@@ -15,5 +15,5 @@ jobs:
   analyze:
     uses: ryansonshine/ryansonshine/.github/workflows/codeql-analysis.yml@main
     permissions:
-      contents: read
+      actions: read
       security-events: write
