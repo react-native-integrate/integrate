@@ -1,46 +1,7 @@
-# typescript-npm-cli-template
-
-> Boilerplate to kickstart creating a Node.js command-line tool
-
-Inspired by [node-cli-boilerplate](https://github.com/sindresorhus/node-cli-boilerplate)
-
-## Getting started
-
-### Set up your repository
-
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
-
-```bash
-curl -fsSL https://github.com/ryansonshine/typescript-npm-cli-template/archive/main.tar.gz | tar -xz --strip-components=1
-```
-
-Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with your own details to personalize your new package:
-
-```bash
-FULL_NAME="John Smith"
-GITHUB_USER="johnsmith"
-REPO_NAME="my-cool-package"
-sed -i.mybak "s/\([\/\"]\)(ryansonshine)/$GITHUB_USER/g; s/typescript-npm-cli-template\|my-cli-name/$REPO_NAME/g; s/Ryan Sonshine/$FULL_NAME/g" package.json package-lock.json README.md
-rm *.mybak
-```
-
-### Add NPM Token
-
-Add your npm token to your GitHub repository secrets as `NPM_TOKEN`.
-
-### Add Codecov integration
-
-Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
-
-**Remove everything from here and above**
-
----
-
-# my-cli-name
+# react-native-integrate
 
 [![npm package][npm-img]][npm-url]
+[![GitHub package.json version][version-img]][version-url]
 [![Build Status][build-img]][build-url]
 [![Downloads][downloads-img]][downloads-url]
 [![Issues][issues-img]][issues-url]
@@ -48,40 +9,80 @@ Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
-> My awesome command-line tool
+**Automate Integration of Additional Code into React Native Projects**
 
-## Install
+## Introduction
+
+This is a command-line tool designed to streamline the process of integrating additional code into React Native projects. It automates the integration steps that are often required when adding packages that involve modifications to iOS or Android projects.
+
+You can focus more on coding and development, while the tool takes care of integrating the necessary code changes into your project. It is particularly helpful for reducing manual labor and potential errors when working with various React Native packages.
+
+## Features
+
+- Automatic integration of additional code into React Native iOS and Android projects.
+- Simplifies the process of handling code changes required by various packages.
+- Saves time and effort by automating integration tasks.
+- Works seamlessly with your project's package management.
+
+## Supported Modifications
+
+
+### iOS
+
+- [x] PList
+- [x] AppDelegate.mm
+- [ ] Resource additions
+- [ ] Waiting and validating manual additions (like xcode extensions, capabilities)
+- [ ] Extension content
+
+### android
+- [x] build.gradle
+- [x] app/build.gradle
+- [ ] AndroidManifest.xml
+
+## Installation
+
+To get started, install "react-native-integrate" into devDependencies using npm:
 
 ```bash
-npm install my-cli-name
+npm install react-native-integrate --save-dev
+# or
+yarn add react-native-integrate --dev
 ```
 
 ## Usage
 
-```bash
-Usage: my-command [options]
+Add the "integrate" command as a post-install script in your project's package.json:
 
-Options:
-  -V, --version            output the version number
-  -d, --debug              enables verbose logging (default: false)
-
-Examples:
-
-  $ my-command --version
-  1.0.0
+```json
+"scripts": {
+  "postinstall": "integrate"
+}
 ```
 
-[build-img]:https://github.com/ryansonshine/typescript-npm-cli-template/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/ryansonshine/typescript-npm-cli-template/actions/workflows/release.yml
-[downloads-img]:https://img.shields.io/npm/dt/typescript-npm-cli-template
-[downloads-url]:https://www.npmtrends.com/typescript-npm-cli-template
-[npm-img]:https://img.shields.io/npm/v/typescript-npm-cli-template
-[npm-url]:https://www.npmjs.com/package/typescript-npm-cli-template
-[issues-img]:https://img.shields.io/github/issues/ryansonshine/typescript-npm-cli-template
-[issues-url]:https://github.com/ryansonshine/typescript-npm-cli-template/issues
-[codecov-img]:https://codecov.io/gh/ryansonshine/typescript-npm-cli-template/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/ryansonshine/typescript-npm-cli-template
+After each package installation, the "integrate" command will automatically be triggered, and the necessary code changes will be integrated into your React Native project.
+
+## Contributing
+
+Contributions are welcome! If you find any issues, have suggestions feel free to submit a pull request or open an issue. For major changes, please discuss the proposed changes with us first.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+[build-img]:https://github.com/murat-mehmet/react-native-integrate/actions/workflows/release.yml/badge.svg
+[build-url]:https://github.com/murat-mehmet/react-native-integrate/actions/workflows/release.yml
+[downloads-img]:https://img.shields.io/npm/dt/react-native-integrate
+[downloads-url]:https://www.npmtrends.com/react-native-integrate
+[npm-img]:https://img.shields.io/npm/v/react-native-integrate
+[npm-url]:https://www.npmjs.com/package/react-native-integrate
+[issues-img]:https://img.shields.io/github/issues/murat-mehmet/react-native-integrate
+[issues-url]:https://github.com/murat-mehmet/react-native-integrate/issues
+[codecov-img]:https://codecov.io/gh/murat-mehmet/react-native-integrate/branch/main/graph/badge.svg
+[codecov-url]:https://codecov.io/gh/murat-mehmet/react-native-integrate
 [semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 [semantic-release-url]:https://github.com/semantic-release/semantic-release
 [commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
 [commitizen-url]:http://commitizen.github.io/cz-cli/
+[version-img]:https://img.shields.io/github/package-json/v/murat-mehmet/react-native-integrate
+[version-url]:https://github.com/murat-mehmet/react-native-integrate

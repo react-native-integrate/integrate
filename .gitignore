@@ -115,5 +115,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Idea
+.idea/
+
 # Compiled code
 lib/
