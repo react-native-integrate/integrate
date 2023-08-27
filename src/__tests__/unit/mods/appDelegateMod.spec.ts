@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-const { mockFs, writeMockProject } = require('../../mocks/mockAll');
+require('../../mocks/mockAll');
 import { appDelegateMod } from '../../../mods/appDelegateMod';
 import { AppDelegateModType } from '../../../types/mod.types';
-import { getInstalledPackages } from '../../../utils/getInstalledPackages';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
 describe('appDelegateMod', () => {
