@@ -46,7 +46,8 @@
   },
   "homepage": "https://github.com/murat-mehmet/react-native-integrate#readme",
   "dependencies": {
-    "commander": "^7.2.0"
+    "commander": "^7.2.0",
+    "plist": "^3.1.0"
   },
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",

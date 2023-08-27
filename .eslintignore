@@ -1,3 +1,2 @@
 src/types/global.d.ts
-.eslintrc.js
-bin/
+*.js

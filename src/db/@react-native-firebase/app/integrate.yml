@@ -1,0 +1,7 @@
+steps:
+  - type: app_delegate
+    imports:
+      - <Firebase.h>
+    method: didFinishLaunchingWithOptions
+    append:
+      text: "[FIRApp configure];"
