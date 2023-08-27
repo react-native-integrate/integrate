@@ -51,7 +51,7 @@ describe('updateIntegrationStatus', () => {
       __dirname,
       `../../mock-project/${Constants.LOCK_FILE_NAME}`
     );
-    mockFs.writeFileSync(lockPath, '', null, 2);
+    mockFs.writeFileSync(lockPath, '');
     updateIntegrationStatus('test', {
       version: '1.2.3',
       integrated: true,

@@ -13,7 +13,7 @@ function writeMockProject(projectJson: Record<any, any>): void {
     __dirname,
     `../mock-project/${Constants.PACKAGE_JSON_FILE_NAME}`
   );
-  mockFs.writeFileSync(packageJsonPath, JSON.stringify(projectJson), null, 2);
+  mockFs.writeFileSync(packageJsonPath, JSON.stringify(projectJson, null, 2));
 }
 
 function writeMockLock(lockData: LockData): void {
@@ -21,7 +21,7 @@ function writeMockLock(lockData: LockData): void {
     __dirname,
     `../mock-project/${Constants.LOCK_FILE_NAME}`
   );
-  mockFs.writeFileSync(lockPath, JSON.stringify(lockData), null, 2);
+  mockFs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2));
 }
 function writeMockAppDelegate(): void {
   const appDelegatePath = path.resolve(

@@ -1,13 +1,12 @@
 export type TextOrFileValue =
-  | {
-      text: string;
-    }
+  | string
   | {
       file: string;
     };
 
 export type FindType = {
-  find: string;
+  find: string | { regex: string; flags?: string };
+  insert: TextOrFileValue;
 };
 
 export type AppendPrependContentMod =
@@ -18,64 +17,67 @@ export type AppendPrependContentMod =
       prepend: TextOrFileValue;
     };
 
-export type BeforeAfterContentMod = (
+export type BeforeAfterContentMod =
   | {
-      after: TextOrFileValue;
+      after: FindType;
     }
   | {
-      before: TextOrFileValue;
-    }
-) &
-  FindType;
+      before: FindType;
+    };
 
 export type AnyContentMod = AppendPrependContentMod | BeforeAfterContentMod;
 
-export type PlistModType = {
+export type PlistModType = ModTaskBase & {
   type: 'plist';
 } & AnyContentMod;
 
-export type AppDelegateModType = AppendPrependContentMod & {
-  type: 'app_delegate';
-  imports?: string[];
-  method:
-    | 'didFinishLaunchingWithOptions'
-    | 'applicationDidBecomeActive'
-    | 'applicationWillResignActive'
-    | 'applicationDidEnterBackground'
-    | 'applicationWillEnterForeground'
-    | 'applicationWillTerminate'
-    | 'openURL'
-    | 'restorationHandler'
-    | 'didRegisterForRemoteNotificationsWithDeviceToken'
-    | 'didFailToRegisterForRemoteNotificationsWithError'
-    | 'didReceiveRemoteNotification'
-    | 'fetchCompletionHandler';
-};
+export type AppDelegateModType = ModTaskBase &
+  AnyContentMod & {
+    type: 'app_delegate';
+    imports?: string[];
+    method:
+      | 'didFinishLaunchingWithOptions'
+      | 'applicationDidBecomeActive'
+      | 'applicationWillResignActive'
+      | 'applicationDidEnterBackground'
+      | 'applicationWillEnterForeground'
+      | 'applicationWillTerminate'
+      | 'openURL'
+      | 'restorationHandler'
+      | 'didRegisterForRemoteNotificationsWithDeviceToken'
+      | 'didFailToRegisterForRemoteNotificationsWithError'
+      | 'didReceiveRemoteNotification'
+      | 'fetchCompletionHandler';
+  };
 
-export type ValidationType = {
+export type ValidationType = ModTaskBase & {
   type: 'validate';
   file: string;
   text?: string;
 };
 
-export type BuildGradleModType = {
+export type BuildGradleModType = ModTaskBase & {
   type: 'build_gradle';
 } & AnyContentMod;
 
-export type AppBuildGradleModType = {
+export type AppBuildGradleModType = ModTaskBase & {
   type: 'app_build_gradle';
 } & AnyContentMod;
 
-export type AndroidManifestModType = {
+export type AndroidManifestModType = ModTaskBase & {
   type: 'android_manifest';
 } & AnyContentMod;
 
-export type AddResourceType = {
+export type AddResourceType = ModTaskBase & {
   type: 'add_resource';
   file: string;
 };
 
-export type ModStep =
+export type ModTaskBase = {
+  comment?: string;
+};
+
+export type ModTask =
   | PlistModType
   | AppDelegateModType
   | ValidationType
@@ -85,5 +87,5 @@ export type ModStep =
   | AddResourceType;
 
 export type IntegrationConfig = {
-  steps: ModStep[];
+  tasks: ModTask[];
 };
