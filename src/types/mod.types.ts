@@ -34,6 +34,7 @@ export type PlistModType = ModTaskBase & {
 export type AppDelegateModType = ModTaskBase &
   AnyContentMod & {
     type: 'app_delegate';
+    comment?: string;
     imports?: string[];
     method:
       | 'didFinishLaunchingWithOptions'
@@ -74,7 +75,7 @@ export type AddResourceType = ModTaskBase & {
 };
 
 export type ModTaskBase = {
-  comment?: string;
+  label?: string;
 };
 
 export type ModTask =

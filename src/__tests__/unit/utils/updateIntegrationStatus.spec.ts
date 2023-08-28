@@ -9,10 +9,15 @@ import { updateIntegrationStatus } from '../../../utils/updateIntegrationStatus'
 
 describe('updateIntegrationStatus', () => {
   it('should create new lock file', () => {
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
@@ -30,10 +35,15 @@ describe('updateIntegrationStatus', () => {
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
     });
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
@@ -52,10 +62,15 @@ describe('updateIntegrationStatus', () => {
       `../../mock-project/${Constants.LOCK_FILE_NAME}`
     );
     mockFs.writeFileSync(lockPath, '');
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
@@ -73,10 +88,15 @@ describe('updateIntegrationStatus', () => {
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: undefined,
     } as any);
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
@@ -99,10 +119,15 @@ describe('updateIntegrationStatus', () => {
       packages: {},
     });
 
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
   });
   it('should abort when has no read permission', () => {
@@ -116,10 +141,15 @@ describe('updateIntegrationStatus', () => {
       packages: {},
     });
 
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
   });
   it('should abort when has no write permission', () => {
@@ -128,10 +158,15 @@ describe('updateIntegrationStatus', () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
 
-    updateIntegrationStatus('test', {
-      version: '1.2.3',
-      integrated: true,
-    });
+    updateIntegrationStatus([
+      {
+        projectName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
   });
 });

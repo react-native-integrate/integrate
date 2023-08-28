@@ -6,6 +6,7 @@ import { LockData } from '../../types/integrator.types';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
 
 require('./mockProjectPath');
+require('./mockFetch');
 const { mockFs } = require('./mockFs');
 
 function writeMockProject(projectJson: Record<any, any>): void {
@@ -26,7 +27,7 @@ function writeMockLock(lockData: LockData): void {
 function writeMockAppDelegate(): void {
   const appDelegatePath = path.resolve(
     __dirname,
-    `../mock-project/ios/MockProject/${Constants.APP_DELEGATE_FILE_NAME}`
+    `../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
   );
   mockFs.writeFileSync(appDelegatePath, mockAppDelegateTemplate);
 }

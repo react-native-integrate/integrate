@@ -1,10 +1,14 @@
+import fs from 'fs';
+import path from 'path';
+import { Constants } from '../constants';
 import { AppDelegateModType } from '../types/mod.types';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { findInsertionPoint } from '../utils/findInsertionPoint';
 import { getModContent } from '../utils/getModContent';
+import { getProjectPath } from '../utils/getProjectPath';
 import { stringSplice } from '../utils/stringSplice';
 
-export function appDelegateMod(args: {
+export function appDelegateTask(args: {
   configPath: string;
   packageName: string;
   content: string;
@@ -210,4 +214,47 @@ function appendNewMethod(content: string, newMethod: string): string {
     0,
     codeToInsert
   );
+}
+
+function getAppDelegatePath() {
+  const projectPath = getProjectPath();
+  const workspaceFolder = fs
+    .readdirSync(path.join(projectPath, 'ios'))
+    .find(x => x.endsWith(Constants.WORKSPACE_EXT));
+  if (!workspaceFolder) throw new Error('iOS workspace not found.');
+  const projectName = workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
+
+  const appDelegatePath = path.join(
+    projectPath,
+    'ios',
+    projectName,
+    Constants.APP_DELEGATE_FILE_NAME
+  );
+  if (!fs.existsSync(appDelegatePath))
+    throw new Error(`AppDelegate file not found at ${appDelegatePath}`);
+  return appDelegatePath;
+}
+function readAppDelegateContent() {
+  const appDelegatePath = getAppDelegatePath();
+  return fs.readFileSync(appDelegatePath, 'utf-8');
+}
+
+function writeAppDelegateContent(content: string): void {
+  const appDelegatePath = getAppDelegatePath();
+  return fs.writeFileSync(appDelegatePath, content, 'utf-8');
+}
+
+export function runTask(args: {
+  configPath: string;
+  packageName: string;
+  task: AppDelegateModType;
+}): void {
+  let content = readAppDelegateContent();
+
+  content = appDelegateTask({
+    ...args,
+    content,
+  });
+
+  writeAppDelegateContent(content);
 }

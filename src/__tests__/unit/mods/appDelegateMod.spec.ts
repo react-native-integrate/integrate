@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-require('../../mocks/mockAll');
-import { appDelegateMod } from '../../../mods/appDelegateMod';
+const { mockFs, writeMockAppDelegate } = require('../../mocks/mockAll');
+import path from 'path';
+import { Constants } from '../../../constants';
+import { appDelegateTask, runTask } from '../../../tasks/appDelegateTask';
 import { AppDelegateModType } from '../../../types/mod.types';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
@@ -14,7 +16,7 @@ describe('appDelegateMod', () => {
       method: 'didFinishLaunchingWithOptions',
       prepend: '[FIRApp configure];',
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -30,7 +32,7 @@ describe('appDelegateMod', () => {
       method: 'didFinishLaunchingWithOptions',
       append: '[FIRApp configure];',
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -49,7 +51,7 @@ describe('appDelegateMod', () => {
         insert: '[FIRApp configure];',
       },
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -72,7 +74,7 @@ describe('appDelegateMod', () => {
         insert: '[FIRApp configure];',
       },
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -94,7 +96,7 @@ describe('appDelegateMod', () => {
       prepend: '[FIRApp configure];',
     };
     expect(() =>
-      appDelegateMod({
+      appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
@@ -114,7 +116,7 @@ describe('appDelegateMod', () => {
       },
     };
     expect(() =>
-      appDelegateMod({
+      appDelegateTask({
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
@@ -131,7 +133,7 @@ describe('appDelegateMod', () => {
       },
     };
     expect(() =>
-      appDelegateMod({
+      appDelegateTask({
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
@@ -148,7 +150,7 @@ describe('appDelegateMod', () => {
       prepend: '[FIRApp configure];',
     };
     expect(() =>
-      appDelegateMod({
+      appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
@@ -164,7 +166,7 @@ describe('appDelegateMod', () => {
       prepend: '[FIRApp configure];',
     };
     expect(() =>
-      appDelegateMod({
+      appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
@@ -179,7 +181,7 @@ describe('appDelegateMod', () => {
       method: 'applicationDidBecomeActive',
       append: 'appended code',
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: step,
       content,
@@ -199,7 +201,7 @@ describe('appDelegateMod', () => {
         insert: 'inserted code',
       },
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: step,
       content,
@@ -219,7 +221,7 @@ describe('appDelegateMod', () => {
         insert: 'inserted code',
       },
     };
-    content = appDelegateMod({
+    content = appDelegateTask({
       configPath: 'path/to/config',
       task: step,
       content,
@@ -250,7 +252,7 @@ describe('appDelegateMod', () => {
         prepend: 'prepended code',
         append: 'appended code',
       };
-      content = appDelegateMod({
+      content = appDelegateTask({
         configPath: 'path/to/config',
         task: step,
         content,
@@ -264,7 +266,7 @@ describe('appDelegateMod', () => {
         prepend: 'prepended code 2',
         append: 'appended code 2',
       };
-      content = appDelegateMod({
+      content = appDelegateTask({
         configPath: 'path/to/config',
         task: step2,
         content,
@@ -281,5 +283,59 @@ describe('appDelegateMod', () => {
       // @ts-ignore
       expect(content).toContain(step2.append);
     });
+  });
+});
+
+describe('runTask', () => {
+  it('should read and write app delegate file', () => {
+    const appDelegatePath = path.resolve(
+      __dirname,
+      `../../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
+    );
+    mockFs.writeFileSync(appDelegatePath, mockAppDelegateTemplate);
+    const task: AppDelegateModType = {
+      type: 'app_delegate',
+      imports: ['<Firebase.h>'],
+      method: 'didFinishLaunchingWithOptions',
+      prepend: '[FIRApp configure];',
+    };
+    runTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain(task.prepend);
+  });
+  it('should throw when app delegate does not exist', () => {
+    const task: AppDelegateModType = {
+      type: 'app_delegate',
+      imports: ['<Firebase.h>'],
+      method: 'didFinishLaunchingWithOptions',
+      prepend: '[FIRApp configure];',
+    };
+    expect(() => {
+      runTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      });
+    }).toThrowError('AppDelegate file not found');
+  });
+  it('should throw when workspace does not exist', () => {
+    jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => []);
+    const task: AppDelegateModType = {
+      type: 'app_delegate',
+      imports: ['<Firebase.h>'],
+      method: 'didFinishLaunchingWithOptions',
+      prepend: '[FIRApp configure];',
+    };
+    expect(() => {
+      runTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      });
+    }).toThrowError('workspace not found');
   });
 });

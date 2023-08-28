@@ -1,8 +1,8 @@
-import { getInstalledPackages } from './utils/getInstalledPackages';
+import { getNewPackages } from './utils/getNewPackages';
 
 export function integrate(): void {
-  const installedPackage = getInstalledPackages();
+  const packagesToIntegrate = getNewPackages();
 
   // get packages that need to be implemented
-  console.log(installedPackage);
+  console.log(packagesToIntegrate);
 }
