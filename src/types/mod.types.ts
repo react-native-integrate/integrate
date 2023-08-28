@@ -25,7 +25,9 @@ export type BeforeAfterContentMod =
       before: FindType;
     };
 
-export type AnyContentMod = AppendPrependContentMod | BeforeAfterContentMod;
+export type AnyContentMod = {
+  ifNotPresent?: string;
+} & (AppendPrependContentMod | BeforeAfterContentMod);
 
 export type PlistModType = ModTaskBase & {
   type: 'plist';
@@ -53,8 +55,9 @@ export type AppDelegateModType = ModTaskBase &
 
 export type ValidationType = ModTaskBase & {
   type: 'validate';
-  file: string;
-  text?: string;
+  file: string | { regex: string; flags?: string };
+  find?: string | { regex: string; flags?: string };
+  errorMsg?: string;
 };
 
 export type BuildGradleModType = ModTaskBase & {

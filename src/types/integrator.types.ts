@@ -2,7 +2,13 @@ export interface IntegratorOptions {
   debug: boolean;
 }
 
-export type InstalledPackages = [string, string][];
+export type PackageTuples = [string, string][];
+export type AnalyzedPackages = {
+  installedPackages: PackageTuples;
+  newPackages: PackageTuples;
+  updatedPackages: PackageTuples;
+  deletedPackages: [string, LockProjectData][];
+};
 
 export interface LockData {
   lockfileVersion: number;
@@ -12,4 +18,5 @@ export interface LockData {
 export interface LockProjectData {
   version: string;
   integrated: boolean;
+  deleted?: boolean;
 }

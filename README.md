@@ -1,7 +1,6 @@
 # react-native-integrate
 
 [![npm package][npm-img]][npm-url]
-[![GitHub package.json version][version-img]][version-url]
 [![Build Status][build-img]][build-url]
 [![Downloads][downloads-img]][downloads-url]
 [![Issues][issues-img]][issues-url]
@@ -84,5 +83,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [semantic-release-url]:https://github.com/semantic-release/semantic-release
 [commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
 [commitizen-url]:http://commitizen.github.io/cz-cli/
-[version-img]:https://img.shields.io/github/package-json/v/murat-mehmet/react-native-integrate
-[version-url]:https://github.com/murat-mehmet/react-native-integrate

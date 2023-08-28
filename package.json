@@ -46,7 +46,11 @@
   },
   "homepage": "https://github.com/murat-mehmet/react-native-integrate#readme",
   "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "ajv": "^8.12.0",
     "commander": "^7.2.0",
+    "isomorphic-fetch": "^3.0.0",
+    "picocolors": "^1.0.0",
     "plist": "^3.1.0",
     "yaml": "^2.3.1"
   },

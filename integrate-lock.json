@@ -1,0 +1,29 @@
+{
+  "packages": {
+    "@clack/prompts": {
+      "version": "^0.7.0",
+      "integrated": false
+    },
+    "commander": {
+      "version": "^7.2.0",
+      "integrated": false
+    },
+    "isomorphic-fetch": {
+      "version": "^3.0.0",
+      "integrated": false
+    },
+    "picocolors": {
+      "version": "^1.0.0",
+      "integrated": false
+    },
+    "plist": {
+      "version": "^3.1.0",
+      "integrated": false
+    },
+    "yaml": {
+      "version": "^2.3.1",
+      "integrated": false
+    }
+  },
+  "lockfileVersion": 1
+}

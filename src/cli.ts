@@ -1,7 +1,9 @@
 import { Command } from 'commander';
+import 'isomorphic-fetch';
 import { version } from '../package.json';
 import { integrate } from './integrate';
 import { options } from './options';
+import { logIntro, logOutro } from './prompter';
 
 const program = new Command();
 
@@ -9,11 +11,11 @@ program
   .version(version)
   .name('integrate')
   .option('-d, --debug', 'enables verbose logging', false)
-  .action(args => {
+  .action(async args => {
+    logIntro();
     options.set(args);
-    integrate();
+    await integrate();
+    logOutro();
   });
 
-program.parse();
-
-// Function code for CLI goes here
+program.parseAsync().catch(console.warn);

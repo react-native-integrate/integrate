@@ -11,7 +11,7 @@ describe('updateIntegrationStatus', () => {
   it('should create new lock file', () => {
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -31,13 +31,13 @@ describe('updateIntegrationStatus', () => {
     });
   });
   it('should update existing lock file', () => {
-    writeMockLock({
+    const filePath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
     });
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -45,7 +45,6 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
 
-    const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
@@ -56,6 +55,32 @@ describe('updateIntegrationStatus', () => {
       },
     });
   });
+  it('should delete package', () => {
+    const filePath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {
+        test: {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    });
+    updateIntegrationStatus([
+      {
+        packageName: 'test',
+        lockProjectData: {
+          version: '1.2.3',
+          integrated: true,
+          deleted: true,
+        },
+      },
+    ]);
+
+    const fileContent = mockFs.readFileSync(filePath);
+    expect(fileContent).toBeTruthy();
+    const content = JSON.parse(fileContent);
+    expect(content.packages).toEqual({});
+  });
   it('should update empty lock file', () => {
     const lockPath = path.resolve(
       __dirname,
@@ -64,7 +89,7 @@ describe('updateIntegrationStatus', () => {
     mockFs.writeFileSync(lockPath, '');
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -84,13 +109,13 @@ describe('updateIntegrationStatus', () => {
     });
   });
   it('should update existing lock file with no packages field', () => {
-    writeMockLock({
+    const filePath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: undefined,
     } as any);
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -98,7 +123,6 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
 
-    const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
     const fileContent = mockFs.readFileSync(filePath);
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
@@ -121,7 +145,7 @@ describe('updateIntegrationStatus', () => {
 
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -143,7 +167,7 @@ describe('updateIntegrationStatus', () => {
 
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,
@@ -160,7 +184,7 @@ describe('updateIntegrationStatus', () => {
 
     updateIntegrationStatus([
       {
-        projectName: 'test',
+        packageName: 'test',
         lockProjectData: {
           version: '1.2.3',
           integrated: true,

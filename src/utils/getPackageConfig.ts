@@ -1,12 +1,19 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
+import { updateSpinner } from '../prompter';
 import { getMd5 } from './getMd5';
 import { getProjectPath } from './getProjectPath';
 
 export async function getPackageConfig(
-  packageName: string
+  packageName: string,
+  pagination: { index: number; count: number } = { index: 0, count: 1 }
 ): Promise<string | null> {
+  updateSpinner(
+    `[${pagination.index + 1}/${
+      pagination.count
+    }] Checking config for package: ${packageName}`
+  );
   let localConfigPath = getLocalPackageConfig(packageName);
   if (!localConfigPath) {
     localConfigPath = await downloadRemotePackageConfig(packageName);
@@ -14,12 +21,15 @@ export async function getPackageConfig(
   return localConfigPath;
 }
 
-function getLocalPackageConfig(packageName: string) {
+export function getPackagePath(packageName: string): string {
   const projectPath = getProjectPath();
+  return path.join(projectPath, 'node_modules', packageName);
+}
+
+function getLocalPackageConfig(packageName: string) {
+  const localPackagePath = getPackagePath(packageName);
   const localConfigPath = path.join(
-    projectPath,
-    'node_modules',
-    packageName,
+    localPackagePath,
     Constants.CONFIG_FILE_NAME
   );
 
@@ -31,8 +41,7 @@ function getLocalPackageConfig(packageName: string) {
 export async function downloadRemotePackageConfig(
   packageName: string
 ): Promise<string | null> {
-  const projectPath = getProjectPath();
-  const localPackagePath = path.join(projectPath, 'node_modules', packageName);
+  const localPackagePath = getPackagePath(packageName);
   const localConfigPath = path.join(
     localPackagePath,
     Constants.CONFIG_FILE_NAME

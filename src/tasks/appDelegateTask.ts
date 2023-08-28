@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
+import { logMessage, logMessageGray, summarize } from '../prompter';
 import { AppDelegateModType } from '../types/mod.types';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { findInsertionPoint } from '../utils/findInsertionPoint';
@@ -19,7 +20,13 @@ export function appDelegateTask(args: {
 
   task.imports?.forEach(imp => {
     const codeToInsert = `#import ${imp}`;
-    if (!content.includes(imp)) content = `${codeToInsert}\n` + content;
+    if (!content.includes(imp)) {
+      content = `${codeToInsert}\n` + content;
+      logMessage(`added import: ${summarize(imp)}`);
+    } else
+      logMessageGray(
+        `import already exists, skipped adding: ${summarize(imp)}`
+      );
   });
   let regex, makeNewMethod;
   switch (task.method) {
@@ -111,6 +118,9 @@ export function appDelegateTask(args: {
     if (!methodStartMatch) {
       const newMethod = makeNewMethod(codeToInsert);
       content = appendNewMethod(content, newMethod);
+      logMessage(
+        `added new method ${task.method} with code: ${summarize(prependText)}`
+      );
       methodStartMatch = regex.exec(content);
     } else {
       const methodEndIndex = findClosingTagIndex(
@@ -121,12 +131,27 @@ export function appDelegateTask(args: {
         methodStartMatch.index + methodStartMatch[0].length,
         methodEndIndex
       );
-      if (!methodBody.includes(prependText))
+      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
+        logMessageGray(
+          `found existing ${summarize(
+            task.ifNotPresent
+          )}, skipped inserting: ${summarize(prependText)}`
+        );
+      } else if (!methodBody.includes(prependText)) {
         content = stringSplice(
           content,
           methodStartMatch.index + methodStartMatch[0].length,
           0,
           codeToInsert
+        );
+        logMessage(
+          `prepended code in ${summarize(task.method)}: ${summarize(
+            prependText
+          )}`
+        );
+      } else
+        logMessageGray(
+          `code already exists, skipped prepending: ${summarize(prependText)}`
         );
     }
   }
@@ -136,6 +161,9 @@ export function appDelegateTask(args: {
     if (!methodStartMatch) {
       const newMethod = makeNewMethod(codeToInsert);
       content = appendNewMethod(content, newMethod);
+      logMessage(
+        `added new method ${task.method} with code: ${summarize(appendText)}`
+      );
       methodStartMatch = regex.exec(content);
     } else {
       const methodEndIndex = findClosingTagIndex(
@@ -146,9 +174,21 @@ export function appDelegateTask(args: {
         methodStartMatch.index + methodStartMatch[0].length,
         methodEndIndex
       );
-      if (!methodBody.includes(appendText)) {
+      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
+        logMessageGray(
+          `found existing ${summarize(
+            task.ifNotPresent
+          )}, skipped inserting: ${summarize(appendText)}`
+        );
+      } else if (!methodBody.includes(appendText)) {
         content = stringSplice(content, methodEndIndex - 1, 0, codeToInsert);
-      }
+        logMessage(
+          `appended code in ${summarize(task.method)}: ${summarize(appendText)}`
+        );
+      } else
+        logMessageGray(
+          `code already exists, skipped appending: ${summarize(appendText)}`
+        );
     }
   }
   if ('before' in task) {
@@ -157,6 +197,9 @@ export function appDelegateTask(args: {
     if (!methodStartMatch) {
       const newMethod = makeNewMethod(codeToInsert);
       content = appendNewMethod(content, newMethod);
+      logMessage(
+        `added new method ${task.method} with code: ${summarize(text)}`
+      );
       methodStartMatch = regex.exec(content);
     } else {
       const foundIndex = findInsertionPoint(content, task.before);
@@ -170,9 +213,24 @@ export function appDelegateTask(args: {
         methodStartMatch.index + methodStartMatch[0].length,
         methodEndIndex
       );
-      if (!methodBody.includes(text)) {
+      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
+        logMessageGray(
+          `found existing ${summarize(
+            task.ifNotPresent
+          )}, skipped inserting: ${summarize(text)}`
+        );
+      } else if (!methodBody.includes(text)) {
         content = stringSplice(content, foundIndex.start, 0, codeToInsert);
-      }
+        logMessage(
+          `inserted code into ${summarize(task.method)} (before ${summarize(
+            foundIndex.match,
+            20
+          )}): ${summarize(text)}`
+        );
+      } else
+        logMessageGray(
+          `code already exists, skipped inserting: ${summarize(text)}`
+        );
     }
   }
   if ('after' in task) {
@@ -181,6 +239,11 @@ export function appDelegateTask(args: {
     if (!methodStartMatch) {
       const newMethod = makeNewMethod(codeToInsert);
       content = appendNewMethod(content, newMethod);
+      logMessage(
+        `added new method ${summarize(task.method)} with code: ${summarize(
+          text
+        )}`
+      );
     } else {
       const foundIndex = findInsertionPoint(content, task.after);
       if (foundIndex.start == -1)
@@ -193,9 +256,24 @@ export function appDelegateTask(args: {
         methodStartMatch.index + methodStartMatch[0].length,
         methodEndIndex
       );
-      if (!methodBody.includes(text)) {
+      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
+        logMessageGray(
+          `found existing ${summarize(
+            task.ifNotPresent
+          )}, skipped inserting: ${summarize(text)}`
+        );
+      } else if (!methodBody.includes(text)) {
         content = stringSplice(content, foundIndex.end, 0, codeToInsert);
-      }
+        logMessage(
+          `inserted code into ${summarize(task.method)} (after ${summarize(
+            foundIndex.match,
+            20
+          )}): ${summarize(text)}`
+        );
+      } else
+        logMessageGray(
+          `code already exists, skipped inserting: ${summarize(text)}`
+        );
     }
   }
   return content;
@@ -218,9 +296,14 @@ function appendNewMethod(content: string, newMethod: string): string {
 
 function getAppDelegatePath() {
   const projectPath = getProjectPath();
-  const workspaceFolder = fs
-    .readdirSync(path.join(projectPath, 'ios'))
-    .find(x => x.endsWith(Constants.WORKSPACE_EXT));
+  let workspaceFolder: string | undefined;
+  try {
+    workspaceFolder = fs
+      .readdirSync(path.join(projectPath, 'ios'))
+      .find(x => x.endsWith(Constants.WORKSPACE_EXT));
+  } catch (e) {
+    workspaceFolder = undefined;
+  }
   if (!workspaceFolder) throw new Error('iOS workspace not found.');
   const projectName = workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
 
@@ -234,6 +317,7 @@ function getAppDelegatePath() {
     throw new Error(`AppDelegate file not found at ${appDelegatePath}`);
   return appDelegatePath;
 }
+
 function readAppDelegateContent() {
   const appDelegatePath = getAppDelegatePath();
   return fs.readFileSync(appDelegatePath, 'utf-8');

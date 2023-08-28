@@ -1,13 +1,75 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-const { mockFs, writeMockAppDelegate } = require('../../mocks/mockAll');
-import path from 'path';
-import { Constants } from '../../../constants';
+const { mockFs, mockPrompter } = require('../../mocks/mockAll');
 import { appDelegateTask, runTask } from '../../../tasks/appDelegateTask';
 import { AppDelegateModType } from '../../../types/mod.types';
+import { writeMockAppDelegate } from '../../mocks/mockAll';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
 describe('appDelegateMod', () => {
+  it('should skip import when exists', () => {
+    mockPrompter.log.message.mockClear();
+    let content = mockAppDelegateTemplate;
+    const task: AppDelegateModType = {
+      type: 'app_delegate',
+      imports: ['<Firebase.h>'],
+      method: 'didFinishLaunchingWithOptions',
+      append: '[FIRApp configure];',
+      prepend: '[FIRApp configure];',
+      before: {
+        find: { regex: 'return' },
+        insert: '[FIRApp configure];',
+      },
+      after: {
+        find: { regex: 'return' },
+        insert: '[FIRApp configure];',
+      },
+    };
+    content = appDelegateTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    appDelegateTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('import already exists')
+    );
+  });
+  it('should skip import when ifNotPresent exists', () => {
+    mockPrompter.log.message.mockClear();
+    const content = mockAppDelegateTemplate;
+    const task: AppDelegateModType = {
+      type: 'app_delegate',
+      imports: ['<Firebase.h>'],
+      method: 'didFinishLaunchingWithOptions',
+      append: '[FIRApp configure];',
+      prepend: '[FIRApp configure];',
+      before: {
+        find: { regex: 'return' },
+        insert: '[FIRApp configure];',
+      },
+      after: {
+        find: { regex: 'return' },
+        insert: '[FIRApp configure];',
+      },
+      ifNotPresent: 'RCTAppSetupPrepareApp',
+    };
+    appDelegateTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('found existing ')
+    );
+  });
   it('should prepend text into didLaunchWithOptions', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateModType = {
@@ -259,12 +321,19 @@ describe('appDelegateMod', () => {
         packageName: 'test-package',
       });
 
+      expect(content).toContain(method);
+      // @ts-ignore
+      expect(content).toContain(step.prepend);
+      // @ts-ignore
+      expect(content).toContain(step.append);
+
       // second append on existing method
+      mockPrompter.log.message.mockClear();
       const step2: AppDelegateModType = {
         type: 'app_delegate',
         method: method,
-        prepend: 'prepended code 2',
-        append: 'appended code 2',
+        prepend: 'prepended code',
+        append: 'appended code',
       };
       content = appDelegateTask({
         configPath: 'path/to/config',
@@ -273,26 +342,21 @@ describe('appDelegateMod', () => {
         packageName: 'test-package',
       });
 
-      expect(content).toContain(method);
-      // @ts-ignore
-      expect(content).toContain(step.prepend);
-      // @ts-ignore
-      expect(content).toContain(step.append);
       // @ts-ignore
       expect(content).toContain(step2.prepend);
       // @ts-ignore
       expect(content).toContain(step2.append);
+
+      expect(mockPrompter.log.message).toHaveBeenCalledWith(
+        expect.stringContaining('code already exists')
+      );
     });
   });
 });
 
 describe('runTask', () => {
   it('should read and write app delegate file', () => {
-    const appDelegatePath = path.resolve(
-      __dirname,
-      `../../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
-    );
-    mockFs.writeFileSync(appDelegatePath, mockAppDelegateTemplate);
+    const appDelegatePath = writeMockAppDelegate();
     const task: AppDelegateModType = {
       type: 'app_delegate',
       imports: ['<Firebase.h>'],
@@ -323,7 +387,9 @@ describe('runTask', () => {
     }).toThrowError('AppDelegate file not found');
   });
   it('should throw when workspace does not exist', () => {
-    jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => []);
+    jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
+      throw new Error('Directory not found');
+    });
     const task: AppDelegateModType = {
       type: 'app_delegate',
       imports: ['<Firebase.h>'],

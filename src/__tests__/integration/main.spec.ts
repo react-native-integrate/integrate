@@ -1,3 +1,5 @@
+require('../mocks/mockAll');
+
 import execa from 'execa';
 import { resolve } from 'path';
 

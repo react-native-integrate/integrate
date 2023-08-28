@@ -43,7 +43,7 @@ function writeLockFile(data: LockData): void {
 
 export function updateIntegrationStatus(
   packageIntegrations: {
-    projectName: string;
+    packageName: string;
     lockProjectData: LockProjectData;
   }[]
 ): void {
@@ -51,8 +51,11 @@ export function updateIntegrationStatus(
   if (!integrationLockData) return;
   if (!integrationLockData.packages) integrationLockData.packages = {};
   packageIntegrations.forEach(integration => {
-    integrationLockData.packages[integration.projectName] =
-      integration.lockProjectData;
+    if (integration.lockProjectData.deleted)
+      delete integrationLockData.packages[integration.packageName];
+    else
+      integrationLockData.packages[integration.packageName] =
+        integration.lockProjectData;
   });
   writeLockFile(integrationLockData);
 }

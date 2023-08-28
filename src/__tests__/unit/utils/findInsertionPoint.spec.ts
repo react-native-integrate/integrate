@@ -16,6 +16,7 @@ describe('findInsertionPoint', () => {
     expect(insertionPoint).toEqual({
       start: preContent.length,
       end: preContent.length + findContent.length,
+      match: findContent,
     });
   });
   it('should return negative on fail', () => {
@@ -30,6 +31,7 @@ describe('findInsertionPoint', () => {
     expect(insertionPoint).toEqual({
       start: -1,
       end: -1,
+      match: null,
     });
   });
   it('should return insertion point index with regex search', () => {
@@ -47,6 +49,7 @@ describe('findInsertionPoint', () => {
     expect(insertionPoint).toEqual({
       start: preContent.length,
       end: preContent.length + findContent.length,
+      match: findContent,
     });
   });
   it('should return negative on fail with regex search', () => {
@@ -64,6 +67,7 @@ describe('findInsertionPoint', () => {
     expect(insertionPoint).toEqual({
       start: -1,
       end: -1,
+      match: null,
     });
   });
 });

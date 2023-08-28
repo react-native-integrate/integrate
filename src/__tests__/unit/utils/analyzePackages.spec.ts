@@ -2,13 +2,13 @@
 
 const { writeMockLock } = require('../../mocks/mockAll');
 import { Constants } from '../../../constants';
-import { getNewPackages } from '../../../utils/getNewPackages';
+import { analyzePackages } from '../../../utils/analyzePackages';
 
-describe('getNewPackages', () => {
+describe('analyzePackages', () => {
   it('should get new packages', () => {
-    const installedPackages = getNewPackages();
-    expect(installedPackages).toBeTruthy();
-    expect(installedPackages).toContainEqual(['mock-package', '^1.2.3']);
+    const { newPackages } = analyzePackages();
+    expect(newPackages).toBeTruthy();
+    expect(newPackages).toContainEqual(['mock-package', '^1.2.3']);
   });
   it('should not get integrated packages', () => {
     writeMockLock({
@@ -20,8 +20,8 @@ describe('getNewPackages', () => {
         },
       },
     });
-    const installedPackages = getNewPackages();
-    expect(installedPackages).toBeTruthy();
-    expect(installedPackages).toEqual([]);
+    const { newPackages } = analyzePackages();
+    expect(newPackages).toBeTruthy();
+    expect(newPackages).toEqual([]);
   });
 });

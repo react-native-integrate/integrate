@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import { InstalledPackages } from '../types/integrator.types';
+import { PackageTuples } from '../types/integrator.types';
 import { getProjectPath } from './getProjectPath';
 
-export function getInstalledPackages(): InstalledPackages {
+export function getInstalledPackages(): PackageTuples {
   try {
     const projectPath = getProjectPath();
     const packageJsonPath = path.join(

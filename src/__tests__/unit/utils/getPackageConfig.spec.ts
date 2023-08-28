@@ -6,9 +6,9 @@ import path from 'path';
 import { Constants } from '../../../constants';
 import {
   getPackageConfig,
+  getPackagePath,
   getRemotePath,
 } from '../../../utils/getPackageConfig';
-import { getProjectPath } from '../../../utils/getProjectPath';
 import { mockIntegrateYml } from '../../mocks/mockIntegrateYml';
 
 describe('getRemotePath', () => {
@@ -38,11 +38,10 @@ describe('getPackageConfig', () => {
   });
   it('should use local config', async () => {
     const packageName = '@react-native-firebase/app';
-    const projectPath = getProjectPath();
+
+    const localPackagePath = getPackagePath(packageName);
     const localConfigPath = path.join(
-      projectPath,
-      'node_modules',
-      packageName,
+      localPackagePath,
       Constants.CONFIG_FILE_NAME
     );
     mockFs.writeFileSync(localConfigPath, mockIntegrateYml);
