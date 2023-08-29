@@ -3,7 +3,7 @@ import mergeWith from 'lodash.mergewith';
 import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../constants';
-import { logMessage } from '../prompter';
+import { logMessage, summarize } from '../prompter';
 import { PlistModType } from '../types/mod.types';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
 
@@ -49,11 +49,14 @@ export function plistTask(args: {
       temp_obj[key] = content[key];
       return temp_obj;
     }, {} as Record<string, any>);
-  logMessage(
-    `set ${color.yellow(
-      Object.keys(task.set).length
-    )} property in plist file with ${color.yellow(strategy)} strategy`
-  );
+  Object.entries(task.set).forEach(([key, value]) => {
+    value = typeof value === 'string' ? value : JSON.stringify(value);
+    logMessage(
+      `set ${color.yellow(key)} with ${color.yellow(
+        strategy
+      )} strategy in plist: ${summarize(value)}`
+    );
+  });
   return content;
 }
 
