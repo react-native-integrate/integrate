@@ -31,7 +31,11 @@ export type AnyContentMod = {
 
 export type PlistModType = ModTaskBase & {
   type: 'plist';
-} & AnyContentMod;
+  set: {
+    [key: string]: any;
+  };
+  strategy?: 'merge_concat' | 'merge' | 'assign';
+};
 
 export type AppDelegateModType = ModTaskBase &
   AnyContentMod & {

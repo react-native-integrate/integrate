@@ -1,5 +1,6 @@
 import { runTask as runAppDelegateTask } from '../tasks/appDelegateTask';
-import { AppDelegateModType, ModTask } from '../types/mod.types';
+import { runTask as runPListTask } from '../tasks/plistTask';
+import { ModTask } from '../types/mod.types';
 
 export function runTask(args: {
   configPath: string;
@@ -9,12 +10,17 @@ export function runTask(args: {
   const { task, packageName, configPath } = args;
   switch (task.type) {
     case 'plist':
+      runPListTask({
+        configPath: configPath,
+        packageName: packageName,
+        task: task,
+      });
       break;
     case 'app_delegate':
       runAppDelegateTask({
         configPath: configPath,
         packageName: packageName,
-        task: task as AppDelegateModType,
+        task: task,
       });
       break;
     case 'validate':

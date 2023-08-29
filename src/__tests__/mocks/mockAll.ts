@@ -9,6 +9,7 @@ import path from 'path';
 import { Constants } from '../../constants';
 import { LockData } from '../../types/integrator.types';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
+import { mockPList } from './mockPList';
 
 function writeMockProject(projectJson: Record<any, any>): string {
   const packageJsonPath = path.resolve(
@@ -35,6 +36,14 @@ function writeMockAppDelegate(
     `../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
   );
   mockFs.writeFileSync(appDelegatePath, appDelegateContent);
+  return appDelegatePath;
+}
+function writeMockPList(): string {
+  const appDelegatePath = path.resolve(
+    __dirname,
+    `../mock-project/ios/test/${Constants.PLIST_FILE_NAME}`
+  );
+  mockFs.writeFileSync(appDelegatePath, mockPList);
   return appDelegatePath;
 }
 
@@ -72,4 +81,5 @@ export {
   writeMockProject,
   writeMockLock,
   writeMockAppDelegate,
+  writeMockPList,
 };

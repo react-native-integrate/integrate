@@ -57,5 +57,11 @@ export function updateIntegrationStatus(
       integrationLockData.packages[integration.packageName] =
         integration.lockProjectData;
   });
+  integrationLockData.packages = Object.keys(integrationLockData.packages)
+    .sort()
+    .reduce((temp_obj, key) => {
+      temp_obj[key] = integrationLockData.packages[key];
+      return temp_obj;
+    }, {} as Record<string, any>);
   writeLockFile(integrationLockData);
 }

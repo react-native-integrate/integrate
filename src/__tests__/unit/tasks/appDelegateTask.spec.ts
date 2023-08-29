@@ -6,7 +6,7 @@ import { AppDelegateModType } from '../../../types/mod.types';
 import { writeMockAppDelegate } from '../../mocks/mockAll';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
-describe('appDelegateMod', () => {
+describe('appDelegateTask', () => {
   it('should skip import when exists', () => {
     mockPrompter.log.message.mockClear();
     let content = mockAppDelegateTemplate;
@@ -352,56 +352,56 @@ describe('appDelegateMod', () => {
       );
     });
   });
-});
 
-describe('runTask', () => {
-  it('should read and write app delegate file', () => {
-    const appDelegatePath = writeMockAppDelegate();
-    const task: AppDelegateModType = {
-      type: 'app_delegate',
-      imports: ['<Firebase.h>'],
-      method: 'didFinishLaunchingWithOptions',
-      prepend: '[FIRApp configure];',
-    };
-    runTask({
-      configPath: 'path/to/config',
-      task: task,
-      packageName: 'test-package',
-    });
-    const content = mockFs.readFileSync(appDelegatePath);
-    expect(content).toContain(task.prepend);
-  });
-  it('should throw when app delegate does not exist', () => {
-    const task: AppDelegateModType = {
-      type: 'app_delegate',
-      imports: ['<Firebase.h>'],
-      method: 'didFinishLaunchingWithOptions',
-      prepend: '[FIRApp configure];',
-    };
-    expect(() => {
+  describe('runTask', () => {
+    it('should read and write app delegate file', () => {
+      const appDelegatePath = writeMockAppDelegate();
+      const task: AppDelegateModType = {
+        type: 'app_delegate',
+        imports: ['<Firebase.h>'],
+        method: 'didFinishLaunchingWithOptions',
+        prepend: '[FIRApp configure];',
+      };
       runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
       });
-    }).toThrowError('AppDelegate file not found');
-  });
-  it('should throw when workspace does not exist', () => {
-    jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
-      throw new Error('Directory not found');
+      const content = mockFs.readFileSync(appDelegatePath);
+      expect(content).toContain(task.prepend);
     });
-    const task: AppDelegateModType = {
-      type: 'app_delegate',
-      imports: ['<Firebase.h>'],
-      method: 'didFinishLaunchingWithOptions',
-      prepend: '[FIRApp configure];',
-    };
-    expect(() => {
-      runTask({
-        configPath: 'path/to/config',
-        task: task,
-        packageName: 'test-package',
+    it('should throw when app delegate does not exist', () => {
+      const task: AppDelegateModType = {
+        type: 'app_delegate',
+        imports: ['<Firebase.h>'],
+        method: 'didFinishLaunchingWithOptions',
+        prepend: '[FIRApp configure];',
+      };
+      expect(() => {
+        runTask({
+          configPath: 'path/to/config',
+          task: task,
+          packageName: 'test-package',
+        });
+      }).toThrowError('AppDelegate file not found');
+    });
+    it('should throw when workspace does not exist', () => {
+      jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
+        throw new Error('Directory not found');
       });
-    }).toThrowError('workspace not found');
+      const task: AppDelegateModType = {
+        type: 'app_delegate',
+        imports: ['<Firebase.h>'],
+        method: 'didFinishLaunchingWithOptions',
+        prepend: '[FIRApp configure];',
+      };
+      expect(() => {
+        runTask({
+          configPath: 'path/to/config',
+          task: task,
+          packageName: 'test-package',
+        });
+      }).toThrowError('workspace not found');
+    });
   });
 });

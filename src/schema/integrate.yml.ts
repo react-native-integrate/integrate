@@ -67,7 +67,14 @@ properties:
                   properties:
                     file:
                       type: string
-
+        
+        #plist task
+        set:
+          type: object
+        strategy:
+          type: string
+          enum: [merge_concat, merge, assign]
+          
         # app_delegate task
         imports:
           type: array

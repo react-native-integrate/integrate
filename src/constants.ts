@@ -3,6 +3,7 @@ export const Constants = {
   LOCK_FILE_NAME: 'integrate-lock.json',
   PACKAGE_JSON_FILE_NAME: 'package.json',
   APP_DELEGATE_FILE_NAME: 'AppDelegate.mm',
+  PLIST_FILE_NAME: 'Info.plist',
   WORKSPACE_EXT: '.xcworkspace',
   CONFIG_FILE_NAME: 'integrate.yml',
   REMOTE_CONFIG_REPO:
