@@ -1,9 +1,11 @@
 import fs from 'fs';
 import mergeWith from 'lodash.mergewith';
 import path from 'path';
+import color from 'picocolors';
 import { Constants } from '../constants';
+import { logMessage } from '../prompter';
 import { PlistModType } from '../types/mod.types';
-import { getProjectPath } from '../utils/getProjectPath';
+import { getIosProjectPath } from '../utils/getIosProjectPath';
 
 const plist: {
   parse(plist: string): Record<string, any>;
@@ -19,6 +21,7 @@ export function plistTask(args: {
   let { content } = args;
   const { task } = args;
   const strategy = task.strategy || 'assign';
+
   if (strategy == 'assign') {
     content = Object.assign(content, task.set);
   } else {
@@ -46,28 +49,18 @@ export function plistTask(args: {
       temp_obj[key] = content[key];
       return temp_obj;
     }, {} as Record<string, any>);
+  logMessage(
+    `set ${color.yellow(
+      Object.keys(task.set).length
+    )} property in plist file with ${color.yellow(strategy)} strategy`
+  );
   return content;
 }
 
 function getPListPath() {
-  const projectPath = getProjectPath();
-  let workspaceFolder: string | undefined;
-  try {
-    workspaceFolder = fs
-      .readdirSync(path.join(projectPath, 'ios'))
-      .find(x => x.endsWith(Constants.WORKSPACE_EXT));
-  } catch (e) {
-    workspaceFolder = undefined;
-  }
-  if (!workspaceFolder) throw new Error('iOS workspace not found.');
-  const projectName = workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
+  const iosProjectPath = getIosProjectPath();
 
-  const pListPath = path.join(
-    projectPath,
-    'ios',
-    projectName,
-    Constants.PLIST_FILE_NAME
-  );
+  const pListPath = path.join(iosProjectPath, Constants.PLIST_FILE_NAME);
   if (!fs.existsSync(pListPath))
     throw new Error(`Plist file not found at ${pListPath}`);
   return pListPath;

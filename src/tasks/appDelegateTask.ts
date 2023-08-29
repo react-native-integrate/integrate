@@ -5,8 +5,8 @@ import { logMessage, logMessageGray, summarize } from '../prompter';
 import { AppDelegateModType } from '../types/mod.types';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { findInsertionPoint } from '../utils/findInsertionPoint';
+import { getIosProjectPath } from '../utils/getIosProjectPath';
 import { getModContent } from '../utils/getModContent';
-import { getProjectPath } from '../utils/getProjectPath';
 import { stringSplice } from '../utils/stringSplice';
 
 export function appDelegateTask(args: {
@@ -295,22 +295,10 @@ function appendNewMethod(content: string, newMethod: string): string {
 }
 
 function getAppDelegatePath() {
-  const projectPath = getProjectPath();
-  let workspaceFolder: string | undefined;
-  try {
-    workspaceFolder = fs
-      .readdirSync(path.join(projectPath, 'ios'))
-      .find(x => x.endsWith(Constants.WORKSPACE_EXT));
-  } catch (e) {
-    workspaceFolder = undefined;
-  }
-  if (!workspaceFolder) throw new Error('iOS workspace not found.');
-  const projectName = workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
+  const iosProjectPath = getIosProjectPath();
 
   const appDelegatePath = path.join(
-    projectPath,
-    'ios',
-    projectName,
+    iosProjectPath,
     Constants.APP_DELEGATE_FILE_NAME
   );
   if (!fs.existsSync(appDelegatePath))

@@ -160,12 +160,12 @@ describe('summarize', () => {
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();
   });
-  it('should take only first line', () => {
+  it('should flat new lines', () => {
     // @ts-ignore
     jest.spyOn(color, 'yellow').mockImplementationOnce(msg => msg);
     const summarized = summarize('test1\ntest2\ntest3');
 
-    expect(summarized).toEqual('test1');
+    expect(summarized).toEqual('test1⏎test2⏎test3');
   });
   it('should support null', () => {
     // @ts-ignore

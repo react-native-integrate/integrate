@@ -64,9 +64,9 @@ export async function confirm(msg: string): Promise<boolean> {
 
 export function summarize(code: string | null, maxLength = 128): string {
   if (!code) return 'null';
-  const firstLine = code.split('\n')[0];
+  const flatText = code.replace(/\n/g, '⏎');
   return color.yellow(
-    firstLine.substring(0, maxLength) +
-      (firstLine.length > maxLength ? '...' : '')
+    flatText.substring(0, maxLength) +
+      (flatText.length > maxLength ? '...' : '')
   );
 }
