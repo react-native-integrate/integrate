@@ -39,10 +39,17 @@ function writeMockAppDelegate(
 }
 
 let didSetup = false;
+let mock: any;
 if (!didSetup) {
+  beforeAll(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    mock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+  afterAll(() => {
+    mock.mockClear();
+  });
   beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    jest.spyOn(console, 'error').mockImplementation(() => {});
 
     mockFs.reset();
 
@@ -55,9 +62,6 @@ if (!didSetup) {
         'mock-package': '^1.2.3',
       },
     });
-  });
-  afterEach(() => {
-    jest.restoreAllMocks();
   });
   didSetup = true;
 }

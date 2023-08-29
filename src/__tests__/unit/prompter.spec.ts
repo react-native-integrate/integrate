@@ -141,6 +141,7 @@ describe('prompter', () => {
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
     expect(mockAbort).toHaveBeenCalledTimes(1);
+    mockAbort.mockRestore();
   });
 });
 

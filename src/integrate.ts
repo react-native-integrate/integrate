@@ -4,6 +4,7 @@ import {
   log,
   logError,
   logInfo,
+  logWarning,
   startSpinner,
   stopSpinner,
 } from './prompter';
@@ -75,13 +76,14 @@ export async function integrate(): Promise<void> {
   }
   if (packagesToIntegrate.length) {
     for (let i = 0; i < packagesToIntegrate.length; i++) {
-      const { packageName, configPath } = packagesToIntegrate[i];
+      const { packageName, version, configPath } = packagesToIntegrate[i];
       const config = parseConfig(configPath);
       logInfo(
-        color.bold(color.bgBlue(' new package: ')) +
+        color.bold(color.bgBlue(' new package ')) +
           color.bold(color.blue(` ${packageName} `))
       );
-      if (await confirm('would you like to integrate this package?'))
+      if (await confirm('would you like to integrate this package?')) {
+        let failedTaskCount = 0;
         config.tasks.forEach((task, i) => {
           log(
             color.cyan(`[${i + 1}/${config.tasks.length}]`) +
@@ -95,10 +97,30 @@ export async function integrate(): Promise<void> {
               task,
             });
           } catch (e) {
-            if (e instanceof Error) logError(e.message);
+            failedTaskCount++;
+            logError(e instanceof Error ? e.message : 'An error occurred');
           }
         });
-      else log(color.gray(color.italic('skipped package integration')));
+        if (failedTaskCount) {
+          logWarning(`failed to complete ${failedTaskCount} task(s)`);
+        }
+        packageLockUpdates.push({
+          packageName,
+          lockProjectData: {
+            version,
+            integrated: true,
+          },
+        });
+      } else {
+        packageLockUpdates.push({
+          packageName,
+          lockProjectData: {
+            version,
+            integrated: false,
+          },
+        });
+        log(color.gray(color.italic('skipped package integration')));
+      }
     }
   }
   for (let i = 0; i < deletedPackages.length; i++) {

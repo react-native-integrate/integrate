@@ -153,6 +153,7 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
+    mockAbort.mockRestore();
   });
   it('should abort when has no read permission', () => {
     mockFs.setReadPermission(false);
@@ -175,6 +176,7 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
+    mockAbort.mockRestore();
   });
   it('should abort when has no write permission', () => {
     mockFs.setWritePermission(false);
@@ -192,5 +194,6 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
     expect(mockAbort).toHaveBeenCalledTimes(1);
+    mockAbort.mockRestore();
   });
 });

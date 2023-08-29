@@ -7,14 +7,10 @@ process.argv.splice(0, process.argv.length);
 
 describe('cli', () => {
   it('should exist', () => {
-    const mockIntegrate = {
-      integrate: jest.fn(),
-    };
-    const mock = jest.mock('../../integrate', () => mockIntegrate);
+    const mock = jest.spyOn(require('../../integrate'), 'integrate');
     const cli = require(resolve(__dirname, '../../cli'));
 
     expect(cli).toBeTruthy();
-    expect(mockIntegrate.integrate).toHaveBeenCalled();
-    mock.restoreAllMocks();
+    expect(mock).toHaveBeenCalled();
   });
 });

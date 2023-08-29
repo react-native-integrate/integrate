@@ -5,12 +5,14 @@ const {
   writeMockLock,
 } = require('../mocks/mockAll');
 
+const mock = jest.spyOn(require('../../utils/runTask'), 'runTask');
+
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {
-  it('should integrate normally', async () => {
+  it('should run tasks', async () => {
     const appDelegatePath = writeMockAppDelegate();
 
     await integrate();
@@ -19,6 +21,12 @@ describe('integrate', () => {
     expect(content).toContain('[FIRApp configure];');
   });
   it('should handle deleted packages', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {},
+    });
     const lockPath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {
@@ -98,6 +106,44 @@ describe('integrate', () => {
 
     expect(mockPrompter.log.step).toHaveBeenCalledWith(
       expect.stringContaining('skipped package integration')
+    );
+    expect(content).not.toContain('[FIRApp configure];');
+  });
+  it('should handle task errors', async () => {
+    mock.mockImplementationOnce(() => {
+      throw new Error('test error');
+    });
+    mockPrompter.log.error.mockClear();
+    const lockPath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(lockPath);
+
+    expect(mockPrompter.log.error).toHaveBeenCalledWith(
+      expect.stringContaining('test error')
+    );
+    expect(content).not.toContain('[FIRApp configure];');
+  });
+  it('should handle non error obj task errors', async () => {
+    mock.mockImplementationOnce(() => {
+      throw 'test error';
+    });
+    mockPrompter.log.error.mockClear();
+    const lockPath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(lockPath);
+
+    expect(mockPrompter.log.error).toHaveBeenCalledWith(
+      expect.stringContaining('error occurred')
     );
     expect(content).not.toContain('[FIRApp configure];');
   });

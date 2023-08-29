@@ -23,7 +23,7 @@ export function logMessageGray(msg: string): void {
   promptLog.message(color.gray('⦿ ' + msg));
 }
 export function logWarning(msg: string): void {
-  promptLog.warning(msg);
+  promptLog.warning(color.yellow(msg));
 }
 export function logInfo(msg: string): void {
   promptLog.info(msg);
