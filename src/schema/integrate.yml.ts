@@ -6,106 +6,216 @@ properties:
   tasks:
     type: array
     items:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-          enum: [plist, app_delegate, validate, build_gradle, app_build_gradle, android_manifest, add_resource]
-        ifNotPresent:
-          type: string
-        prepend:
-          anyOf:
-            - type: string
-            - type: object
-              properties:
-                file:
-                  type: string
-        append:
-          anyOf:
-            - type: string
-            - type: object
-              properties:
-                file:
-                  type: string
-        before:
-          type: object
-          properties:
-            find:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    regex:
-                      type: string
-                    flags:
-                      type: string
-            insert:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-        after:
-          type: object
-          properties:
-            find:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    regex:
-                      type: string
-                    flags:
-                      type: string
-            insert:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-        
+      anyOf:
         #plist task
-        set:
-          type: object
-        strategy:
-          type: string
-          enum: [merge_concat, merge, assign]
-          
-        # app_delegate task
-        imports:
-          type: array
-          items:
-            type: string
-        method:
-          type: string
-          enum: [didFinishLaunchingWithOptions, applicationDidBecomeActive, applicationWillResignActive, applicationDidEnterBackground, applicationWillEnterForeground, applicationWillTerminate, openURL, restorationHandler, didRegisterForRemoteNotificationsWithDeviceToken, didFailToRegisterForRemoteNotificationsWithError, didReceiveRemoteNotification, fetchCompletionHandler]
-        comment:
-          type: string
-          
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [plist]
+            label:
+              type: string
+            set:
+              type: object
+            strategy:
+              type: string
+              enum: [merge_concat, merge, assign]
+
+        #app_delegate task     
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [app_delegate]
+            label:
+              type: string
+            ifNotPresent:
+              type: string
+            prepend:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    file:
+                      type: string
+            append:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    file:
+                      type: string
+            before:
+              type: object
+              properties:
+                find:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        regex:
+                          type: string
+                        flags:
+                          type: string
+                insert:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        file:
+                          type: string
+            after:
+              type: object
+              properties:
+                find:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        regex:
+                          type: string
+                        flags:
+                          type: string
+                insert:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        file:
+                          type: string
+            imports:
+              type: array
+              items:
+                type: string
+            method:
+              type: string
+              enum: [didFinishLaunchingWithOptions, applicationDidBecomeActive, applicationWillResignActive, applicationDidEnterBackground, applicationWillEnterForeground, applicationWillTerminate, openURL, restorationHandler, didRegisterForRemoteNotificationsWithDeviceToken, didFailToRegisterForRemoteNotificationsWithError, didReceiveRemoteNotification, fetchCompletionHandler]
+            comment:
+              type: string
+
         # validate task
-        file:
-          anyOf:
-            - type: string
-            - type: object
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [validate]
+            label:
+              type: string
+            file:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    regex:
+                      type: string
+                    flags:
+                      type: string
+            find:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    regex:
+                      type: string
+                    flags:
+                      type: string
+            errorMsg:
+              type: string
+
+        # build and app/build gradle task       
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [build_gradle, app_build_gradle]
+            label:
+              type: string
+            ifNotPresent:
+              type: string
+            prepend:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    file:
+                      type: string
+            append:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    file:
+                      type: string
+            before:
+              type: object
               properties:
-                regex:
-                  type: string
-                flags:
-                  type: string
-        find:
-          anyOf:
-            - type: string
-            - type: object
+                find:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        regex:
+                          type: string
+                        flags:
+                          type: string
+                insert:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        file:
+                          type: string
+            after:
+              type: object
               properties:
-                regex:
-                  type: string
-                flags:
-                  type: string
-        errorMsg:
-          type: string
-        
+                find:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        regex:
+                          type: string
+                        flags:
+                          type: string
+                insert:
+                  anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        file:
+                          type: string
+            method:
+              type: string
+            comment:
+              type: string
+
+        # android manifest task
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [android_manifest]
+            label:
+              type: string
+
+        # add resource task
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [add_resource]
+            label:
+              type: string
 `;

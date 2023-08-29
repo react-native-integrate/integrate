@@ -66,11 +66,13 @@ export type ValidationType = ModTaskBase & {
 
 export type BuildGradleModType = ModTaskBase & {
   type: 'build_gradle';
+  comment?: string;
+  method?: string;
 } & AnyContentMod;
 
-export type AppBuildGradleModType = ModTaskBase & {
+export type AppBuildGradleModType = Omit<BuildGradleModType, 'type'> & {
   type: 'app_build_gradle';
-} & AnyContentMod;
+};
 
 export type AndroidManifestModType = ModTaskBase & {
   type: 'android_manifest';
