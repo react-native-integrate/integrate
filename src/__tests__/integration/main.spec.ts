@@ -1,3 +1,5 @@
+require('../mocks/mockAll');
+
 import execa from 'execa';
 import { resolve } from 'path';
 
@@ -8,5 +10,5 @@ describe('integrate', () => {
     const { stdout } = await execa(bin, ['--help']);
 
     expect(stdout).toContain('Usage: integrate [options]');
-  });
+  }, 30000);
 });

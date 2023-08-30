@@ -7,6 +7,7 @@ export type TextOrFileValue =
 export type FindType = {
   find: string | { regex: string; flags?: string };
   insert: TextOrFileValue;
+  strict?: boolean;
 };
 
 export type AppendPrependContentMod =
@@ -25,15 +26,22 @@ export type BeforeAfterContentMod =
       before: FindType;
     };
 
-export type AnyContentMod = AppendPrependContentMod | BeforeAfterContentMod;
+export type AnyContentMod = {
+  ifNotPresent?: string;
+} & (AppendPrependContentMod | BeforeAfterContentMod);
 
 export type PlistModType = ModTaskBase & {
   type: 'plist';
-} & AnyContentMod;
+  set: {
+    [key: string]: any;
+  };
+  strategy?: 'merge_concat' | 'merge' | 'assign';
+};
 
 export type AppDelegateModType = ModTaskBase &
   AnyContentMod & {
     type: 'app_delegate';
+    comment?: string;
     imports?: string[];
     method:
       | 'didFinishLaunchingWithOptions'
@@ -52,17 +60,20 @@ export type AppDelegateModType = ModTaskBase &
 
 export type ValidationType = ModTaskBase & {
   type: 'validate';
-  file: string;
-  text?: string;
+  file: string | { regex: string; flags?: string };
+  find?: string | { regex: string; flags?: string };
+  errorMsg?: string;
 };
 
 export type BuildGradleModType = ModTaskBase & {
   type: 'build_gradle';
+  comment?: string;
+  path?: string;
 } & AnyContentMod;
 
-export type AppBuildGradleModType = ModTaskBase & {
+export type AppBuildGradleModType = Omit<BuildGradleModType, 'type'> & {
   type: 'app_build_gradle';
-} & AnyContentMod;
+};
 
 export type AndroidManifestModType = ModTaskBase & {
   type: 'android_manifest';
@@ -74,7 +85,7 @@ export type AddResourceType = ModTaskBase & {
 };
 
 export type ModTaskBase = {
-  comment?: string;
+  label?: string;
 };
 
 export type ModTask =

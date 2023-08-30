@@ -29,5 +29,6 @@ describe('getInstalledPackages', () => {
     getInstalledPackages();
 
     expect(mockAbort).toHaveBeenCalledTimes(1);
+    mockAbort.mockRestore();
   });
 });

@@ -1,3 +1,5 @@
+import { Constants } from '../../constants';
+
 let store: Record<string, string> = {};
 const permissions = {
   read: true,
@@ -15,6 +17,9 @@ export const mockFs = {
     if (!permissions.write) throw new Error('[mock] permission denied');
     store[path] = data;
     return true;
+  },
+  readdirSync: (): string[] => {
+    return ['test' + Constants.WORKSPACE_EXT];
   },
   reset(): void {
     store = {};

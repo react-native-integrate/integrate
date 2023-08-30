@@ -42,12 +42,26 @@ function writeLockFile(data: LockData): void {
 }
 
 export function updateIntegrationStatus(
-  projectName: string,
-  lockProjectData: LockProjectData
+  packageIntegrations: {
+    packageName: string;
+    lockProjectData: LockProjectData;
+  }[]
 ): void {
   const integrationLockData = readLockFile();
   if (!integrationLockData) return;
   if (!integrationLockData.packages) integrationLockData.packages = {};
-  integrationLockData.packages[projectName] = lockProjectData;
+  packageIntegrations.forEach(integration => {
+    if (integration.lockProjectData.deleted)
+      delete integrationLockData.packages[integration.packageName];
+    else
+      integrationLockData.packages[integration.packageName] =
+        integration.lockProjectData;
+  });
+  integrationLockData.packages = Object.keys(integrationLockData.packages)
+    .sort()
+    .reduce((temp_obj, key) => {
+      temp_obj[key] = integrationLockData.packages[key];
+      return temp_obj;
+    }, {} as Record<string, any>);
   writeLockFile(integrationLockData);
 }

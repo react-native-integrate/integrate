@@ -1,41 +1,64 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
+require('./mockProjectPath');
+require('./mockFetch');
+const { mockPrompter } = require('./mockPrompter');
+const { mockFs } = require('./mockFs');
+
 import path from 'path';
 import { Constants } from '../../constants';
 import { LockData } from '../../types/integrator.types';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
+import { mockPList } from './mockPList';
 
-require('./mockProjectPath');
-const { mockFs } = require('./mockFs');
-
-function writeMockProject(projectJson: Record<any, any>): void {
+function writeMockProject(projectJson: Record<any, any>): string {
   const packageJsonPath = path.resolve(
     __dirname,
     `../mock-project/${Constants.PACKAGE_JSON_FILE_NAME}`
   );
   mockFs.writeFileSync(packageJsonPath, JSON.stringify(projectJson, null, 2));
+  return packageJsonPath;
 }
 
-function writeMockLock(lockData: LockData): void {
+function writeMockLock(lockData: LockData): string {
   const lockPath = path.resolve(
     __dirname,
     `../mock-project/${Constants.LOCK_FILE_NAME}`
   );
   mockFs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2));
+  return lockPath;
 }
-function writeMockAppDelegate(): void {
+function writeMockAppDelegate(
+  appDelegateContent = mockAppDelegateTemplate
+): string {
   const appDelegatePath = path.resolve(
     __dirname,
-    `../mock-project/ios/MockProject/${Constants.APP_DELEGATE_FILE_NAME}`
+    `../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
   );
-  mockFs.writeFileSync(appDelegatePath, mockAppDelegateTemplate);
+  mockFs.writeFileSync(appDelegatePath, appDelegateContent);
+  return appDelegatePath;
+}
+function writeMockPList(): string {
+  const appDelegatePath = path.resolve(
+    __dirname,
+    `../mock-project/ios/test/${Constants.PLIST_FILE_NAME}`
+  );
+  mockFs.writeFileSync(appDelegatePath, mockPList);
+  return appDelegatePath;
 }
 
 let didSetup = false;
+let mock: any;
 if (!didSetup) {
+  beforeAll(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    mock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+  afterAll(() => {
+    mock.mockClear();
+  });
   beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    jest.spyOn(console, 'error').mockImplementation(() => {});
 
     mockFs.reset();
 
@@ -49,10 +72,14 @@ if (!didSetup) {
       },
     });
   });
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
   didSetup = true;
 }
 
-export { mockFs, writeMockProject, writeMockLock, writeMockAppDelegate };
+export {
+  mockFs,
+  mockPrompter,
+  writeMockProject,
+  writeMockLock,
+  writeMockAppDelegate,
+  writeMockPList,
+};
