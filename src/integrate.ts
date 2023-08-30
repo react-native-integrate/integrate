@@ -16,21 +16,57 @@ import { parseConfig } from './utils/parseConfig';
 import { runTask } from './utils/runTask';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 
-export async function integrate(): Promise<void> {
+export async function integrate(packageName?: string): Promise<void> {
+  if (packageName) {
+    //remove selected package from lock
+    updateIntegrationStatus([
+      {
+        packageName,
+        lockProjectData: {
+          version: '',
+          integrated: false,
+          deleted: true,
+        },
+      },
+    ]);
+  }
   startSpinner('analyzing packages');
-  const { newPackages, deletedPackages, installedPackages } = analyzePackages();
+  const analyzedPackages = analyzePackages();
+  const { deletedPackages, installedPackages } = analyzedPackages;
+  let { newPackages } = analyzedPackages;
 
-  // get packages that need to be implemented
   let msg = `analyzed ${installedPackages.length} packages`;
-  if (newPackages.length || deletedPackages.length) {
-    if (newPackages.length > 0) {
-      msg += color.green(` | ${newPackages.length} new package(s)`);
-    }
-    if (deletedPackages.length > 0) {
-      msg += color.gray(` | ${deletedPackages.length} deleted package(s)`);
+  if (packageName) {
+    // check if package is installed
+    newPackages = newPackages.filter(
+      ([newPackageName]) => newPackageName == packageName
+    );
+    if (
+      installedPackages.every(
+        ([installedPackageName]) => installedPackageName != packageName
+      ) ||
+      !newPackages.length
+    ) {
+      stopSpinner(msg);
+      logWarning(
+        `${color.bold(
+          packageName
+        )} is not installed - please install it first and try again`
+      );
+      return;
     }
   } else {
-    msg += ' | no changes';
+    // get packages that need to be implemented
+    if (newPackages.length || deletedPackages.length) {
+      if (newPackages.length > 0) {
+        msg += color.green(` | ${newPackages.length} new package(s)`);
+      }
+      if (deletedPackages.length > 0) {
+        msg += color.gray(` | ${deletedPackages.length} deleted package(s)`);
+      }
+    } else {
+      msg += ' | no changes';
+    }
   }
   stopSpinner(msg);
   const packageLockUpdates: {
@@ -43,7 +79,7 @@ export async function integrate(): Promise<void> {
     configPath: string;
   }[] = [];
   if (newPackages.length) {
-    startSpinner('checking new packages');
+    startSpinner('checking package configuration');
     for (let i = 0; i < newPackages.length; i++) {
       const [packageName, version] = newPackages[i];
       const configPath = await getPackageConfig(packageName, {
@@ -65,13 +101,21 @@ export async function integrate(): Promise<void> {
           configPath,
         });
     }
-    let msg = 'checked new packages';
-    if (packagesToIntegrate.length > 0) {
-      msg += color.green(
-        ` | ${packagesToIntegrate.length} package needs integration`
-      );
+    let msg = 'checked package configuration';
+    if (packageName) {
+      if (packagesToIntegrate.length == 0) {
+        stopSpinner(msg);
+        logWarning(`${color.bold(packageName)} has no configuration specified`);
+        return;
+      }
     } else {
-      msg += ' | no integration needed.';
+      if (packagesToIntegrate.length > 0) {
+        msg += color.green(
+          ` | ${packagesToIntegrate.length} package can be integrated`
+        );
+      } else {
+        msg += ' | no configuration specified';
+      }
     }
     stopSpinner(msg);
   }

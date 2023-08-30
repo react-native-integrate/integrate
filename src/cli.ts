@@ -10,11 +10,12 @@ const program = new Command();
 program
   .version(version)
   .name('integrate')
+  .argument('[package-name]', 'Package name to integrate')
   .option('-d, --debug', 'enables verbose logging', false)
-  .action(async args => {
-    logIntro();
+  .action(async (packageName, args) => {
     options.set(args);
-    await integrate();
+    logIntro();
+    await integrate(packageName);
     logOutro();
   });
 

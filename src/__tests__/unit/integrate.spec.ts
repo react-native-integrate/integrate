@@ -20,6 +20,38 @@ describe('integrate', () => {
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
   });
+  it('should run tasks for a package', async () => {
+    const appDelegatePath = writeMockAppDelegate();
+
+    await integrate('mock-package');
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain('[FIRApp configure];');
+  });
+  it('should handle package that doesnt exist', async () => {
+    const appDelegatePath = writeMockAppDelegate();
+
+    await integrate('random-package');
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
+  });
+  it('should handle package that doesnt have config', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-fail': '^1.2.3',
+      },
+    });
+    const appDelegatePath = writeMockAppDelegate();
+
+    await integrate('mock-package-fail');
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
+  });
   it('should handle deleted packages', async () => {
     writeMockProject({
       name: 'mock-project',

@@ -12,7 +12,7 @@ export async function getPackageConfig(
   updateSpinner(
     `[${pagination.index + 1}/${
       pagination.count
-    }] Checking config for package: ${packageName}`
+    }] checking package configuration: ${packageName}`
   );
   let localConfigPath = getLocalPackageConfig(packageName);
   if (!localConfigPath) {
