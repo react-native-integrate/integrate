@@ -1,5 +1,6 @@
 import { runTask as runAppDelegateTask } from '../tasks/appDelegateTask';
 import { runTask as runPListTask } from '../tasks/plistTask';
+import { runTask as runBuildGradleTask } from '../tasks/buildGradleTask';
 import { ModTask } from '../types/mod.types';
 
 export function runTask(args: {
@@ -26,8 +27,20 @@ export function runTask(args: {
     case 'validate':
       break;
     case 'build_gradle':
+      runBuildGradleTask({
+        isInAppFolder: false,
+        configPath: configPath,
+        packageName: packageName,
+        task: task,
+      });
       break;
     case 'app_build_gradle':
+      runBuildGradleTask({
+        isInAppFolder: true,
+        configPath: configPath,
+        packageName: packageName,
+        task: task,
+      });
       break;
     case 'android_manifest':
       break;

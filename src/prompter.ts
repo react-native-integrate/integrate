@@ -22,14 +22,14 @@ export function logMessage(msg: string): void {
 export function logMessageGray(msg: string): void {
   promptLog.message(color.gray('⦿ ' + msg));
 }
-export function logWarning(msg: string): void {
-  promptLog.warning(color.yellow(msg));
+export function logWarning(msg: string, noColor?: boolean): void {
+  promptLog.warning(noColor ? msg : color.yellow(msg));
 }
 export function logInfo(msg: string): void {
   promptLog.info(msg);
 }
-export function logError(msg: string): void {
-  promptLog.error(color.red(msg));
+export function logError(msg: string, noColor?: boolean): void {
+  promptLog.error(noColor ? msg : color.red(msg));
 }
 export function logNote(msg: string, title: string): void {
   note(msg, title);

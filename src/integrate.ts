@@ -4,6 +4,7 @@ import {
   log,
   logError,
   logInfo,
+  logSuccess,
   logWarning,
   startSpinner,
   stopSpinner,
@@ -102,7 +103,27 @@ export async function integrate(): Promise<void> {
           }
         });
         if (failedTaskCount) {
-          logWarning(`failed to complete ${failedTaskCount} task(s)`);
+          logWarning(
+            color.inverse(
+              color.bold(color.yellow(' integrated with errors '))
+            ) +
+              color.bold(color.blue(` ${packageName} `)) +
+              color.yellow(
+                `failed to complete ${failedTaskCount} task(s) - please complete this integration manually`
+              ),
+            true
+          );
+          logWarning(
+            `failed to complete ${failedTaskCount} task(s) - please complete integration manually`
+          );
+        } else {
+          logSuccess(
+            color.inverse(color.bold(color.green(' integrated '))) +
+              color.black(color.bold(color.blue(` ${packageName} `))) +
+              color.green(
+                `completed ${config.tasks.length} task(s) successfully`
+              )
+          );
         }
         packageLockUpdates.push({
           packageName,

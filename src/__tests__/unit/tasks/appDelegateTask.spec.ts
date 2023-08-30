@@ -41,7 +41,7 @@ describe('appDelegateTask', () => {
       expect.stringContaining('import already exists')
     );
   });
-  it('should skip import when ifNotPresent exists', () => {
+  it('should skip insert when ifNotPresent exists', () => {
     mockPrompter.log.message.mockClear();
     const content = mockAppDelegateTemplate;
     const task: AppDelegateModType = {
@@ -143,9 +143,9 @@ describe('appDelegateTask', () => {
       packageName: 'test-package',
     });
     expect(content).toContain(`
+
   // test-package
   [FIRApp configure];
-
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 `);
   });

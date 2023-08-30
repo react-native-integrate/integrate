@@ -7,6 +7,7 @@ export type TextOrFileValue =
 export type FindType = {
   find: string | { regex: string; flags?: string };
   insert: TextOrFileValue;
+  strict?: boolean;
 };
 
 export type AppendPrependContentMod =
@@ -67,7 +68,7 @@ export type ValidationType = ModTaskBase & {
 export type BuildGradleModType = ModTaskBase & {
   type: 'build_gradle';
   comment?: string;
-  method?: string;
+  path?: string;
 } & AnyContentMod;
 
 export type AppBuildGradleModType = Omit<BuildGradleModType, 'type'> & {

@@ -65,6 +65,13 @@ describe('prompter', () => {
       expect.stringContaining('test')
     );
   });
+  it('should log warning message without color', () => {
+    const spy = jest.spyOn(color, 'yellow');
+    logWarning('test', true);
+
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
   it('should log info message', () => {
     mockPrompter.log.info.mockClear();
     logInfo('test');
@@ -80,6 +87,13 @@ describe('prompter', () => {
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('test')
     );
+  });
+  it('should log error message without color', () => {
+    const spy = jest.spyOn(color, 'red');
+    logError('test', true);
+
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
   it('should log error message', () => {
     mockPrompter.note.mockClear();

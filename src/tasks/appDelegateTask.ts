@@ -5,6 +5,7 @@ import { logMessage, logMessageGray, summarize } from '../prompter';
 import { AppDelegateModType } from '../types/mod.types';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { findInsertionPoint } from '../utils/findInsertionPoint';
+import { findLineEnd, findLineStart } from '../utils/findLineTools';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
 import { getModContent } from '../utils/getModContent';
 import { stringSplice } from '../utils/stringSplice';
@@ -181,7 +182,12 @@ export function appDelegateTask(args: {
           )}, skipped inserting: ${summarize(appendText)}`
         );
       } else if (!methodBody.includes(appendText)) {
-        content = stringSplice(content, methodEndIndex - 1, 0, codeToInsert);
+        content = stringSplice(
+          content,
+          findLineStart(content, methodEndIndex - 1),
+          0,
+          codeToInsert
+        );
         logMessage(
           `appended code in ${summarize(task.method)}: ${summarize(appendText)}`
         );
@@ -220,7 +226,16 @@ export function appDelegateTask(args: {
           )}, skipped inserting: ${summarize(text)}`
         );
       } else if (!methodBody.includes(text)) {
-        content = stringSplice(content, foundIndex.start, 0, codeToInsert);
+        content = stringSplice(
+          content,
+          findLineStart(
+            content,
+            foundIndex.start,
+            methodStartMatch.index + methodStartMatch[0].length
+          ),
+          0,
+          codeToInsert
+        );
         logMessage(
           `inserted code into ${summarize(task.method)} (before ${summarize(
             foundIndex.match,
@@ -263,7 +278,12 @@ export function appDelegateTask(args: {
           )}, skipped inserting: ${summarize(text)}`
         );
       } else if (!methodBody.includes(text)) {
-        content = stringSplice(content, foundIndex.end, 0, codeToInsert);
+        content = stringSplice(
+          content,
+          findLineEnd(content, foundIndex.end, methodEndIndex),
+          0,
+          codeToInsert
+        );
         logMessage(
           `inserted code into ${summarize(task.method)} (after ${summarize(
             foundIndex.match,

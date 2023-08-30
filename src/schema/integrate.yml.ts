@@ -68,6 +68,8 @@ properties:
                       properties:
                         file:
                           type: string
+                strict:
+                  type: boolean
             after:
               type: object
               properties:
@@ -87,6 +89,8 @@ properties:
                       properties:
                         file:
                           type: string
+                strict:
+                  type: boolean
             imports:
               type: array
               items:
@@ -173,6 +177,8 @@ properties:
                       properties:
                         file:
                           type: string
+                strict:
+                  type: boolean
             after:
               type: object
               properties:
@@ -192,7 +198,9 @@ properties:
                       properties:
                         file:
                           type: string
-            method:
+                strict:
+                  type: boolean
+            path:
               type: string
             comment:
               type: string

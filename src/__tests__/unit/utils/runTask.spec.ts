@@ -8,9 +8,16 @@ const mocks = {
   plist: {
     runTask: jest.fn(),
   },
+  build_gradle: {
+    runTask: jest.fn(),
+  },
+  app_build_gradle: {
+    runTask: jest.fn(),
+  },
 };
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
+jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
 
 import path from 'path';
 import { ModTask } from '../../../types/mod.types';
@@ -18,9 +25,16 @@ import { runTask } from '../../../utils/runTask';
 import { mockIntegrateYml } from '../../mocks/mockIntegrateYml';
 
 describe('runTask', () => {
-  ['app_delegate' as const, 'plist' as const].map(taskType => {
+  [
+    'app_delegate' as const,
+    'plist' as const,
+    'build_gradle' as const,
+    'app_build_gradle' as const,
+  ].map(taskType => {
     it(`should run ${taskType} task`, () => {
-      mocks[taskType].runTask.mockClear();
+      mocks[
+        taskType === 'app_build_gradle' ? 'build_gradle' : taskType
+      ].runTask.mockClear();
 
       const integrateYmlPath = path.resolve(
         __dirname,
@@ -38,13 +52,14 @@ describe('runTask', () => {
         task,
         packageName: 'test',
       });
-      expect(mocks[taskType].runTask).toHaveBeenCalledTimes(1);
+      expect(
+        mocks[taskType === 'app_build_gradle' ? 'build_gradle' : taskType]
+          .runTask
+      ).toHaveBeenCalledTimes(1);
     });
   });
   [
     'validate' as const,
-    'build_gradle' as const,
-    'app_build_gradle' as const,
     'android_manifest' as const,
     'add_resource' as const,
   ].map(taskType => {
