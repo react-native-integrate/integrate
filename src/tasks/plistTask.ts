@@ -6,11 +6,7 @@ import { Constants } from '../constants';
 import { logMessage, summarize } from '../prompter';
 import { PlistModType } from '../types/mod.types';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
-
-const plist: {
-  parse(plist: string): Record<string, any>;
-  build(obj: Record<string, any>): string;
-} = require('plist');
+import plist from 'simple-plist';
 
 export function plistTask(args: {
   configPath: string;
@@ -76,7 +72,7 @@ function readPListContent() {
 
 function writePListContent(content: Record<string, any>): void {
   const appDelegatePath = getPListPath();
-  return fs.writeFileSync(appDelegatePath, plist.build(content), 'utf-8');
+  return fs.writeFileSync(appDelegatePath, plist.stringify(content), 'utf-8');
 }
 
 export function runTask(args: {

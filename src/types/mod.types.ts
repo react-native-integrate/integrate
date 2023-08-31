@@ -82,6 +82,13 @@ export type AndroidManifestModType = ModTaskBase & {
 export type AddResourceType = ModTaskBase & {
   type: 'add_resource';
   file: string;
+  target?:
+    | 'root'
+    | 'app'
+    | {
+        name?: string;
+        path?: string;
+      };
 };
 
 export type ModTaskBase = {

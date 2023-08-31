@@ -30,7 +30,7 @@ You can focus more on coding and development, while the tool takes care of integ
 
 - [x] PList
 - [x] AppDelegate.mm
-- [ ] Resource additions
+- [x] Resource additions
 - [ ] Waiting and validating manual additions (like xcode extensions, capabilities)
 - [ ] Extension content
 

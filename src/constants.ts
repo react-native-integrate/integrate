@@ -7,6 +7,7 @@ export const Constants = {
   BUILD_GRADLE_FILE_NAME: 'build.gradle',
   WORKSPACE_EXT: '.xcworkspace',
   CONFIG_FILE_NAME: 'integrate.yml',
+  XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',
   REMOTE_CONFIG_REPO:
     'https://raw.githubusercontent.com/murat-mehmet/react-native-integrate-configs/master/packages/[package]/integrate.yml',
 };
