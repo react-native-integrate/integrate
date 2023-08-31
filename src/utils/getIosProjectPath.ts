@@ -5,6 +5,12 @@ import { getProjectPath } from './getProjectPath';
 
 export function getIosProjectPath(): string {
   const projectPath = getProjectPath();
+  const projectName = getIosProjectName();
+  return path.join(projectPath, 'ios', projectName);
+}
+
+export function getIosProjectName(): string {
+  const projectPath = getProjectPath();
   let workspaceFolder: string | undefined;
   try {
     workspaceFolder = fs
@@ -14,6 +20,10 @@ export function getIosProjectPath(): string {
     workspaceFolder = undefined;
   }
   if (!workspaceFolder) throw new Error('iOS workspace not found.');
-  const projectName = workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
-  return path.join(projectPath, 'ios', projectName);
+  return workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
+}
+
+export function getPbxProjectPath(): string {
+  const iosProjectPath = getIosProjectPath();
+  return path.join(iosProjectPath + '.xcodeproj', 'project.pbxproj');
 }

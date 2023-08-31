@@ -10,6 +10,7 @@ import {
   stopSpinner,
 } from './prompter';
 import { LockProjectData } from './types/integrator.types';
+import { IntegrationConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { parseConfig } from './utils/parseConfig';
@@ -122,7 +123,19 @@ export async function integrate(packageName?: string): Promise<void> {
   if (packagesToIntegrate.length) {
     for (let i = 0; i < packagesToIntegrate.length; i++) {
       const { packageName, version, configPath } = packagesToIntegrate[i];
-      const config = parseConfig(configPath);
+      let config: IntegrationConfig;
+      try {
+        config = parseConfig(configPath);
+      } catch (e) {
+        logError(
+          color.bold(color.bgRed(' error ')) +
+            color.bold(color.blue(` ${packageName} `)) +
+            color.red('could not parse package configuration\n') +
+            color.gray(getErrMessage(e, 'validation')),
+          true
+        );
+        continue;
+      }
       logInfo(
         color.bold(color.bgBlue(' new package ')) +
           color.bold(color.blue(` ${packageName} `))
@@ -143,7 +156,7 @@ export async function integrate(packageName?: string): Promise<void> {
             });
           } catch (e) {
             failedTaskCount++;
-            logError(e instanceof Error ? e.message : 'An error occurred');
+            logError(getErrMessage(e));
           }
         });
         if (failedTaskCount) {
@@ -197,4 +210,16 @@ export async function integrate(packageName?: string): Promise<void> {
     });
   }
   updateIntegrationStatus(packageLockUpdates);
+}
+
+function getErrMessage(e: any, type?: string) {
+  const shapeMessage = (msg: string) => {
+    switch (type) {
+      case 'validation':
+        return msg.split(',')[0];
+      default:
+        return msg;
+    }
+  };
+  return e instanceof Error ? shapeMessage(e.message) : 'An error occurred';
 }

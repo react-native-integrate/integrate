@@ -386,7 +386,7 @@ describe('appDelegateTask', () => {
       }).toThrowError('AppDelegate file not found');
     });
     it('should throw when workspace does not exist', () => {
-      jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
+      const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
       const task: AppDelegateModType = {
@@ -402,6 +402,7 @@ describe('appDelegateTask', () => {
           packageName: 'test-package',
         });
       }).toThrowError('workspace not found');
+      mock.mockRestore();
     });
   });
 });

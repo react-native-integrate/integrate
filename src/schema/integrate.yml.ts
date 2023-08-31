@@ -226,4 +226,16 @@ properties:
               enum: [add_resource]
             label:
               type: string
+            file:
+              type: string
+            target:
+              anyOf:
+                - type: string
+                  enum: [root, app]
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                    path:
+                      type: string
 `;

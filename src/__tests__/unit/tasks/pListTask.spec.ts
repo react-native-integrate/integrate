@@ -188,7 +188,7 @@ describe('pListTask', () => {
       }).toThrowError('Plist file not found');
     });
     it('should throw when workspace does not exist', () => {
-      jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
+      const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
       const task: PlistModType = {
@@ -204,6 +204,7 @@ describe('pListTask', () => {
           packageName: 'test-package',
         });
       }).toThrowError('workspace not found');
+      mock.mockRestore();
     });
   });
 });

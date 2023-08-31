@@ -5,7 +5,11 @@ const {
   writeMockLock,
 } = require('../mocks/mockAll');
 
-const mock = jest.spyOn(require('../../utils/runTask'), 'runTask');
+const mockRunTask = jest.spyOn(require('../../utils/runTask'), 'runTask');
+const mockParseConfig = jest.spyOn(
+  require('../../utils/parseConfig'),
+  'parseConfig'
+);
 
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
@@ -142,7 +146,7 @@ describe('integrate', () => {
     expect(content).not.toContain('[FIRApp configure];');
   });
   it('should handle task errors', async () => {
-    mock.mockImplementationOnce(() => {
+    mockRunTask.mockImplementationOnce(() => {
       throw new Error('test error');
     });
     mockPrompter.log.error.mockClear();
@@ -161,7 +165,7 @@ describe('integrate', () => {
     expect(content).not.toContain('[FIRApp configure];');
   });
   it('should handle non error obj task errors', async () => {
-    mock.mockImplementationOnce(() => {
+    mockRunTask.mockImplementationOnce(() => {
       throw 'test error';
     });
     mockPrompter.log.error.mockClear();
@@ -176,6 +180,25 @@ describe('integrate', () => {
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('error occurred')
+    );
+    expect(content).not.toContain('[FIRApp configure];');
+  });
+  it('should handle parse error', async () => {
+    mockParseConfig.mockImplementationOnce(() => {
+      throw new Error('test error');
+    });
+    mockPrompter.log.error.mockClear();
+    const lockPath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(lockPath);
+
+    expect(mockPrompter.log.error).toHaveBeenCalledWith(
+      expect.stringContaining('test error')
     );
     expect(content).not.toContain('[FIRApp configure];');
   });
