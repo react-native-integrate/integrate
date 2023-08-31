@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const { mockFs } = require('../../mocks/mockAll');
-import color from 'picocolors';
 import { addResourceTask, runTask } from '../../../tasks/addResourceTask';
-import { AddResourceType, PlistModType } from '../../../types/mod.types';
+import { AddResourceType } from '../../../types/mod.types';
 import { XcodeType } from '../../../types/xcode.type';
 import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
-import { mockPrompter, writeMockPList } from '../../mocks/mockAll';
+import { mockPrompter } from '../../mocks/mockAll';
 import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
 
 const xcode: XcodeType = require('xcode');
@@ -143,6 +142,7 @@ describe('addResource', () => {
         file: 'GoogleService-Info.plist',
         target: 'app',
       };
+      // noinspection SpellCheckingInspection
       expect(() => {
         runTask({
           configPath: 'path/to/config',
