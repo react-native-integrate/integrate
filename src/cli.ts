@@ -1,9 +1,10 @@
 import { Command } from 'commander';
 import 'isomorphic-fetch';
-import { version } from '../package.json';
 import { integrate } from './integrate';
 import { options } from './options';
 import { logIntro, logOutro } from './prompter';
+
+const { version } = require('../package.json');
 
 const program = new Command();
 
