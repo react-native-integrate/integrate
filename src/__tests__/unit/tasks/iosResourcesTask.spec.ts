@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const { mockFs } = require('../../mocks/mockAll');
-import { addResourceTask, runTask } from '../../../tasks/addResourceTask';
-import { AddResourceType } from '../../../types/mod.types';
+import { iosResourcesTask, runTask } from '../../../tasks/iosResourcesTask';
+import { IosResourcesTaskType } from '../../../types/mod.types';
 import { XcodeType } from '../../../types/xcode.type';
 import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
 import { mockPrompter } from '../../mocks/mockAll';
@@ -10,7 +10,7 @@ import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
 
 const xcode: XcodeType = require('xcode');
 
-describe('addResource', () => {
+describe('iosResourcesTask', () => {
   it('should add resource to root', () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
@@ -18,11 +18,15 @@ describe('addResource', () => {
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
 
-    const task: AddResourceType = {
-      type: 'add_resource',
-      file: 'GoogleService-Info.plist',
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      updates: [
+        {
+          add: 'GoogleService-Info.plist',
+        },
+      ],
     };
-    addResourceTask({
+    iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -34,7 +38,7 @@ describe('addResource', () => {
     );
 
     mockPrompter.log.message.mockClear();
-    addResourceTask({
+    iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -50,13 +54,17 @@ describe('addResource', () => {
 
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
-
-    const task: AddResourceType = {
-      type: 'add_resource',
-      file: 'GoogleService-Info.plist',
-      target: 'app',
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      updates: [
+        {
+          add: 'GoogleService-Info.plist',
+          target: 'app',
+        },
+      ],
     };
-    addResourceTask({
+
+    iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -73,15 +81,19 @@ describe('addResource', () => {
 
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
-
-    const task: AddResourceType = {
-      type: 'add_resource',
-      file: 'GoogleService-Info.plist',
-      target: {
-        name: 'Resources',
-      },
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      updates: [
+        {
+          add: 'GoogleService-Info.plist',
+          target: {
+            name: 'Resources',
+          },
+        },
+      ],
     };
-    addResourceTask({
+
+    iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -100,11 +112,16 @@ describe('addResource', () => {
     proj.parseSync();
     proj.removePbxGroup('Resources');
 
-    const task: AddResourceType = {
-      type: 'add_resource',
-      file: 'GoogleService-Info.plist',
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      updates: [
+        {
+          add: 'GoogleService-Info.plist',
+        },
+      ],
     };
-    addResourceTask({
+
+    iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -120,12 +137,15 @@ describe('addResource', () => {
       const pbxFilePath = getPbxProjectPath();
       mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
-      const task: AddResourceType = {
-        type: 'add_resource',
-        file: 'GoogleService-Info.plist',
-        target: 'app',
+      const task: IosResourcesTaskType = {
+        type: 'ios_resources',
+        updates: [
+          {
+            add: 'GoogleService-Info.plist',
+            target: 'app',
+          },
+        ],
       };
-
       runTask({
         configPath: 'path/to/config',
         task: task,
@@ -137,11 +157,16 @@ describe('addResource', () => {
       );
     });
     it('should throw when plist does not exist', () => {
-      const task: AddResourceType = {
-        type: 'add_resource',
-        file: 'GoogleService-Info.plist',
-        target: 'app',
+      const task: IosResourcesTaskType = {
+        type: 'ios_resources',
+        updates: [
+          {
+            add: 'GoogleService-Info.plist',
+            target: 'app',
+          },
+        ],
       };
+
       // noinspection SpellCheckingInspection
       expect(() => {
         runTask({
@@ -155,11 +180,16 @@ describe('addResource', () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
-      const task: AddResourceType = {
-        type: 'add_resource',
-        file: 'GoogleService-Info.plist',
-        target: 'app',
+      const task: IosResourcesTaskType = {
+        type: 'ios_resources',
+        updates: [
+          {
+            add: 'GoogleService-Info.plist',
+            target: 'app',
+          },
+        ],
       };
+
       expect(() => {
         runTask({
           configPath: 'path/to/config',

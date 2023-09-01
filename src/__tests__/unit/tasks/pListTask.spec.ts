@@ -2,7 +2,7 @@
 
 const { mockFs } = require('../../mocks/mockAll');
 import { plistTask, runTask } from '../../../tasks/plistTask';
-import { PlistModType } from '../../../types/mod.types';
+import { PlistTaskType } from '../../../types/mod.types';
 import { writeMockPList } from '../../mocks/mockAll';
 
 describe('pListTask', () => {
@@ -15,11 +15,15 @@ describe('pListTask', () => {
       CFBundleSignature: 'test',
       CFBundleVersion: '1.2.3',
     };
-    const task: PlistModType = {
+    const task: PlistTaskType = {
       type: 'plist',
-      set: {
-        CFBundleName: 'test2',
-      },
+      updates: [
+        {
+          set: {
+            CFBundleName: 'test2',
+          },
+        },
+      ],
     };
     content = plistTask({
       configPath: 'path/to/config',
@@ -37,14 +41,18 @@ describe('pListTask', () => {
         },
       },
     };
-    const task: PlistModType = {
+    const task: PlistTaskType = {
       type: 'plist',
-      set: {
-        first: {
-          assigned: 'test2',
+      updates: [
+        {
+          set: {
+            first: {
+              assigned: 'test2',
+            },
+          },
+          strategy: 'assign',
         },
-      },
-      strategy: 'assign',
+      ],
     };
     content = plistTask({
       configPath: 'path/to/config',
@@ -65,15 +73,19 @@ describe('pListTask', () => {
         other: ['test'],
       },
     };
-    const task: PlistModType = {
+    const task: PlistTaskType = {
       type: 'plist',
-      set: {
-        first: {
-          assigned: 'test2',
-          other: ['test2'],
+      updates: [
+        {
+          set: {
+            first: {
+              assigned: 'test2',
+              other: ['test2'],
+            },
+          },
+          strategy: 'merge',
         },
-      },
-      strategy: 'merge',
+      ],
     };
     content = plistTask({
       configPath: 'path/to/config',
@@ -98,15 +110,19 @@ describe('pListTask', () => {
         other: ['test'],
       },
     };
-    const task: PlistModType = {
+    const task: PlistTaskType = {
       type: 'plist',
-      set: {
-        first: {
-          assigned: 'test2',
-          other: ['test2'],
+      updates: [
+        {
+          set: {
+            first: {
+              assigned: 'test2',
+              other: ['test2'],
+            },
+          },
+          strategy: 'merge_concat',
         },
-      },
-      strategy: 'merge_concat',
+      ],
     };
     content = plistTask({
       configPath: 'path/to/config',
@@ -130,19 +146,24 @@ describe('pListTask', () => {
         },
       },
     };
-    const task: PlistModType = {
+    const task: PlistTaskType = {
       type: 'plist',
-      set: {
-        first: {
-          second: {
-            assigned: 'test2',
-            other: ['test2'],
-            __assign: true,
+      updates: [
+        {
+          set: {
+            first: {
+              second: {
+                assigned: 'test2',
+                other: ['test2'],
+                __assign: true,
+              },
+            },
           },
+          strategy: 'merge_concat',
         },
-      },
-      strategy: 'merge_concat',
+      ],
     };
+
     content = plistTask({
       configPath: 'path/to/config',
       task: task,
@@ -158,12 +179,17 @@ describe('pListTask', () => {
   describe('runTask', () => {
     it('should read and write plist file', () => {
       const pListPath = writeMockPList();
-      const task: PlistModType = {
+      const task: PlistTaskType = {
         type: 'plist',
-        set: {
-          CFBundleDisplayName: 'test2',
-        },
+        updates: [
+          {
+            set: {
+              CFBundleDisplayName: 'test2',
+            },
+          },
+        ],
       };
+
       runTask({
         configPath: 'path/to/config',
         task: task,
@@ -173,12 +199,17 @@ describe('pListTask', () => {
       expect(content).toContain('test2');
     });
     it('should throw when plist does not exist', () => {
-      const task: PlistModType = {
+      const task: PlistTaskType = {
         type: 'plist',
-        set: {
-          CFBundleDisplayName: 'test2',
-        },
+        updates: [
+          {
+            set: {
+              CFBundleDisplayName: 'test2',
+            },
+          },
+        ],
       };
+
       expect(() => {
         runTask({
           configPath: 'path/to/config',
@@ -191,12 +222,17 @@ describe('pListTask', () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
-      const task: PlistModType = {
+      const task: PlistTaskType = {
         type: 'plist',
-        set: {
-          CFBundleDisplayName: 'test2',
-        },
+        updates: [
+          {
+            set: {
+              CFBundleDisplayName: 'test2',
+            },
+          },
+        ],
       };
+
       expect(() => {
         runTask({
           configPath: 'path/to/config',

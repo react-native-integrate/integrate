@@ -2,29 +2,41 @@ import fs from 'fs';
 import mergeWith from 'lodash.mergewith';
 import path from 'path';
 import color from 'picocolors';
+import plist from 'simple-plist';
 import { Constants } from '../constants';
 import { logMessage, summarize } from '../prompter';
-import { PlistModType } from '../types/mod.types';
+import { PlistModifierType, PlistTaskType } from '../types/mod.types';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
-import plist from 'simple-plist';
 
 export function plistTask(args: {
   configPath: string;
   packageName: string;
   content: Record<string, any>;
-  task: PlistModType;
+  task: PlistTaskType;
 }): Record<string, any> {
   let { content } = args;
   const { task } = args;
-  const strategy = task.strategy || 'assign';
+
+  task.updates.forEach(update => {
+    content = applyPlistModification(content, update);
+  });
+
+  return content;
+}
+
+function applyPlistModification(
+  content: Record<string, any>,
+  update: PlistModifierType
+) {
+  const strategy = update.strategy || 'assign';
 
   if (strategy == 'assign') {
-    content = Object.assign(content, task.set);
+    content = Object.assign(content, update.set);
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
     content = mergeWith(
       content,
-      task.set,
+      update.set,
       function customizer(objValue: any, srcValue: any) {
         if (strategy == 'merge_concat')
           if (Array.isArray(objValue) && Array.isArray(srcValue)) {
@@ -45,7 +57,7 @@ export function plistTask(args: {
       temp_obj[key] = content[key];
       return temp_obj;
     }, {} as Record<string, any>);
-  Object.entries(task.set).forEach(([key, value]) => {
+  Object.entries(update.set).forEach(([key, value]) => {
     value = typeof value === 'string' ? value : JSON.stringify(value);
     logMessage(
       `set ${color.yellow(key)} with ${color.yellow(
@@ -53,6 +65,7 @@ export function plistTask(args: {
       )} strategy in plist: ${summarize(value)}`
     );
   });
+
   return content;
 }
 
@@ -78,7 +91,7 @@ function writePListContent(content: Record<string, any>): void {
 export function runTask(args: {
   configPath: string;
   packageName: string;
-  task: PlistModType;
+  task: PlistTaskType;
 }): void {
   let content = readPListContent();
 

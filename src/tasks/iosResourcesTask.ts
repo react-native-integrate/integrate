@@ -3,23 +3,39 @@ import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../constants';
 import { logMessage, logMessageGray } from '../prompter';
-import { AddResourceType } from '../types/mod.types';
+import {
+  IosResourcesModifierType,
+  IosResourcesTaskType,
+} from '../types/mod.types';
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
 
 const xcode: XcodeType = require('xcode');
 
-export function addResourceTask(args: {
+export function iosResourcesTask(args: {
   configPath: string;
   packageName: string;
   content: XcodeProjectType;
-  task: AddResourceType;
+  task: IosResourcesTaskType;
 }): XcodeProjectType {
-  const { content, task } = args;
-  let { target } = task;
+  let { content } = args;
+  const { task } = args;
+
+  task.updates.forEach(update => {
+    content = applyIosResourcesModification(content, update);
+  });
+
+  return content;
+}
+
+function applyIosResourcesModification(
+  content: XcodeProjectType,
+  update: IosResourcesModifierType
+) {
+  let { target } = update;
   target = target || 'root';
 
-  const fileName = path.basename(task.file);
+  const fileName = path.basename(update.add);
   const nativeTarget = content.getTarget(Constants.XCODE_APPLICATION_TYPE);
   let group;
   let logTarget;
@@ -40,10 +56,10 @@ export function addResourceTask(args: {
       break;
   }
   const groupObj = content.getPBXGroupByKey(group);
-  if (groupObj.children.some(x => x.comment == task.file)) {
+  if (groupObj.children.some(x => x.comment == update.add)) {
     logMessageGray(
       `skipped adding resource, ${color.yellow(
-        task.file
+        update.add
       )} is already referenced in ${color.yellow(logTarget)}`
     );
     return content;
@@ -55,8 +71,9 @@ export function addResourceTask(args: {
     releasePatch();
   }
   logMessage(
-    `added ${color.yellow(task.file)} reference in ${color.yellow(logTarget)}`
+    `added ${color.yellow(update.add)} reference in ${color.yellow(logTarget)}`
   );
+
   return content;
 }
 
@@ -84,11 +101,11 @@ function writePbxProjContent(proj: XcodeProjectType): void {
 export function runTask(args: {
   configPath: string;
   packageName: string;
-  task: AddResourceType;
+  task: IosResourcesTaskType;
 }): void {
   let content = readPbxProjContent();
 
-  content = addResourceTask({
+  content = iosResourcesTask({
     ...args,
     content,
   });

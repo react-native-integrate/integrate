@@ -223,7 +223,7 @@ properties:
           properties:
             type:
               type: string
-              enum: [add_resource]
+              enum: [ios_resources]
             label:
               type: string
             file:

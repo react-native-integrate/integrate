@@ -6,35 +6,29 @@ const mock = jest.spyOn(require('../../../utils/stringSplice'), 'stringSplice');
 import path from 'path';
 import { Constants } from '../../../constants';
 import { buildGradleTask, runTask } from '../../../tasks/buildGradleTask';
-import { BuildGradleModType } from '../../../types/mod.types';
+import { BuildGradleTaskType } from '../../../types/mod.types';
 import { mockPrompter } from '../../mocks/mockAll';
 
 describe('buildGradleTask', () => {
   it('should prepend text into empty body ', () => {
     let content = '';
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      append: 'google();',
-      prepend: 'google();',
-      before: {
-        find: { regex: 'google();' },
-        insert: 'google();',
-      },
-      after: {
-        find: { regex: 'google();' },
-        insert: 'google();',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          append: 'google();',
+          prepend: 'google();',
+        },
+      ],
     };
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -48,30 +42,24 @@ buildscript {
 }
 `);
   });
-  it('should prepend text into empty body without path', () => {
+  it('should prepend text into empty body without block', () => {
     let content = '';
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      append: 'google();',
-      prepend: 'google();',
-      before: {
-        find: { regex: 'google();' },
-        insert: 'google();',
-      },
-      after: {
-        find: { regex: 'google();' },
-        insert: 'google();',
-      },
+      updates: [
+        {
+          append: 'google();',
+          prepend: 'google();',
+        },
+      ],
     };
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -89,24 +77,23 @@ buildscript {
     }
 }
 `;
-
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      append: 'google();',
-      prepend: 'google();',
-      before: {
-        find: { regex: 'jcenter' },
-        insert: 'google();',
-      },
-      after: {
-        find: { regex: 'jcenter' },
-        insert: 'google();',
-      },
-      ifNotPresent: 'jcenter',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          ifNotPresent: 'jcenter',
+          append: 'google();',
+        },
+        {
+          block: 'buildscript.ext',
+          ifNotPresent: 'jcenter',
+          prepend: 'google();',
+        },
+      ],
     };
+
     buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -120,14 +107,17 @@ buildscript {
     let content = `
 buildscript {}
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      append: 'google();',
-      prepend: 'google();',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          prepend: 'google();',
+        },
+      ],
     };
+
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -149,15 +139,19 @@ buildscript {
     }
 }
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      prepend: 'google();',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          prepend: 'google();',
+        },
+      ],
     };
+
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
-      task: task,
+      task,
       content,
       packageName: 'test-package',
     });
@@ -178,13 +172,16 @@ buildscript {
     }
 }
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      append: 'google();',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          append: 'google();',
+        },
+      ],
     };
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -208,17 +205,19 @@ buildscript {
     }
 }
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      comment: 'test comment',
-      after: {
-        find: { regex: 'test1' },
-        insert: 'test2;',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          after: 'test1',
+          prepend: 'test2;',
+          comment: 'test comment',
+        },
+      ],
     };
+
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -233,16 +232,18 @@ buildscript {
     let content = `
 buildscript {}
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      after: {
-        find: { regex: 'test1' },
-        insert: 'test2;',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          after: 'test1',
+          prepend: 'test2;',
+        },
+      ],
     };
+
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -265,16 +266,18 @@ buildscript {
     }
 }
 `;
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      before: {
-        find: { regex: '\n.*?test3;' },
-        insert: 'test2;',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          before: { regex: '\n.*?test3;' },
+          append: 'test2;',
+        },
+      ],
     };
+
     content = buildGradleTask({
-      isInAppFolder: false,
       configPath: 'path/to/config',
       task: task,
       content,
@@ -293,27 +296,30 @@ buildscript {
     }
 }
 `;
-    const taskInsertBefore: BuildGradleModType = {
+    const taskInsertBefore: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      before: {
-        find: 'random',
-        insert: 'test2;',
-        strict: true,
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          before: 'random',
+          append: 'test2;',
+          strict: true,
+        },
+      ],
     };
-    const taskInsertBeforeNonStrict: BuildGradleModType = {
+    const taskInsertBeforeNonStrict: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      before: {
-        find: 'random',
-        insert: 'test2;',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          before: 'random',
+          append: 'test2;',
+        },
+      ],
     };
 
     expect(() =>
       buildGradleTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
@@ -322,34 +328,37 @@ buildscript {
     ).toThrowError('insertion point');
     expect(() =>
       buildGradleTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: taskInsertBeforeNonStrict,
         content,
         packageName: 'test-package',
       })
     ).not.toThrowError('insertion point');
-    const taskInsertAfter: BuildGradleModType = {
+    const taskInsertAfter: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      after: {
-        find: 'random',
-        insert: 'test2;',
-        strict: true,
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          after: 'random',
+          prepend: 'test2;',
+          strict: true,
+        },
+      ],
     };
-    const taskInsertAfterNonStrict: BuildGradleModType = {
+
+    const taskInsertAfterNonStrict: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      after: {
-        find: 'random',
-        insert: 'test2;',
-      },
+      updates: [
+        {
+          block: 'buildscript.ext',
+          after: 'random',
+          prepend: 'test2;',
+        },
+      ],
     };
 
     expect(() =>
       buildGradleTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
@@ -358,7 +367,6 @@ buildscript {
     ).toThrowError('insertion point');
     expect(() =>
       buildGradleTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: taskInsertAfterNonStrict,
         content,
@@ -369,15 +377,18 @@ buildscript {
   it('should throw when block could not be added', () => {
     const content = '';
     mock.mockImplementationOnce(content => content);
-    const task: BuildGradleModType = {
+    const task: BuildGradleTaskType = {
       type: 'build_gradle',
-      path: 'buildscript.ext',
-      prepend: 'random',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          prepend: 'random;',
+        },
+      ],
     };
 
     expect(() =>
       buildGradleTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: task,
         content,
@@ -401,19 +412,24 @@ buildscript {
         `../../mock-project/android/${Constants.BUILD_GRADLE_FILE_NAME}`
       );
       mockFs.writeFileSync(buildGradlePath, content);
-      const task: BuildGradleModType = {
+      const task: BuildGradleTaskType = {
         type: 'build_gradle',
-        path: 'buildscript.ext',
-        prepend: 'test2;',
+        updates: [
+          {
+            block: 'buildscript.ext',
+            prepend: 'test2;',
+          },
+        ],
       };
+
       runTask({
-        isInAppFolder: false,
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
       });
       content = mockFs.readFileSync(buildGradlePath);
-      expect(content).toContain(task.prepend);
+      // @ts-ignore
+      expect(content).toContain(task.updates[0].prepend);
     });
     it('should read and write app build gradle file', () => {
       let content = `
@@ -429,29 +445,39 @@ buildscript {
         `../../mock-project/android/app/${Constants.BUILD_GRADLE_FILE_NAME}`
       );
       mockFs.writeFileSync(buildGradlePath, content);
-      const task: BuildGradleModType = {
+      const task: BuildGradleTaskType = {
         type: 'build_gradle',
-        path: 'buildscript.ext',
-        prepend: 'test2;',
+        inAppFolder: true,
+        updates: [
+          {
+            block: 'buildscript.ext',
+            prepend: 'test2;',
+          },
+        ],
       };
+
       runTask({
-        isInAppFolder: true,
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
       });
       content = mockFs.readFileSync(buildGradlePath);
-      expect(content).toContain(task.prepend);
+      // @ts-ignore
+      expect(content).toContain(task.updates[0].prepend);
     });
     it('should throw when build gradle does not exist', () => {
-      const task: BuildGradleModType = {
+      const task: BuildGradleTaskType = {
         type: 'build_gradle',
-        path: 'buildscript.ext',
-        prepend: 'test2;',
+        updates: [
+          {
+            block: 'buildscript.ext',
+            prepend: 'test2;',
+          },
+        ],
       };
+
       expect(() => {
         runTask({
-          isInAppFolder: false,
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',

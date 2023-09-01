@@ -1,11 +1,11 @@
-import { FindType } from '../types/mod.types';
+import { TextOrRegex } from '../types/mod.types';
 
 export function findInsertionPoint(
   content: string,
-  finder: FindType
+  textOrRegex: TextOrRegex
 ): { start: number; end: number; match: string | null } {
-  if (typeof finder.find == 'string') {
-    const index = content.indexOf(finder.find);
+  if (typeof textOrRegex == 'string') {
+    const index = content.indexOf(textOrRegex);
     if (index == -1)
       return {
         start: -1,
@@ -14,11 +14,11 @@ export function findInsertionPoint(
       };
     return {
       start: index,
-      end: index + finder.find.length,
-      match: finder.find,
+      end: index + textOrRegex.length,
+      match: textOrRegex,
     };
   }
-  const match = new RegExp(finder.find.regex, finder.find.flags).exec(content);
+  const match = new RegExp(textOrRegex.regex, textOrRegex.flags).exec(content);
   if (!match)
     return {
       start: -1,

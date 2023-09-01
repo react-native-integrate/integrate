@@ -1,6 +1,7 @@
+// language=yaml
 export const mockIntegrateYml = `tasks:
   - type: app_delegate
-    imports:
-      - <Firebase.h>
-    method: didFinishLaunchingWithOptions
-    prepend: "[FIRApp configure];"`;
+    updates:
+      - prepend: "#import <Firebase.h>"
+      - block: didFinishLaunchingWithOptions
+        prepend: "[FIRApp configure];"`;

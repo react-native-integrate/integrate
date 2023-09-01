@@ -1,303 +1,170 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import { logMessage, logMessageGray, summarize } from '../prompter';
-import { AppDelegateModType } from '../types/mod.types';
+import {
+  AppDelegateBlockType,
+  AppDelegateTaskType,
+  BlockContentType,
+} from '../types/mod.types';
+import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
-import { findInsertionPoint } from '../utils/findInsertionPoint';
-import { findLineEnd, findLineStart } from '../utils/findLineTools';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
-import { getModContent } from '../utils/getModContent';
 import { stringSplice } from '../utils/stringSplice';
 
 export function appDelegateTask(args: {
   configPath: string;
   packageName: string;
   content: string;
-  task: AppDelegateModType;
+  task: AppDelegateTaskType;
 }): string {
   let { content } = args;
-  const { task, packageName, configPath } = args;
+  const { task, configPath } = args;
 
-  task.imports?.forEach(imp => {
-    const codeToInsert = `#import ${imp}`;
-    if (!content.includes(imp)) {
-      content = `${codeToInsert}\n` + content;
-      logMessage(`added import: ${summarize(imp)}`);
-    } else
-      logMessageGray(
-        `import already exists, skipped adding: ${summarize(imp)}`
-      );
+  task.updates.forEach(update => {
+    content = applyContentModification({
+      update,
+      findOrCreateBlock,
+      configPath,
+      content,
+      indentation: 2,
+    });
   });
-  let regex, makeNewMethod;
-  switch (task.method) {
-    case 'didFinishLaunchingWithOptions':
-      regex = /didFinishLaunchingWithOptions.*?\{/s;
-      makeNewMethod = () => {
-        throw new Error(
-          'didFinishLaunchingWithOptions not implemented, something is wrong?'
-        );
-      };
-      break;
-    case 'applicationDidBecomeActive':
-      regex = /applicationDidBecomeActive.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)applicationDidBecomeActive:(UIApplication *)application {${codeToInsert}}`;
-      };
-      break;
-    case 'applicationWillResignActive':
-      regex = /applicationWillResignActive.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)applicationWillResignActive:(UIApplication *)application {${codeToInsert}}`;
-      };
-      break;
-    case 'applicationDidEnterBackground':
-      regex = /applicationDidEnterBackground.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)applicationDidEnterBackground:(UIApplication *)application {${codeToInsert}}`;
-      };
-      break;
-    case 'applicationWillEnterForeground':
-      regex = /applicationWillEnterForeground.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)applicationWillEnterForeground:(UIApplication *)application {${codeToInsert}}`;
-      };
-      break;
-    case 'applicationWillTerminate':
-      regex = /applicationWillTerminate.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)applicationWillTerminate:(UIApplication *)application {${codeToInsert}}`;
-      };
-      break;
-    case 'openURL':
-      regex = /openURL:.*?options:.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {${codeToInsert}}`;
-      };
-      break;
-    case 'restorationHandler':
-      regex = /continueUserActivity:.*?restorationHandler:.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {${codeToInsert}}`;
-      };
-      break;
-    case 'didRegisterForRemoteNotificationsWithDeviceToken':
-      regex = /didRegisterForRemoteNotificationsWithDeviceToken.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {${codeToInsert}}`;
-      };
-      break;
-    case 'didFailToRegisterForRemoteNotificationsWithError':
-      regex = /didFailToRegisterForRemoteNotificationsWithError.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {${codeToInsert}}`;
-      };
-      break;
-    case 'didReceiveRemoteNotification':
-      regex = /didReceiveRemoteNotification((?!fetchCompletionHandler).)*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {${codeToInsert}}`;
-      };
-      break;
-    case 'fetchCompletionHandler':
-      regex = /didReceiveRemoteNotification:.*?fetchCompletionHandler:.*?\{/s;
-      makeNewMethod = (codeToInsert: string) => {
-        return `- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {${codeToInsert}}`;
-      };
-      break;
-  }
 
-  if (!regex) throw new Error(`Invalid method: ${task.method}`);
-  const getCodeToInsert = (text: string) => `
-  // ${task.comment || packageName}
-  ${text}
-`;
-  let methodStartMatch = regex.exec(content);
-  if ('prepend' in task) {
-    const prependText = getModContent(configPath, task.prepend);
-    const codeToInsert = getCodeToInsert(prependText);
-    if (!methodStartMatch) {
-      const newMethod = makeNewMethod(codeToInsert);
-      content = appendNewMethod(content, newMethod);
-      logMessage(
-        `added new method ${task.method} with code: ${summarize(prependText)}`
-      );
-      methodStartMatch = regex.exec(content);
-    } else {
-      const methodEndIndex = findClosingTagIndex(
-        content,
-        methodStartMatch.index + methodStartMatch[0].length
-      );
-      const methodBody = content.substring(
-        methodStartMatch.index + methodStartMatch[0].length,
-        methodEndIndex
-      );
-      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
-        logMessageGray(
-          `found existing ${summarize(
-            task.ifNotPresent
-          )}, skipped inserting: ${summarize(prependText)}`
-        );
-      } else if (!methodBody.includes(prependText)) {
-        content = stringSplice(
-          content,
-          methodStartMatch.index + methodStartMatch[0].length,
-          0,
-          codeToInsert
-        );
-        logMessage(
-          `prepended code in ${summarize(task.method)}: ${summarize(
-            prependText
-          )}`
-        );
-      } else
-        logMessageGray(
-          `code already exists, skipped prepending: ${summarize(prependText)}`
-        );
-    }
-  }
-  if ('append' in task) {
-    const appendText = getModContent(configPath, task.append);
-    const codeToInsert = getCodeToInsert(appendText);
-    if (!methodStartMatch) {
-      const newMethod = makeNewMethod(codeToInsert);
-      content = appendNewMethod(content, newMethod);
-      logMessage(
-        `added new method ${task.method} with code: ${summarize(appendText)}`
-      );
-      methodStartMatch = regex.exec(content);
-    } else {
-      const methodEndIndex = findClosingTagIndex(
-        content,
-        methodStartMatch.index + methodStartMatch[0].length
-      );
-      const methodBody = content.substring(
-        methodStartMatch.index + methodStartMatch[0].length,
-        methodEndIndex
-      );
-      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
-        logMessageGray(
-          `found existing ${summarize(
-            task.ifNotPresent
-          )}, skipped inserting: ${summarize(appendText)}`
-        );
-      } else if (!methodBody.includes(appendText)) {
-        content = stringSplice(
-          content,
-          findLineStart(content, methodEndIndex - 1),
-          0,
-          codeToInsert
-        );
-        logMessage(
-          `appended code in ${summarize(task.method)}: ${summarize(appendText)}`
-        );
-      } else
-        logMessageGray(
-          `code already exists, skipped appending: ${summarize(appendText)}`
-        );
-    }
-  }
-  if ('before' in task) {
-    const text = getModContent(configPath, task.before.insert);
-    const codeToInsert = getCodeToInsert(text);
-    if (!methodStartMatch) {
-      const newMethod = makeNewMethod(codeToInsert);
-      content = appendNewMethod(content, newMethod);
-      logMessage(
-        `added new method ${task.method} with code: ${summarize(text)}`
-      );
-      methodStartMatch = regex.exec(content);
-    } else {
-      const foundIndex = findInsertionPoint(content, task.before);
-      if (foundIndex.start == -1)
-        throw new Error('Could not find insertion point');
-      const methodEndIndex = findClosingTagIndex(
-        content,
-        methodStartMatch.index + methodStartMatch[0].length
-      );
-      const methodBody = content.substring(
-        methodStartMatch.index + methodStartMatch[0].length,
-        methodEndIndex
-      );
-      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
-        logMessageGray(
-          `found existing ${summarize(
-            task.ifNotPresent
-          )}, skipped inserting: ${summarize(text)}`
-        );
-      } else if (!methodBody.includes(text)) {
-        content = stringSplice(
-          content,
-          findLineStart(
-            content,
-            foundIndex.start,
-            methodStartMatch.index + methodStartMatch[0].length
-          ),
-          0,
-          codeToInsert
-        );
-        logMessage(
-          `inserted code into ${summarize(task.method)} (before ${summarize(
-            foundIndex.match,
-            20
-          )}): ${summarize(text)}`
-        );
-      } else
-        logMessageGray(
-          `code already exists, skipped inserting: ${summarize(text)}`
-        );
-    }
-  }
-  if ('after' in task) {
-    const text = getModContent(configPath, task.after.insert);
-    const codeToInsert = getCodeToInsert(text);
-    if (!methodStartMatch) {
-      const newMethod = makeNewMethod(codeToInsert);
-      content = appendNewMethod(content, newMethod);
-      logMessage(
-        `added new method ${summarize(task.method)} with code: ${summarize(
-          text
-        )}`
-      );
-    } else {
-      const foundIndex = findInsertionPoint(content, task.after);
-      if (foundIndex.start == -1)
-        throw new Error('Could not find insertion point');
-      const methodEndIndex = findClosingTagIndex(
-        content,
-        methodStartMatch.index + methodStartMatch[0].length
-      );
-      const methodBody = content.substring(
-        methodStartMatch.index + methodStartMatch[0].length,
-        methodEndIndex
-      );
-      if (task.ifNotPresent && methodBody.includes(task.ifNotPresent)) {
-        logMessageGray(
-          `found existing ${summarize(
-            task.ifNotPresent
-          )}, skipped inserting: ${summarize(text)}`
-        );
-      } else if (!methodBody.includes(text)) {
-        content = stringSplice(
-          content,
-          findLineEnd(content, foundIndex.end, methodEndIndex),
-          0,
-          codeToInsert
-        );
-        logMessage(
-          `inserted code into ${summarize(task.method)} (after ${summarize(
-            foundIndex.match,
-            20
-          )}): ${summarize(text)}`
-        );
-      } else
-        logMessageGray(
-          `code already exists, skipped inserting: ${summarize(text)}`
-        );
-    }
-  }
   return content;
 }
+
+function findOrCreateBlock(
+  content: string,
+  block: string
+): {
+  blockContent: BlockContentType;
+  content: string;
+} {
+  let blockContent = {
+    start: 0,
+    end: content.length,
+    match: content,
+    space: '',
+    justCreated: false,
+  };
+  const blockDefinition = blockDefinitions[block as AppDelegateBlockType];
+
+  if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
+  const { regex, makeNewMethod } = blockDefinition;
+  let blockStart = regex.exec(content);
+
+  const justCreated = !blockStart;
+  if (!blockStart) {
+    const newMethod = makeNewMethod();
+    content = appendNewMethod(content, newMethod);
+
+    blockStart = regex.exec(content);
+  }
+  if (!blockStart) {
+    throw new Error('block could not be inserted, something wrong?');
+  }
+  const blockEndIndex = findClosingTagIndex(
+    content,
+    blockStart.index + blockStart[0].length
+  );
+  const blockBody = content.substring(
+    blockStart.index + blockStart[0].length,
+    blockEndIndex
+  );
+  blockContent = {
+    start: blockStart.index + blockStart[0].length,
+    end: blockEndIndex,
+    match: blockBody,
+    justCreated,
+    space: '',
+  };
+
+  return {
+    blockContent,
+    content,
+  };
+}
+
+const blockDefinitions: Record<
+  AppDelegateBlockType,
+  { regex: RegExp; makeNewMethod: () => string }
+> = {
+  didFinishLaunchingWithOptions: {
+    regex: /didFinishLaunchingWithOptions.*?\{/s,
+    makeNewMethod: () => {
+      throw new Error(
+        'didFinishLaunchingWithOptions not implemented, something is wrong?'
+      );
+    },
+  },
+  applicationDidBecomeActive: {
+    regex: /applicationDidBecomeActive.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)applicationDidBecomeActive:(UIApplication *)application {}';
+    },
+  },
+  applicationWillResignActive: {
+    regex: /applicationWillResignActive.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)applicationWillResignActive:(UIApplication *)application {}';
+    },
+  },
+  applicationDidEnterBackground: {
+    regex: /applicationDidEnterBackground.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)applicationDidEnterBackground:(UIApplication *)application {}';
+    },
+  },
+  applicationWillEnterForeground: {
+    regex: /applicationWillEnterForeground.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)applicationWillEnterForeground:(UIApplication *)application {}';
+    },
+  },
+  applicationWillTerminate: {
+    regex: /applicationWillTerminate.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)applicationWillTerminate:(UIApplication *)application {}';
+    },
+  },
+  openURL: {
+    regex: /openURL:.*?options:.*?\{/s,
+    makeNewMethod: () => {
+      // noinspection SpellCheckingInspection
+      return '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {}';
+    },
+  },
+  restorationHandler: {
+    regex: /continueUserActivity:.*?restorationHandler:.*?\{/s,
+    makeNewMethod: () => {
+      return '- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {}';
+    },
+  },
+  didRegisterForRemoteNotificationsWithDeviceToken: {
+    regex: /didRegisterForRemoteNotificationsWithDeviceToken.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {}';
+    },
+  },
+  didFailToRegisterForRemoteNotificationsWithError: {
+    regex: /didFailToRegisterForRemoteNotificationsWithError.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {}';
+    },
+  },
+  didReceiveRemoteNotification: {
+    regex: /didReceiveRemoteNotification((?!fetchCompletionHandler).)*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {}';
+    },
+  },
+  fetchCompletionHandler: {
+    regex: /didReceiveRemoteNotification:.*?fetchCompletionHandler:.*?\{/s,
+    makeNewMethod: () => {
+      return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {}';
+    },
+  },
+};
 
 function appendNewMethod(content: string, newMethod: string): string {
   const appDelegateMatch = /@implementation AppDelegate.*?@end/s.exec(content);
@@ -339,7 +206,7 @@ function writeAppDelegateContent(content: string): void {
 export function runTask(args: {
   configPath: string;
   packageName: string;
-  task: AppDelegateModType;
+  task: AppDelegateTaskType;
 }): void {
   let content = readAppDelegateContent();
 

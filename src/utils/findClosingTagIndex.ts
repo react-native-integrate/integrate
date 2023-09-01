@@ -15,5 +15,5 @@ export function findClosingTagIndex(
   }
   if (braceCount > 0)
     throw new Error('Could not find closing tag for method body.');
-  return currentIndex;
+  return currentIndex - 1;
 }

@@ -16,7 +16,7 @@ describe('findClosingTagIndex', () => {
       content + moreContent,
       methodStartIndex
     );
-    expect(closingTagIndex).toBe(content.length);
+    expect(closingTagIndex).toBe(content.length - 1);
   });
   it('should throw if there is unclosed brace', () => {
     const content = 'fn() { { { } }  ';

@@ -1,7 +1,7 @@
 import { runTask as runAppDelegateTask } from '../tasks/appDelegateTask';
 import { runTask as runPListTask } from '../tasks/plistTask';
 import { runTask as runBuildGradleTask } from '../tasks/buildGradleTask';
-import { runTask as runAddResourceTask } from '../tasks/addResourceTask';
+import { runTask as runAddResourceTask } from '../tasks/iosResourcesTask';
 import { ModTask } from '../types/mod.types';
 
 export function runTask(args: {
@@ -29,15 +29,6 @@ export function runTask(args: {
       break;
     case 'build_gradle':
       runBuildGradleTask({
-        isInAppFolder: false,
-        configPath,
-        packageName,
-        task,
-      });
-      break;
-    case 'app_build_gradle':
-      runBuildGradleTask({
-        isInAppFolder: true,
         configPath,
         packageName,
         task,
@@ -45,7 +36,7 @@ export function runTask(args: {
       break;
     case 'android_manifest':
       break;
-    case 'add_resource':
+    case 'ios_resources':
       runAddResourceTask({
         configPath,
         packageName,

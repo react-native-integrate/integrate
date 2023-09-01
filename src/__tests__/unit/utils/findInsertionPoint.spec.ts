@@ -9,10 +9,7 @@ describe('findInsertionPoint', () => {
     const findContent = 'test1;';
     const postContent = ' test2; }';
     const content = preContent + findContent + postContent;
-    const insertionPoint = findInsertionPoint(content, {
-      find: findContent,
-      insert: 'any',
-    });
+    const insertionPoint = findInsertionPoint(content, findContent);
     expect(insertionPoint).toEqual({
       start: preContent.length,
       end: preContent.length + findContent.length,
@@ -24,10 +21,7 @@ describe('findInsertionPoint', () => {
     const findContent = 'test1;';
     const postContent = ' test2; }';
     const content = preContent + findContent + postContent;
-    const insertionPoint = findInsertionPoint(content, {
-      find: 'random',
-      insert: 'any',
-    });
+    const insertionPoint = findInsertionPoint(content, 'random');
     expect(insertionPoint).toEqual({
       start: -1,
       end: -1,
@@ -40,11 +34,8 @@ describe('findInsertionPoint', () => {
     const postContent = ' test2; }';
     const content = preContent + findContent + postContent;
     const insertionPoint = findInsertionPoint(content, {
-      find: {
-        regex: 'test1;.*?strings;',
-        flags: 's',
-      },
-      insert: 'any',
+      regex: 'test1;.*?strings;',
+      flags: 's',
     });
     expect(insertionPoint).toEqual({
       start: preContent.length,
@@ -58,11 +49,8 @@ describe('findInsertionPoint', () => {
     const postContent = ' test2; }';
     const content = preContent + findContent + postContent;
     const insertionPoint = findInsertionPoint(content, {
-      find: {
-        regex: 'testrandom',
-        flags: 's',
-      },
-      insert: 'any',
+      regex: 'test_random',
+      flags: 's',
     });
     expect(insertionPoint).toEqual({
       start: -1,
