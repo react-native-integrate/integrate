@@ -87,8 +87,10 @@ export type ValidationTaskType = ModTaskBase & {
 export type BuildGradleTaskType = ModTaskBase &
   UpdatesType<ContentModifierType> & {
     type: 'build_gradle';
-    inAppFolder?: boolean;
+    location?: BuildGradleLocationType;
   };
+
+export type BuildGradleLocationType = 'root' | 'app';
 
 // android manifest task
 

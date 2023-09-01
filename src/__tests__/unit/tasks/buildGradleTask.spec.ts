@@ -447,7 +447,7 @@ buildscript {
       mockFs.writeFileSync(buildGradlePath, content);
       const task: BuildGradleTaskType = {
         type: 'build_gradle',
-        inAppFolder: true,
+        location: 'app',
         updates: [
           {
             block: 'buildscript.ext',

@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import { BlockContentType, BuildGradleTaskType } from '../types/mod.types';
+import {
+  BlockContentType,
+  BuildGradleLocationType,
+  BuildGradleTaskType,
+} from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
@@ -92,13 +96,13 @@ ${previousSpace}`;
   };
 }
 
-function getBuildGradlePath(isInAppFolder: boolean) {
+function getBuildGradlePath(location: BuildGradleLocationType) {
   const projectPath = getProjectPath();
 
   const buildGradlePath = path.join(
     projectPath,
     'android',
-    isInAppFolder ? 'app' : '',
+    location == 'app' ? 'app' : '',
     Constants.BUILD_GRADLE_FILE_NAME
   );
   if (!fs.existsSync(buildGradlePath))
@@ -106,13 +110,16 @@ function getBuildGradlePath(isInAppFolder: boolean) {
   return buildGradlePath;
 }
 
-function readBuildGradleContent(isInAppFolder = false) {
-  const buildGradlePath = getBuildGradlePath(isInAppFolder);
+function readBuildGradleContent(location = 'root' as BuildGradleLocationType) {
+  const buildGradlePath = getBuildGradlePath(location);
   return fs.readFileSync(buildGradlePath, 'utf-8');
 }
 
-function writeBuildGradleContent(content: string, isInAppFolder = false): void {
-  const buildGradlePath = getBuildGradlePath(isInAppFolder);
+function writeBuildGradleContent(
+  content: string,
+  location = 'root' as BuildGradleLocationType
+): void {
+  const buildGradlePath = getBuildGradlePath(location);
   return fs.writeFileSync(buildGradlePath, content, 'utf-8');
 }
 
@@ -121,12 +128,12 @@ export function runTask(args: {
   packageName: string;
   task: BuildGradleTaskType;
 }): void {
-  let content = readBuildGradleContent(args.task.inAppFolder);
+  let content = readBuildGradleContent(args.task.location);
 
   content = buildGradleTask({
     ...args,
     content,
   });
 
-  writeBuildGradleContent(content, args.task.inAppFolder);
+  writeBuildGradleContent(content, args.task.location);
 }
