@@ -10,21 +10,6 @@
 
 **Automate Integration of Additional Code into React Native Projects**
 
-## Table of Contents
-
-- [Task Usages](#task-usages)
-    - [AppDelegate Task](docs/APP_DELEGATE.md)
-    - [Plist Task](docs/PLIST.md)
-    - [iOS Resources Task](docs/IOS_RESOURCES.md)
-    - [Build Gradle Task](docs/BUILD_GRADLE.md)
-- [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Installation Steps](#installation-steps)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
-- 
 ## Introduction
 
 This is a command-line tool designed to streamline the process of integrating additional code into React Native projects. It automates the integration steps that are often required when adding packages that involve modifications to iOS or Android projects.
