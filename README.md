@@ -10,6 +10,21 @@
 
 **Automate Integration of Additional Code into React Native Projects**
 
+## Table of Contents
+
+- [Task Usages](#task-usages)
+    - [AppDelegate Task](docs/APP_DELEGATE.md)
+    - [Plist Task](docs/PLIST.md)
+    - [iOS Resources Task](docs/IOS_RESOURCES.md)
+    - [Build Gradle Task](docs/BUILD_GRADLE.md)
+- [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Installation Steps](#installation-steps)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
+- 
 ## Introduction
 
 This is a command-line tool designed to streamline the process of integrating additional code into React Native projects. It automates the integration steps that are often required when adding packages that involve modifications to iOS or Android projects.
@@ -39,9 +54,27 @@ You can focus more on coding and development, while the tool takes care of integ
 - [x] app/build.gradle
 - [ ] AndroidManifest.xml
 
-## Installation
+## Usage
 
-To get started, install "react-native-integrate" into devDependencies using npm:
+There are two options to use this CLI.
+
+### 1. Manual
+Here you manually run the cli each time you install a package.
+```bash
+npx react-native-integrate <package-name>
+```
+
+#### Example
+```bash
+# First install the package
+npm install @react-native-firebase/app
+
+# Then integrate it
+npx react-native-integrate @react-native-firebase/app
+```
+
+### 2. Automatic
+- Install this package as a dev dependency
 
 ```bash
 npm install react-native-integrate --save-dev
@@ -49,9 +82,7 @@ npm install react-native-integrate --save-dev
 yarn add react-native-integrate --dev
 ```
 
-## Usage
-
-Add the "integrate" command as a post-install script in your project's package.json:
+- Add the "integrate" command as a post-install script in your project's package.json:
 
 ```json
 "scripts": {
@@ -60,6 +91,43 @@ Add the "integrate" command as a post-install script in your project's package.j
 ```
 
 After each package installation, the "integrate" command will automatically be triggered, and the necessary code changes will be integrated into your React Native project.
+
+It gets your approval before each integration so no need to worry about messing up your code.
+
+## For Package Developers
+
+If your package requires "additional steps" after installation, follow these steps to allow other developers quickly integrate your package into their projects.
+
+1. Create an `integrate.yml` file in the root directory of your project.
+2. Add the necessary tasks for integrating your package into this file. You can use the example below as a starting point.
+3. Encourage developers to run `npx react-native-integrate <your-package>` right after installation of your package.
+
+#### Example
+```yaml
+tasks:
+  - type: app_delegate
+    label: "Updating AppDelegate.mm"
+    updates:
+      - prepend: "#import <YourPackage.h>"
+      - block: didFinishLaunchingWithOptions
+        prepend: "[YourPackage configure];"
+  - type: build_gradle
+    label: "Enabling multidex"
+    location: "app",
+    updates:
+      - block: "android.defaultConfig"
+        after: versionName
+        prepend: multiDexEnabled true
+```
+
+#### Task types
+
+Click on the links below to learn how to use each task type:
+
+- [AppDelegate Task](docs/APP_DELEGATE.md)
+- [Plist Task](docs/PLIST.md)
+- [iOS Resources Task](docs/IOS_RESOURCES.md)
+- [Build Gradle Task](docs/BUILD_GRADLE.md)
 
 ## Contributing
 
