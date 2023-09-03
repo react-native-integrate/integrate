@@ -20,13 +20,25 @@ export type ApplyContentModificationArgType = {
   update: ContentModifierType;
   findOrCreateBlock: FindOrCreateBlockType;
   indentation: number;
+  additionalModification?: (args: {
+    content: string;
+    blockContent: BlockContentType;
+  }) => string;
+  buildComment?: (comment: string) => string[];
 };
 
 export function applyContentModification(
   args: ApplyContentModificationArgType
 ): string {
   let { content } = args;
-  const { configPath, update, findOrCreateBlock, indentation } = args;
+  const {
+    configPath,
+    update,
+    findOrCreateBlock,
+    indentation,
+    additionalModification,
+    buildComment,
+  } = args;
 
   let blockContent = {
     start: 0,
@@ -53,9 +65,13 @@ export function applyContentModification(
     }
 
     if (update.block) blockIndentation = ' '.repeat(indentation);
-    if (update.comment)
-      comment = `${blockContent.space}${blockIndentation}// ${update.comment}
-`;
+    if (update.comment) {
+      const _buildCommand = buildComment || buildCommonComment;
+      const commentLines = _buildCommand(update.comment);
+      commentLines.forEach(line => {
+        comment += `${blockContent.space}${blockIndentation}${line}\n`;
+      });
+    }
     return `${openingNewLine}${comment}${blockContent.space}${blockIndentation}${text}${closingNewLine}`;
   };
 
@@ -114,7 +130,7 @@ export function applyContentModification(
   const splittingMsg = splittingMsgArr.length
     ? ` (${splittingMsgArr.join(', ')})`
     : '';
-  if ('prepend' in update) {
+  if (update.prepend) {
     const prependText = getModContent(configPath, update.prepend);
     const codeToInsert = getCodeToInsert(prependText);
 
@@ -131,7 +147,7 @@ export function applyContentModification(
       content = stringSplice(content, blockContent.start, 0, codeToInsert);
       logMessage(
         `prepended code in ${summarize(
-          getPathName(update)
+          getBlockName(update)
         )}${splittingMsg}: ${summarize(prependText)}`
       );
 
@@ -147,7 +163,7 @@ export function applyContentModification(
         `code already exists, skipped prepending: ${summarize(prependText)}`
       );
   }
-  if ('append' in update) {
+  if (update.append) {
     const appendText = getModContent(configPath, update.append);
     const codeToInsert = getCodeToInsert(appendText);
     if (
@@ -168,7 +184,7 @@ export function applyContentModification(
       );
       logMessage(
         `appended code in ${summarize(
-          getPathName(update)
+          getBlockName(update)
         )}${splittingMsg}: ${summarize(appendText)}`
       );
 
@@ -184,7 +200,20 @@ export function applyContentModification(
         `code already exists, skipped appending: ${summarize(appendText)}`
       );
   }
+  if (additionalModification) {
+    content = additionalModification({
+      content,
+      blockContent,
+    });
+    const updateResult = updateBlockContent(update, content, findOrCreateBlock);
+    content = updateResult.content;
+    blockContent = updateResult.blockContent;
+  }
   return content;
+}
+
+function buildCommonComment(comment: string): string[] {
+  return comment.split('\n').map(x => `// ${x}`);
 }
 
 function updateBlockContent(
@@ -229,6 +258,6 @@ function resolveInsertionPoint(
   }
 }
 
-function getPathName(update: ContentModifierType) {
+export function getBlockName(update: ContentModifierType): string {
   return update.block || 'file';
 }

@@ -4,6 +4,8 @@ export const Constants = {
   PACKAGE_JSON_FILE_NAME: 'package.json',
   APP_DELEGATE_FILE_NAME: 'AppDelegate.mm',
   PLIST_FILE_NAME: 'Info.plist',
+  ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
+  ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',
   BUILD_GRADLE_FILE_NAME: 'build.gradle',
   WORKSPACE_EXT: '.xcworkspace',
   CONFIG_FILE_NAME: 'integrate.yml',

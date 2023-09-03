@@ -34,20 +34,29 @@ function applyPlistModification(
     content = Object.assign(content, update.set);
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
-    content = mergeWith(
-      content,
-      update.set,
-      function customizer(objValue: any, srcValue: any) {
-        if (strategy == 'merge_concat')
-          if (Array.isArray(objValue) && Array.isArray(srcValue)) {
-            return objValue.concat(srcValue);
-          }
-        if (typeof srcValue === 'object' && srcValue.__assign) {
-          delete srcValue.__assign;
-          return srcValue;
+    const customizer = function (objValue: any, srcValue: any) {
+      if (strategy == 'merge_concat')
+        if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+          return objValue.concat(srcValue);
         }
+      if (typeof srcValue === 'object' && srcValue.$assign) {
+        delete srcValue.$assign;
+        return srcValue;
       }
-    );
+      if (
+        Array.isArray(objValue) &&
+        typeof srcValue === 'object' &&
+        srcValue.$index != null
+      ) {
+        const index = srcValue.$index;
+        delete srcValue.$index;
+        objValue[index] = mergeWith(objValue[index], srcValue, customizer);
+
+        return objValue;
+      }
+    };
+
+    content = mergeWith(content, update.set, customizer);
     /* eslint-enable @typescript-eslint/no-unsafe-return */
   }
 

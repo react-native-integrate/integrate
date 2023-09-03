@@ -155,7 +155,7 @@ describe('pListTask', () => {
               second: {
                 assigned: 'test2',
                 other: ['test2'],
-                __assign: true,
+                $assign: true,
               },
             },
           },
@@ -174,6 +174,40 @@ describe('pListTask', () => {
       assigned: 'test2',
       other: ['test2'],
     });
+  });
+  it('should set index value', () => {
+    let content: Record<string, any> = {
+      first: {
+        second: [{ third: 'test' }, { forth: 'test2' }],
+      },
+    };
+    const task: PlistTaskType = {
+      type: 'plist',
+      updates: [
+        {
+          set: {
+            first: {
+              second: {
+                $index: 0,
+                assigned: 'test2',
+              },
+            },
+          },
+          strategy: 'merge_concat',
+        },
+      ],
+    };
+
+    content = plistTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content.first.second).toEqual([
+      { third: 'test', assigned: 'test2' },
+      { forth: 'test2' },
+    ]);
   });
 
   describe('runTask', () => {

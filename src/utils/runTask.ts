@@ -2,6 +2,7 @@ import { runTask as runAppDelegateTask } from '../tasks/appDelegateTask';
 import { runTask as runPListTask } from '../tasks/plistTask';
 import { runTask as runBuildGradleTask } from '../tasks/buildGradleTask';
 import { runTask as runAddResourceTask } from '../tasks/iosResourcesTask';
+import { runTask as runAndroidManifestTask } from '../tasks/androidManifestTask';
 import { ModTask } from '../types/mod.types';
 
 export function runTask(args: {
@@ -35,6 +36,11 @@ export function runTask(args: {
       });
       break;
     case 'android_manifest':
+      runAndroidManifestTask({
+        configPath,
+        packageName,
+        task,
+      });
       break;
     case 'ios_resources':
       runAddResourceTask({

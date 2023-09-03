@@ -8,6 +8,7 @@ const { mockFs } = require('./mockFs');
 import path from 'path';
 import { Constants } from '../../constants';
 import { LockData } from '../../types/integrator.types';
+import { mockAndroidManifestTemplate } from './mockAndroidManifestTemplate';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
 import { mockPList } from './mockPList';
 
@@ -46,6 +47,14 @@ function writeMockPList(): string {
   mockFs.writeFileSync(appDelegatePath, mockPList);
   return appDelegatePath;
 }
+function writeMockAndroidManifest(): string {
+  const manifestPath = path.resolve(
+    __dirname,
+    `../mock-project/${Constants.ANDROID_MAIN_FILE_PATH}/${Constants.ANDROID_MANIFEST_FILE_NAME}`
+  );
+  mockFs.writeFileSync(manifestPath, mockAndroidManifestTemplate);
+  return manifestPath;
+}
 
 let didSetup = false;
 let mock: any;
@@ -82,4 +91,5 @@ export {
   writeMockLock,
   writeMockAppDelegate,
   writeMockPList,
+  writeMockAndroidManifest,
 };

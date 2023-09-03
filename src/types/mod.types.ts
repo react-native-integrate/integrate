@@ -24,16 +24,13 @@ export type ContentModifierType<TBlock = string> = {
 
   // throws if before or after fails to find insertion point
   strict?: boolean;
-} & (
-  | {
-      // appends text to the end of file context
-      append: TextOrFileValue;
-    }
-  | {
-      // appends tex to the start of file context
-      prepend: TextOrFileValue;
-    }
-);
+
+  // appends text to the end of file context
+  append?: TextOrFileValue;
+
+  // appends tex to the start of file context
+  prepend?: TextOrFileValue;
+};
 
 export type UpdatesType<T> = {
   updates: T[];
@@ -94,9 +91,17 @@ export type BuildGradleLocationType = 'root' | 'app';
 
 // android manifest task
 
-export type AndroidManifestTaskType = ModTaskBase & {
-  type: 'android_manifest';
-};
+export type AndroidManifestTaskType = ModTaskBase &
+  UpdatesType<AndroidManifestModifierType> & {
+    type: 'android_manifest';
+  };
+
+export type AndroidManifestBlockType = 'manifest' | 'application' | 'activity';
+
+export type AndroidManifestModifierType =
+  ContentModifierType<AndroidManifestBlockType> & {
+    attributes?: Record<string, any>;
+  };
 
 // add resource task
 

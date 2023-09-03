@@ -14,11 +14,15 @@ const mocks = {
   ios_resources: {
     runTask: jest.fn(),
   },
+  android_manifest: {
+    runTask: jest.fn(),
+  },
 };
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
 jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
 jest.mock('../../../tasks/iosResourcesTask', () => mocks.ios_resources);
+jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
 
 import path from 'path';
 import { ModTask } from '../../../types/mod.types';
@@ -31,6 +35,7 @@ describe('runTask', () => {
     'plist' as const,
     'build_gradle' as const,
     'ios_resources' as const,
+    'android_manifest' as const,
   ].map(taskType => {
     it(`should run ${taskType} task`, () => {
       mocks[taskType].runTask.mockClear();
@@ -54,7 +59,7 @@ describe('runTask', () => {
       expect(mocks[taskType].runTask).toHaveBeenCalledTimes(1);
     });
   });
-  ['validate' as const, 'android_manifest' as const].map(taskType => {
+  ['validate' as const].map(taskType => {
     it(`should run ${taskType} task`, () => {
       mocks.app_delegate.runTask.mockClear();
 

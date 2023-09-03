@@ -113,6 +113,7 @@ Click on the links below to learn how to use each task type:
 - [Plist Task](docs/PLIST.md)
 - [iOS Resources Task](docs/IOS_RESOURCES.md)
 - [Build Gradle Task](docs/BUILD_GRADLE.md)
+- [Android Manifest](docs/ANROID_MANIFEST.md)
 
 ## Contributing
 
