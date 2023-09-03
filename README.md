@@ -23,28 +23,12 @@ You can focus more on coding and development, while the tool takes care of integ
 - Saves time and effort by automating integration tasks.
 - Works seamlessly with your project's package management.
 
-## Supported Modifications
-
-
-### iOS
-
-- [x] PList
-- [x] AppDelegate.mm
-- [x] Resource additions
-- [ ] Waiting and validating manual additions (like xcode extensions, capabilities)
-- [ ] Extension content
-
-### android
-- [x] build.gradle
-- [x] app/build.gradle
-- [ ] AndroidManifest.xml
-
 ## Usage
 
-There are two options to use this CLI.
+There are two options to use this CLI, manual and automatic.
 
 ### 1. Manual
-Here you manually run the cli each time you install a package.
+In manual usage you run the cli after each time you install a package.
 ```bash
 npx react-native-integrate <package-name>
 ```
@@ -79,6 +63,9 @@ After each package installation, the "integrate" command will automatically be t
 
 It gets your approval before each integration so no need to worry about messing up your code.
 
+> **_NOTE:_**  If you are using npm, since 7.0.0 postinstall script does not run after `npm install <some-package>`
+> 
+> In this case you can run `integrate` manually after a package installation.
 ## For Package Developers
 
 If your package requires "additional steps" after installation, follow these steps to allow other developers quickly integrate your package into their projects.
@@ -113,7 +100,11 @@ Click on the links below to learn how to use each task type:
 - [Plist Task](docs/PLIST.md)
 - [iOS Resources Task](docs/IOS_RESOURCES.md)
 - [Build Gradle Task](docs/BUILD_GRADLE.md)
-- [Android Manifest](docs/ANROID_MANIFEST.md)
+- [Android Manifest](docs/ANDROID_MANIFEST.md)
+
+### Get help from community
+
+You can also open an issue and provide a link to a repository that features a clean React Native installation with your package integrated.
 
 ## Contributing
 
