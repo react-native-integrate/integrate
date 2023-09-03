@@ -1,5 +1,5 @@
 Android Manifest Task Configuration (`android_manifest`)
-================================================
+========================================================
 
 Overview
 --------
@@ -16,29 +16,27 @@ The `android_manifest` task allows you to modify the AndroidManifest.xml file in
         -   `application`: Modifies the `<application>` tag in the file.
         -   `activity`: Modifies the `<activity>` tag in the file.
         -   Omitting this field means the entire AndroidManifest.xml file will be the context.
+    -   `append` (Optional): Specifies text or code to be added after the specified context within the AndroidManifest.xml file.
+    -   `prepend` (Optional): Specifies text or code to be added before the specified context within the AndroidManifest.xml file.
+    -   `before` (Optional): Specifies text or code to be added immediately before a specific text or code within the specified context. This field can also include a `$delete: true` flag to remove the specified text.
+    -   `after` (Optional): Specifies text or code to be added immediately after a specific text or code within the specified context. This field can also include a `$delete: true` flag to remove the specified text.
+    -   `strict` (Optional): Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.
+    -   `ifNotPresent` (Optional): Indicates that the task should only be executed if the specified text or code is not present within the specified context.
+    -   `comment` (Optional): Adds a comment before the inserted text or code within the specified context.
     -   `attributes` (Optional): An object that defines the attributes and their values to be added, updated, or deleted within the specified tag. When using the `block` field, this property must be provided.
 
-         Example:
-        ```yaml
-        type: android_manifest
-        updates:
-          - block: activity
-            attributes:
-              android:name: new_name
-              android:useless:
-                $delete: true
-        ```
-
-        In this example, we target the `<activity>` tag and set the `android:name` attribute to "new_name." Additionally, we delete the `android:useless` attribute using `$delete: true`.
-
--   `append` (Optional): Specifies text or code to be added after the specified context within the AndroidManifest.xml file.
--   `prepend` (Optional): Specifies text or code to be added before the specified context within the AndroidManifest.xml file.
--   `before` (Optional): Specifies text or code to be added immediately before a specific text or code within the specified context. This field can also include a `$delete: true` flag to remove the specified text.
--   `after` (Optional): Specifies text or code to be added immediately after a specific text or code within the specified context. This field can also include a `$delete: true` flag to remove the specified text.
--   `strict` (Optional): Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.
--   `ifNotPresent` (Optional): Indicates that the task should only be executed if the specified text or code is not present within the specified context.
--   `comment` (Optional): Adds a comment before the inserted text or code within the specified context.
-
+      Example:
+      ```yaml
+      type: android_manifest
+      updates:
+        - block: activity
+          attributes:
+            android:name: new_name
+            android:useless:
+              $delete: true
+      ```
+    In this example, we target the `<activity>` tag and set the `android:name` attribute to "new_name." Additionally, we delete the `android:useless` attribute using `$delete: true`.
+    
 Usage Example
 -------------
 

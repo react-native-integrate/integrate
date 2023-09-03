@@ -1,4 +1,4 @@
-# react-native-integrate
+# React Native Integrate
 
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
@@ -101,6 +101,7 @@ Click on the links below to learn how to use each task type:
 - [iOS Resources Task](docs/IOS_RESOURCES.md)
 - [Build Gradle Task](docs/BUILD_GRADLE.md)
 - [Android Manifest](docs/ANDROID_MANIFEST.md)
+- [Podfile](docs/PODFILE.md)
 
 ### Get help from community
 

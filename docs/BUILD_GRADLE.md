@@ -20,6 +20,8 @@ Task Properties
     -   `append` (string or object): Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.
     -   `before` (string or object): Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.
     -   `after` (string or object): Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.
+    -   `strict` (Optional): Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.
+    -   `ifNotPresent` (Optional): Indicates that the task should only be executed if the specified text or code is not present within the specified context.
     -   `comment` (string): An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.
 
 Block
@@ -31,13 +33,13 @@ Usage Example
 -------------
 
 ```yaml
-- type: build_gradle
-  label: "Enabling multidex"
-  location: "app",
-  updates:
-    - block: "android.defaultConfig"
-      after: versionName
-      prepend: multiDexEnabled true
+type: build_gradle
+label: "Enabling multidex"
+location: "app",
+updates:
+  - block: "android.defaultConfig"
+    after: versionName
+    prepend: multiDexEnabled true
 ```
 
 In this example, the `build_gradle` task enables multidex in `defaultConfig` block in the `build.gradle` file. The `block` property is set to "android.defaultConfig", indicating the modification context.

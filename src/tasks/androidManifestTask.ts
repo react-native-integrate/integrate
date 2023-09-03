@@ -88,8 +88,9 @@ function applyAttributeModification(args: {
       checkBlockStartValue(blockStart);
 
       if (blockStart) {
+        // noinspection RegExpSimplifiable
         const existingMatcher = new RegExp(
-          `(?<!\\w)${escapeRegExp(name)}=".*?(?!\\\\)."`
+          `\\b${escapeRegExp(name)}="(?:\\\\.|[^\\\\"])*"([\\s]+)?`
         );
         const existingMatch = existingMatcher.exec(blockStart[0]);
         // delete

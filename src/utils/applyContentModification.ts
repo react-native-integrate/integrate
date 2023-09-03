@@ -74,59 +74,7 @@ export function applyContentModification(
     }
     return `${openingNewLine}${comment}${blockContent.space}${blockIndentation}${text}${closingNewLine}`;
   };
-
-  const splittingMsgArr: string[] = [];
-  if (update.after) {
-    const foundIndex = resolveInsertionPoint(
-      blockContent,
-      content,
-      update.after
-    );
-    if (foundIndex.start == -1) {
-      if (update.strict) throw new Error('Could not find insertion point');
-
-      logMessageGray(
-        `insertion point not found, ignoring ${color.yellow('before')} criteria`
-      );
-    } else {
-      blockContent.start = findLineEnd(
-        content,
-        foundIndex.end,
-        blockContent.end
-      );
-      blockContent.match = content.substring(
-        blockContent.start,
-        blockContent.end
-      );
-      splittingMsgArr.push(`after ${summarize(foundIndex.match, 20)}`);
-    }
-  }
-
-  if (update.before) {
-    const foundIndex = resolveInsertionPoint(
-      blockContent,
-      content,
-      update.before
-    );
-    if (foundIndex.start == -1) {
-      if (update.strict) throw new Error('Could not find insertion point');
-
-      logMessageGray(
-        `insertion point not found, skipping ${color.yellow('before')} criteria`
-      );
-    } else {
-      blockContent.end = findLineStart(
-        content,
-        foundIndex.start,
-        blockContent.start
-      );
-      blockContent.match = content.substring(
-        blockContent.start,
-        blockContent.end
-      );
-      splittingMsgArr.push(`before ${summarize(foundIndex.match, 20)}`);
-    }
-  }
+  const splittingMsgArr = applyContextReduction(update, blockContent, content);
   const splittingMsg = splittingMsgArr.length
     ? ` (${splittingMsgArr.join(', ')})`
     : '';
@@ -260,4 +208,64 @@ function resolveInsertionPoint(
 
 export function getBlockName(update: ContentModifierType): string {
   return update.block || 'file';
+}
+
+export function applyContextReduction(
+  update: ContentModifierType,
+  blockContent: BlockContentType,
+  content: string
+): string[] {
+  const splittingMsgArr: string[] = [];
+  if (update.after) {
+    const foundIndex = resolveInsertionPoint(
+      blockContent,
+      content,
+      update.after
+    );
+    if (foundIndex.start == -1) {
+      if (update.strict) throw new Error('Could not find insertion point');
+
+      logMessageGray(
+        `insertion point not found, ignoring ${color.yellow('before')} criteria`
+      );
+    } else {
+      blockContent.start = findLineEnd(
+        content,
+        foundIndex.end,
+        blockContent.end
+      );
+      blockContent.match = content.substring(
+        blockContent.start,
+        blockContent.end
+      );
+      splittingMsgArr.push(`after ${summarize(foundIndex.match, 20)}`);
+    }
+  }
+
+  if (update.before) {
+    const foundIndex = resolveInsertionPoint(
+      blockContent,
+      content,
+      update.before
+    );
+    if (foundIndex.start == -1) {
+      if (update.strict) throw new Error('Could not find insertion point');
+
+      logMessageGray(
+        `insertion point not found, skipping ${color.yellow('before')} criteria`
+      );
+    } else {
+      blockContent.end = findLineStart(
+        content,
+        foundIndex.start,
+        blockContent.start
+      );
+      blockContent.match = content.substring(
+        blockContent.start,
+        blockContent.end
+      );
+      splittingMsgArr.push(`before ${summarize(foundIndex.match, 20)}`);
+    }
+  }
+  return splittingMsgArr;
 }

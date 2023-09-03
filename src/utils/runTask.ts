@@ -3,6 +3,7 @@ import { runTask as runPListTask } from '../tasks/plistTask';
 import { runTask as runBuildGradleTask } from '../tasks/buildGradleTask';
 import { runTask as runAddResourceTask } from '../tasks/iosResourcesTask';
 import { runTask as runAndroidManifestTask } from '../tasks/androidManifestTask';
+import { runTask as runPodFileTask } from '../tasks/podFileTask';
 import { ModTask } from '../types/mod.types';
 
 export function runTask(args: {
@@ -44,6 +45,13 @@ export function runTask(args: {
       break;
     case 'ios_resources':
       runAddResourceTask({
+        configPath,
+        packageName,
+        task,
+      });
+      break;
+    case 'podfile':
+      runPodFileTask({
         configPath,
         packageName,
         task,

@@ -207,7 +207,6 @@ describe('androidManifestTask', () => {
 <manifest>
   <test3 />
   <application
-      
       test3="OK"
       test="OK">
       <activity>

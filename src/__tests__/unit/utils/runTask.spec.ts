@@ -17,12 +17,16 @@ const mocks = {
   android_manifest: {
     runTask: jest.fn(),
   },
+  podfile: {
+    runTask: jest.fn(),
+  },
 };
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
 jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
 jest.mock('../../../tasks/iosResourcesTask', () => mocks.ios_resources);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
+jest.mock('../../../tasks/podFileTask', () => mocks.podfile);
 
 import path from 'path';
 import { ModTask } from '../../../types/mod.types';
@@ -36,6 +40,7 @@ describe('runTask', () => {
     'build_gradle' as const,
     'ios_resources' as const,
     'android_manifest' as const,
+    'podfile' as const,
   ].map(taskType => {
     it(`should run ${taskType} task`, () => {
       mocks[taskType].runTask.mockClear();

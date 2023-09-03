@@ -7,6 +7,7 @@ export const Constants = {
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',
   BUILD_GRADLE_FILE_NAME: 'build.gradle',
+  POD_FILE_NAME: 'Podfile',
   WORKSPACE_EXT: '.xcworkspace',
   CONFIG_FILE_NAME: 'integrate.yml',
   XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',

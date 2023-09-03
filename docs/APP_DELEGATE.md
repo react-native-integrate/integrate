@@ -17,6 +17,8 @@ Task Properties
     -   `append` (string or object): Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.
     -   `before` (string or object): Text or code to insert before a specific point within the context. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search for the insertion point.
     -   `after` (string or object): Text or code to insert after a specific point within the context. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search for the insertion point.
+    -   `strict` (Optional): Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.
+    -   `ifNotPresent` (Optional): Indicates that the task should only be executed if the specified text or code is not present within the specified context.
     -   `comment` (string): An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.
 
 Allowed Method Names
@@ -43,15 +45,15 @@ Usage Example
 Here's an example of how to use the `app_delegate` task:
 
 ```yaml
-- type: app_delegate
-  label: "Integrate Firebase"
-  updates:
-    - prepend: "#import <Firebase.h>"
-    - block: "didFinishLaunchingWithOptions"
-      prepend: "[FIRApp configure];"
-    - block: "openURL"
-      before: "return YES;"
-      append: "// Handle custom URL schemes here."
+type: app_delegate
+label: "Integrate Firebase"
+updates:
+  - prepend: "#import <Firebase.h>"
+  - block: "didFinishLaunchingWithOptions"
+    prepend: "[FIRApp configure];"
+  - block: "openURL"
+    before: "return YES;"
+    append: "// Handle custom URL schemes here."
 ```
 
 In this example, the task is labeled "Integrate Firebase." It defines three update items:

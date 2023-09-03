@@ -17,11 +17,16 @@ properties:
               enum: [plist]
             label:
               type: string
-            set:
-              type: object
-            strategy:
-              type: string
-              enum: [merge_concat, merge, assign]
+            updates:
+              type: array
+              items:
+                type: object
+                properties:
+                  set:
+                    type: object
+                  strategy:
+                    type: string
+                    enum: [merge_concat, merge, assign]
 
         #app_delegate task     
         - type: object
@@ -33,73 +38,52 @@ properties:
               enum: [app_delegate]
             label:
               type: string
-            ifNotPresent:
-              type: string
-            prepend:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-            append:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-            before:
-              type: object
-              properties:
-                find:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        regex:
-                          type: string
-                        flags:
-                          type: string
-                insert:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        file:
-                          type: string
-                strict:
-                  type: boolean
-            after:
-              type: object
-              properties:
-                find:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        regex:
-                          type: string
-                        flags:
-                          type: string
-                insert:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        file:
-                          type: string
-                strict:
-                  type: boolean
-            imports:
+            updates:
               type: array
               items:
-                type: string
-            method:
-              type: string
-              enum: [didFinishLaunchingWithOptions, applicationDidBecomeActive, applicationWillResignActive, applicationDidEnterBackground, applicationWillEnterForeground, applicationWillTerminate, openURL, restorationHandler, didRegisterForRemoteNotificationsWithDeviceToken, didFailToRegisterForRemoteNotificationsWithError, didReceiveRemoteNotification, fetchCompletionHandler]
-            comment:
-              type: string
+                type: object
+                properties:
+                  block:
+                    type: string
+                    enum: [didFinishLaunchingWithOptions, applicationDidBecomeActive, applicationWillResignActive, applicationDidEnterBackground, applicationWillEnterForeground, applicationWillTerminate, openURL, restorationHandler, didRegisterForRemoteNotificationsWithDeviceToken, didFailToRegisterForRemoteNotificationsWithError, didReceiveRemoteNotification, fetchCompletionHandler]
+                  prepend:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  before:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  after:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  strict:
+                    type: boolean
+                  ifNotPresent:
+                    type: string
+                  comment:
+                    type: string
 
         # validate task
         - type: object
@@ -132,78 +116,64 @@ properties:
             errorMsg:
               type: string
 
-        # build and app/build gradle task       
+        # build gradle task  
         - type: object
           required:
             - type
           properties:
             type:
               type: string
-              enum: [build_gradle, app_build_gradle]
+              enum: [build_gradle]
             label:
               type: string
-            ifNotPresent:
+            location:
               type: string
-            prepend:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-            append:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    file:
-                      type: string
-            before:
-              type: object
-              properties:
-                find:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        regex:
-                          type: string
-                        flags:
-                          type: string
-                insert:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        file:
-                          type: string
-                strict:
-                  type: boolean
-            after:
-              type: object
-              properties:
-                find:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        regex:
-                          type: string
-                        flags:
-                          type: string
-                insert:
-                  anyOf:
-                    - type: string
-                    - type: object
-                      properties:
-                        file:
-                          type: string
-                strict:
-                  type: boolean
-            path:
-              type: string
-            comment:
-              type: string
+              enum: [root, app]
+            updates:
+              type: array
+              items:
+                type: object
+                properties:
+                  block:
+                    type: string
+                  prepend:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  before:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  after:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  strict:
+                    type: boolean
+                  ifNotPresent:
+                    type: string
+                  comment:
+                    type: string
 
         # android manifest task
         - type: object
@@ -215,6 +185,52 @@ properties:
               enum: [android_manifest]
             label:
               type: string
+            updates:
+              type: array
+              items:
+                type: object
+                properties:
+                  block:
+                    type: string
+                    enum: [manifest, application, activity]
+                  prepend:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  before:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  after:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  strict:
+                    type: boolean
+                  ifNotPresent:
+                    type: string
+                  comment:
+                    type: string
 
         # add resource task
         - type: object
@@ -226,16 +242,77 @@ properties:
               enum: [ios_resources]
             label:
               type: string
-            file:
+            updates:
+              type: array
+              items:
+                type: object
+                properties:
+                  add:
+                    type: string
+                  target:
+                    anyOf:
+                      - type: string
+                        enum: [root, app]
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                          path:
+                            type: string
+
+        # podfile task  
+        - type: object
+          required:
+            - type
+          properties:
+            type:
               type: string
-            target:
-              anyOf:
-                - type: string
-                  enum: [root, app]
-                - type: object
-                  properties:
-                    name:
-                      type: string
-                    path:
-                      type: string
+              enum: [podfile]
+            label:
+              type: string
+            updates:
+              type: array
+              items:
+                type: object
+                properties:
+                  block:
+                    type: string
+                  prepend:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  before:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  after:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
+                  strict:
+                    type: boolean
+                  ifNotPresent:
+                    type: string
+                  comment:
+                    type: string
 `;

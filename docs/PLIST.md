@@ -21,17 +21,16 @@ Each object within the `updates` array represents a modification you want to mak
 ### Example Usage
 
 ```yaml
-- type: plist
-  label: Add or Modify Plist Entries
-  update:
-    - set:
-        MY_KEY: "my value"
-        ANOTHER_KEY: "another value"
-      strategy: assign
-
-    - set:
-        NEW_KEY: "new value"
-      strategy: merge
+type: plist
+label: Add or Modify Plist Entries
+update:
+  - set:
+      MY_KEY: "my value"
+      ANOTHER_KEY: "another value"
+    strategy: assign
+  - set:
+      NEW_KEY: "new value"
+    strategy: merge
 ```
 
 In this example, the `plist` task is used to add or modify entries in a plist file. Two updates are specified:

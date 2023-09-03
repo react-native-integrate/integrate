@@ -170,9 +170,6 @@ export async function integrate(packageName?: string): Promise<void> {
               ),
             true
           );
-          logWarning(
-            `failed to complete ${failedTaskCount} task(s) - please complete integration manually`
-          );
         } else {
           logSuccess(
             color.inverse(color.bold(color.green(' integrated '))) +

@@ -1,5 +1,5 @@
 Ios Resources Task Configuration (`ios_resources`)
-================================================
+==================================================
 
 Overview
 ---------
@@ -24,13 +24,13 @@ Usage Example
 -------------
 
 ```yaml
-- type: ios_resources
-  updates:
-    - add: "GoogleService-Info.plist"
-      target: "app"
-    - add: "splash.png"
-      target:
-        name: "CustomTarget"
+type: ios_resources
+updates:
+  - add: "GoogleService-Info.plist"
+    target: "app"
+  - add: "splash.png"
+    target:
+      name: "CustomTarget"
 ```
 
 In this example, two resources, `GoogleService-Info.plist` and `splash.png` are specified for addition. The `target` field distinguishes the target groups within the iOS project where each resource should be placed, enabling precise resource management.

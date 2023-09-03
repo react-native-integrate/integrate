@@ -1,21 +1,20 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import {
-  BlockContentType,
-  BuildGradleLocationType,
-  BuildGradleTaskType,
-} from '../types/mod.types';
+import { BlockContentType, PodFileTaskType } from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
-import { findClosingTagIndex } from '../utils/findClosingTagIndex';
+import {
+  findClosingTagIndex,
+  TagDefinitions,
+} from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
 import { stringSplice } from '../utils/stringSplice';
 
-export function buildGradleTask(args: {
+export function podFileTask(args: {
   configPath: string;
   packageName: string;
   content: string;
-  task: BuildGradleTaskType;
+  task: PodFileTaskType;
 }): string {
   let { content } = args;
   const { task, configPath } = args;
@@ -26,10 +25,15 @@ export function buildGradleTask(args: {
       findOrCreateBlock,
       configPath,
       content,
-      indentation: 4,
+      indentation: 2,
+      buildComment: buildPodComment,
     });
   });
   return content;
+}
+
+function buildPodComment(comment: string): string[] {
+  return comment.split('\n').map(x => `# ${x}`);
 }
 
 function findOrCreateBlock(
@@ -51,7 +55,9 @@ function findOrCreateBlock(
   for (let i = 0; i < blockPath.length; i++) {
     const partialPath = blockPath.slice(0, i + 1);
     const matcherRegex = new RegExp(
-      `^((\\s+)?)${partialPath.join('.*?^(\\s+)?')}\\s+\\{`,
+      `^((\\s+)?)${partialPath.join(
+        '.*?^(\\s+)?'
+      )}.*?\\bdo\\b(\\s\\|.*?\\|)?\\s?`,
       'ms'
     );
     let blockStart = matcherRegex.exec(content);
@@ -60,12 +66,13 @@ function findOrCreateBlock(
     if (!blockStart) {
       const blockName = blockPath[i];
       // create block in block
-      const space = ' '.repeat(4 * i);
-      const previousSpace = ' '.repeat(Math.max(0, 4 * (i - 1)));
-      const newBlock = `${space}${blockName} {}`;
+      const space = ' '.repeat(2 * i);
+      const previousSpace = ' '.repeat(Math.max(0, 2 * (i - 1)));
+      const newBlock = buildBlock(space, blockName);
       const codeToInsert = `
 ${newBlock}
 ${previousSpace}`;
+
       content = stringSplice(content, blockContent.end, 0, codeToInsert);
       blockStart = matcherRegex.exec(content);
     }
@@ -74,7 +81,8 @@ ${previousSpace}`;
     }
     const blockEndIndex = findClosingTagIndex(
       content,
-      blockStart.index + blockStart[0].length
+      blockStart.index + blockStart[0].length,
+      TagDefinitions.POD
     );
     const blockBody = content.substring(
       blockStart.index + blockStart[0].length,
@@ -85,7 +93,7 @@ ${previousSpace}`;
       end: blockEndIndex,
       match: blockBody,
       justCreated,
-      space: ' '.repeat(4 * i),
+      space: ' '.repeat(2 * i),
     };
   }
 
@@ -95,44 +103,57 @@ ${previousSpace}`;
   };
 }
 
-function getBuildGradlePath(location: BuildGradleLocationType) {
+function buildBlock(space: string, blockName: string) {
+  if (blockName === 'target') {
+    // name is not specified so cannot create, throw error
+    throw new Error('target not found, something is wrong?');
+  } else if (/target '.*?'/.test(blockName)) {
+    // name is specified, create block
+    return `${space}${blockName} do end`;
+  } else if (podHooks.includes(blockName)) {
+    return `${space}${blockName} do |installer| end`;
+  } else {
+    throw new Error('invalid block: ' + blockName);
+  }
+}
+
+const podHooks = [
+  'pre_install',
+  'pre_integrate',
+  'post_install',
+  'post_integrate',
+];
+
+function getPodFilePath() {
   const projectPath = getProjectPath();
 
-  const buildGradlePath = path.join(
-    projectPath,
-    'android',
-    location == 'app' ? 'app' : '',
-    Constants.BUILD_GRADLE_FILE_NAME
-  );
-  if (!fs.existsSync(buildGradlePath))
-    throw new Error(`build.gradle file not found at ${buildGradlePath}`);
-  return buildGradlePath;
+  const podFilePath = path.join(projectPath, 'ios', Constants.POD_FILE_NAME);
+  if (!fs.existsSync(podFilePath))
+    throw new Error(`Pod file not found at ${podFilePath}`);
+  return podFilePath;
 }
 
-function readBuildGradleContent(location = 'root' as BuildGradleLocationType) {
-  const buildGradlePath = getBuildGradlePath(location);
-  return fs.readFileSync(buildGradlePath, 'utf-8');
+function readPodFileContent() {
+  const podFilePath = getPodFilePath();
+  return fs.readFileSync(podFilePath, 'utf-8');
 }
 
-function writeBuildGradleContent(
-  content: string,
-  location = 'root' as BuildGradleLocationType
-): void {
-  const buildGradlePath = getBuildGradlePath(location);
-  return fs.writeFileSync(buildGradlePath, content, 'utf-8');
+function writePodFileContent(content: string): void {
+  const podFilePath = getPodFilePath();
+  return fs.writeFileSync(podFilePath, content, 'utf-8');
 }
 
 export function runTask(args: {
   configPath: string;
   packageName: string;
-  task: BuildGradleTaskType;
+  task: PodFileTaskType;
 }): void {
-  let content = readBuildGradleContent(args.task.location);
+  let content = readPodFileContent();
 
-  content = buildGradleTask({
+  content = podFileTask({
     ...args,
     content,
   });
 
-  writeBuildGradleContent(content, args.task.location);
+  writePodFileContent(content);
 }

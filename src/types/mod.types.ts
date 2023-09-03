@@ -121,6 +121,13 @@ export type IosResourcesModifierType = {
       };
 };
 
+// pod file task
+
+export type PodFileTaskType = ModTaskBase &
+  UpdatesType<ContentModifierType> & {
+    type: 'podfile';
+  };
+
 export type ModTaskBase = {
   label?: string;
 };
@@ -131,7 +138,8 @@ export type ModTask =
   | ValidationTaskType
   | BuildGradleTaskType
   | AndroidManifestTaskType
-  | IosResourcesTaskType;
+  | IosResourcesTaskType
+  | PodFileTaskType;
 
 export type IntegrationConfig = {
   tasks: ModTask[];
