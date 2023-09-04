@@ -11,6 +11,7 @@ import {
 import {
   applyContentModification,
   getBlockName,
+  updateBlockContent,
 } from '../utils/applyContentModification';
 import { escapeRegExp } from '../utils/escapeRegExp';
 import {
@@ -56,7 +57,7 @@ function applyAttributeModification(args: {
   blockContent: BlockContentType;
   update: AndroidManifestModifierType;
 }): string {
-  const { update } = args;
+  const { update, blockContent } = args;
   let { content } = args;
   if (update.attributes) {
     if (!update.block)
@@ -96,12 +97,11 @@ function applyAttributeModification(args: {
         // delete
         if (typeof value == 'object' && value.$delete) {
           if (existingMatch) {
-            content = stringSplice(
-              content,
-              existingMatch.index + blockStart.index,
-              existingMatch[0].length,
-              ''
-            );
+            const start = existingMatch.index + blockStart.index,
+              rem = existingMatch[0].length,
+              insert = '';
+            content = stringSplice(content, start, rem, insert);
+            updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `deleted attribute ${summarize(name)} in ${summarize(
                 getBlockName(update)
@@ -122,12 +122,11 @@ function applyAttributeModification(args: {
           );
           if (existingMatch) {
             // replace
-            content = stringSplice(
-              content,
-              existingMatch.index + blockStart.index,
-              existingMatch[0].length,
-              codeToInsert
-            );
+            const start = existingMatch.index + blockStart.index,
+              rem = existingMatch[0].length,
+              insert = codeToInsert;
+            content = stringSplice(content, start, rem, insert);
+            updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `set existing attribute in ${summarize(
                 getBlockName(update)
@@ -137,12 +136,13 @@ function applyAttributeModification(args: {
             // set
             const endOfOpeningTagIndex =
               blockStart.index + blockStart[0].length - 1;
-            content = stringSplice(
-              content,
-              endOfOpeningTagIndex,
-              0,
-              codeToInsert
-            );
+
+            // noinspection UnnecessaryLocalVariableJS
+            const start = endOfOpeningTagIndex,
+              rem = 0,
+              insert = codeToInsert;
+            content = stringSplice(content, start, rem, insert);
+            updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `set new attribute in ${summarize(
                 getBlockName(update)

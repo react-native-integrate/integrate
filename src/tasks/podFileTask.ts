@@ -57,7 +57,7 @@ function findOrCreateBlock(
     const matcherRegex = new RegExp(
       `^((\\s+)?)${partialPath.join(
         '.*?^(\\s+)?'
-      )}.*?\\bdo\\b(\\s\\|.*?\\|)?\\s?`,
+      )}.*?\\bdo\\b(\\s\\|.*?\\|)? ?`,
       'ms'
     );
     let blockStart = matcherRegex.exec(content);

@@ -9,16 +9,27 @@ The "ios_resources" task is used to manage resources within the iOS project. Thi
 Task Properties
 ---------------
 
--   `type`: Specifies the task type, which should be set to "ios_resources" for this task.
--   `label`: An optional label or description for the task.
--   `updates`: An array of update items used to define the resource modifications. Each update item consists of the following fields:
-    -   `add`: Specifies the resource to be added. It can be a string representing the resource file name.
-    -   `target`: (string or object) Specifies the target group within the iOS project where the resource should be added. It can take the listed values.
-        - `root`: (default) Adds the resource to the project root
-        - `app`: Adds the resource to the main application group
-        - `(object)`
-            - `name`: Name of the target group
-            - `path`: Path of the target group
+#### `type` (string, required)
+Specifies the task type, which should be set to "ios_resources" for this task.
+
+#### `label` (string)
+An optional label or description for the task.
+
+#### `updates` (array of objects, required)
+An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+
+### Update Item
+
+#### `add` (string)
+Specifies the resource to be added. It can be a string representing the resource file name.
+
+#### `target` (string or object)
+Specifies the target group within the iOS project where the resource should be added. It can take the listed values.
+- `root`: (default) Adds the resource to the project root
+- `app`: Adds the resource to the main application group
+- `(object)`
+    - `name`: Name of the target group
+    - `path`: Path of the target group
 
 Usage Example
 -------------

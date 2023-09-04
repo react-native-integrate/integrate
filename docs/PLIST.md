@@ -3,20 +3,28 @@ Property List (PLIST) Task Configuration (`plist`)
 
 The `plist` task allows you to modify property list (plist) files, typically used in iOS projects, to add or modify values.
 
-### Fields
+Task Properties
+---------------
 
--   `type`: This should be set to `plist` to indicate that you're using the `plist` task.
--   `label`: A label or description for the task. It's used for documentation purposes and doesn't affect the functionality.
--   `updates`: An array of updates you want to make to the plist file. Each update object represents a modification.
+#### `type` (string, required)
+Specifies the task type, which should be set to "plist" for this task.
 
-#### Update Item Fields
+#### `label` (string)
+An optional label or description for the task.
 
-Each object within the `updates` array represents a modification you want to make to the plist file. Here are the fields within an update object:
--   `set`: An object containing key-value pairs that you want to add or modify in the plist.
--   `strategy`:  (optional) Specifies how to handle merging new and existing values. It can be one of the following:
-    -   `assign`: (default) Overwrites the entire key with the new value.
-    -   `merge`: Merges new values into existing dictionaries.
-    -   `merge_concat`: Merges dictionaries while concatenating arrays.
+#### `updates` (array of objects, required)
+An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+
+### Update Item
+
+#### `set` (object)
+An object containing key-value pairs that you want to add or modify in the plist.
+
+#### `strategy` (string)
+Specifies how to handle merging new and existing values. It can be one of the following:
+-   `assign`: (default) Overwrites the entire key with the new value.
+-   `merge`: Merges new values into existing dictionaries.
+-   `merge_concat`: Merges dictionaries while concatenating arrays.
 
 ### Example Usage
 

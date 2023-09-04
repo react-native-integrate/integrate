@@ -16,11 +16,18 @@ export type ContentModifierType<TBlock = string> = {
   // inserts if text is not present
   ifNotPresent?: string;
 
+  // specifies that before, after, append and prepend
+  // should insert text without line management
+  exact?: boolean;
+
   // narrows context to after this point
   after?: TextOrRegex;
 
   // narrows context to before this point
   before?: TextOrRegex;
+
+  // narrows context to this point
+  search?: TextOrRegex;
 
   // throws if before or after fails to find insertion point
   strict?: boolean;
@@ -28,8 +35,11 @@ export type ContentModifierType<TBlock = string> = {
   // appends text to the end of file context
   append?: TextOrFileValue;
 
-  // appends tex to the start of file context
+  // appends text to the start of file context
   prepend?: TextOrFileValue;
+
+  // replaces the file context with text
+  replace?: TextOrFileValue;
 };
 
 export type UpdatesType<T> = {

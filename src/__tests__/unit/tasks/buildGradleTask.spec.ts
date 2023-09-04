@@ -196,6 +196,150 @@ buildscript {
 }
 `);
   });
+  it('should replace text with existing body ', () => {
+    let content = `
+buildscript {
+    ext {
+        jcenter();
+        jcenter();
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          search: 'jcenter();',
+          replace: 'google();',
+        },
+      ],
+    };
+    content = buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+buildscript {
+    ext {
+        google();
+        jcenter();
+    }
+}
+`);
+  });
+  it('should append text exactly with existing body ', () => {
+    let content = `
+buildscript {
+    ext {
+        jcenter();
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      updates: [
+        {
+          block: 'buildscript',
+          after: 'ext {',
+          before: '}',
+          search: 'jcenter();',
+          replace: 'jcenter();',
+          prepend: 'google1();',
+          append: 'google3();',
+          exact: true,
+        },
+      ],
+    };
+    content = buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+buildscript {
+    ext {
+        google1();jcenter();google3();
+    }
+}
+`);
+  });
+  it('should replace all text with existing body ', () => {
+    let content = `
+buildscript {
+    ext {
+        jcenter();
+        jcenter();
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          search: {
+            regex: 'jcenter\\(\\);',
+            flags: 'g',
+          },
+          replace: 'google();',
+        },
+      ],
+    };
+    content = buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+buildscript {
+    ext {
+        google();
+        google();
+    }
+}
+`);
+  });
+  it('should skip replace when ifNotPresent exists', () => {
+    const content = `
+buildscript {
+    ext {
+        jcenter();
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      updates: [
+        {
+          block: 'buildscript.ext',
+          ifNotPresent: 'jcenter',
+          search: 'jcenter();',
+          replace: 'google();',
+        },
+        {
+          block: 'buildscript.ext',
+          ifNotPresent: 'jcenter',
+          search: 'jcenter();',
+          replace: 'google();',
+        },
+      ],
+    };
+
+    buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('found existing ')
+    );
+  });
   it('should insert text after point with comment', () => {
     let content = `
 buildscript {

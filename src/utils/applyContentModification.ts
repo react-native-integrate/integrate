@@ -5,6 +5,7 @@ import {
   ContentModifierType,
   TextOrRegex,
 } from '../types/mod.types';
+import { escapeRegExp } from './escapeRegExp';
 import { findInsertionPoint } from './findInsertionPoint';
 import { findLineEnd, findLineStart } from './findLineTools';
 import { getModContent } from './getModContent';
@@ -78,84 +79,160 @@ export function applyContentModification(
   const splittingMsg = splittingMsgArr.length
     ? ` (${splittingMsgArr.join(', ')})`
     : '';
-  if (update.prepend) {
-    const prependText = getModContent(configPath, update.prepend);
-    const codeToInsert = getCodeToInsert(prependText);
+  const runModifiers = (
+    spliceCallback?: (start: number, rem: number, insert: string) => void
+  ) => {
+    Object.keys(update).forEach(key => {
+      switch (key) {
+        case 'prepend':
+          if (update.prepend) {
+            const prependText = getModContent(configPath, update.prepend);
+            const codeToInsert = update.exact
+              ? prependText
+              : getCodeToInsert(prependText);
 
-    if (
-      update.ifNotPresent &&
-      blockContent.match.includes(update.ifNotPresent)
-    ) {
-      logMessageGray(
-        `found existing ${summarize(
-          update.ifNotPresent
-        )}, skipped inserting: ${summarize(prependText)}`
-      );
-    } else if (!blockContent.match.includes(prependText)) {
-      content = stringSplice(content, blockContent.start, 0, codeToInsert);
-      logMessage(
-        `prepended code in ${summarize(
-          getBlockName(update)
-        )}${splittingMsg}: ${summarize(prependText)}`
-      );
+            if (
+              update.ifNotPresent &&
+              blockContent.match.includes(update.ifNotPresent)
+            ) {
+              logMessageGray(
+                `found existing ${summarize(
+                  update.ifNotPresent
+                )}, skipped inserting: ${summarize(prependText)}`
+              );
+            } else if (!blockContent.match.includes(prependText)) {
+              const start = blockContent.start,
+                rem = 0,
+                insert = codeToInsert;
+              content = stringSplice(content, start, rem, insert);
 
-      const updateResult = updateBlockContent(
-        update,
-        content,
-        findOrCreateBlock
-      );
-      content = updateResult.content;
-      blockContent = updateResult.blockContent;
-    } else
-      logMessageGray(
-        `code already exists, skipped prepending: ${summarize(prependText)}`
-      );
-  }
-  if (update.append) {
-    const appendText = getModContent(configPath, update.append);
-    const codeToInsert = getCodeToInsert(appendText);
-    if (
-      update.ifNotPresent &&
-      blockContent.match.includes(update.ifNotPresent)
-    ) {
-      logMessageGray(
-        `found existing ${summarize(
-          update.ifNotPresent
-        )}, skipped inserting: ${summarize(appendText)}`
-      );
-    } else if (!blockContent.match.includes(appendText)) {
-      content = stringSplice(
-        content,
-        findLineStart(content, blockContent.end, blockContent.start),
-        0,
-        codeToInsert
-      );
-      logMessage(
-        `appended code in ${summarize(
-          getBlockName(update)
-        )}${splittingMsg}: ${summarize(appendText)}`
-      );
+              if (spliceCallback) spliceCallback(start, rem, insert);
+              updateBlockContent(blockContent, rem, insert, content);
+              logMessage(
+                `prepended code in ${summarize(
+                  getBlockName(update)
+                )}${splittingMsg}: ${summarize(prependText)}`
+              );
+            } else
+              logMessageGray(
+                `code already exists, skipped prepending: ${summarize(
+                  prependText
+                )}`
+              );
+          }
+          break;
+        case 'append':
+          if (update.append) {
+            const appendText = getModContent(configPath, update.append);
+            const codeToInsert = update.exact
+              ? appendText
+              : getCodeToInsert(appendText);
+            if (
+              update.ifNotPresent &&
+              blockContent.match.includes(update.ifNotPresent)
+            ) {
+              logMessageGray(
+                `found existing ${summarize(
+                  update.ifNotPresent
+                )}, skipped inserting: ${summarize(appendText)}`
+              );
+            } else if (!blockContent.match.includes(appendText)) {
+              const lineStart = update.exact
+                ? blockContent.end
+                : findLineStart(content, blockContent.end, blockContent.start);
 
-      const updateResult = updateBlockContent(
-        update,
-        content,
-        findOrCreateBlock
+              const start = lineStart,
+                rem = 0,
+                insert = codeToInsert;
+              content = stringSplice(content, start, rem, insert);
+
+              if (spliceCallback) spliceCallback(start, rem, insert);
+              updateBlockContent(blockContent, rem, insert, content);
+
+              logMessage(
+                `appended code in ${summarize(
+                  getBlockName(update)
+                )}${splittingMsg}: ${summarize(appendText)}`
+              );
+            } else
+              logMessageGray(
+                `code already exists, skipped appending: ${summarize(
+                  appendText
+                )}`
+              );
+          }
+          break;
+        case 'replace':
+          if (update.replace) {
+            const replaceText = getModContent(configPath, update.replace);
+            if (
+              update.ifNotPresent &&
+              blockContent.match.includes(update.ifNotPresent)
+            ) {
+              logMessageGray(
+                `found existing ${summarize(
+                  update.ifNotPresent
+                )}, skipped inserting: ${summarize(replaceText)}`
+              );
+            } else if (!blockContent.match.includes(replaceText)) {
+              const start = blockContent.start,
+                rem = blockContent.end - blockContent.start,
+                insert = replaceText;
+              content = stringSplice(content, start, rem, insert);
+
+              if (spliceCallback) spliceCallback(start, rem, insert);
+              updateBlockContent(blockContent, rem, insert, content);
+              logMessage(
+                `replaced code in ${summarize(
+                  getBlockName(update)
+                )}${splittingMsg}: ${summarize(replaceText)}`
+              );
+            } else
+              logMessageGray(
+                `code already exists, skipped replacing: ${summarize(
+                  replaceText
+                )}`
+              );
+          }
+          break;
+      }
+    });
+  };
+  if (update.search) {
+    const searchBlockContent = { ...blockContent };
+    let searchMatcher =
+      typeof update.search == 'string'
+        ? new RegExp(escapeRegExp(update.search))
+        : new RegExp(update.search.regex, update.search.flags);
+    const searchOnce = !searchMatcher.flags.includes('g');
+    if (searchOnce)
+      searchMatcher = new RegExp(
+        searchMatcher.source,
+        searchMatcher.flags + 'g'
       );
-      content = updateResult.content;
-      blockContent = updateResult.blockContent;
-    } else
-      logMessageGray(
-        `code already exists, skipped appending: ${summarize(appendText)}`
-      );
-  }
+    let searching = true;
+    while (searching) {
+      const match = searchMatcher.exec(searchBlockContent.match);
+      if (!match) break;
+
+      blockContent.start = searchBlockContent.start + match.index;
+      blockContent.end =
+        searchBlockContent.start + match.index + match[0].length;
+      blockContent.match = match[0];
+
+      runModifiers((start, rem, insert) => {
+        searchMatcher.lastIndex += -rem + insert.length;
+        updateBlockContent(searchBlockContent, rem, insert, content);
+      });
+
+      if (searchOnce) searching = false;
+    }
+  } else runModifiers();
   if (additionalModification) {
     content = additionalModification({
       content,
       blockContent,
     });
-    const updateResult = updateBlockContent(update, content, findOrCreateBlock);
-    content = updateResult.content;
-    blockContent = updateResult.blockContent;
   }
   return content;
 }
@@ -163,27 +240,14 @@ export function applyContentModification(
 function buildCommonComment(comment: string): string[] {
   return comment.split('\n').map(x => `// ${x}`);
 }
-
-function updateBlockContent(
-  update: ContentModifierType,
-  content: string,
-  findOrCreateBlock: FindOrCreateBlockType
-) {
-  let blockContent: BlockContentType;
-
-  if (update.block) {
-    const foundBlock = findOrCreateBlock(content, update.block);
-    blockContent = foundBlock.blockContent;
-    content = foundBlock.content;
-  } else
-    blockContent = {
-      start: 0,
-      end: content.length,
-      match: content,
-      justCreated: false,
-      space: '',
-    };
-  return { content, blockContent };
+export function updateBlockContent(
+  blockContent: BlockContentType,
+  rem: number,
+  insert: string,
+  content: string
+): void {
+  blockContent.end += -rem + insert.length;
+  blockContent.match = content.substring(blockContent.start, blockContent.end);
 }
 
 function resolveInsertionPoint(
@@ -229,11 +293,9 @@ export function applyContextReduction(
         `insertion point not found, ignoring ${color.yellow('before')} criteria`
       );
     } else {
-      blockContent.start = findLineEnd(
-        content,
-        foundIndex.end,
-        blockContent.end
-      );
+      blockContent.start = update.exact
+        ? foundIndex.end
+        : findLineEnd(content, foundIndex.end, blockContent.end);
       blockContent.match = content.substring(
         blockContent.start,
         blockContent.end
@@ -255,11 +317,9 @@ export function applyContextReduction(
         `insertion point not found, skipping ${color.yellow('before')} criteria`
       );
     } else {
-      blockContent.end = findLineStart(
-        content,
-        foundIndex.start,
-        blockContent.start
-      );
+      blockContent.end = update.exact
+        ? foundIndex.start
+        : findLineStart(content, foundIndex.start, blockContent.start);
       blockContent.match = content.substring(
         blockContent.start,
         blockContent.end
