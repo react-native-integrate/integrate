@@ -39,10 +39,10 @@ function writeMockAppDelegate(
   mockFs.writeFileSync(appDelegatePath, appDelegateContent);
   return appDelegatePath;
 }
-function writeMockPList(): string {
+function writeMockPList(target = 'test'): string {
   const appDelegatePath = path.resolve(
     __dirname,
-    `../mock-project/ios/test/${Constants.PLIST_FILE_NAME}`
+    `../mock-project/ios/${target}/${Constants.PLIST_FILE_NAME}`
   );
   mockFs.writeFileSync(appDelegatePath, mockPList);
   return appDelegatePath;

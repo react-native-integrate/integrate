@@ -12,6 +12,9 @@ Specifies the task type, which should be set to "plist" for this task.
 #### `label` (string)
 An optional label or description for the task.
 
+#### `target` (string)
+Specifies the target which contains the plist file. Omitting this field means the plist of main app will be modified.
+
 #### `updates` (array of objects, required)
 An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
 

@@ -232,6 +232,28 @@ describe('pListTask', () => {
       const content = mockFs.readFileSync(pListPath);
       expect(content).toContain('test2');
     });
+    it('should read and write plist file of custom target', () => {
+      const pListPath = writeMockPList('custom');
+      const task: PlistTaskType = {
+        type: 'plist',
+        target: 'custom',
+        updates: [
+          {
+            set: {
+              CFBundleDisplayName: 'test2',
+            },
+          },
+        ],
+      };
+
+      runTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      });
+      const content = mockFs.readFileSync(pListPath);
+      expect(content).toContain('test2');
+    });
     it('should throw when plist does not exist', () => {
       const task: PlistTaskType = {
         type: 'plist',

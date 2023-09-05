@@ -51,6 +51,7 @@ export type UpdatesType<T> = {
 export type PlistTaskType = ModTaskBase &
   UpdatesType<PlistModifierType> & {
     type: 'plist';
+    target?: string;
   };
 
 export type PlistModifierType = {

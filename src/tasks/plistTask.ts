@@ -6,7 +6,8 @@ import plist from 'simple-plist';
 import { Constants } from '../constants';
 import { logMessage, summarize } from '../prompter';
 import { PlistModifierType, PlistTaskType } from '../types/mod.types';
-import { getIosProjectPath } from '../utils/getIosProjectPath';
+import { getIosProjectName } from '../utils/getIosProjectPath';
+import { getProjectPath } from '../utils/getProjectPath';
 
 export function plistTask(args: {
   configPath: string;
@@ -78,22 +79,30 @@ function applyPlistModification(
   return content;
 }
 
-function getPListPath() {
-  const iosProjectPath = getIosProjectPath();
-
-  const pListPath = path.join(iosProjectPath, Constants.PLIST_FILE_NAME);
+function getPListPath(target: string | undefined) {
+  if (!target) target = getIosProjectName();
+  const projectPath = getProjectPath();
+  const pListPath = path.join(
+    projectPath,
+    'ios',
+    target,
+    Constants.PLIST_FILE_NAME
+  );
   if (!fs.existsSync(pListPath))
     throw new Error(`Plist file not found at ${pListPath}`);
   return pListPath;
 }
 
-function readPListContent() {
-  const appDelegatePath = getPListPath();
+function readPListContent(target: string | undefined) {
+  const appDelegatePath = getPListPath(target);
   return plist.parse(fs.readFileSync(appDelegatePath, 'utf-8'));
 }
 
-function writePListContent(content: Record<string, any>): void {
-  const appDelegatePath = getPListPath();
+function writePListContent(
+  content: Record<string, any>,
+  target: string | undefined
+): void {
+  const appDelegatePath = getPListPath(target);
   return fs.writeFileSync(appDelegatePath, plist.stringify(content), 'utf-8');
 }
 
@@ -102,12 +111,12 @@ export function runTask(args: {
   packageName: string;
   task: PlistTaskType;
 }): void {
-  let content = readPListContent();
+  let content = readPListContent(args.task.target);
 
   content = plistTask({
     ...args,
     content,
   });
 
-  writePListContent(content);
+  writePListContent(content, args.task.target);
 }
