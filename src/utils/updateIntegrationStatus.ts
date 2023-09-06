@@ -1,22 +1,35 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import { LockData, LockProjectData } from '../types/integrator.types';
+import {
+  LockData,
+  LockDataWithMeta,
+  LockProjectData,
+} from '../types/integrator.types';
 import { getProjectPath } from './getProjectPath';
 
 const projectPath = getProjectPath();
 const lockFilePath = path.join(projectPath, Constants.LOCK_FILE_NAME);
 
 function createLockObject(): LockData {
-  return { packages: {}, lockfileVersion: Constants.CURRENT_LOCK_VERSION };
+  return { lockfileVersion: Constants.CURRENT_LOCK_VERSION, packages: {} };
 }
 
-export function readLockFile(): LockData {
+export function readLockFile(): LockDataWithMeta {
   try {
-    if (!fs.existsSync(lockFilePath)) return createLockObject();
+    if (!fs.existsSync(lockFilePath))
+      return {
+        lockData: createLockObject(),
+        justCreated: true,
+      };
     // Read the file and parse it as JSON
     const lockFileContent = fs.readFileSync(lockFilePath, 'utf-8');
-    if (!lockFileContent) return createLockObject();
+    if (!lockFileContent)
+      return {
+        lockData: createLockObject(),
+        justCreated: true,
+      };
+
     // compare lock version
     const lockData = JSON.parse(lockFileContent) as LockData;
     if (lockData.lockfileVersion !== Constants.CURRENT_LOCK_VERSION) {
@@ -25,7 +38,10 @@ export function readLockFile(): LockData {
       );
       process.abort();
     }
-    return lockData;
+    return {
+      lockData,
+      justCreated: false,
+    };
   } catch (error) {
     console.error('Error reading integrate-lock.json:', error);
     process.abort();
@@ -47,21 +63,19 @@ export function updateIntegrationStatus(
     lockProjectData: LockProjectData;
   }[]
 ): void {
-  const integrationLockData = readLockFile();
-  if (!integrationLockData) return;
-  if (!integrationLockData.packages) integrationLockData.packages = {};
+  const { lockData } = readLockFile();
+  if (!lockData.packages) lockData.packages = {};
   packageIntegrations.forEach(integration => {
     if (integration.lockProjectData.deleted)
-      delete integrationLockData.packages[integration.packageName];
+      delete lockData.packages[integration.packageName];
     else
-      integrationLockData.packages[integration.packageName] =
-        integration.lockProjectData;
+      lockData.packages[integration.packageName] = integration.lockProjectData;
   });
-  integrationLockData.packages = Object.keys(integrationLockData.packages)
+  lockData.packages = Object.keys(lockData.packages)
     .sort()
     .reduce((temp_obj, key) => {
-      temp_obj[key] = integrationLockData.packages[key];
+      temp_obj[key] = lockData.packages[key];
       return temp_obj;
     }, {} as Record<string, any>);
-  writeLockFile(integrationLockData);
+  writeLockFile(lockData);
 }

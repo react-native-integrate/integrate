@@ -136,64 +136,60 @@ describe('updateIntegrationStatus', () => {
   it('should abort for unsupported lock file version', () => {
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
 
     writeMockLock({
       lockfileVersion: -1,
       packages: {},
     });
 
-    updateIntegrationStatus([
-      {
-        packageName: 'test',
-        lockProjectData: {
-          version: '1.2.3',
-          integrated: true,
+    expect(() => {
+      updateIntegrationStatus([
+        {
+          packageName: 'test',
+          lockProjectData: {
+            version: '1.2.3',
+            integrated: true,
+          },
         },
-      },
-    ]);
-    expect(mockAbort).toHaveBeenCalledTimes(1);
-    mockAbort.mockRestore();
+      ]);
+    }).toThrowError('program aborted');
   });
   it('should abort when has no read permission', () => {
     mockFs.setReadPermission(false);
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
 
     writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
     });
 
-    updateIntegrationStatus([
-      {
-        packageName: 'test',
-        lockProjectData: {
-          version: '1.2.3',
-          integrated: true,
+    expect(() => {
+      updateIntegrationStatus([
+        {
+          packageName: 'test',
+          lockProjectData: {
+            version: '1.2.3',
+            integrated: true,
+          },
         },
-      },
-    ]);
-    expect(mockAbort).toHaveBeenCalledTimes(1);
-    mockAbort.mockRestore();
+      ]);
+    }).toThrowError('program aborted');
   });
   it('should abort when has no write permission', () => {
     mockFs.setWritePermission(false);
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
-
-    updateIntegrationStatus([
-      {
-        packageName: 'test',
-        lockProjectData: {
-          version: '1.2.3',
-          integrated: true,
+    expect(() => {
+      updateIntegrationStatus([
+        {
+          packageName: 'test',
+          lockProjectData: {
+            version: '1.2.3',
+            integrated: true,
+          },
         },
-      },
-    ]);
-    expect(mockAbort).toHaveBeenCalledTimes(1);
-    mockAbort.mockRestore();
+      ]);
+    }).toThrowError('program aborted');
   });
 });

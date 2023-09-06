@@ -24,11 +24,9 @@ describe('getInstalledPackages', () => {
     mockFs.reset();
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
 
-    getInstalledPackages();
-
-    expect(mockAbort).toHaveBeenCalledTimes(1);
-    mockAbort.mockRestore();
+    expect(() => {
+      getInstalledPackages();
+    }).toThrowError('program aborted');
   });
 });

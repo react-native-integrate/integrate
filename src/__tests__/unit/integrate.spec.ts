@@ -11,26 +11,79 @@ const mockParseConfig = jest.spyOn(
   'parseConfig'
 );
 
+import path from 'path';
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {
-  it('should run tasks', async () => {
+  it('should not run tasks when lock does not exist (first run)', async () => {
+    const spinner = mockPrompter.spinner();
+    spinner.stop.mockClear();
+    const appDelegatePath = writeMockAppDelegate();
+
+    await integrate();
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
+    expect(spinner.stop).toHaveBeenCalledWith(
+      expect.stringContaining('first run')
+    );
+  });
+  it('should run tasks when lock exists', async () => {
+    const lockPath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
     const appDelegatePath = writeMockAppDelegate();
 
     await integrate();
 
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
+
+    const lockContent = mockFs.readFileSync(lockPath);
+    const lockData = JSON.parse(lockContent);
+    expect(lockData.packages['mock-package']).toEqual({
+      version: '^1.2.3',
+      integrated: true,
+    });
   });
-  it('should run tasks for a package', async () => {
+  it('should run tasks for a package when lock does not exist', async () => {
+    const lockPath = path.resolve(
+      __dirname,
+      `../mock-project/${Constants.LOCK_FILE_NAME}`
+    );
     const appDelegatePath = writeMockAppDelegate();
 
     await integrate('mock-package');
 
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
+    const lockContent = mockFs.readFileSync(lockPath);
+    const lockData = JSON.parse(lockContent);
+    expect(lockData.packages['mock-package']).toEqual({
+      version: '^1.2.3',
+      integrated: true,
+    });
+  });
+  it('should run tasks for a package when lock exist', async () => {
+    const lockPath = writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    const appDelegatePath = writeMockAppDelegate();
+
+    await integrate('mock-package');
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain('[FIRApp configure];');
+    const lockContent = mockFs.readFileSync(lockPath);
+    const lockData = JSON.parse(lockContent);
+    expect(lockData.packages['mock-package']).toEqual({
+      version: '^1.2.3',
+      integrated: true,
+    });
   });
   it('should handle package that doesnt exist', async () => {
     const appDelegatePath = writeMockAppDelegate();

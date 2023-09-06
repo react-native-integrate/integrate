@@ -12,6 +12,10 @@ import { mockAndroidManifestTemplate } from './mockAndroidManifestTemplate';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
 import { mockPList } from './mockPList';
 
+jest.spyOn(process, 'abort').mockImplementation(() => {
+  throw new Error('program aborted');
+});
+
 function writeMockProject(projectJson: Record<any, any>): string {
   const packageJsonPath = path.resolve(
     __dirname,

@@ -8,11 +8,18 @@ export type AnalyzedPackages = {
   newPackages: PackageTuples;
   updatedPackages: PackageTuples;
   deletedPackages: [string, LockProjectData][];
+  justCreatedLockFile: boolean;
+  forceIntegratePackageName: string | undefined;
 };
 
 export interface LockData {
   lockfileVersion: number;
   packages: { [projectName: string]: LockProjectData };
+}
+
+export interface LockDataWithMeta {
+  lockData: LockData;
+  justCreated: boolean;
 }
 
 export interface LockProjectData {

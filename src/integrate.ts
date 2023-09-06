@@ -9,7 +9,7 @@ import {
   startSpinner,
   stopSpinner,
 } from './prompter';
-import { LockProjectData } from './types/integrator.types';
+import { AnalyzedPackages, LockProjectData } from './types/integrator.types';
 import { IntegrationConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getPackageConfig } from './utils/getPackageConfig';
@@ -18,24 +18,12 @@ import { runTask } from './utils/runTask';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 
 export async function integrate(packageName?: string): Promise<void> {
-  if (packageName) {
-    //remove selected package from lock
-    updateIntegrationStatus([
-      {
-        packageName,
-        lockProjectData: {
-          version: '',
-          integrated: false,
-          deleted: true,
-        },
-      },
-    ]);
-  }
   startSpinner('analyzing packages');
-  const analyzedPackages = analyzePackages();
+  const analyzedPackages = analyzePackages(packageName);
   const { deletedPackages, installedPackages } = analyzedPackages;
   let { newPackages } = analyzedPackages;
 
+  const shouldBreak = checkIfJustCreatedLockFile(analyzedPackages);
   let msg = `analyzed ${installedPackages.length} packages`;
   if (packageName) {
     // check if package is installed
@@ -57,6 +45,8 @@ export async function integrate(packageName?: string): Promise<void> {
       return;
     }
   } else {
+    if (shouldBreak) return;
+
     // get packages that need to be implemented
     if (newPackages.length || deletedPackages.length) {
       if (newPackages.length > 0) {
@@ -207,6 +197,34 @@ export async function integrate(packageName?: string): Promise<void> {
     });
   }
   updateIntegrationStatus(packageLockUpdates);
+}
+
+function checkIfJustCreatedLockFile(analyzedPackages: AnalyzedPackages) {
+  const { newPackages, justCreatedLockFile } = analyzedPackages;
+  if (justCreatedLockFile) {
+    if (!analyzedPackages.forceIntegratePackageName)
+      stopSpinner(
+        color.gray(color.italic('first run, skipped integration checks'))
+      );
+
+    const packageLockUpdates: {
+      packageName: string;
+      lockProjectData: LockProjectData;
+    }[] = [];
+    for (let i = 0; i < newPackages.length; i++) {
+      const [packageName, version] = newPackages[i];
+      packageLockUpdates.push({
+        packageName,
+        lockProjectData: {
+          version,
+          integrated: false,
+        },
+      });
+    }
+    updateIntegrationStatus(packageLockUpdates);
+    return true;
+  }
+  return false;
 }
 
 function getErrMessage(e: any, type?: string) {

@@ -149,13 +149,12 @@ describe('prompter', () => {
 
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const mockAbort = jest.spyOn(process, 'abort').mockImplementation(() => {});
 
-    await confirm('test');
+    await expect(async () => {
+      await confirm('test');
+    }).rejects.toThrowError('program aborted');
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
-    expect(mockAbort).toHaveBeenCalledTimes(1);
-    mockAbort.mockRestore();
   });
 });
 
