@@ -8,6 +8,7 @@ import { logMessage, summarize } from '../prompter';
 import { PlistModifierType, PlistTaskType } from '../types/mod.types';
 import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
+import { transformTextInObject } from '../variables';
 
 export function plistTask(args: {
   configPath: string;
@@ -30,6 +31,7 @@ function applyPlistModification(
   update: PlistModifierType
 ) {
   const strategy = update.strategy || 'assign';
+  update.set = transformTextInObject(update.set);
 
   if (strategy == 'assign') {
     content = Object.assign(content, update.set);
@@ -94,16 +96,16 @@ function getPListPath(target: string | undefined) {
 }
 
 function readPListContent(target: string | undefined) {
-  const appDelegatePath = getPListPath(target);
-  return plist.parse(fs.readFileSync(appDelegatePath, 'utf-8'));
+  const plistPath = getPListPath(target);
+  return plist.parse(fs.readFileSync(plistPath, 'utf-8'));
 }
 
 function writePListContent(
   content: Record<string, any>,
   target: string | undefined
 ): void {
-  const appDelegatePath = getPListPath(target);
-  return fs.writeFileSync(appDelegatePath, plist.stringify(content), 'utf-8');
+  const plistPath = getPListPath(target);
+  return fs.writeFileSync(plistPath, plist.stringify(content), 'utf-8');
 }
 
 export function runTask(args: {

@@ -96,12 +96,16 @@ tasks:
 
 Click on the links below to learn how to use each task type:
 
-- [AppDelegate Task](docs/APP_DELEGATE.md)
-- [Plist Task](docs/PLIST.md)
-- [iOS Resources Task](docs/IOS_RESOURCES.md)
-- [Build Gradle Task](docs/BUILD_GRADLE.md)
+- [AppDelegate](docs/APP_DELEGATE.md)
+- [Plist](docs/PLIST.md)
+- [iOS Resources](docs/IOS_RESOURCES.md)
+- [Build Gradle](docs/BUILD_GRADLE.md)
 - [Android Manifest](docs/ANDROID_MANIFEST.md)
 - [Podfile](docs/PODFILE.md)
+
+#### Variables
+
+Check [Variables](docs/VARIABLES.md) page to learn how to assign and use variables in configuration files.
 
 ### Get help from community
 

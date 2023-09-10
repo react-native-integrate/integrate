@@ -20,6 +20,7 @@ import {
 } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
 import { stringSplice } from '../utils/stringSplice';
+import { getText, transformTextInObject } from '../variables';
 
 export function androidManifestTask(args: {
   configPath: string;
@@ -84,6 +85,7 @@ function applyAttributeModification(args: {
     };
 
     Object.entries(update.attributes).forEach(([name, value]) => {
+      value = transformTextInObject(value);
       const blockStart = regex.exec(content);
 
       checkBlockStartValue(blockStart);

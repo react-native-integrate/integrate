@@ -5,6 +5,7 @@ import {
   ContentModifierType,
   TextOrRegex,
 } from '../types/mod.types';
+import { getText } from '../variables';
 import { escapeRegExp } from './escapeRegExp';
 import { findInsertionPoint } from './findInsertionPoint';
 import { findLineEnd, findLineStart } from './findLineTools';
@@ -49,6 +50,7 @@ export function applyContentModification(
     space: '',
   };
   if (update.block) {
+    update.block = getText(update.block);
     const foundBlock = findOrCreateBlock(content, update.block);
     blockContent = foundBlock.blockContent;
     content = foundBlock.content;
@@ -68,7 +70,7 @@ export function applyContentModification(
     if (update.block) blockIndentation = ' '.repeat(indentation);
     if (update.comment) {
       const _buildCommand = buildComment || buildCommonComment;
-      const commentLines = _buildCommand(update.comment);
+      const commentLines = _buildCommand(getText(update.comment));
       commentLines.forEach(line => {
         comment += `${blockContent.space}${blockIndentation}${line}\n`;
       });
@@ -93,11 +95,11 @@ export function applyContentModification(
 
             if (
               update.ifNotPresent &&
-              blockContent.match.includes(update.ifNotPresent)
+              blockContent.match.includes(getText(update.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  update.ifNotPresent
+                  getText(update.ifNotPresent)
                 )}, skipped inserting: ${summarize(prependText)}`
               );
             } else if (!blockContent.match.includes(prependText)) {
@@ -129,11 +131,11 @@ export function applyContentModification(
               : getCodeToInsert(appendText);
             if (
               update.ifNotPresent &&
-              blockContent.match.includes(update.ifNotPresent)
+              blockContent.match.includes(getText(update.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  update.ifNotPresent
+                  getText(update.ifNotPresent)
                 )}, skipped inserting: ${summarize(appendText)}`
               );
             } else if (!blockContent.match.includes(appendText)) {
@@ -167,11 +169,11 @@ export function applyContentModification(
             const replaceText = getModContent(configPath, update.replace);
             if (
               update.ifNotPresent &&
-              blockContent.match.includes(update.ifNotPresent)
+              blockContent.match.includes(getText(update.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  update.ifNotPresent
+                  getText(update.ifNotPresent)
                 )}, skipped inserting: ${summarize(replaceText)}`
               );
             } else if (!blockContent.match.includes(replaceText)) {
@@ -202,8 +204,8 @@ export function applyContentModification(
     const searchBlockContent = { ...blockContent };
     let searchMatcher =
       typeof update.search == 'string'
-        ? new RegExp(escapeRegExp(update.search))
-        : new RegExp(update.search.regex, update.search.flags);
+        ? new RegExp(escapeRegExp(getText(update.search)))
+        : new RegExp(getText(update.search.regex), update.search.flags);
     const searchOnce = !searchMatcher.flags.includes('g');
     if (searchOnce)
       searchMatcher = new RegExp(

@@ -44,12 +44,12 @@ function writeMockAppDelegate(
   return appDelegatePath;
 }
 function writeMockPList(target = 'test'): string {
-  const appDelegatePath = path.resolve(
+  const plistPath = path.resolve(
     __dirname,
     `../mock-project/ios/${target}/${Constants.PLIST_FILE_NAME}`
   );
-  mockFs.writeFileSync(appDelegatePath, mockPList);
-  return appDelegatePath;
+  mockFs.writeFileSync(plistPath, mockPList);
+  return plistPath;
 }
 function writeMockAndroidManifest(): string {
   const manifestPath = path.resolve(

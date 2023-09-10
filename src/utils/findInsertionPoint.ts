@@ -1,10 +1,12 @@
 import { TextOrRegex } from '../types/mod.types';
+import { getText } from '../variables';
 
 export function findInsertionPoint(
   content: string,
   textOrRegex: TextOrRegex
 ): { start: number; end: number; match: string | null } {
   if (typeof textOrRegex == 'string') {
+    textOrRegex = getText(textOrRegex);
     const index = content.indexOf(textOrRegex);
     if (index == -1)
       return {
@@ -18,7 +20,9 @@ export function findInsertionPoint(
       match: textOrRegex,
     };
   }
-  const match = new RegExp(textOrRegex.regex, textOrRegex.flags).exec(content);
+  const match = new RegExp(getText(textOrRegex.regex), textOrRegex.flags).exec(
+    content
+  );
   if (!match)
     return {
       start: -1,

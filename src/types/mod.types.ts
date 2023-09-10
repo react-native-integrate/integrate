@@ -153,6 +153,7 @@ export type ModTask =
   | PodFileTaskType;
 
 export type IntegrationConfig = {
+  env?: Record<string, any>;
   tasks: ModTask[];
 };
 

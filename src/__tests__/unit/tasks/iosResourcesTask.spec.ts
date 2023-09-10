@@ -88,6 +88,7 @@ describe('iosResourcesTask', () => {
           add: 'GoogleService-Info.plist',
           target: {
             name: 'Resources',
+            path: '',
           },
         },
       ],

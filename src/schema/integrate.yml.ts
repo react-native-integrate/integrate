@@ -3,6 +3,8 @@ export const integrateYmlSchema = `type: object
 required:
  - tasks
 properties:
+  env:
+    type: object
   tasks:
     type: array
     items:

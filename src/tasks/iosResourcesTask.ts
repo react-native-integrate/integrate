@@ -9,6 +9,7 @@ import {
 } from '../types/mod.types';
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
+import { getText } from '../variables';
 
 const xcode: XcodeType = require('xcode');
 
@@ -34,6 +35,8 @@ function applyIosResourcesModification(
 ) {
   let { target } = update;
   target = target || 'root';
+  if (typeof target == 'string') target = getText(target) as 'root' | 'app';
+  update.add = getText(update.add);
 
   const fileName = path.basename(update.add);
   const nativeTarget = content.getTarget(Constants.XCODE_APPLICATION_TYPE);
@@ -51,6 +54,8 @@ function applyIosResourcesModification(
       logTarget = `${nativeTarget.target.name} target`;
       break;
     default:
+      if (target.name != null) target.name = getText(target.name);
+      if (target.path != null) target.path = getText(target.path);
       group = content.findPBXGroupKey(target);
       logTarget = `${target.name} target`;
       break;
