@@ -7,8 +7,10 @@ import {
   cancel,
   isCancel,
   note,
+  text as promptText,
 } from '@clack/prompts';
 import color from 'picocolors';
+import { ConfirmPromptArgs, TextPromptArgs } from './types/prompt.types';
 
 export function log(msg: string): void {
   promptLog.step(msg);
@@ -51,9 +53,31 @@ export function updateSpinner(msg: string): void {
 export function stopSpinner(msg: string): void {
   s.stop(msg);
 }
-export async function confirm(msg: string): Promise<boolean> {
+export async function confirm(
+  msg: string,
+  args: ConfirmPromptArgs = {}
+): Promise<boolean> {
   const response = await promptConfirm({
     message: msg,
+    active: args.positive,
+    inactive: args.negative,
+    initialValue: args.initialValue,
+  });
+  if (isCancel(response)) {
+    cancel('operation cancelled');
+    process.abort();
+  }
+  return response;
+}
+export async function text(
+  msg: string,
+  args: TextPromptArgs = {}
+): Promise<string> {
+  const response = await promptText({
+    message: msg,
+    defaultValue: args.defaultValue,
+    initialValue: args.initialValue,
+    placeholder: args.placeholder,
   });
   if (isCancel(response)) {
     cancel('operation cancelled');

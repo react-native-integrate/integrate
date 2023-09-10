@@ -18,6 +18,7 @@ import {
   startSpinner,
   stopSpinner,
   summarize,
+  text,
   updateSpinner,
 } from '../../prompter';
 
@@ -155,6 +156,19 @@ describe('prompter', () => {
     }).rejects.toThrowError('program aborted');
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
+  });
+  it('should cancel test', async () => {
+    mockPrompter.text.mockClear();
+    mockPrompter.isCancel.mockImplementationOnce(() => true);
+
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+
+    await expect(async () => {
+      await text('test');
+    }).rejects.toThrowError('program aborted');
+
+    expect(mockPrompter.text).toHaveBeenCalled();
   });
 });
 

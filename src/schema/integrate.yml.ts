@@ -5,6 +5,31 @@ required:
 properties:
   env:
     type: object
+  prompts:
+    type: array
+    items:
+      type: object
+      required:
+        - name
+        - text
+      properties:
+        name:
+          type: string
+        text:
+          type: string
+        type:
+          type: string
+          enum: [boolean]
+        defaultValue:
+          type: string
+        initialValue:
+          type: string
+        placeholder:
+          type: string
+        positive:
+          type: string
+        negative:
+          type: string
   tasks:
     type: array
     items:

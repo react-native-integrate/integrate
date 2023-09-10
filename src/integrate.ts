@@ -14,8 +14,10 @@ import { IntegrationConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { parseConfig } from './utils/parseConfig';
+import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
+import { getText } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
   startSpinner('analyzing packages');
@@ -132,12 +134,23 @@ export async function integrate(packageName?: string): Promise<void> {
       );
       if (await confirm('would you like to integrate this package?')) {
         let failedTaskCount = 0;
-        config.tasks.forEach((task, i) => {
+        if (config.prompts)
+          for (const prompt of config.prompts) {
+            await runPrompt(prompt);
+          }
+        for (const task of config.tasks) {
+          const taskIndex = config.tasks.indexOf(task);
+          if (task.label) task.label = getText(task.label);
           log(
-            color.cyan(`[${i + 1}/${config.tasks.length}]`) +
+            color.cyan(`[${taskIndex + 1}/${config.tasks.length}]`) +
               ' ' +
               color.bold(task.label || 'task: ' + task.type)
           );
+          if (task.prompts)
+            for (const prompt of task.prompts) {
+              await runPrompt(prompt);
+            }
+
           try {
             runTask({
               configPath,
@@ -148,7 +161,7 @@ export async function integrate(packageName?: string): Promise<void> {
             failedTaskCount++;
             logError(getErrMessage(e));
           }
-        });
+        }
         if (failedTaskCount) {
           logWarning(
             color.inverse(

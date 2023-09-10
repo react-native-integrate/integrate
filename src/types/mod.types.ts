@@ -1,3 +1,5 @@
+import { ConfirmPromptArgs, TextPromptArgs } from './prompt.types';
+
 export type TextOrFileValue =
   | string
   | {
@@ -141,6 +143,7 @@ export type PodFileTaskType = ModTaskBase &
 
 export type ModTaskBase = {
   label?: string;
+  prompts?: Prompt[];
 };
 
 export type ModTask =
@@ -152,8 +155,17 @@ export type ModTask =
   | IosResourcesTaskType
   | PodFileTaskType;
 
+export type Prompt = {
+  name: string;
+  type?: PromptType;
+  text: string;
+} & (TextPromptArgs | ConfirmPromptArgs);
+
+export type PromptType = 'boolean';
+
 export type IntegrationConfig = {
   env?: Record<string, any>;
+  prompts?: Prompt[];
   tasks: ModTask[];
 };
 

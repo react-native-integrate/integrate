@@ -17,6 +17,7 @@ export const mockPrompter = {
   outro: jest.fn(),
   spinner: (): any => mockPrompterSpinner,
   confirm: jest.fn(() => true),
+  text: jest.fn(() => 'test'),
   cancel: jest.fn(),
   isCancel: jest.fn(() => false),
   note: jest.fn(),

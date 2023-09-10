@@ -107,6 +107,10 @@ Click on the links below to learn how to use each task type:
 
 Check [Variables](docs/VARIABLES.md) page to learn how to assign and use variables in configuration files.
 
+#### Prompts
+
+Visit [Prompts](docs/PROMPTS.md) page to learn how to request input from user.
+
 ### Get help from community
 
 You can also open an issue and provide a link to a repository that features a clean React Native installation with your package integrated.
