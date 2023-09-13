@@ -54,35 +54,28 @@ export function getText(text: string): string {
 }
 
 export function transformTextInObject<T>(obj: T): T {
-  // Base case: If the input is not an object, return it as is.
   if (obj == null) {
     return obj;
   }
 
   // If obj is an array, process its elements.
   if (Array.isArray(obj)) {
-    // noinspection TypeScriptValidateTypes
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return obj.map(item => transformTextInObject(item));
+    return <T>obj.map(item => transformTextInObject<T>(item));
+  }
+
+  // If obj is a string, add a "+" sign to it.
+  if (typeof obj == 'string') {
+    return <T>getText(obj);
   }
 
   // If obj is an object, process its properties.
-  if (typeof obj === 'object') {
-    const newObj = {} as T;
+  if (typeof obj == 'object') {
+    const newObj = <T>{};
     for (const key in obj) {
       // Recursively process the property value.
       newObj[key] = transformTextInObject(obj[key]);
     }
     return newObj;
-  }
-
-  // If obj is a string, add a "+" sign to it.
-  // noinspection SuspiciousTypeOfGuard
-  if (typeof obj === 'string') {
-    // noinspection TypeScriptValidateTypes
-    // @ts-ignore
-    return getText(obj);
   }
 
   // Return any other data types as is.
