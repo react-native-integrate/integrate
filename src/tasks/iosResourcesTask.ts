@@ -10,38 +10,40 @@ import {
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
 import { getText } from '../variables';
+import { applyFsModification } from './fsTask';
 
 const xcode: XcodeType = require('xcode');
 
-export function iosResourcesTask(args: {
+export async function iosResourcesTask(args: {
   configPath: string;
   packageName: string;
   content: XcodeProjectType;
   task: IosResourcesTaskType;
-}): XcodeProjectType {
+}): Promise<XcodeProjectType> {
   let { content } = args;
   const { task } = args;
 
-  task.updates.forEach(update => {
-    content = applyIosResourcesModification(content, update);
-  });
+  for (const update of task.updates) {
+    content = await applyIosResourcesModification(content, update);
+  }
 
   return content;
 }
 
-function applyIosResourcesModification(
+async function applyIosResourcesModification(
   content: XcodeProjectType,
   update: IosResourcesModifierType
 ) {
   let { target } = update;
   target = target || 'root';
   if (typeof target == 'string') target = getText(target) as 'root' | 'app';
-  update.add = getText(update.add);
+  update.addFile = getText(update.addFile);
 
-  const fileName = path.basename(update.add);
+  const fileName = path.basename(update.addFile);
   const nativeTarget = content.getTarget(Constants.XCODE_APPLICATION_TYPE);
   let group;
   let logTarget;
+  let destination = 'ios';
   switch (target) {
     case 'root':
       group = content.getFirstProject().firstProject.mainGroup;
@@ -52,23 +54,34 @@ function applyIosResourcesModification(
         name: nativeTarget.target.name,
       });
       logTarget = `${nativeTarget.target.name} target`;
+      destination += `/${nativeTarget.target.name}`;
       break;
     default:
       if (target.name != null) target.name = getText(target.name);
       if (target.path != null) target.path = getText(target.path);
       group = content.findPBXGroupKey(target);
       logTarget = `${target.name} target`;
+      destination += `/${target.name}`;
       break;
   }
+  destination += `/${fileName}`;
   const groupObj = content.getPBXGroupByKey(group);
-  if (groupObj.children.some(x => x.comment == update.add)) {
+  if (groupObj.children.some(x => x.comment == update.addFile)) {
     logMessageGray(
       `skipped adding resource, ${color.yellow(
-        update.add
+        update.addFile
       )} is already referenced in ${color.yellow(logTarget)}`
     );
     return content;
   }
+
+  // copy file
+  await applyFsModification({
+    copyFile: fileName,
+    destination,
+    message: update.message,
+  });
+
   const releasePatch = patchXcodeProject();
   try {
     content.addResourceFile(fileName, { target: nativeTarget.uuid }, group);
@@ -76,7 +89,9 @@ function applyIosResourcesModification(
     releasePatch();
   }
   logMessage(
-    `added ${color.yellow(update.add)} reference in ${color.yellow(logTarget)}`
+    `added ${color.yellow(update.addFile)} reference in ${color.yellow(
+      logTarget
+    )}`
   );
 
   return content;
@@ -103,14 +118,14 @@ function writePbxProjContent(proj: XcodeProjectType): void {
   return fs.writeFileSync(appDelegatePath, proj.writeSync(), 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: IosResourcesTaskType;
-}): void {
+}): Promise<void> {
   let content = readPbxProjContent();
 
-  content = iosResourcesTask({
+  content = await iosResourcesTask({
     ...args,
     content,
   });

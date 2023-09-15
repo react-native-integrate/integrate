@@ -152,7 +152,7 @@ export async function integrate(packageName?: string): Promise<void> {
             }
 
           try {
-            runTask({
+            await runTask({
               configPath,
               packageName,
               task,

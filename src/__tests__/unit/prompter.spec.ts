@@ -24,7 +24,7 @@ import {
 
 describe('prompter', () => {
   it('should log message', () => {
-    mockPrompter.log.step.mockClear();
+    mockPrompter.log.step.mockReset();
     log('test');
 
     expect(mockPrompter.log.step).toHaveBeenCalledWith(
@@ -32,7 +32,7 @@ describe('prompter', () => {
     );
   });
   it('should log success message', () => {
-    mockPrompter.log.success.mockClear();
+    mockPrompter.log.success.mockReset();
     logSuccess('test');
 
     expect(mockPrompter.log.success).toHaveBeenCalledWith(
@@ -40,7 +40,7 @@ describe('prompter', () => {
     );
   });
   it('should log bullet message', () => {
-    mockPrompter.log.message.mockClear();
+    mockPrompter.log.message.mockReset();
     logMessage('test');
 
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
@@ -49,7 +49,7 @@ describe('prompter', () => {
   });
   it('should log gray bullet message', () => {
     const spy = jest.spyOn(color, 'gray');
-    mockPrompter.log.message.mockClear();
+    mockPrompter.log.message.mockReset();
     logMessageGray('test');
 
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
@@ -59,7 +59,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log warning message', () => {
-    mockPrompter.log.warning.mockClear();
+    mockPrompter.log.warning.mockReset();
     logWarning('test');
 
     expect(mockPrompter.log.warning).toHaveBeenCalledWith(
@@ -74,7 +74,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log info message', () => {
-    mockPrompter.log.info.mockClear();
+    mockPrompter.log.info.mockReset();
     logInfo('test');
 
     expect(mockPrompter.log.info).toHaveBeenCalledWith(
@@ -82,7 +82,7 @@ describe('prompter', () => {
     );
   });
   it('should log error message', () => {
-    mockPrompter.log.error.mockClear();
+    mockPrompter.log.error.mockReset();
     logError('test');
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
@@ -97,7 +97,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log error message', () => {
-    mockPrompter.note.mockClear();
+    mockPrompter.note.mockReset();
     logNote('test1', 'test2');
 
     expect(mockPrompter.note).toHaveBeenCalledWith(
@@ -106,46 +106,46 @@ describe('prompter', () => {
     );
   });
   it('should log intro message', () => {
-    mockPrompter.intro.mockClear();
+    mockPrompter.intro.mockReset();
     logIntro();
 
     expect(mockPrompter.intro).toHaveBeenCalled();
   });
   it('should log outro message', () => {
-    mockPrompter.outro.mockClear();
+    mockPrompter.outro.mockReset();
     logOutro();
 
     expect(mockPrompter.outro).toHaveBeenCalled();
   });
   it('should start spinner', () => {
     const spinner = mockPrompter.spinner();
-    spinner.start.mockClear();
+    spinner.start.mockReset();
     startSpinner('test');
 
     expect(spinner.start).toHaveBeenCalled();
   });
   it('should update spinner message', () => {
     const spinner = mockPrompter.spinner();
-    spinner.message.mockClear();
+    spinner.message.mockReset();
     updateSpinner('test');
 
     expect(spinner.message).toHaveBeenCalled();
   });
   it('should stop spinner', () => {
     const spinner = mockPrompter.spinner();
-    spinner.stop.mockClear();
+    spinner.stop.mockReset();
     stopSpinner('test');
 
     expect(spinner.stop).toHaveBeenCalled();
   });
   it('should confirm', async () => {
-    mockPrompter.confirm.mockClear();
+    mockPrompter.confirm.mockReset();
     await confirm('test');
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
   });
   it('should cancel confirm', async () => {
-    mockPrompter.confirm.mockClear();
+    mockPrompter.confirm.mockReset();
     mockPrompter.isCancel.mockImplementationOnce(() => true);
 
     // @ts-ignore
@@ -158,7 +158,7 @@ describe('prompter', () => {
     expect(mockPrompter.confirm).toHaveBeenCalled();
   });
   it('should cancel test', async () => {
-    mockPrompter.text.mockClear();
+    mockPrompter.text.mockReset();
     mockPrompter.isCancel.mockImplementationOnce(() => true);
 
     // @ts-ignore

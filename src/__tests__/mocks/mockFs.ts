@@ -1,3 +1,4 @@
+import path from 'path';
 import { Constants } from '../../constants';
 
 let store: Record<string, string> = {};
@@ -18,11 +19,31 @@ export const mockFs = {
     store[path] = data;
     return true;
   },
+  copyFileSync: (from: string, to: string): boolean => {
+    const content = mockFs.readFileSync(from);
+    mockFs.writeFileSync(to, content);
+    return true;
+  },
   readdirSync: (): string[] => {
     return ['test' + Constants.WORKSPACE_EXT];
   },
+  watch: (
+    filePath: string,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    opts: any,
+    listener: (event: string, filename: string) => void
+  ): any => {
+    if (!permissions.read) throw new Error('[mock] permission denied');
+    // simulate created
+    setImmediate(() => listener('rename', 'file.json'));
+    return {
+      close: jest.fn(),
+    };
+  },
   reset(): void {
     store = {};
+    permissions.read = true;
+    permissions.write = true;
   },
   getStore(): Record<string, string> {
     return store;

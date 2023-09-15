@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const { mockFs } = require('../../mocks/mockAll');
+
+const mockWaitForFile = jest.spyOn(
+  require('../../../utils/waitForFile'),
+  'waitForFile'
+);
+
 import { iosResourcesTask, runTask } from '../../../tasks/iosResourcesTask';
 import { IosResourcesTaskType } from '../../../types/mod.types';
 import { XcodeType } from '../../../types/xcode.type';
@@ -11,7 +17,13 @@ import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
 const xcode: XcodeType = require('xcode');
 
 describe('iosResourcesTask', () => {
-  it('should add resource to root', () => {
+  beforeEach(() => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockWaitForFile.mockImplementationOnce(() => {
+      return Promise.resolve(true);
+    });
+  });
+  it('should add resource to root', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -22,11 +34,11 @@ describe('iosResourcesTask', () => {
       type: 'ios_resources',
       updates: [
         {
-          add: 'GoogleService-Info.plist',
+          addFile: 'GoogleService-Info.plist',
         },
       ],
     };
-    iosResourcesTask({
+    await iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -37,8 +49,8 @@ describe('iosResourcesTask', () => {
       /83CBB9F61A601CBA00E9B192 = \{.*?GoogleService-Info\.plist.*?}/s
     );
 
-    mockPrompter.log.message.mockClear();
-    iosResourcesTask({
+    mockPrompter.log.message.mockReset();
+    await iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -48,7 +60,7 @@ describe('iosResourcesTask', () => {
       expect.stringContaining('skipped adding resource')
     );
   });
-  it('should add resource to app', () => {
+  it('should add resource to app', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -58,13 +70,13 @@ describe('iosResourcesTask', () => {
       type: 'ios_resources',
       updates: [
         {
-          add: 'GoogleService-Info.plist',
+          addFile: 'GoogleService-Info.plist',
           target: 'app',
         },
       ],
     };
 
-    iosResourcesTask({
+    await iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -75,7 +87,7 @@ describe('iosResourcesTask', () => {
       /ReactNativeCliTemplates \*\/ = \{.*?GoogleService-Info\.plist.*?}/s
     );
   });
-  it('should add resource to custom group', () => {
+  it('should add resource to custom group', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -85,7 +97,7 @@ describe('iosResourcesTask', () => {
       type: 'ios_resources',
       updates: [
         {
-          add: 'GoogleService-Info.plist',
+          addFile: 'GoogleService-Info.plist',
           target: {
             name: 'Resources',
             path: '',
@@ -94,7 +106,7 @@ describe('iosResourcesTask', () => {
       ],
     };
 
-    iosResourcesTask({
+    await iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -105,7 +117,7 @@ describe('iosResourcesTask', () => {
       /Resources \*\/ = \{.*?GoogleService-Info\.plist.*?}/s
     );
   });
-  it('should add resource to root with no resources group', () => {
+  it('should add resource to root with no resources group', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -117,12 +129,12 @@ describe('iosResourcesTask', () => {
       type: 'ios_resources',
       updates: [
         {
-          add: 'GoogleService-Info.plist',
+          addFile: 'GoogleService-Info.plist',
         },
       ],
     };
 
-    iosResourcesTask({
+    await iosResourcesTask({
       configPath: 'path/to/config',
       task: task,
       content: proj,
@@ -134,7 +146,7 @@ describe('iosResourcesTask', () => {
     );
   });
   describe('runTask', () => {
-    it('should read and write plist file', () => {
+    it('should read and write plist file', async () => {
       const pbxFilePath = getPbxProjectPath();
       mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -142,12 +154,12 @@ describe('iosResourcesTask', () => {
         type: 'ios_resources',
         updates: [
           {
-            add: 'GoogleService-Info.plist',
+            addFile: 'GoogleService-Info.plist',
             target: 'app',
           },
         ],
       };
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
@@ -157,27 +169,27 @@ describe('iosResourcesTask', () => {
         /ReactNativeCliTemplates \*\/ = \{.*?GoogleService-Info\.plist.*?}/s
       );
     });
-    it('should throw when plist does not exist', () => {
+    it('should throw when plist does not exist', async () => {
       const task: IosResourcesTaskType = {
         type: 'ios_resources',
         updates: [
           {
-            add: 'GoogleService-Info.plist',
+            addFile: 'GoogleService-Info.plist',
             target: 'app',
           },
         ],
       };
 
       // noinspection SpellCheckingInspection
-      expect(() => {
+      await expect(() =>
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('project.pbxproj file not found');
+        })
+      ).rejects.toThrowError('project.pbxproj file not found');
     });
-    it('should throw when workspace does not exist', () => {
+    it('should throw when workspace does not exist', async () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
@@ -185,19 +197,19 @@ describe('iosResourcesTask', () => {
         type: 'ios_resources',
         updates: [
           {
-            add: 'GoogleService-Info.plist',
+            addFile: 'GoogleService-Info.plist',
             target: 'app',
           },
         ],
       };
 
-      expect(() => {
+      await expect(() =>
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('workspace not found');
+        })
+      ).rejects.toThrowError('workspace not found');
       mock.mockRestore();
     });
   });

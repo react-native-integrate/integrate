@@ -20,6 +20,9 @@ const mocks = {
   podfile: {
     runTask: jest.fn(),
   },
+  fs: {
+    runTask: jest.fn(),
+  },
 };
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
@@ -27,6 +30,7 @@ jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
 jest.mock('../../../tasks/iosResourcesTask', () => mocks.ios_resources);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
 jest.mock('../../../tasks/podFileTask', () => mocks.podfile);
+jest.mock('../../../tasks/fsTask', () => mocks.fs);
 
 import path from 'path';
 import { ModTask } from '../../../types/mod.types';
@@ -41,9 +45,10 @@ describe('runTask', () => {
     'ios_resources' as const,
     'android_manifest' as const,
     'podfile' as const,
+    'fs' as const,
   ].map(taskType => {
-    it(`should run ${taskType} task`, () => {
-      mocks[taskType].runTask.mockClear();
+    it(`should run ${taskType} task`, async () => {
+      mocks[taskType].runTask.mockReset();
 
       const integrateYmlPath = path.resolve(
         __dirname,
@@ -56,7 +61,7 @@ describe('runTask', () => {
         type: taskType,
       } as any;
 
-      runTask({
+      await runTask({
         configPath: integrateYmlPath,
         task,
         packageName: 'test',
@@ -65,8 +70,8 @@ describe('runTask', () => {
     });
   });
   ['validate' as const].map(taskType => {
-    it(`should run ${taskType} task`, () => {
-      mocks.app_delegate.runTask.mockClear();
+    it(`should run ${taskType} task`, async () => {
+      mocks.app_delegate.runTask.mockReset();
 
       const integrateYmlPath = path.resolve(
         __dirname,
@@ -79,7 +84,7 @@ describe('runTask', () => {
         type: taskType,
       } as any;
 
-      runTask({
+      await runTask({
         configPath: integrateYmlPath,
         task,
         packageName: 'test',

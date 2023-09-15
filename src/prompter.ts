@@ -59,8 +59,8 @@ export async function confirm(
 ): Promise<boolean> {
   const response = await promptConfirm({
     message: msg,
-    active: args.positive,
-    inactive: args.negative,
+    active: args.positive || 'yes',
+    inactive: args.negative || 'no',
     initialValue: args.initialValue,
   });
   if (isCancel(response)) {

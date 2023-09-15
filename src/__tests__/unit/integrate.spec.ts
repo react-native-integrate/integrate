@@ -19,7 +19,7 @@ import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 describe('integrate', () => {
   it('should not run tasks when lock does not exist (first run)', async () => {
     const spinner = mockPrompter.spinner();
-    spinner.stop.mockClear();
+    spinner.stop.mockReset();
     const appDelegatePath = writeMockAppDelegate();
 
     await integrate();
@@ -183,7 +183,7 @@ describe('integrate', () => {
   });
   it('should handle user rejecting to integrate', async () => {
     mockPrompter.confirm.mockImplementationOnce(() => false);
-    mockPrompter.log.step.mockClear();
+    mockPrompter.log.step.mockReset();
     const lockPath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
@@ -202,7 +202,7 @@ describe('integrate', () => {
     mockRunTask.mockImplementationOnce(() => {
       throw new Error('test error');
     });
-    mockPrompter.log.error.mockClear();
+    mockPrompter.log.error.mockReset();
     const lockPath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
@@ -221,7 +221,7 @@ describe('integrate', () => {
     mockRunTask.mockImplementationOnce(() => {
       throw 'test error';
     });
-    mockPrompter.log.error.mockClear();
+    mockPrompter.log.error.mockReset();
     const lockPath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
@@ -240,7 +240,7 @@ describe('integrate', () => {
     mockParseConfig.mockImplementationOnce(() => {
       throw new Error('test error');
     });
-    mockPrompter.log.error.mockClear();
+    mockPrompter.log.error.mockReset();
     const lockPath = writeMockLock({
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},

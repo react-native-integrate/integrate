@@ -124,7 +124,8 @@ export type IosResourcesTaskType = ModTaskBase &
   };
 
 export type IosResourcesModifierType = {
-  add: string;
+  addFile: string;
+  message?: string;
   target?:
     | 'root'
     | 'app'
@@ -141,6 +142,19 @@ export type PodFileTaskType = ModTaskBase &
     type: 'podfile';
   };
 
+// fs task
+
+export type FsTaskType = ModTaskBase &
+  UpdatesType<FsModifierType> & {
+    type: 'fs';
+  };
+
+export type FsModifierType = {
+  copyFile?: string;
+  message?: string;
+  destination: string;
+};
+
 export type ModTaskBase = {
   label?: string;
   prompts?: Prompt[];
@@ -153,7 +167,8 @@ export type ModTask =
   | BuildGradleTaskType
   | AndroidManifestTaskType
   | IosResourcesTaskType
-  | PodFileTaskType;
+  | PodFileTaskType
+  | FsTaskType;
 
 export type Prompt = {
   name: string;

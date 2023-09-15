@@ -259,7 +259,7 @@ properties:
                   comment:
                     type: string
 
-        # add resource task
+        # ios resource task
         - type: object
           required:
             - type
@@ -275,6 +275,8 @@ properties:
                 type: object
                 properties:
                   add:
+                    type: string
+                  message:
                     type: string
                   target:
                     anyOf:
@@ -341,5 +343,29 @@ properties:
                   ifNotPresent:
                     type: string
                   comment:
+                    type: string
+
+        # fs task
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum: [fs]
+            label:
+              type: string
+            updates:
+              type: array
+              items:
+                type: object
+                required:
+                  - destination
+                properties:
+                  copyFile:
+                    type: string
+                  destination:
+                    type: string
+                  message:
                     type: string
 `;

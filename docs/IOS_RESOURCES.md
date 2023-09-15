@@ -20,8 +20,11 @@ An array of update items that define the modifications to be made in the file. E
 
 ### Update Item
 
-#### `add` (string)
-Specifies the resource to be added. It can be a string representing the resource file name.
+#### `addFile` (string)
+Specifies the resource file to be added. It can be a string representing the resource file name.
+
+#### `message` (string)
+A string that serves as the user prompt message when collecting input for file to copy. If provided, this message will replace the default message.
 
 #### `target` (string or object)
 Specifies the target group within the iOS project where the resource should be added. It can take the listed values.

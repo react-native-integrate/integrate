@@ -10,7 +10,7 @@ import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
 describe('appDelegateTask', () => {
   it('should skip insert when ifNotPresent exists', () => {
-    mockPrompter.log.message.mockClear();
+    mockPrompter.log.message.mockReset();
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -376,7 +376,7 @@ describe('appDelegateTask', () => {
       expect(content).toContain(task.updates[0].append);
 
       // second append on existing block
-      mockPrompter.log.message.mockClear();
+      mockPrompter.log.message.mockReset();
       const task2: AppDelegateTaskType = {
         type: 'app_delegate',
         updates: [
