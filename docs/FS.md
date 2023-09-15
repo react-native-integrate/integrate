@@ -1,4 +1,4 @@
-Fs Task Configuration (`fs`)
+File System Task Configuration (`fs`)
 ============================
 
 Overview
