@@ -102,6 +102,7 @@ Click on the links below to learn how to use each task type:
 - [Build Gradle](docs/BUILD_GRADLE.md)
 - [Android Manifest](docs/ANDROID_MANIFEST.md)
 - [Podfile](docs/PODFILE.md)
+- [File system](docs/FS.md)
 
 #### Variables
 
