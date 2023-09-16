@@ -15,6 +15,9 @@ Specifies the task type, which should be set to "ios_resources" for this task.
 #### `label` (string)
 An optional label or description for the task.
 
+#### `prompts` (array)
+Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
+
 #### `updates` (array of objects, required)
 An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
 

@@ -8,6 +8,12 @@ prompts:
   - name: test3
     type: boolean
     text: Test prompt
+  - name: testMulti
+    type: multiselect
+    text: Test prompt
+    options:
+      - value: opt1
+      - value: opt2
 tasks:
   - type: app_delegate
     prompts:

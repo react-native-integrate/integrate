@@ -40,7 +40,7 @@ export async function applyFsModification(
       const projectPath = getProjectPath();
       const destination = path.join(projectPath, update.destination);
       // security check
-      if (!destination.includes(projectPath)) {
+      if (!destination.startsWith(projectPath)) {
         throw new Error('invalid destination path');
       }
 

@@ -9,41 +9,179 @@ properties:
     type: array
     items:
       type: object
-      required:
-        - name
-        - text
-      properties:
-        name:
-          type: string
-        text:
-          type: string
-        type:
-          type: string
-          enum: [boolean]
-        defaultValue:
-          type: string
-        initialValue:
-          type: string
-        placeholder:
-          type: string
-        positive:
-          type: string
-        negative:
-          type: string
+      oneOf:
+        # text prompt
+        - required:
+            - name
+            - text
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            text:
+              type: string
+            defaultValue:
+              type: string
+            initialValue:
+              type: string
+            placeholder:
+              type: string
+        
+        # confirm prompt
+        - required:
+            - name
+            - text
+            - type
+          properties:
+            name:
+              type: string
+            text:
+              type: string
+            type:
+              type: string
+              enum: [boolean]
+            initialValue:
+              type: string
+            positive:
+              type: string
+            negative:
+              type: string
+        
+        # multiselect prompt
+        - required:
+            - name
+            - text
+            - type
+          properties:
+            name:
+              type: string
+            text:
+              type: string
+            type:
+              type: string
+              enum: [multiselect]
+            required:
+              type: boolean
+            options:
+              type: array
+              items:
+                type: object
+                required:
+                  - value
+                properties:
+                  label:
+                    type: string
+                  hint:
+                    type: string
+                  value:
+                    oneOf:
+                      - type: string
+                      - type: boolean
+                      - type: number
+            initialValues:
+              type: array
+              items:
+                oneOf:
+                  - type: string
+                  - type: boolean
+                  - type: number
+              
   tasks:
     type: array
     items:
+      type: object
+      required:
+        - type
+      properties:
+        label:
+          type: string
+        prompts:
+          type: array
+          items:
+            type: object
+            oneOf:
+              # text prompt
+              - required:
+                  - name
+                  - text
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                  text:
+                    type: string
+                  defaultValue:
+                    type: string
+                  initialValue:
+                    type: string
+                  placeholder:
+                    type: string
+      
+              # confirm prompt
+              - required:
+                  - name
+                  - text
+                  - type
+                properties:
+                  name:
+                    type: string
+                  text:
+                    type: string
+                  type:
+                    type: string
+                    enum: [boolean]
+                  initialValue:
+                    type: string
+                  positive:
+                    type: string
+                  negative:
+                    type: string
+      
+              # multiselect prompt
+              - required:
+                  - name
+                  - text
+                  - type
+                properties:
+                  name:
+                    type: string
+                  text:
+                    type: string
+                  type:
+                    type: string
+                    enum: [multiselect]
+                  required:
+                    type: boolean
+                  options:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - value
+                      properties:
+                        label:
+                          type: string
+                        hint:
+                          type: string
+                        value:
+                          oneOf:
+                            - type: string
+                            - type: boolean
+                            - type: number
+                  initialValues:
+                    type: array
+                    items:
+                      oneOf:
+                        - type: string
+                        - type: boolean
+                        - type: number
+
       anyOf:
-        #plist task
-        - type: object
-          required:
-            - type
-          properties:
-            type:
+        # plist task
+        - properties:
+            type: 
               type: string
               enum: [plist]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -55,16 +193,11 @@ properties:
                     type: string
                     enum: [merge_concat, merge, assign]
 
-        #app_delegate task     
-        - type: object
-          required:
-            - type
-          properties:
+        # app_delegate task
+        - properties:
             type:
               type: string
               enum: [app_delegate]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -81,6 +214,13 @@ properties:
                           file:
                             type: string
                   append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  replace:
                     anyOf:
                       - type: string
                       - type: object
@@ -105,18 +245,26 @@ properties:
                             type: string
                           flags:
                             type: string
+                  search:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
                   strict:
                     type: boolean
                   ifNotPresent:
                     type: string
                   comment:
                     type: string
+                  exact:
+                    type: boolean
 
         # validate task
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [validate]
@@ -144,15 +292,10 @@ properties:
               type: string
 
         # build gradle task  
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [build_gradle]
-            label:
-              type: string
             location:
               type: string
               enum: [root, app]
@@ -177,6 +320,13 @@ properties:
                         properties:
                           file:
                             type: string
+                  replace:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
                   before:
                     anyOf:
                       - type: string
@@ -195,23 +345,29 @@ properties:
                             type: string
                           flags:
                             type: string
+                  search:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
                   strict:
                     type: boolean
                   ifNotPresent:
                     type: string
                   comment:
                     type: string
+                  exact:
+                    type: boolean
 
         # android manifest task
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [android_manifest]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -234,6 +390,13 @@ properties:
                         properties:
                           file:
                             type: string
+                  replace:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
                   before:
                     anyOf:
                       - type: string
@@ -252,23 +415,29 @@ properties:
                             type: string
                           flags:
                             type: string
+                  search:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
                   strict:
                     type: boolean
                   ifNotPresent:
                     type: string
                   comment:
                     type: string
+                  exact:
+                    type: boolean
 
         # ios resource task
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [ios_resources]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -290,15 +459,10 @@ properties:
                             type: string
 
         # podfile task  
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [podfile]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -314,6 +478,13 @@ properties:
                           file:
                             type: string
                   append:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          file:
+                            type: string
+                  replace:
                     anyOf:
                       - type: string
                       - type: object
@@ -338,23 +509,29 @@ properties:
                             type: string
                           flags:
                             type: string
+                  search:
+                    anyOf:
+                      - type: string
+                      - type: object
+                        properties:
+                          regex:
+                            type: string
+                          flags:
+                            type: string
                   strict:
                     type: boolean
                   ifNotPresent:
                     type: string
                   comment:
                     type: string
+                  exact:
+                    type: boolean
 
         # fs task
-        - type: object
-          required:
-            - type
-          properties:
+        - properties:
             type:
               type: string
               enum: [fs]
-            label:
-              type: string
             updates:
               type: array
               items:
@@ -362,10 +539,12 @@ properties:
                 required:
                   - destination
                 properties:
-                  copyFile:
-                    type: string
                   destination:
                     type: string
                   message:
                     type: string
+                oneOf:
+                  - properties:
+                      copyFile:
+                        type: string
 `;

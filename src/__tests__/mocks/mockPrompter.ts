@@ -1,3 +1,5 @@
+import { MultiselectPromptArgs } from '../../types/prompt.types';
+
 const mockPrompterSpinner = {
   start: jest.fn(),
   stop: jest.fn(),
@@ -17,6 +19,9 @@ export const mockPrompter = {
   outro: jest.fn(),
   spinner: (): any => mockPrompterSpinner,
   confirm: jest.fn(() => true),
+  multiselect: jest.fn(({ options }: MultiselectPromptArgs) =>
+    options.map(x => x.value)
+  ),
   text: jest.fn(() => 'test'),
   cancel: jest.fn(),
   isCancel: jest.fn(() => false),

@@ -45,6 +45,25 @@ prompts:
     text: "Do you want to run this task?"
 ```
 
+### Multi Select Prompt
+
+Multi select prompts request multiple values by presenting a list of options.
+
+```yaml
+prompts:
+  - name: platforms
+    type: multiselect
+    required: true
+    text: "Select platforms to integrate:"
+    options:
+      - value: android
+        label: Android
+        hint: will integrate into android platform
+      - value: ios
+        label: iOS
+        hint: will integrate into iOS platform
+```
+
 <!--
 ### Numeric Prompt
 

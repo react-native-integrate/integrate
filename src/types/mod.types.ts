@@ -1,4 +1,8 @@
-import { ConfirmPromptArgs, TextPromptArgs } from './prompt.types';
+import {
+  ConfirmPromptArgs,
+  MultiselectPromptArgs,
+  TextPromptArgs,
+} from './prompt.types';
 
 export type TextOrFileValue =
   | string
@@ -170,13 +174,20 @@ export type ModTask =
   | PodFileTaskType
   | FsTaskType;
 
+export type TextPrompt = TextPromptArgs & {
+  type: undefined;
+};
+export type ConfirmPrompt = ConfirmPromptArgs & {
+  type: 'boolean';
+};
+export type MultiselectPrompt = MultiselectPromptArgs & {
+  type: 'multiselect';
+};
+
 export type Prompt = {
   name: string;
-  type?: PromptType;
   text: string;
-} & (TextPromptArgs | ConfirmPromptArgs);
-
-export type PromptType = 'boolean';
+} & (TextPrompt | ConfirmPrompt | MultiselectPrompt);
 
 export type IntegrationConfig = {
   env?: Record<string, any>;

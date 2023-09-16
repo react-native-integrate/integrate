@@ -15,6 +15,7 @@ import {
   logOutro,
   logSuccess,
   logWarning,
+  multiselect,
   startSpinner,
   stopSpinner,
   summarize,
@@ -24,7 +25,7 @@ import {
 
 describe('prompter', () => {
   it('should log message', () => {
-    mockPrompter.log.step.mockReset();
+    mockPrompter.log.step.mockClear();
     log('test');
 
     expect(mockPrompter.log.step).toHaveBeenCalledWith(
@@ -32,7 +33,7 @@ describe('prompter', () => {
     );
   });
   it('should log success message', () => {
-    mockPrompter.log.success.mockReset();
+    mockPrompter.log.success.mockClear();
     logSuccess('test');
 
     expect(mockPrompter.log.success).toHaveBeenCalledWith(
@@ -40,7 +41,7 @@ describe('prompter', () => {
     );
   });
   it('should log bullet message', () => {
-    mockPrompter.log.message.mockReset();
+    mockPrompter.log.message.mockClear();
     logMessage('test');
 
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
@@ -49,7 +50,7 @@ describe('prompter', () => {
   });
   it('should log gray bullet message', () => {
     const spy = jest.spyOn(color, 'gray');
-    mockPrompter.log.message.mockReset();
+    mockPrompter.log.message.mockClear();
     logMessageGray('test');
 
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
@@ -59,7 +60,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log warning message', () => {
-    mockPrompter.log.warning.mockReset();
+    mockPrompter.log.warning.mockClear();
     logWarning('test');
 
     expect(mockPrompter.log.warning).toHaveBeenCalledWith(
@@ -74,7 +75,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log info message', () => {
-    mockPrompter.log.info.mockReset();
+    mockPrompter.log.info.mockClear();
     logInfo('test');
 
     expect(mockPrompter.log.info).toHaveBeenCalledWith(
@@ -82,7 +83,7 @@ describe('prompter', () => {
     );
   });
   it('should log error message', () => {
-    mockPrompter.log.error.mockReset();
+    mockPrompter.log.error.mockClear();
     logError('test');
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
@@ -97,7 +98,7 @@ describe('prompter', () => {
     spy.mockRestore();
   });
   it('should log error message', () => {
-    mockPrompter.note.mockReset();
+    mockPrompter.note.mockClear();
     logNote('test1', 'test2');
 
     expect(mockPrompter.note).toHaveBeenCalledWith(
@@ -106,46 +107,55 @@ describe('prompter', () => {
     );
   });
   it('should log intro message', () => {
-    mockPrompter.intro.mockReset();
+    mockPrompter.intro.mockClear();
     logIntro();
 
     expect(mockPrompter.intro).toHaveBeenCalled();
   });
   it('should log outro message', () => {
-    mockPrompter.outro.mockReset();
+    mockPrompter.outro.mockClear();
     logOutro();
 
     expect(mockPrompter.outro).toHaveBeenCalled();
   });
   it('should start spinner', () => {
     const spinner = mockPrompter.spinner();
-    spinner.start.mockReset();
+    spinner.start.mockClear();
     startSpinner('test');
 
     expect(spinner.start).toHaveBeenCalled();
   });
   it('should update spinner message', () => {
     const spinner = mockPrompter.spinner();
-    spinner.message.mockReset();
+    spinner.message.mockClear();
     updateSpinner('test');
 
     expect(spinner.message).toHaveBeenCalled();
   });
   it('should stop spinner', () => {
     const spinner = mockPrompter.spinner();
-    spinner.stop.mockReset();
+    spinner.stop.mockClear();
     stopSpinner('test');
 
     expect(spinner.stop).toHaveBeenCalled();
   });
   it('should confirm', async () => {
-    mockPrompter.confirm.mockReset();
+    mockPrompter.confirm.mockClear();
     await confirm('test');
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
   });
+  it('should prompt multiselect', async () => {
+    mockPrompter.multiselect.mockClear();
+    const opts = await multiselect('test', {
+      options: [{ value: 'opt1' }, { value: 'opt2' }],
+    });
+
+    expect(mockPrompter.multiselect).toHaveBeenCalled();
+    expect(opts).toEqual(['opt1', 'opt2']);
+  });
   it('should cancel confirm', async () => {
-    mockPrompter.confirm.mockReset();
+    mockPrompter.confirm.mockClear();
     mockPrompter.isCancel.mockImplementationOnce(() => true);
 
     // @ts-ignore
@@ -158,7 +168,7 @@ describe('prompter', () => {
     expect(mockPrompter.confirm).toHaveBeenCalled();
   });
   it('should cancel test', async () => {
-    mockPrompter.text.mockReset();
+    mockPrompter.text.mockClear();
     mockPrompter.isCancel.mockImplementationOnce(() => true);
 
     // @ts-ignore
@@ -170,6 +180,21 @@ describe('prompter', () => {
 
     expect(mockPrompter.text).toHaveBeenCalled();
   });
+});
+it('should cancel multiselect', async () => {
+  mockPrompter.multiselect.mockClear();
+  mockPrompter.isCancel.mockImplementationOnce(() => true);
+
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
+  await expect(async () =>
+    multiselect('test', {
+      options: [{ value: 'opt1' }, { value: 'opt2' }],
+    })
+  ).rejects.toThrowError('program aborted');
+
+  expect(mockPrompter.multiselect).toHaveBeenCalled();
 });
 
 describe('summarize', () => {

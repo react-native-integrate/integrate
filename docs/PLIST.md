@@ -12,6 +12,9 @@ Specifies the task type, which should be set to "plist" for this task.
 #### `label` (string)
 An optional label or description for the task.
 
+#### `prompts` (array)
+Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
+
 #### `target` (string)
 Specifies the target which contains the plist file. Omitting this field means the plist of main app will be modified.
 

@@ -8,9 +8,15 @@ import {
   isCancel,
   note,
   text as promptText,
+  multiselect as promptMultiselect,
 } from '@clack/prompts';
 import color from 'picocolors';
-import { ConfirmPromptArgs, TextPromptArgs } from './types/prompt.types';
+import {
+  ConfirmPromptArgs,
+  MultiselectOptionValue,
+  MultiselectPromptArgs,
+  TextPromptArgs,
+} from './types/prompt.types';
 
 export function log(msg: string): void {
   promptLog.step(msg);
@@ -52,6 +58,27 @@ export function updateSpinner(msg: string): void {
 }
 export function stopSpinner(msg: string): void {
   s.stop(msg);
+}
+export async function multiselect(
+  msg: string,
+  args: MultiselectPromptArgs
+): Promise<MultiselectOptionValue[]> {
+  const response = await promptMultiselect({
+    message: msg,
+    required: args.required,
+    options: args.options.map(x => ({
+      value: x.value,
+      label: x.label || x.value.toString(),
+      hint: x.hint,
+    })),
+    initialValues: args.initialValues,
+  });
+  if (isCancel(response)) {
+    cancel('operation cancelled');
+    process.abort();
+  }
+  // @ts-ignore
+  return response;
 }
 export async function confirm(
   msg: string,

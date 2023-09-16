@@ -15,6 +15,9 @@ Specifies the task type, which should be set to "build_gradle" for this task.
 #### `label` (string)
 An optional label or description for the task.
 
+#### `prompts` (array)
+Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
+
 #### `location` (string)
 Specifies the target location within the project structure, distinguishing between the root and app folders. It helps determine which build.gradle file to modify during the configuration process.
     -   `root`: (default) Modifies `android/build.gradle` file.
