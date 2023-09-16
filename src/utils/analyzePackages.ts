@@ -3,7 +3,7 @@ import { getInstalledPackages } from './getInstalledPackages';
 import { readLockFile } from './updateIntegrationStatus';
 
 export function analyzePackages(
-  forceIntegratePackageName: string | undefined
+  forceIntegratePackageName?: string | undefined
 ): AnalyzedPackages {
   const installedPackages = getInstalledPackages();
   const { lockData, justCreated: justCreatedLockFile } = readLockFile();

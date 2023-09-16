@@ -20,7 +20,7 @@ import {
 } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
 import { stringSplice } from '../utils/stringSplice';
-import { getText, transformTextInObject } from '../variables';
+import { transformTextInObject } from '../variables';
 
 export function androidManifestTask(args: {
   configPath: string;

@@ -1,4 +1,3 @@
-import path from 'path';
 import { Constants } from '../../constants';
 
 let store: Record<string, string> = {};
