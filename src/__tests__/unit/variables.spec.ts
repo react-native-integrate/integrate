@@ -5,6 +5,11 @@ describe('variables', () => {
   beforeEach(() => {
     variables.clear();
   });
+  it('should get store', () => {
+    variables.set('test', 'value');
+    const obj = variables.getStore();
+    expect(obj['test']).toEqual('value');
+  });
   it('should get ios project name', () => {
     const iosProjectName = variables.get('IOS_PROJECT_NAME');
     expect(iosProjectName).toEqual('test');

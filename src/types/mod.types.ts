@@ -162,6 +162,7 @@ export type FsModifierType = {
 export type ModTaskBase = {
   label?: string;
   prompts?: Prompt[];
+  when?: any;
 };
 
 export type ModTask =

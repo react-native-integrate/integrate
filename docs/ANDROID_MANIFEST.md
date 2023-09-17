@@ -14,6 +14,9 @@ Specifies the task type, which should be set to "android_manifest" for this task
 #### `label` (string)
 An optional label or description for the task.
 
+#### `when` (object)
+Visit [When](WHEN.md) page to learn how to execute task conditionally.
+
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 

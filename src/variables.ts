@@ -26,6 +26,12 @@ export const variables = {
   clear(): void {
     _store = {};
   },
+  getStore(): Record<string, any> {
+    return {
+      ...predefinedVariables,
+      ..._store,
+    };
+  },
 };
 
 export function getText(text: string): string {

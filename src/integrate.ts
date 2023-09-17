@@ -16,8 +16,9 @@ import { getPackageConfig } from './utils/getPackageConfig';
 import { parseConfig } from './utils/parseConfig';
 import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
+import { satisfies } from './utils/satisfies';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
-import { getText } from './variables';
+import { getText, variables } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
   startSpinner('analyzing packages');
@@ -139,12 +140,12 @@ export async function integrate(packageName?: string): Promise<void> {
             await runPrompt(prompt);
           }
         for (const task of config.tasks) {
-          const taskIndex = config.tasks.indexOf(task);
+          if (task.when && !satisfies(variables.getStore(), task.when))
+            continue;
           if (task.label) task.label = getText(task.label);
-          log(
-            color.cyan(`[${taskIndex + 1}/${config.tasks.length}]`) +
-              ' ' +
-              color.bold(task.label || 'task: ' + task.type)
+          logInfo(
+            color.bold(color.inverse(color.cyan(' task '))) +
+              color.bold(color.cyan(` ${task.label || task.type} `))
           );
           if (task.prompts)
             for (const prompt of task.prompts) {
