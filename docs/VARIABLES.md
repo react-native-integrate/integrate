@@ -36,7 +36,7 @@ env:
 tasks:
   - type: app_delegate
     label: "Integrate $[frb]"
-    updates:
+    actions:
       - prepend: "#import <$[frb].h>"
         comment: added by $[frb]
       - block: "didFinishLaunchingWithOptions"

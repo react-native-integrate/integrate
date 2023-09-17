@@ -32,7 +32,7 @@ describe('iosResourcesTask', () => {
 
     const task: IosResourcesTaskType = {
       type: 'ios_resources',
-      updates: [
+      actions: [
         {
           addFile: 'GoogleService-Info.plist',
         },
@@ -68,7 +68,7 @@ describe('iosResourcesTask', () => {
     proj.parseSync();
     const task: IosResourcesTaskType = {
       type: 'ios_resources',
-      updates: [
+      actions: [
         {
           addFile: 'GoogleService-Info.plist',
           target: 'app',
@@ -95,7 +95,7 @@ describe('iosResourcesTask', () => {
     proj.parseSync();
     const task: IosResourcesTaskType = {
       type: 'ios_resources',
-      updates: [
+      actions: [
         {
           addFile: 'GoogleService-Info.plist',
           target: {
@@ -127,7 +127,7 @@ describe('iosResourcesTask', () => {
 
     const task: IosResourcesTaskType = {
       type: 'ios_resources',
-      updates: [
+      actions: [
         {
           addFile: 'GoogleService-Info.plist',
         },
@@ -152,7 +152,7 @@ describe('iosResourcesTask', () => {
 
       const task: IosResourcesTaskType = {
         type: 'ios_resources',
-        updates: [
+        actions: [
           {
             addFile: 'GoogleService-Info.plist',
             target: 'app',
@@ -172,7 +172,7 @@ describe('iosResourcesTask', () => {
     it('should throw when plist does not exist', async () => {
       const task: IosResourcesTaskType = {
         type: 'ios_resources',
-        updates: [
+        actions: [
           {
             addFile: 'GoogleService-Info.plist',
             target: 'app',
@@ -195,7 +195,7 @@ describe('iosResourcesTask', () => {
       });
       const task: IosResourcesTaskType = {
         type: 'ios_resources',
-        updates: [
+        actions: [
           {
             addFile: 'GoogleService-Info.plist',
             target: 'app',

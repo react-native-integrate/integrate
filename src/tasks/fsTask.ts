@@ -14,31 +14,31 @@ export async function fsTask(args: {
 }): Promise<void> {
   const { task } = args;
 
-  for (const update of task.updates) {
-    await applyFsModification(update);
+  for (const action of task.actions) {
+    await applyFsModification(action);
   }
 }
 
 export async function applyFsModification(
-  update: FsModifierType
+  action: FsModifierType
 ): Promise<void> {
-  if (update.copyFile) {
-    update.copyFile = getText(update.copyFile);
+  if (action.copyFile) {
+    action.copyFile = getText(action.copyFile);
 
     const file = await text(
-      update.message || `enter the path of ${update.copyFile} to copy`,
+      action.message || `enter the path of ${action.copyFile} to copy`,
       {
         placeholder: 'leave empty do it manually',
       }
     );
-    variables.set('FILE_NAME', update.copyFile);
+    variables.set('FILE_NAME', action.copyFile);
     if (file) {
       const fileName = path.basename(file);
       variables.set('FILE_NAME', fileName);
-      update.destination = getText(update.destination);
+      action.destination = getText(action.destination);
 
       const projectPath = getProjectPath();
-      const destination = path.join(projectPath, update.destination);
+      const destination = path.join(projectPath, action.destination);
       // security check
       if (!destination.startsWith(projectPath)) {
         throw new Error('invalid destination path');
@@ -46,19 +46,19 @@ export async function applyFsModification(
 
       fs.copyFileSync(file, destination);
       logMessage(
-        `copied ${color.yellow(file)} to ${color.yellow(update.destination)}`
+        `copied ${color.yellow(file)} to ${color.yellow(action.destination)}`
       );
     } else {
       // user copying manually
-      update.destination = getText(update.destination);
-      const destination = path.join(getProjectPath(), update.destination);
+      action.destination = getText(action.destination);
+      const destination = path.join(getProjectPath(), action.destination);
 
       // wait for file creation
       const fileExists = await waitForFile(destination);
       if (!fileExists) {
         const confirmed = await confirm(
           `confirm after manually updating the file at ${color.yellow(
-            update.destination
+            action.destination
           )}`,
           {
             positive: 'done',

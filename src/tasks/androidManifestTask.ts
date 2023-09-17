@@ -31,13 +31,13 @@ export function androidManifestTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.updates.forEach(update => {
+  task.actions.forEach(action => {
     const additionalModification = (args: {
       content: string;
       blockContent: BlockContentType;
-    }) => applyAttributeModification({ ...args, update });
+    }) => applyAttributeModification({ ...args, action });
     content = applyContentModification({
-      update,
+      action,
       findOrCreateBlock,
       configPath,
       content,
@@ -56,14 +56,14 @@ function buildXmlComment(comment: string): string[] {
 function applyAttributeModification(args: {
   content: string;
   blockContent: BlockContentType;
-  update: AndroidManifestModifierType;
+  action: AndroidManifestModifierType;
 }): string {
-  const { update, blockContent } = args;
+  const { action, blockContent } = args;
   let { content } = args;
-  if (update.attributes) {
-    if (!update.block)
+  if (action.attributes) {
+    if (!action.block)
       throw new Error('you must set block to update attributes');
-    const blockDefinition = blockDefinitions[update.block];
+    const blockDefinition = blockDefinitions[action.block];
     const { regex, indentation } = blockDefinition;
 
     const getCodeToInsert = (text: string, isReplacing: boolean) => {
@@ -84,7 +84,7 @@ function applyAttributeModification(args: {
       }${text}${closingNewLine}`;
     };
 
-    Object.entries(update.attributes).forEach(([name, value]) => {
+    Object.entries(action.attributes).forEach(([name, value]) => {
       value = transformTextInObject(value);
       const blockStart = regex.exec(content);
 
@@ -106,13 +106,13 @@ function applyAttributeModification(args: {
             updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `deleted attribute ${summarize(name)} in ${summarize(
-                getBlockName(update)
+                getBlockName(action)
               )}`
             );
           } else {
             logMessageGray(
               `attribute ${summarize(name)} does not exist in ${summarize(
-                getBlockName(update)
+                getBlockName(action)
               )} - skipping delete operation`
             );
           }
@@ -131,7 +131,7 @@ function applyAttributeModification(args: {
             updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `set existing attribute in ${summarize(
-                getBlockName(update)
+                getBlockName(action)
               )} - ${summarize(name)}: ${summarize(value)}`
             );
           } else {
@@ -147,7 +147,7 @@ function applyAttributeModification(args: {
             updateBlockContent(blockContent, rem, insert, content);
             logMessage(
               `set new attribute in ${summarize(
-                getBlockName(update)
+                getBlockName(action)
               )} - ${summarize(name)}: ${summarize(value)}`
             );
           }

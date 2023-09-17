@@ -182,7 +182,7 @@ properties:
             type: 
               type: string
               enum: [plist]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -198,7 +198,7 @@ properties:
             type:
               type: string
               enum: [app_delegate]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -299,7 +299,7 @@ properties:
             location:
               type: string
               enum: [root, app]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -368,7 +368,7 @@ properties:
             type:
               type: string
               enum: [android_manifest]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -438,7 +438,7 @@ properties:
             type:
               type: string
               enum: [ios_resources]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -463,7 +463,7 @@ properties:
             type:
               type: string
               enum: [podfile]
-            updates:
+            actions:
               type: array
               items:
                 type: object
@@ -532,7 +532,7 @@ properties:
             type:
               type: string
               enum: [fs]
-            updates:
+            actions:
               type: array
               items:
                 type: object

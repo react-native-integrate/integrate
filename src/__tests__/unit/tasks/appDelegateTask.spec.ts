@@ -14,7 +14,7 @@ describe('appDelegateTask', () => {
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -41,7 +41,7 @@ describe('appDelegateTask', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -58,13 +58,13 @@ describe('appDelegateTask', () => {
       packageName: 'test-package',
     });
     // @ts-ignore
-    expect(content).toContain(task.updates[1].prepend);
+    expect(content).toContain(task.actions[1].prepend);
   });
   it('should append text into didLaunchWithOptions', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -81,13 +81,13 @@ describe('appDelegateTask', () => {
       packageName: 'test-package',
     });
     // @ts-ignore
-    expect(content).toContain(task.updates[1].append);
+    expect(content).toContain(task.actions[1].append);
   });
   it('should insert text after point into didLaunchWithOptions', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -113,7 +113,7 @@ describe('appDelegateTask', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -139,7 +139,7 @@ describe('appDelegateTask', () => {
     const content = '';
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -163,7 +163,7 @@ describe('appDelegateTask', () => {
     const content = mockAppDelegateTemplate;
     const taskInsertBefore: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -186,7 +186,7 @@ describe('appDelegateTask', () => {
     ).toThrowError('insertion point');
     const taskInsertAfter: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -212,7 +212,7 @@ describe('appDelegateTask', () => {
     const content = '';
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -236,7 +236,7 @@ describe('appDelegateTask', () => {
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -260,7 +260,7 @@ describe('appDelegateTask', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -280,13 +280,13 @@ describe('appDelegateTask', () => {
 
     expect(content).toContain('applicationDidBecomeActive');
     // @ts-ignore
-    expect(content).toContain(task.updates[1].append);
+    expect(content).toContain(task.actions[1].append);
   });
   it('should insert text before point into non existing applicationDidBecomeActive', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -307,13 +307,13 @@ describe('appDelegateTask', () => {
 
     expect(content).toContain('applicationDidBecomeActive');
     // @ts-ignore
-    expect(content).toContain(task.updates[1].append);
+    expect(content).toContain(task.actions[1].append);
   });
   it('should insert text after point into non existing applicationDidBecomeActive', () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           prepend: '#import <Firebase.h>',
         },
@@ -334,7 +334,7 @@ describe('appDelegateTask', () => {
 
     expect(content).toContain('applicationDidBecomeActive');
     // @ts-ignore
-    expect(content).toContain(task.updates[1].prepend);
+    expect(content).toContain(task.actions[1].prepend);
   });
   it('should append/prepend/insert after/before text into non existing blocks}', () => {
     [
@@ -353,7 +353,7 @@ describe('appDelegateTask', () => {
       let content = mockAppDelegateTemplate;
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
-        updates: [
+        actions: [
           {
             block,
             prepend: 'prepended code',
@@ -371,15 +371,15 @@ describe('appDelegateTask', () => {
 
       expect(content).toContain(block);
       // @ts-ignore
-      expect(content).toContain(task.updates[0].prepend);
+      expect(content).toContain(task.actions[0].prepend);
       // @ts-ignore
-      expect(content).toContain(task.updates[0].append);
+      expect(content).toContain(task.actions[0].append);
 
       // second append on existing block
       mockPrompter.log.message.mockReset();
       const task2: AppDelegateTaskType = {
         type: 'app_delegate',
-        updates: [
+        actions: [
           {
             block,
             prepend: 'prepended code',
@@ -396,9 +396,9 @@ describe('appDelegateTask', () => {
       });
 
       // @ts-ignore
-      expect(content).toContain(task2.updates[0].prepend);
+      expect(content).toContain(task2.actions[0].prepend);
       // @ts-ignore
-      expect(content).toContain(task2.updates[0].append);
+      expect(content).toContain(task2.actions[0].append);
 
       expect(mockPrompter.log.message).toHaveBeenCalledWith(
         expect.stringContaining('code already exists')
@@ -410,7 +410,7 @@ describe('appDelegateTask', () => {
     mock.mockImplementationOnce(content => content);
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
-      updates: [
+      actions: [
         {
           block: 'applicationDidBecomeActive',
           prepend: 'random',
@@ -432,7 +432,7 @@ describe('appDelegateTask', () => {
       const appDelegatePath = writeMockAppDelegate();
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
-        updates: [
+        actions: [
           {
             prepend: '#import <Firebase.h>',
           },
@@ -450,12 +450,12 @@ describe('appDelegateTask', () => {
       });
       const content = mockFs.readFileSync(appDelegatePath);
       // @ts-ignore
-      expect(content).toContain(task.updates[1].prepend);
+      expect(content).toContain(task.actions[1].prepend);
     });
     it('should throw when app delegate does not exist', () => {
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
-        updates: [
+        actions: [
           {
             prepend: '#import <Firebase.h>',
           },
@@ -479,7 +479,7 @@ describe('appDelegateTask', () => {
       });
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
-        updates: [
+        actions: [
           {
             prepend: '#import <Firebase.h>',
           },

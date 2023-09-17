@@ -19,8 +19,8 @@ export function plistTask(args: {
   let { content } = args;
   const { task } = args;
 
-  task.updates.forEach(update => {
-    content = applyPlistModification(content, update);
+  task.actions.forEach(action => {
+    content = applyPlistModification(content, action);
   });
 
   return content;
@@ -28,13 +28,13 @@ export function plistTask(args: {
 
 function applyPlistModification(
   content: Record<string, any>,
-  update: PlistModifierType
+  action: PlistModifierType
 ) {
-  const strategy = update.strategy || 'assign';
-  update.set = transformTextInObject(update.set);
+  const strategy = action.strategy || 'assign';
+  action.set = transformTextInObject(action.set);
 
   if (strategy == 'assign') {
-    content = Object.assign(content, update.set);
+    content = Object.assign(content, action.set);
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
     const customizer = function (objValue: any, srcValue: any) {
@@ -59,7 +59,7 @@ function applyPlistModification(
       }
     };
 
-    content = mergeWith(content, update.set, customizer);
+    content = mergeWith(content, action.set, customizer);
     /* eslint-enable @typescript-eslint/no-unsafe-return */
   }
 
@@ -69,7 +69,7 @@ function applyPlistModification(
       temp_obj[key] = content[key];
       return temp_obj;
     }, {} as Record<string, any>);
-  Object.entries(update.set).forEach(([key, value]) => {
+  Object.entries(action.set).forEach(([key, value]) => {
     value = typeof value === 'string' ? value : JSON.stringify(value);
     logMessage(
       `set ${color.yellow(key)} with ${color.yellow(

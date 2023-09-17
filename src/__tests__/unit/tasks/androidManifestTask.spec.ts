@@ -17,7 +17,7 @@ describe('androidManifestTask', () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           attributes: {
             test: 1,
@@ -38,7 +38,7 @@ describe('androidManifestTask', () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'random' as any,
         },
@@ -57,7 +57,7 @@ describe('androidManifestTask', () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'activity',
           append: '<test />',
@@ -77,7 +77,7 @@ describe('androidManifestTask', () => {
     let content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           prepend: '<test />',
           append: '<test />',
@@ -106,7 +106,7 @@ describe('androidManifestTask', () => {
 
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'activity',
           ifNotPresent: 'intent-filter',
@@ -143,7 +143,7 @@ describe('androidManifestTask', () => {
 `;
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'application',
           prepend: '<test />',
@@ -184,7 +184,7 @@ describe('androidManifestTask', () => {
 `;
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'application',
           attributes: {
@@ -229,7 +229,7 @@ describe('androidManifestTask', () => {
 `;
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           append: '<test />',
@@ -268,7 +268,7 @@ describe('androidManifestTask', () => {
 `;
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           after: 'test3',
@@ -310,7 +310,7 @@ describe('androidManifestTask', () => {
 `;
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           before: { regex: 'test3' },
@@ -350,7 +350,7 @@ describe('androidManifestTask', () => {
 `;
     const taskInsertBefore: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           before: 'random',
@@ -361,7 +361,7 @@ describe('androidManifestTask', () => {
     };
     const taskInsertBeforeNonStrict: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           before: 'random',
@@ -388,7 +388,7 @@ describe('androidManifestTask', () => {
     ).not.toThrowError('insertion point');
     const taskInsertAfter: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           after: 'random',
@@ -400,7 +400,7 @@ describe('androidManifestTask', () => {
 
     const taskInsertAfterNonStrict: AndroidManifestTaskType = {
       type: 'android_manifest',
-      updates: [
+      actions: [
         {
           block: 'manifest',
           after: 'random',
@@ -446,7 +446,7 @@ describe('androidManifestTask', () => {
       mockFs.writeFileSync(manifestPath, content);
       const task: AndroidManifestTaskType = {
         type: 'android_manifest',
-        updates: [
+        actions: [
           {
             block: 'manifest',
             prepend: '<test />',
@@ -461,12 +461,12 @@ describe('androidManifestTask', () => {
       });
       content = mockFs.readFileSync(manifestPath);
       // @ts-ignore
-      expect(content).toContain(task.updates[0].prepend);
+      expect(content).toContain(task.actions[0].prepend);
     });
     it('should throw when android manifest does not exist', () => {
       const task: AndroidManifestTaskType = {
         type: 'android_manifest',
-        updates: [
+        actions: [
           {
             block: 'manifest',
             prepend: 'test2;',

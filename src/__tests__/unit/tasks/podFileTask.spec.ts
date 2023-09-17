@@ -13,7 +13,7 @@ describe('podFileTask', () => {
     let content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: "target 'TestApp'",
           append: 'config = use_native_modules!',
@@ -43,7 +43,7 @@ end
     let content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           append: 'config = use_native_modules!',
           prepend: 'config = use_native_modules!',
@@ -74,7 +74,7 @@ end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target',
           ifNotPresent: 'use_native_modules',
@@ -104,7 +104,7 @@ target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           prepend: 'config = use_native_modules!',
@@ -136,7 +136,7 @@ end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           prepend: 'config2 = use_native_modules!',
@@ -169,7 +169,7 @@ end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           append: 'config2 = use_native_modules!',
@@ -201,7 +201,7 @@ end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           after: 'config',
@@ -233,7 +233,7 @@ target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           after: 'random',
@@ -267,7 +267,7 @@ end
 `;
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           before: { regex: 'test3' },
@@ -297,7 +297,7 @@ end
 `;
     const taskInsertBefore: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           before: 'random',
@@ -308,7 +308,7 @@ end
     };
     const taskInsertBeforeNonStrict: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           before: 'random',
@@ -335,7 +335,7 @@ end
     ).not.toThrowError('insertion point');
     const taskInsertAfter: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           after: 'random',
@@ -347,7 +347,7 @@ end
 
     const taskInsertAfterNonStrict: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target.pre_install',
           after: 'random',
@@ -378,7 +378,7 @@ end
     mock.mockImplementationOnce(content => content);
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: "target 'Test'.pre_install",
           prepend: 'random;',
@@ -399,7 +399,7 @@ end
     const content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'target',
           prepend: 'random;',
@@ -420,7 +420,7 @@ end
     const content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
-      updates: [
+      actions: [
         {
           block: 'random',
           prepend: 'random;',
@@ -455,7 +455,7 @@ end
       mockFs.writeFileSync(podFilePath, content);
       const task: PodFileTaskType = {
         type: 'podfile',
-        updates: [
+        actions: [
           {
             block: 'target.pre_install',
             prepend: 'test2;',
@@ -470,12 +470,12 @@ end
       });
       content = mockFs.readFileSync(podFilePath);
       // @ts-ignore
-      expect(content).toContain(task.updates[0].prepend);
+      expect(content).toContain(task.actions[0].prepend);
     });
     it('should throw when pod file does not exist', () => {
       const task: PodFileTaskType = {
         type: 'podfile',
-        updates: [
+        actions: [
           {
             block: 'target.pre_install',
             prepend: 'test2;',

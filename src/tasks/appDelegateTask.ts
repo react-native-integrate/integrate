@@ -20,9 +20,9 @@ export function appDelegateTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.updates.forEach(update => {
+  task.actions.forEach(action => {
     content = applyContentModification({
-      update,
+      action,
       findOrCreateBlock,
       configPath,
       content,

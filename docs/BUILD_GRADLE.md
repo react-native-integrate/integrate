@@ -26,10 +26,10 @@ Specifies the target location within the project structure, distinguishing betwe
     -   `root`: (default) Modifies `android/build.gradle` file.
     -   `app`: Modifies `android/app/build.gradle` file.
     
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 ###### Context reduction properties
 
@@ -81,7 +81,7 @@ Usage Example
 type: build_gradle
 label: "Enabling multidex"
 location: "app",
-updates:
+actions:
   - block: "android.defaultConfig"
     after: versionName
     prepend: multiDexEnabled true
@@ -92,4 +92,4 @@ In this example, the `build_gradle` task enables multidex in `defaultConfig` blo
 Conclusion
 ----------
 
-The `build_gradle` task is a powerful tool for customizing Android project configurations by making precise modifications to the `build.gradle` files. It allows you to add dependencies, configure build settings, and perform other customizations with ease. The `block` property ensures that modifications occur in the intended context within the file, offering fine-grained control over project configuration. The `updates` property enhances this task's capabilities by allowing multiple modifications within the specified block.
+The `build_gradle` task is a powerful tool for customizing Android project configurations by making precise modifications to the `build.gradle` files. It allows you to add dependencies, configure build settings, and perform other customizations with ease. The `block` property ensures that modifications occur in the intended context within the file, offering fine-grained control over project configuration. The `actions` property enhances this task's capabilities by allowing multiple modifications within the specified block.

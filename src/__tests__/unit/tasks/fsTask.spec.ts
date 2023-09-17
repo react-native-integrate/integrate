@@ -23,7 +23,7 @@ describe('fsTask', () => {
 
     const task: FsTaskType = {
       type: 'fs',
-      updates: [
+      actions: [
         {
           copyFile: 'file.json',
           destination: 'android/file.json',
@@ -49,7 +49,7 @@ describe('fsTask', () => {
 
     const task: FsTaskType = {
       type: 'fs',
-      updates: [
+      actions: [
         {
           copyFile: 'file.json',
           destination: '../somewhere/file.json',
@@ -73,7 +73,7 @@ describe('fsTask', () => {
 
     const task: FsTaskType = {
       type: 'fs',
-      updates: [
+      actions: [
         {
           copyFile: 'file.json',
           destination: 'android/file.json',
@@ -117,7 +117,7 @@ describe('fsTask', () => {
 
     const task: FsTaskType = {
       type: 'fs',
-      updates: [
+      actions: [
         {
           copyFile: 'file.json',
           destination: 'android/file.json',
@@ -160,7 +160,7 @@ describe('fsTask', () => {
 
     const task: FsTaskType = {
       type: 'fs',
-      updates: [
+      actions: [
         {
           copyFile: 'file.json',
           destination: 'android/file.json',
@@ -196,7 +196,7 @@ describe('fsTask', () => {
     it('should run fs tasks', async () => {
       const task: FsTaskType = {
         type: 'fs',
-        updates: [
+        actions: [
           {
             copyFile: 'file.json',
             destination: 'android/file.json',

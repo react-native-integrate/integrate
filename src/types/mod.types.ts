@@ -48,14 +48,14 @@ export type ContentModifierType<TBlock = string> = {
   replace?: TextOrFileValue;
 };
 
-export type UpdatesType<T> = {
-  updates: T[];
+export type ActionsType<T> = {
+  actions: T[];
 };
 
 // plist task
 
 export type PlistTaskType = ModTaskBase &
-  UpdatesType<PlistModifierType> & {
+  ActionsType<PlistModifierType> & {
     type: 'plist';
     target?: string;
   };
@@ -70,7 +70,7 @@ export type PlistModifierType = {
 // app_delegate task
 
 export type AppDelegateTaskType = ModTaskBase &
-  UpdatesType<ContentModifierType<AppDelegateBlockType>> & {
+  ActionsType<ContentModifierType<AppDelegateBlockType>> & {
     type: 'app_delegate';
   };
 export type AppDelegateBlockType =
@@ -99,7 +99,7 @@ export type ValidationTaskType = ModTaskBase & {
 // build gradle task
 
 export type BuildGradleTaskType = ModTaskBase &
-  UpdatesType<ContentModifierType> & {
+  ActionsType<ContentModifierType> & {
     type: 'build_gradle';
     location?: BuildGradleLocationType;
   };
@@ -109,7 +109,7 @@ export type BuildGradleLocationType = 'root' | 'app';
 // android manifest task
 
 export type AndroidManifestTaskType = ModTaskBase &
-  UpdatesType<AndroidManifestModifierType> & {
+  ActionsType<AndroidManifestModifierType> & {
     type: 'android_manifest';
   };
 
@@ -123,7 +123,7 @@ export type AndroidManifestModifierType =
 // add resource task
 
 export type IosResourcesTaskType = ModTaskBase &
-  UpdatesType<IosResourcesModifierType> & {
+  ActionsType<IosResourcesModifierType> & {
     type: 'ios_resources';
   };
 
@@ -142,14 +142,14 @@ export type IosResourcesModifierType = {
 // pod file task
 
 export type PodFileTaskType = ModTaskBase &
-  UpdatesType<ContentModifierType> & {
+  ActionsType<ContentModifierType> & {
     type: 'podfile';
   };
 
 // fs task
 
 export type FsTaskType = ModTaskBase &
-  UpdatesType<FsModifierType> & {
+  ActionsType<FsModifierType> & {
     type: 'fs';
   };
 

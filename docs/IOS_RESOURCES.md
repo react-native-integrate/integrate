@@ -21,10 +21,10 @@ Visit [When](WHEN.md) page to learn how to execute task conditionally.
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 #### `addFile` (string)
 Specifies the resource file to be added. It can be a string representing the resource file name.
@@ -45,7 +45,7 @@ Usage Example
 
 ```yaml
 type: ios_resources
-updates:
+actions:
   - add: "GoogleService-Info.plist"
     target: "app"
   - add: "splash.png"
@@ -58,4 +58,4 @@ In this example, two resources, `GoogleService-Info.plist` and `splash.png` are 
 Conclusion
 ----------
 
-The `ios_resources` task simplifies the process of adding resources to an iOS project within a React Native application. By utilizing the `updates` array and specifying the `target` field, you can efficiently manage and configure the addition of resources to specific target groups within the project. This task streamlines iOS resource management and enhances the overall development experience.
+The `ios_resources` task simplifies the process of adding resources to an iOS project within a React Native application. By utilizing the `actions` array and specifying the `target` field, you can efficiently manage and configure the addition of resources to specific target groups within the project. This task streamlines iOS resource management and enhances the overall development experience.

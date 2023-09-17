@@ -21,15 +21,15 @@ Visit [When](WHEN.md) page to learn how to execute task conditionally.
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 ###### Context reduction properties
 
 #### `block` (string)
-Specifies the name of the method within AppDelegate.mm where the modification should be applied. It must match one of the allowed method names. See the "Allowed Method Names" section for details. Omitting this field instructs the update item to modify whole file.
+Specifies the name of the method within AppDelegate.mm where the modification should be applied. It must match one of the allowed method names. See the "Allowed Method Names" section for details. Omitting this field instructs the action item to modify whole file.
 
 #### `before` (string or object)
 Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.
@@ -67,7 +67,7 @@ An optional comment to add before the inserted code or text. The comment is pure
 
 ### Allowed Method Names
 
-The `block` field within the update items must match one of the allowed method names within the AppDelegate.mm file. The method is created if it does not exist. The following method names are allowed:
+The `block` field within the action items must match one of the allowed method names within the AppDelegate.mm file. The method is created if it does not exist. The following method names are allowed:
 
 -   `didFinishLaunchingWithOptions`
 -   `applicationDidBecomeActive`
@@ -90,7 +90,7 @@ Here's an example of how to use the `app_delegate` task:
 ```yaml
 type: app_delegate
 label: "Integrate Firebase"
-updates:
+actions:
   - prepend: "#import <Firebase.h>"
   - block: "didFinishLaunchingWithOptions"
     prepend: "[FIRApp configure];"
@@ -99,7 +99,7 @@ updates:
     append: "// Handle custom URL schemes here."
 ```
 
-In this example, the task is labeled "Integrate Firebase." It defines three update items:
+In this example, the task is labeled "Integrate Firebase." It defines three action items:
 
 1.  It prepends the header import to the file `#import <Firebase.h>`.
  

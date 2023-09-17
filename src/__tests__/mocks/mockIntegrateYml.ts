@@ -26,12 +26,12 @@ tasks:
       - name: test4
         text: Test prompt
     label: 'App Delegate'
-    updates:
+    actions:
       - prepend: "#import <Firebase.h>"
       - block: didFinishLaunchingWithOptions
         prepend: "[FIRApp configure];"
   - type: app_delegate
-    updates:
+    actions:
       - prepend: "#import <Firebase.h>"
       - block: didFinishLaunchingWithOptions
         prepend: "[FIRApp configure];"`;

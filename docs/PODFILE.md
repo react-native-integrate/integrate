@@ -21,10 +21,10 @@ Visit [When](WHEN.md) page to learn how to execute task conditionally.
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 ###### Context reduction properties
 
@@ -34,7 +34,7 @@ Specifies the part of the Podfile to target. You can set it to one of the follow
 -   `target 'TargetName'`: Targets a specific named target.
 -   `target.(hook_name)`: Possible hooks are `pre_install`, `post_install`, `pre_integrate`, `post_integrate`: Targets predefined Podfile hooks.
 
-If omitted, the entire Podfile will be the context for updates.
+If omitted, the entire Podfile will be the context for actions.
 
 #### `before` (string or object)
 Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.
@@ -78,7 +78,7 @@ Here's an example of a configuration file (`integrate.yml`) that utilizes the `p
 ```yaml
 type: podfile
 label: "Modify Podfile"
-updates:
+actions:
   - block: target
     prepend: |
       pod 'SomeLibrary', '1.0.0'

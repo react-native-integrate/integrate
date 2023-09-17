@@ -20,10 +20,10 @@ Visit [When](WHEN.md) page to learn how to execute task conditionally.
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made in the file. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 ###### Context reduction properties
 
@@ -76,7 +76,7 @@ An object that defines the attributes and their values to be added, updated, or 
 Example:
 ```yaml
 type: android_manifest
-updates:
+actions:
   - block: activity
     attributes:
       android:name: new_name
@@ -92,7 +92,7 @@ Here's an example of how to use the `android_manifest` task to modify the Androi
 ```yaml
 type: android_manifest
 label: "Modify Android Manifest"
-updates:
+actions:
   - block: application
     append: |
       <meta-data
@@ -104,7 +104,7 @@ updates:
       android:theme: "@style/AppTheme.NoActionBar"
 ```
 
-In this example, we append a `<meta-data>` element within the <application> tag and update attributes of a specific `<activity>` tag.
+In this example, we append a `<meta-data>` element within the <application> tag and action attributes of a specific `<activity>` tag.
 
 Conclusion
 ----------

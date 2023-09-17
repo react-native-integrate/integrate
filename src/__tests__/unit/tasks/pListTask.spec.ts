@@ -17,7 +17,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             CFBundleName: 'test2',
@@ -43,7 +43,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             first: {
@@ -75,7 +75,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             first: {
@@ -112,7 +112,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             first: {
@@ -148,7 +148,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             first: {
@@ -183,7 +183,7 @@ describe('pListTask', () => {
     };
     const task: PlistTaskType = {
       type: 'plist',
-      updates: [
+      actions: [
         {
           set: {
             first: {
@@ -215,7 +215,7 @@ describe('pListTask', () => {
       const pListPath = writeMockPList();
       const task: PlistTaskType = {
         type: 'plist',
-        updates: [
+        actions: [
           {
             set: {
               CFBundleDisplayName: 'test2',
@@ -237,7 +237,7 @@ describe('pListTask', () => {
       const task: PlistTaskType = {
         type: 'plist',
         target: 'custom',
-        updates: [
+        actions: [
           {
             set: {
               CFBundleDisplayName: 'test2',
@@ -257,7 +257,7 @@ describe('pListTask', () => {
     it('should throw when plist does not exist', () => {
       const task: PlistTaskType = {
         type: 'plist',
-        updates: [
+        actions: [
           {
             set: {
               CFBundleDisplayName: 'test2',
@@ -280,7 +280,7 @@ describe('pListTask', () => {
       });
       const task: PlistTaskType = {
         type: 'plist',
-        updates: [
+        actions: [
           {
             set: {
               CFBundleDisplayName: 'test2',

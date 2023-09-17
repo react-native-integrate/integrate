@@ -19,7 +19,7 @@ export type FindOrCreateBlockType = (
 export type ApplyContentModificationArgType = {
   configPath: string;
   content: string;
-  update: ContentModifierType;
+  action: ContentModifierType;
   findOrCreateBlock: FindOrCreateBlockType;
   indentation: number;
   additionalModification?: (args: {
@@ -35,7 +35,7 @@ export function applyContentModification(
   let { content } = args;
   const {
     configPath,
-    update,
+    action,
     findOrCreateBlock,
     indentation,
     additionalModification,
@@ -49,9 +49,9 @@ export function applyContentModification(
     justCreated: false,
     space: '',
   };
-  if (update.block) {
-    update.block = getText(update.block);
-    const foundBlock = findOrCreateBlock(content, update.block);
+  if (action.block) {
+    action.block = getText(action.block);
+    const foundBlock = findOrCreateBlock(content, action.block);
     blockContent = foundBlock.blockContent;
     content = foundBlock.content;
   }
@@ -61,45 +61,45 @@ export function applyContentModification(
       blockIndentation = '',
       openingNewLine = '\n',
       closingNewLine = `\n${isBlockSameLine ? blockContent.space : ''}`;
-    const isAppend = 'append' in update || 'before' in update;
+    const isAppend = 'append' in action || 'before' in action;
     if (!isBlockSameLine) {
       if (isAppend || blockContent.start == 0) openingNewLine = '';
       else closingNewLine = '';
     }
 
-    if (update.block) blockIndentation = ' '.repeat(indentation);
-    if (update.comment) {
+    if (action.block) blockIndentation = ' '.repeat(indentation);
+    if (action.comment) {
       const _buildCommand = buildComment || buildCommonComment;
-      const commentLines = _buildCommand(getText(update.comment));
+      const commentLines = _buildCommand(getText(action.comment));
       commentLines.forEach(line => {
         comment += `${blockContent.space}${blockIndentation}${line}\n`;
       });
     }
     return `${openingNewLine}${comment}${blockContent.space}${blockIndentation}${text}${closingNewLine}`;
   };
-  const splittingMsgArr = applyContextReduction(update, blockContent, content);
+  const splittingMsgArr = applyContextReduction(action, blockContent, content);
   const splittingMsg = splittingMsgArr.length
     ? ` (${splittingMsgArr.join(', ')})`
     : '';
   const runModifiers = (
     spliceCallback?: (start: number, rem: number, insert: string) => void
   ) => {
-    Object.keys(update).forEach(key => {
+    Object.keys(action).forEach(key => {
       switch (key) {
         case 'prepend':
-          if (update.prepend) {
-            const prependText = getModContent(configPath, update.prepend);
-            const codeToInsert = update.exact
+          if (action.prepend) {
+            const prependText = getModContent(configPath, action.prepend);
+            const codeToInsert = action.exact
               ? prependText
               : getCodeToInsert(prependText);
 
             if (
-              update.ifNotPresent &&
-              blockContent.match.includes(getText(update.ifNotPresent))
+              action.ifNotPresent &&
+              blockContent.match.includes(getText(action.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  getText(update.ifNotPresent)
+                  getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(prependText)}`
               );
             } else if (!blockContent.match.includes(prependText)) {
@@ -112,7 +112,7 @@ export function applyContentModification(
               updateBlockContent(blockContent, rem, insert, content);
               logMessage(
                 `prepended code in ${summarize(
-                  getBlockName(update)
+                  getBlockName(action)
                 )}${splittingMsg}: ${summarize(prependText)}`
               );
             } else
@@ -124,22 +124,22 @@ export function applyContentModification(
           }
           break;
         case 'append':
-          if (update.append) {
-            const appendText = getModContent(configPath, update.append);
-            const codeToInsert = update.exact
+          if (action.append) {
+            const appendText = getModContent(configPath, action.append);
+            const codeToInsert = action.exact
               ? appendText
               : getCodeToInsert(appendText);
             if (
-              update.ifNotPresent &&
-              blockContent.match.includes(getText(update.ifNotPresent))
+              action.ifNotPresent &&
+              blockContent.match.includes(getText(action.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  getText(update.ifNotPresent)
+                  getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(appendText)}`
               );
             } else if (!blockContent.match.includes(appendText)) {
-              const lineStart = update.exact
+              const lineStart = action.exact
                 ? blockContent.end
                 : findLineStart(content, blockContent.end, blockContent.start);
 
@@ -153,7 +153,7 @@ export function applyContentModification(
 
               logMessage(
                 `appended code in ${summarize(
-                  getBlockName(update)
+                  getBlockName(action)
                 )}${splittingMsg}: ${summarize(appendText)}`
               );
             } else
@@ -165,15 +165,15 @@ export function applyContentModification(
           }
           break;
         case 'replace':
-          if (update.replace) {
-            const replaceText = getModContent(configPath, update.replace);
+          if (action.replace) {
+            const replaceText = getModContent(configPath, action.replace);
             if (
-              update.ifNotPresent &&
-              blockContent.match.includes(getText(update.ifNotPresent))
+              action.ifNotPresent &&
+              blockContent.match.includes(getText(action.ifNotPresent))
             ) {
               logMessageGray(
                 `found existing ${summarize(
-                  getText(update.ifNotPresent)
+                  getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(replaceText)}`
               );
             } else if (!blockContent.match.includes(replaceText)) {
@@ -186,7 +186,7 @@ export function applyContentModification(
               updateBlockContent(blockContent, rem, insert, content);
               logMessage(
                 `replaced code in ${summarize(
-                  getBlockName(update)
+                  getBlockName(action)
                 )}${splittingMsg}: ${summarize(replaceText)}`
               );
             } else
@@ -200,12 +200,12 @@ export function applyContentModification(
       }
     });
   };
-  if (update.search) {
+  if (action.search) {
     const searchBlockContent = { ...blockContent };
     let searchMatcher =
-      typeof update.search == 'string'
-        ? new RegExp(escapeRegExp(getText(update.search)))
-        : new RegExp(getText(update.search.regex), update.search.flags);
+      typeof action.search == 'string'
+        ? new RegExp(escapeRegExp(getText(action.search)))
+        : new RegExp(getText(action.search.regex), action.search.flags);
     const searchOnce = !searchMatcher.flags.includes('g');
     if (searchOnce)
       searchMatcher = new RegExp(
@@ -272,30 +272,30 @@ function resolveInsertionPoint(
   }
 }
 
-export function getBlockName(update: ContentModifierType): string {
-  return update.block || 'file';
+export function getBlockName(action: ContentModifierType): string {
+  return action.block || 'file';
 }
 
 export function applyContextReduction(
-  update: ContentModifierType,
+  action: ContentModifierType,
   blockContent: BlockContentType,
   content: string
 ): string[] {
   const splittingMsgArr: string[] = [];
-  if (update.after) {
+  if (action.after) {
     const foundIndex = resolveInsertionPoint(
       blockContent,
       content,
-      update.after
+      action.after
     );
     if (foundIndex.start == -1) {
-      if (update.strict) throw new Error('Could not find insertion point');
+      if (action.strict) throw new Error('Could not find insertion point');
 
       logMessageGray(
         `insertion point not found, ignoring ${color.yellow('before')} criteria`
       );
     } else {
-      blockContent.start = update.exact
+      blockContent.start = action.exact
         ? foundIndex.end
         : findLineEnd(content, foundIndex.end, blockContent.end);
       blockContent.match = content.substring(
@@ -306,20 +306,20 @@ export function applyContextReduction(
     }
   }
 
-  if (update.before) {
+  if (action.before) {
     const foundIndex = resolveInsertionPoint(
       blockContent,
       content,
-      update.before
+      action.before
     );
     if (foundIndex.start == -1) {
-      if (update.strict) throw new Error('Could not find insertion point');
+      if (action.strict) throw new Error('Could not find insertion point');
 
       logMessageGray(
         `insertion point not found, skipping ${color.yellow('before')} criteria`
       );
     } else {
-      blockContent.end = update.exact
+      blockContent.end = action.exact
         ? foundIndex.start
         : findLineStart(content, foundIndex.start, blockContent.start);
       blockContent.match = content.substring(

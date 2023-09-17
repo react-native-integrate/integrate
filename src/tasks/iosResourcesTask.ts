@@ -23,8 +23,8 @@ export async function iosResourcesTask(args: {
   let { content } = args;
   const { task } = args;
 
-  for (const update of task.updates) {
-    content = await applyIosResourcesModification(content, update);
+  for (const action of task.actions) {
+    content = await applyIosResourcesModification(content, action);
   }
 
   return content;
@@ -32,14 +32,14 @@ export async function iosResourcesTask(args: {
 
 async function applyIosResourcesModification(
   content: XcodeProjectType,
-  update: IosResourcesModifierType
+  action: IosResourcesModifierType
 ) {
-  let { target } = update;
+  let { target } = action;
   target = target || 'root';
   if (typeof target == 'string') target = getText(target) as 'root' | 'app';
-  update.addFile = getText(update.addFile);
+  action.addFile = getText(action.addFile);
 
-  const fileName = path.basename(update.addFile);
+  const fileName = path.basename(action.addFile);
   const nativeTarget = content.getTarget(Constants.XCODE_APPLICATION_TYPE);
   let group;
   let logTarget;
@@ -66,10 +66,10 @@ async function applyIosResourcesModification(
   }
   destination += `/${fileName}`;
   const groupObj = content.getPBXGroupByKey(group);
-  if (groupObj.children.some(x => x.comment == update.addFile)) {
+  if (groupObj.children.some(x => x.comment == action.addFile)) {
     logMessageGray(
       `skipped adding resource, ${color.yellow(
-        update.addFile
+        action.addFile
       )} is already referenced in ${color.yellow(logTarget)}`
     );
     return content;
@@ -79,7 +79,7 @@ async function applyIosResourcesModification(
   await applyFsModification({
     copyFile: fileName,
     destination,
-    message: update.message,
+    message: action.message,
   });
 
   const releasePatch = patchXcodeProject();
@@ -89,7 +89,7 @@ async function applyIosResourcesModification(
     releasePatch();
   }
   logMessage(
-    `added ${color.yellow(update.addFile)} reference in ${color.yellow(
+    `added ${color.yellow(action.addFile)} reference in ${color.yellow(
       logTarget
     )}`
   );

@@ -21,10 +21,10 @@ Visit [When](WHEN.md) page to learn how to execute task conditionally.
 #### `prompts` (array)
 Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 
-#### `updates` (array of objects, required)
-An array of update items that define the modifications to be made for this task. Each update item contains the following fields:
+#### `actions` (array of objects, required)
+An array of action items that define the modifications to be made for this task. Each action item contains the following fields:
 
-### Update Item
+### Action Item
 
 #### `copyFile` (string)
 A string that specifies the name of the file you want to copy.
@@ -43,7 +43,7 @@ Here's an example of how to use the "fs" task in a configuration file:
 ```yaml
 tasks:
 - type: fs
-  updates:
+  actions:
     - copyFile: "example.txt"
       message: "Please enter the path of the file you want to copy:"
       destination: "assets/example.txt"
