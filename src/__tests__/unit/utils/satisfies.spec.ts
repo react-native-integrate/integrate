@@ -265,16 +265,9 @@ describe('satisfies', () => {
         )
       ).toBe(false);
     });
-    it('should satisfy $gt', () => {
-      expect(
-        satisfies(
-          {
-            test: { x: 1, y: 2 },
-          },
-          { test: { x: { $gt: 0 } } }
-        )
-      ).toBe(true);
-    });
+  });
+
+  describe('non array operands', () => {
     it('should not satisfy $gt', () => {
       expect(
         satisfies(
@@ -441,6 +434,36 @@ describe('satisfies', () => {
             test: { x: 1, y: 2 },
           },
           { test: { x: { $exists: false } } }
+        )
+      ).toBe(false);
+    });
+    it('should satisfy $regex', () => {
+      expect(
+        satisfies(
+          {
+            test: { x: 'value' },
+          },
+          { test: { x: { $regex: 'VAL', $options: 'i' } } }
+        )
+      ).toBe(true);
+    });
+    it('should satisfy $regex with non string options', () => {
+      expect(
+        satisfies(
+          {
+            test: { x: 'value' },
+          },
+          { test: { x: { $regex: 'val' } } }
+        )
+      ).toBe(true);
+    });
+    it('should satisfy $regex with non string left side', () => {
+      expect(
+        satisfies(
+          {
+            test: { x: null },
+          },
+          { test: { x: { $regex: 'val' } } }
         )
       ).toBe(false);
     });

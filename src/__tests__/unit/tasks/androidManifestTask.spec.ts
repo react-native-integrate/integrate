@@ -34,6 +34,28 @@ describe('androidManifestTask', () => {
       })
     ).toThrowError('you must set block');
   });
+  it('should skip if condition not met', () => {
+    const content = '';
+    const task: AndroidManifestTaskType = {
+      type: 'android_manifest',
+      actions: [
+        {
+          when: { test: 'random' },
+          attributes: {
+            test: 1,
+          },
+        },
+      ],
+    };
+    expect(() =>
+      androidManifestTask({
+        configPath: 'path/to/config',
+        task: task,
+        content,
+        packageName: 'test-package',
+      })
+    ).not.toThrow();
+  });
   it('should throw if block is invalid', () => {
     const content = '';
     const task: AndroidManifestTaskType = {

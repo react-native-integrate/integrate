@@ -9,7 +9,9 @@ import {
 import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
+import { satisfies } from '../utils/satisfies';
 import { stringSplice } from '../utils/stringSplice';
+import { variables } from '../variables';
 
 export function buildGradleTask(args: {
   configPath: string;
@@ -20,7 +22,9 @@ export function buildGradleTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.actions.forEach(action => {
+  for (const action of task.actions) {
+    variables.set('CONTENT', content);
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     content = applyContentModification({
       action,
       findOrCreateBlock,
@@ -28,7 +32,7 @@ export function buildGradleTask(args: {
       content,
       indentation: 4,
     });
-  });
+  }
   return content;
 }
 

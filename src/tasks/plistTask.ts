@@ -8,7 +8,8 @@ import { logMessage, summarize } from '../prompter';
 import { PlistModifierType, PlistTaskType } from '../types/mod.types';
 import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
-import { transformTextInObject } from '../variables';
+import { satisfies } from '../utils/satisfies';
+import { transformTextInObject, variables } from '../variables';
 
 export function plistTask(args: {
   configPath: string;
@@ -19,9 +20,11 @@ export function plistTask(args: {
   let { content } = args;
   const { task } = args;
 
-  task.actions.forEach(action => {
+  for (const action of task.actions) {
+    variables.set('CONTENT', content);
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     content = applyPlistModification(content, action);
-  });
+  }
 
   return content;
 }

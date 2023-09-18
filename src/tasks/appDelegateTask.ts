@@ -9,7 +9,9 @@ import {
 import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
+import { satisfies } from '../utils/satisfies';
 import { stringSplice } from '../utils/stringSplice';
+import { variables } from '../variables';
 
 export function appDelegateTask(args: {
   configPath: string;
@@ -20,7 +22,9 @@ export function appDelegateTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.actions.forEach(action => {
+  for (const action of task.actions) {
+    variables.set('CONTENT', content);
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     content = applyContentModification({
       action,
       findOrCreateBlock,
@@ -28,7 +32,7 @@ export function appDelegateTask(args: {
       content,
       indentation: 2,
     });
-  });
+  }
 
   return content;
 }

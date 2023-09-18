@@ -8,7 +8,9 @@ import {
   TagDefinitions,
 } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
+import { satisfies } from '../utils/satisfies';
 import { stringSplice } from '../utils/stringSplice';
+import { variables } from '../variables';
 
 export function podFileTask(args: {
   configPath: string;
@@ -19,7 +21,9 @@ export function podFileTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.actions.forEach(action => {
+  for (const action of task.actions) {
+    variables.set('CONTENT', content);
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     content = applyContentModification({
       action,
       findOrCreateBlock,
@@ -28,7 +32,7 @@ export function podFileTask(args: {
       indentation: 2,
       buildComment: buildPodComment,
     });
-  });
+  }
   return content;
 }
 

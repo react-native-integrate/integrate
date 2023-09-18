@@ -59,7 +59,8 @@ function anySatisfiesObject(left: TAny, right: TObject): boolean {
 
 function objectSatisfiesObject(left: TObject, right: TObject): boolean {
   return Object.entries(right).every(([key, value]) => {
-    if (key in nonArrayOperands) return nonArrayOperands[key](left, value);
+    if (key in nonArrayOperands)
+      return nonArrayOperands[key](left, value, right);
     return satisfies(left[key], value);
   });
 }
@@ -83,7 +84,8 @@ function primitiveSatisfiesPrimitive(
 
 function primitiveSatisfiesObject(left: TPrimitive, right: TObject): boolean {
   return Object.entries(right).every(([key, value]) => {
-    if (key in nonArrayOperands) return nonArrayOperands[key](left, value);
+    if (key in nonArrayOperands)
+      return nonArrayOperands[key](left, value, right);
     return false;
   });
 }
@@ -179,7 +181,7 @@ const arrayOperands: Record<string, (left: TArray, right: TAny) => boolean> = {
 
 const nonArrayOperands: Record<
   string,
-  (left: TObjectOrPrimitive, right: TAny) => boolean
+  (left: TObjectOrPrimitive, right: TAny, operandParent: TObject) => boolean
 > = {
   ...commonOperands,
 
@@ -209,5 +211,14 @@ const nonArrayOperands: Record<
   },
   $exists(left: TObjectOrPrimitive, right: TAny) {
     return right ? left != undefined : left == undefined;
+  },
+  $regex(left: TObjectOrPrimitive, right: TAny, operandParent: TObject) {
+    if (typeof right != 'string' || typeof left != 'string') return false;
+    let options = operandParent.$options;
+    if (typeof options != 'string') options = undefined;
+    return new RegExp(right, options).test(left);
+  },
+  $options() {
+    return true;
   },
 };

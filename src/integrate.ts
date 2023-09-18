@@ -134,7 +134,8 @@ export async function integrate(packageName?: string): Promise<void> {
           color.bold(color.blue(` ${packageName} `))
       );
       if (await confirm('would you like to integrate this package?')) {
-        let failedTaskCount = 0;
+        let failedTaskCount = 0,
+          completedTaskCount = 0;
         if (config.prompts)
           for (const prompt of config.prompts) {
             await runPrompt(prompt);
@@ -158,6 +159,7 @@ export async function integrate(packageName?: string): Promise<void> {
               packageName,
               task,
             });
+            completedTaskCount++;
           } catch (e) {
             failedTaskCount++;
             logError(getErrMessage(e));
@@ -179,7 +181,7 @@ export async function integrate(packageName?: string): Promise<void> {
             color.inverse(color.bold(color.green(' integrated '))) +
               color.black(color.bold(color.blue(` ${packageName} `))) +
               color.green(
-                `completed ${config.tasks.length} task(s) successfully`
+                `completed ${completedTaskCount} task(s) successfully`
               )
           );
         }

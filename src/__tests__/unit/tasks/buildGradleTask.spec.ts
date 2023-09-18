@@ -431,6 +431,37 @@ buildscript {
         test2;
         test3;`);
   });
+  it('should skip if condition not met', () => {
+    let content = `
+buildscript {
+    ext {
+        test1;
+        test3;
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      actions: [
+        {
+          when: { test: 'random' },
+          block: 'buildscript.ext',
+          before: { regex: '\n.*?test3;' },
+          append: 'test2;',
+        },
+      ],
+    };
+
+    content = buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).not.toContain(`test1;
+        test2;
+        test3;`);
+  });
   it('should throw when insertion point not found with strict', () => {
     const content = `
 buildscript {

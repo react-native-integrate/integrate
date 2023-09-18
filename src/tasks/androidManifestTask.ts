@@ -19,8 +19,9 @@ import {
   TagDefinitions,
 } from '../utils/findClosingTagIndex';
 import { getProjectPath } from '../utils/getProjectPath';
+import { satisfies } from '../utils/satisfies';
 import { stringSplice } from '../utils/stringSplice';
-import { transformTextInObject } from '../variables';
+import { transformTextInObject, variables } from '../variables';
 
 export function androidManifestTask(args: {
   configPath: string;
@@ -31,7 +32,9 @@ export function androidManifestTask(args: {
   let { content } = args;
   const { task, configPath } = args;
 
-  task.actions.forEach(action => {
+  for (const action of task.actions) {
+    variables.set('CONTENT', content);
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     const additionalModification = (args: {
       content: string;
       blockContent: BlockContentType;
@@ -45,7 +48,7 @@ export function androidManifestTask(args: {
       additionalModification,
       buildComment: buildXmlComment,
     });
-  });
+  }
   return content;
 }
 

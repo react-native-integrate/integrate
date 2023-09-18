@@ -4,6 +4,7 @@ import color from 'picocolors';
 import { confirm, logMessage, logMessageGray, text } from '../prompter';
 import { FsModifierType, FsTaskType } from '../types/mod.types';
 import { getProjectPath } from '../utils/getProjectPath';
+import { satisfies } from '../utils/satisfies';
 import { waitForFile } from '../utils/waitForFile';
 import { getText, variables } from '../variables';
 
@@ -15,6 +16,7 @@ export async function fsTask(args: {
   const { task } = args;
 
   for (const action of task.actions) {
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     await applyFsModification(action);
   }
 }

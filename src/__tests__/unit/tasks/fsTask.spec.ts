@@ -67,6 +67,30 @@ describe('fsTask', () => {
       })
     ).rejects.toThrowError('invalid destination path');
   });
+  it('should skip if condition not met', async () => {
+    mockPrompter.text.mockReset();
+
+    const task: FsTaskType = {
+      type: 'fs',
+      actions: [
+        {
+          when: { test: 'random' },
+          copyFile: 'file.json',
+          destination: '../somewhere/file.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    mockPrompter.text.mockImplementationOnce(() => '/test/file.json');
+    await expect(
+      fsTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      })
+    ).resolves.not.toThrow();
+  });
   it('should wait for user to copy file to destination when not exists', async () => {
     mockPrompter.text.mockReset();
     mockPrompter.confirm.mockReset();

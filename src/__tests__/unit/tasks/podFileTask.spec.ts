@@ -416,6 +416,28 @@ end
       })
     ).toThrowError('target not found');
   });
+  it('should skip if condition not met', () => {
+    const content = '';
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          when: { test: 'random' },
+          block: 'target',
+          prepend: 'random;',
+        },
+      ],
+    };
+
+    expect(() =>
+      podFileTask({
+        configPath: 'path/to/config',
+        task: task,
+        content,
+        packageName: 'test-package',
+      })
+    ).not.toThrowError('target not found');
+  });
   it('should throw invalid block', () => {
     const content = '';
     const task: PodFileTaskType = {

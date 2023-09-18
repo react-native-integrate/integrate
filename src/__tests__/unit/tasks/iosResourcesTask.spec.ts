@@ -87,6 +87,34 @@ describe('iosResourcesTask', () => {
       /ReactNativeCliTemplates \*\/ = \{.*?GoogleService-Info\.plist.*?}/s
     );
   });
+  it('should skip if condition not met', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      actions: [
+        {
+          when: { test: 'random' },
+          addFile: 'GoogleService-Info.plist',
+          target: 'app',
+        },
+      ],
+    };
+
+    await iosResourcesTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).not.toMatch(
+      /ReactNativeCliTemplates \*\/ = \{.*?GoogleService-Info\.plist.*?}/s
+    );
+  });
   it('should add resource to custom group', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);

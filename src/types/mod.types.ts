@@ -48,8 +48,12 @@ export type ContentModifierType<TBlock = string> = {
   replace?: TextOrFileValue;
 };
 
+export type ActionBase<T> = T & {
+  when?: any;
+};
+
 export type ActionsType<T> = {
-  actions: T[];
+  actions: ActionBase<T>[];
 };
 
 // plist task

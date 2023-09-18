@@ -159,6 +159,32 @@ describe('appDelegateTask', () => {
       })
     ).toThrowError('didFinishLaunchingWithOptions not implemented');
   });
+  it('should skip if condition not met', () => {
+    const content = '';
+    const task: AppDelegateTaskType = {
+      type: 'app_delegate',
+      actions: [
+        {
+          when: { test: 'random' },
+          prepend: '#import <Firebase.h>',
+        },
+        {
+          when: { test: 'random' },
+          block: 'didFinishLaunchingWithOptions',
+          prepend: '[FIRApp configure];',
+        },
+      ],
+    };
+
+    expect(() =>
+      appDelegateTask({
+        configPath: 'path/to/config',
+        task: task,
+        content,
+        packageName: 'test-package',
+      })
+    ).not.toThrow();
+  });
   it('should throw when insertion point not found', () => {
     const content = mockAppDelegateTemplate;
     const taskInsertBefore: AppDelegateTaskType = {

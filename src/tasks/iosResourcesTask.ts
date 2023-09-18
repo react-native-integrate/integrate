@@ -9,7 +9,8 @@ import {
 } from '../types/mod.types';
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
-import { getText } from '../variables';
+import { satisfies } from '../utils/satisfies';
+import { getText, variables } from '../variables';
 import { applyFsModification } from './fsTask';
 
 const xcode: XcodeType = require('xcode');
@@ -24,6 +25,7 @@ export async function iosResourcesTask(args: {
   const { task } = args;
 
   for (const action of task.actions) {
+    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
     content = await applyIosResourcesModification(content, action);
   }
 
