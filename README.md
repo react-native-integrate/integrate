@@ -79,14 +79,14 @@ If your package requires "additional steps" after installation, follow these ste
 tasks:
   - type: app_delegate
     label: "Updating AppDelegate.mm"
-    updates:
+    actions:
       - prepend: "#import <YourPackage.h>"
       - block: didFinishLaunchingWithOptions
         prepend: "[YourPackage configure];"
   - type: build_gradle
     label: "Enabling multidex"
     location: "app",
-    updates:
+    actions:
       - block: "android.defaultConfig"
         after: versionName
         prepend: multiDexEnabled true
