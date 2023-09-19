@@ -18,8 +18,10 @@ import {
   findClosingTagIndex,
   TagDefinitions,
 } from '../utils/findClosingTagIndex';
+import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
 import { satisfies } from '../utils/satisfies';
+import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { transformTextInObject, variables } from '../variables';
 
@@ -34,20 +36,46 @@ export function androidManifestTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
-    const additionalModification = (args: {
-      content: string;
-      blockContent: BlockContentType;
-    }) => applyAttributeModification({ ...args, action });
-    content = applyContentModification({
-      action,
-      findOrCreateBlock,
-      configPath,
-      content,
-      indentation: 0,
-      additionalModification,
-      buildComment: buildXmlComment,
+    if (action.when && !satisfies(variables.getStore(), action.when)) {
+      setState(action.name, {
+        state: 'skipped',
+        reason: 'when',
+        error: false,
+      });
+      continue;
+    }
+
+    setState(action.name, {
+      state: 'progress',
+      error: false,
     });
+    try {
+      const additionalModification = (args: {
+        content: string;
+        blockContent: BlockContentType;
+      }) => applyAttributeModification({ ...args, action });
+      content = applyContentModification({
+        action,
+        findOrCreateBlock,
+        configPath,
+        content,
+        indentation: 0,
+        additionalModification,
+        buildComment: buildXmlComment,
+      });
+
+      setState(action.name, {
+        state: 'done',
+        error: false,
+      });
+    } catch (e) {
+      setState(action.name, {
+        state: 'error',
+        reason: getErrMessage(e),
+        error: true,
+      });
+      throw e;
+    }
   }
   return content;
 }

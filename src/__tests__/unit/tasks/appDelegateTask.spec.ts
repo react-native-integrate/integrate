@@ -191,6 +191,7 @@ describe('appDelegateTask', () => {
       type: 'app_delegate',
       actions: [
         {
+          search: 'random',
           prepend: '#import <Firebase.h>',
         },
         {

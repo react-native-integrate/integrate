@@ -12,11 +12,13 @@ import {
 import { AnalyzedPackages, LockProjectData } from './types/integrator.types';
 import { IntegrationConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
+import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { parseConfig } from './utils/parseConfig';
 import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
+import { setState } from './utils/setState';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { getText, variables } from './variables';
 
@@ -141,8 +143,19 @@ export async function integrate(packageName?: string): Promise<void> {
             await runPrompt(prompt);
           }
         for (const task of config.tasks) {
-          if (task.when && !satisfies(variables.getStore(), task.when))
+          if (task.when && !satisfies(variables.getStore(), task.when)) {
+            setState(task.name, {
+              state: 'skipped',
+              error: false,
+            });
             continue;
+          }
+
+          setState(task.name, {
+            state: 'progress',
+            error: false,
+          });
+
           if (task.label) task.label = getText(task.label);
           logInfo(
             color.bold(color.inverse(color.cyan(' task '))) +
@@ -160,9 +173,21 @@ export async function integrate(packageName?: string): Promise<void> {
               task,
             });
             completedTaskCount++;
+
+            setState(task.name, {
+              state: 'done',
+              error: false,
+            });
           } catch (e) {
             failedTaskCount++;
-            logError(getErrMessage(e));
+            const errMessage = getErrMessage(e);
+            logError(errMessage);
+
+            setState(task.name, {
+              state: 'error',
+              reason: errMessage,
+              error: true,
+            });
           }
         }
         if (failedTaskCount) {
@@ -241,16 +266,4 @@ function checkIfJustCreatedLockFile(analyzedPackages: AnalyzedPackages) {
     return true;
   }
   return false;
-}
-
-function getErrMessage(e: any, type?: string) {
-  const shapeMessage = (msg: string) => {
-    switch (type) {
-      case 'validation':
-        return msg.split(',')[0];
-      default:
-        return msg;
-    }
-  };
-  return e instanceof Error ? shapeMessage(e.message) : 'An error occurred';
 }

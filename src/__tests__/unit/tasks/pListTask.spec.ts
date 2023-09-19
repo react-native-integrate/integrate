@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const { mockFs } = require('../../mocks/mockAll');
+
+const mockObjectEntries = jest.spyOn(Object, 'entries');
+
 import { plistTask, runTask } from '../../../tasks/plistTask';
 import { PlistTaskType } from '../../../types/mod.types';
 import { writeMockPList } from '../../mocks/mockAll';
@@ -243,6 +246,43 @@ describe('pListTask', () => {
       { third: 'test', assigned: 'test2' },
       { forth: 'test2' },
     ]);
+  });
+  it('should throw on random error', () => {
+    mockObjectEntries.mockImplementationOnce(() => {
+      throw new Error('some random error');
+    });
+
+    const content: Record<string, any> = {
+      first: {
+        second: [{ third: 'test' }, { forth: 'test2' }],
+      },
+    };
+    const task: PlistTaskType = {
+      type: 'plist',
+      actions: [
+        {
+          set: {
+            first: {
+              second: {
+                $index: 0,
+                assigned: 'test2',
+              },
+            },
+          },
+          strategy: 'merge_concat',
+        },
+      ],
+    };
+
+    expect(() =>
+      plistTask({
+        configPath: 'path/to/config',
+        task: task,
+        content,
+        packageName: 'test-package',
+      })
+    ).toThrowError('random error');
+    jest.unmock('lodash.mergewith');
   });
 
   describe('runTask', () => {

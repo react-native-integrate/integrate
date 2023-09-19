@@ -8,8 +8,10 @@ import {
   IosResourcesTaskType,
 } from '../types/mod.types';
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
+import { getErrMessage } from '../utils/getErrMessage';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
 import { satisfies } from '../utils/satisfies';
+import { setState } from '../utils/setState';
 import { getText, variables } from '../variables';
 import { applyFsModification } from './fsTask';
 
@@ -25,8 +27,33 @@ export async function iosResourcesTask(args: {
   const { task } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
-    content = await applyIosResourcesModification(content, action);
+    if (action.when && !satisfies(variables.getStore(), action.when)) {
+      setState(action.name, {
+        state: 'skipped',
+        reason: 'when',
+        error: false,
+      });
+      continue;
+    }
+
+    setState(action.name, {
+      state: 'progress',
+      error: false,
+    });
+    try {
+      content = await applyIosResourcesModification(content, action);
+      setState(action.name, {
+        state: 'done',
+        error: false,
+      });
+    } catch (e) {
+      setState(action.name, {
+        state: 'error',
+        reason: getErrMessage(e),
+        error: true,
+      });
+      throw e;
+    }
   }
 
   return content;

@@ -8,8 +8,10 @@ import {
 } from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
+import { getErrMessage } from '../utils/getErrMessage';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
 import { satisfies } from '../utils/satisfies';
+import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { variables } from '../variables';
 
@@ -24,14 +26,40 @@ export function appDelegateTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
-    content = applyContentModification({
-      action,
-      findOrCreateBlock,
-      configPath,
-      content,
-      indentation: 2,
+    if (action.when && !satisfies(variables.getStore(), action.when)) {
+      setState(action.name, {
+        state: 'skipped',
+        reason: 'when',
+        error: false,
+      });
+      continue;
+    }
+
+    setState(action.name, {
+      state: 'progress',
+      error: false,
     });
+    try {
+      content = applyContentModification({
+        action,
+        findOrCreateBlock,
+        configPath,
+        content,
+        indentation: 2,
+      });
+
+      setState(action.name, {
+        state: 'done',
+        error: false,
+      });
+    } catch (e) {
+      setState(action.name, {
+        state: 'error',
+        reason: getErrMessage(e),
+        error: true,
+      });
+      throw e;
+    }
   }
 
   return content;

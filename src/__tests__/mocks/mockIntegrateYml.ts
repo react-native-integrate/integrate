@@ -16,6 +16,7 @@ prompts:
       - value: opt2
 tasks:
   - type: app_delegate
+    name: app_delegate
     label: 'Will not run'
     when:
       test: false

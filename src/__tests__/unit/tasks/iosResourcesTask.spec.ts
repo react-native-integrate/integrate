@@ -173,6 +173,36 @@ describe('iosResourcesTask', () => {
       /83CBB9F61A601CBA00E9B192 = \{.*?GoogleService-Info\.plist.*?}/s
     );
   });
+  it('should throw on random error', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+    mockWaitForFile.mockReset().mockImplementationOnce(() => {
+      throw new Error('some random error');
+    });
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+    proj.removePbxGroup('Resources');
+
+    const task: IosResourcesTaskType = {
+      type: 'ios_resources',
+      actions: [
+        {
+          addFile: 'GoogleService-Info.plist',
+        },
+      ],
+    };
+
+    await expect(() =>
+      iosResourcesTask({
+        configPath: 'path/to/config',
+        task: task,
+        content: proj,
+        packageName: 'test-package',
+      })
+    ).rejects.toThrowError('random error');
+  });
+
   describe('runTask', () => {
     it('should read and write plist file', async () => {
       const pbxFilePath = getPbxProjectPath();

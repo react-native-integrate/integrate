@@ -12,6 +12,10 @@ Task Properties
 #### `type` (string, required)
 Specifies the task type, which should be set to "fs" for this task.
 
+#### `name` (string)
+An optional name for the task. If provided, the task state will be saved as a variable.
+Visit [Task and Action States](STATES.md) page to learn more.
+
 #### `label` (string)
 An optional label or description for the task.
 
@@ -25,6 +29,13 @@ Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
 An array of action items that define the modifications to be made for this task. Each action item contains the following fields:
 
 ### Action Item
+
+#### `name` (string)
+An optional name for the action. If provided, the action state will be saved as a variable.
+Visit [Task and Action States](STATES.md) page to learn more.
+
+#### `when` (object)
+Visit [When](WHEN.md) page to learn how to execute action conditionally.
 
 #### `copyFile` (string)
 A string that specifies the name of the file you want to copy.

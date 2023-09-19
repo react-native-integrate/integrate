@@ -10,6 +10,7 @@ import { escapeRegExp } from './escapeRegExp';
 import { findInsertionPoint } from './findInsertionPoint';
 import { findLineEnd, findLineStart } from './findLineTools';
 import { getModContent } from './getModContent';
+import { setState } from './setState';
 import { stringSplice } from './stringSplice';
 
 export type FindOrCreateBlockType = (
@@ -102,6 +103,11 @@ export function applyContentModification(
                   getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(prependText)}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'prepend.ifNotPresent',
+                error: false,
+              });
             } else if (!blockContent.match.includes(prependText)) {
               const start = blockContent.start,
                 rem = 0,
@@ -115,12 +121,18 @@ export function applyContentModification(
                   getBlockName(action)
                 )}${splittingMsg}: ${summarize(prependText)}`
               );
-            } else
+            } else {
               logMessageGray(
                 `code already exists, skipped prepending: ${summarize(
                   prependText
                 )}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'prepend.exists',
+                error: false,
+              });
+            }
           }
           break;
         case 'append':
@@ -138,6 +150,11 @@ export function applyContentModification(
                   getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(appendText)}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'append.ifNotPresent',
+                error: false,
+              });
             } else if (!blockContent.match.includes(appendText)) {
               const lineStart = action.exact
                 ? blockContent.end
@@ -156,12 +173,18 @@ export function applyContentModification(
                   getBlockName(action)
                 )}${splittingMsg}: ${summarize(appendText)}`
               );
-            } else
+            } else {
               logMessageGray(
                 `code already exists, skipped appending: ${summarize(
                   appendText
                 )}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'append.exists',
+                error: false,
+              });
+            }
           }
           break;
         case 'replace':
@@ -176,6 +199,11 @@ export function applyContentModification(
                   getText(action.ifNotPresent)
                 )}, skipped inserting: ${summarize(replaceText)}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'replace.ifNotPresent',
+                error: false,
+              });
             } else if (!blockContent.match.includes(replaceText)) {
               const start = blockContent.start,
                 rem = blockContent.end - blockContent.start,
@@ -189,12 +217,18 @@ export function applyContentModification(
                   getBlockName(action)
                 )}${splittingMsg}: ${summarize(replaceText)}`
               );
-            } else
+            } else {
               logMessageGray(
                 `code already exists, skipped replacing: ${summarize(
                   replaceText
                 )}`
               );
+              setState(action.name, {
+                state: 'skipped',
+                reason: 'replace.exists',
+                error: false,
+              });
+            }
           }
           break;
       }
@@ -213,10 +247,19 @@ export function applyContentModification(
         searchMatcher.flags + 'g'
       );
     let searching = true;
+    let isFirstSearch = true;
     while (searching) {
       const match = searchMatcher.exec(searchBlockContent.match);
-      if (!match) break;
-
+      if (!match) {
+        if (isFirstSearch)
+          setState(action.name, {
+            state: 'skipped',
+            reason: 'search',
+            error: false,
+          });
+        break;
+      }
+      isFirstSearch = false;
       blockContent.start = searchBlockContent.start + match.index;
       blockContent.end =
         searchBlockContent.start + match.index + match[0].length;

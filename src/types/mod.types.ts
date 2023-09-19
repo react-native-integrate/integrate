@@ -12,7 +12,7 @@ export type TextOrFileValue =
 
 export type TextOrRegex = string | { regex: string; flags?: string };
 
-export type ContentModifierType<TBlock = string> = {
+export type ContentModifierType<TBlock = string> = ActionBase & {
   // adds comment with code
   comment?: string;
 
@@ -48,12 +48,13 @@ export type ContentModifierType<TBlock = string> = {
   replace?: TextOrFileValue;
 };
 
-export type ActionBase<T> = T & {
+export type ActionBase = {
+  name?: string;
   when?: any;
 };
 
-export type ActionsType<T> = {
-  actions: ActionBase<T>[];
+export type ActionsType<T extends ActionBase> = {
+  actions: T[];
 };
 
 // plist task
@@ -64,7 +65,7 @@ export type PlistTaskType = ModTaskBase &
     target?: string;
   };
 
-export type PlistModifierType = {
+export type PlistModifierType = ActionBase & {
   set: {
     [key: string]: any;
   };
@@ -131,7 +132,7 @@ export type IosResourcesTaskType = ModTaskBase &
     type: 'ios_resources';
   };
 
-export type IosResourcesModifierType = {
+export type IosResourcesModifierType = ActionBase & {
   addFile: string;
   message?: string;
   target?:
@@ -157,13 +158,14 @@ export type FsTaskType = ModTaskBase &
     type: 'fs';
   };
 
-export type FsModifierType = {
+export type FsModifierType = ActionBase & {
   copyFile?: string;
   message?: string;
   destination: string;
 };
 
 export type ModTaskBase = {
+  name?: string;
   label?: string;
   prompts?: Prompt[];
   when?: any;
@@ -206,4 +208,10 @@ export type BlockContentType = {
   match: string;
   justCreated: boolean;
   space: string;
+};
+
+export type TaskState = {
+  state: 'progress' | 'error' | 'skipped' | 'done';
+  error: boolean;
+  reason?: string;
 };

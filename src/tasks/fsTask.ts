@@ -3,8 +3,10 @@ import path from 'path';
 import color from 'picocolors';
 import { confirm, logMessage, logMessageGray, text } from '../prompter';
 import { FsModifierType, FsTaskType } from '../types/mod.types';
+import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
 import { satisfies } from '../utils/satisfies';
+import { setState } from '../utils/setState';
 import { waitForFile } from '../utils/waitForFile';
 import { getText, variables } from '../variables';
 
@@ -16,8 +18,33 @@ export async function fsTask(args: {
   const { task } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
-    await applyFsModification(action);
+    if (action.when && !satisfies(variables.getStore(), action.when)) {
+      setState(action.name, {
+        state: 'skipped',
+        reason: 'when',
+        error: false,
+      });
+      continue;
+    }
+
+    setState(action.name, {
+      state: 'progress',
+      error: false,
+    });
+    try {
+      await applyFsModification(action);
+      setState(action.name, {
+        state: 'done',
+        error: false,
+      });
+    } catch (e) {
+      setState(action.name, {
+        state: 'error',
+        reason: getErrMessage(e),
+        error: true,
+      });
+      throw e;
+    }
   }
 }
 

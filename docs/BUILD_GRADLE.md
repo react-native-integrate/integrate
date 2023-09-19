@@ -12,6 +12,10 @@ Task Properties
 #### `type` (string, required)
 Specifies the task type, which should be set to "build_gradle" for this task.
 
+#### `name` (string)
+An optional name for the task. If provided, the task state will be saved as a variable.
+Visit [Task and Action States](STATES.md) page to learn more.
+
 #### `label` (string)
 An optional label or description for the task.
 
@@ -30,6 +34,15 @@ Specifies the target location within the project structure, distinguishing betwe
 An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
 ### Action Item
+
+###### Common properties
+
+#### `name` (string)
+An optional name for the action. If provided, the action state will be saved as a variable.
+Visit [Task and Action States](STATES.md) page to learn more.
+
+#### `when` (object)
+Visit [When](WHEN.md) page to learn how to execute action conditionally.
 
 ###### Context reduction properties
 

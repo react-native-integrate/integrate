@@ -6,9 +6,11 @@ import plist from 'simple-plist';
 import { Constants } from '../constants';
 import { logMessage, summarize } from '../prompter';
 import { PlistModifierType, PlistTaskType } from '../types/mod.types';
+import { getErrMessage } from '../utils/getErrMessage';
 import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
 import { satisfies } from '../utils/satisfies';
+import { setState } from '../utils/setState';
 import { transformTextInObject, variables } from '../variables';
 
 export function plistTask(args: {
@@ -22,8 +24,33 @@ export function plistTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) continue;
-    content = applyPlistModification(content, action);
+    if (action.when && !satisfies(variables.getStore(), action.when)) {
+      setState(action.name, {
+        state: 'skipped',
+        reason: 'when',
+        error: false,
+      });
+      continue;
+    }
+
+    setState(action.name, {
+      state: 'progress',
+      error: false,
+    });
+    try {
+      content = applyPlistModification(content, action);
+      setState(action.name, {
+        state: 'done',
+        error: false,
+      });
+    } catch (e) {
+      setState(action.name, {
+        state: 'error',
+        reason: getErrMessage(e),
+        error: true,
+      });
+      throw e;
+    }
   }
 
   return content;
