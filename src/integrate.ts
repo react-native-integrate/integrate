@@ -4,6 +4,7 @@ import {
   log,
   logError,
   logInfo,
+  logNote,
   logSuccess,
   logWarning,
   startSpinner,
@@ -20,7 +21,7 @@ import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
 import { setState } from './utils/setState';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
-import { getText, variables } from './variables';
+import { getText, transformTextInObject, variables } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
   startSpinner('analyzing packages');
@@ -138,12 +139,17 @@ export async function integrate(packageName?: string): Promise<void> {
       if (await confirm('would you like to integrate this package?')) {
         let failedTaskCount = 0,
           completedTaskCount = 0;
+        if (config.preInfo) logNote(getText(config.preInfo));
+
         if (config.prompts)
           for (const prompt of config.prompts) {
             await runPrompt(prompt);
           }
         for (const task of config.tasks) {
-          if (task.when && !satisfies(variables.getStore(), task.when)) {
+          if (
+            task.when &&
+            !satisfies(variables.getStore(), transformTextInObject(task.when))
+          ) {
             setState(task.name, {
               state: 'skipped',
               error: false,
@@ -161,6 +167,8 @@ export async function integrate(packageName?: string): Promise<void> {
             color.bold(color.inverse(color.cyan(' task '))) +
               color.bold(color.cyan(` ${task.label || task.type} `))
           );
+          if (task.preInfo) logNote(getText(task.preInfo));
+
           if (task.prompts)
             for (const prompt of task.prompts) {
               await runPrompt(prompt);
@@ -178,6 +186,7 @@ export async function integrate(packageName?: string): Promise<void> {
               state: 'done',
               error: false,
             });
+            if (task.postInfo) logNote(getText(task.postInfo));
           } catch (e) {
             failedTaskCount++;
             const errMessage = getErrMessage(e);
@@ -190,6 +199,8 @@ export async function integrate(packageName?: string): Promise<void> {
             });
           }
         }
+        if (config.postInfo) logNote(getText(config.postInfo));
+
         if (failedTaskCount) {
           logWarning(
             color.inverse(

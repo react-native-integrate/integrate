@@ -169,6 +169,8 @@ export type ModTaskBase = {
   label?: string;
   prompts?: Prompt[];
   when?: any;
+  preInfo?: string;
+  postInfo?: string;
 };
 
 export type ModTask =
@@ -200,6 +202,8 @@ export type IntegrationConfig = {
   env?: Record<string, any>;
   prompts?: Prompt[];
   tasks: ModTask[];
+  preInfo?: string;
+  postInfo?: string;
 };
 
 export type BlockContentType = {

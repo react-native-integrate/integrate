@@ -2,6 +2,8 @@
 export const mockIntegrateYml = `
 env:
   test: true
+preInfo: Config pre info
+postInfo: Config post info
 prompts:
   - name: test2
     text: Test prompt
@@ -32,6 +34,8 @@ tasks:
       - block: didFinishLaunchingWithOptions
         prepend: "[FIRApp configure];"
   - type: app_delegate
+    preInfo: Task pre info
+    postInfo: Task post info
     actions:
       - prepend: "#import <Firebase.h>"
       - block: didFinishLaunchingWithOptions

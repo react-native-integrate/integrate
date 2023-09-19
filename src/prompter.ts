@@ -39,7 +39,7 @@ export function logInfo(msg: string): void {
 export function logError(msg: string, noColor?: boolean): void {
   promptLog.error(noColor ? msg : color.red(msg));
 }
-export function logNote(msg: string, title: string): void {
+export function logNote(msg: string, title?: string): void {
   note(msg, title);
 }
 export function logIntro(): void {
