@@ -11,7 +11,7 @@ const mocks = {
   build_gradle: {
     runTask: jest.fn(),
   },
-  ios_resources: {
+  xcode: {
     runTask: jest.fn(),
   },
   android_manifest: {
@@ -27,7 +27,7 @@ const mocks = {
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
 jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
-jest.mock('../../../tasks/iosResourcesTask', () => mocks.ios_resources);
+jest.mock('../../../tasks/xcodeTask', () => mocks.xcode);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
 jest.mock('../../../tasks/podFileTask', () => mocks.podfile);
 jest.mock('../../../tasks/fsTask', () => mocks.fs);
@@ -42,7 +42,7 @@ describe('runTask', () => {
     'app_delegate' as const,
     'plist' as const,
     'build_gradle' as const,
-    'ios_resources' as const,
+    'xcode' as const,
     'android_manifest' as const,
     'podfile' as const,
     'fs' as const,

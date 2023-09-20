@@ -15,10 +15,5 @@ export function parseConfig(configPath: string): IntegrationConfig {
   if (!validate(config)) {
     throw new Error(validate.errors?.map(e => e.message).join(', '));
   }
-  if (config.env) {
-    Object.entries(config.env).forEach(([name, value]) =>
-      variables.set(name, transformTextInObject(value))
-    );
-  }
   return config;
 }

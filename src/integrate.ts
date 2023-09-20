@@ -4,7 +4,6 @@ import {
   log,
   logError,
   logInfo,
-  logNote,
   logSuccess,
   logWarning,
   startSpinner,
@@ -17,7 +16,6 @@ import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { logInfoNote } from './utils/logInfoNote';
 import { parseConfig } from './utils/parseConfig';
-import { waitInputToContinue } from './utils/waitInputToContinue';
 import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
@@ -139,6 +137,13 @@ export async function integrate(packageName?: string): Promise<void> {
           color.bold(color.blue(` ${packageName} `))
       );
       if (await confirm('would you like to integrate this package?')) {
+        variables.clear(); // reset variables
+        if (config.env) {
+          Object.entries(config.env).forEach(([name, value]) =>
+            variables.set(name, transformTextInObject(value))
+          );
+        }
+
         let failedTaskCount = 0,
           completedTaskCount = 0;
         await logInfoNote(config.preInfo);

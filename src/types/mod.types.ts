@@ -134,12 +134,12 @@ export type AndroidManifestModifierType =
 
 // add resource task
 
-export type IosResourcesTaskType = ModTaskBase &
-  ActionsType<IosResourcesModifierType> & {
-    type: 'ios_resources';
+export type XcodeTaskType = ModTaskBase &
+  ActionsType<XcodeModifierType> & {
+    type: 'xcode';
   };
 
-export type IosResourcesModifierType = ActionBase & {
+export type XcodeModifierType = ActionBase & {
   addFile: string;
   message?: string;
   target?:
@@ -186,7 +186,7 @@ export type ModTask =
   | ValidationTaskType
   | BuildGradleTaskType
   | AndroidManifestTaskType
-  | IosResourcesTaskType
+  | XcodeTaskType
   | PodFileTaskType
   | FsTaskType;
 

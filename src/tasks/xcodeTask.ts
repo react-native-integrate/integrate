@@ -3,10 +3,7 @@ import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../constants';
 import { logMessage, logMessageGray } from '../prompter';
-import {
-  IosResourcesModifierType,
-  IosResourcesTaskType,
-} from '../types/mod.types';
+import { XcodeModifierType, XcodeTaskType } from '../types/mod.types';
 import { XcodeProjectType, XcodeType } from '../types/xcode.type';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getPbxProjectPath } from '../utils/getIosProjectPath';
@@ -17,11 +14,11 @@ import { applyFsModification } from './fsTask';
 
 const xcode: XcodeType = require('xcode');
 
-export async function iosResourcesTask(args: {
+export async function xcodeTask(args: {
   configPath: string;
   packageName: string;
   content: XcodeProjectType;
-  task: IosResourcesTaskType;
+  task: XcodeTaskType;
 }): Promise<XcodeProjectType> {
   let { content } = args;
   const { task } = args;
@@ -41,7 +38,7 @@ export async function iosResourcesTask(args: {
       error: false,
     });
     try {
-      content = await applyIosResourcesModification(content, action);
+      content = await applyXcodeModification(content, action);
       setState(action.name, {
         state: 'done',
         error: false,
@@ -59,9 +56,9 @@ export async function iosResourcesTask(args: {
   return content;
 }
 
-async function applyIosResourcesModification(
+async function applyXcodeModification(
   content: XcodeProjectType,
-  action: IosResourcesModifierType
+  action: XcodeModifierType
 ) {
   let { target } = action;
   target = target || 'root';
@@ -150,11 +147,11 @@ function writePbxProjContent(proj: XcodeProjectType): void {
 export async function runTask(args: {
   configPath: string;
   packageName: string;
-  task: IosResourcesTaskType;
+  task: XcodeTaskType;
 }): Promise<void> {
   let content = readPbxProjContent();
 
-  content = await iosResourcesTask({
+  content = await xcodeTask({
     ...args,
     content,
   });

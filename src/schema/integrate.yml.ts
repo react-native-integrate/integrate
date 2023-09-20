@@ -433,11 +433,11 @@ properties:
                   exact:
                     type: boolean
 
-        # ios resource task
+        # xcode task
         - properties:
             type:
               type: string
-              enum: [ios_resources]
+              enum: [xcode]
             actions:
               type: array
               items:

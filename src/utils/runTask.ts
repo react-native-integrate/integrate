@@ -1,7 +1,7 @@
 import { runTask as runAppDelegateTask } from '../tasks/appDelegateTask';
 import { runTask as runPListTask } from '../tasks/plistTask';
 import { runTask as runBuildGradleTask } from '../tasks/buildGradleTask';
-import { runTask as runAddResourceTask } from '../tasks/iosResourcesTask';
+import { runTask as runAddResourceTask } from '../tasks/xcodeTask';
 import { runTask as runAndroidManifestTask } from '../tasks/androidManifestTask';
 import { runTask as runPodFileTask } from '../tasks/podFileTask';
 import { runTask as runFsTask } from '../tasks/fsTask';
@@ -44,7 +44,7 @@ export async function runTask(args: {
         task,
       });
       break;
-    case 'ios_resources':
+    case 'xcode':
       await runAddResourceTask({
         configPath,
         packageName,

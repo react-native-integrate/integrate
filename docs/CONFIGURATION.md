@@ -62,15 +62,15 @@ tasks:
 
 Click on the links below to learn how to use each task type:
 
-|                  Task                   | Description                       |
-|:---------------------------------------:|-----------------------------------|
-|     [AppDelegate](APP_DELEGATE.md)      | Modify AppDelegate.mm file        |
-|            [Plist](PLIST.md)            | Modify Info.plist file            |
-|    [iOS Resources](IOS_RESOURCES.md)    | Insert resources into iOS project |
-|     [Build Gradle](BUILD_GRADLE.md)     | Modify build.gradle files         |
-| [Android Manifest](ANDROID_MANIFEST.md) | Modify AndroidManifest.xml file   |
-|          [Podfile](PODFILE.md)          | Modify Podfile in ios folder      |
-|          [File system](FS.md)           | Copy other files into project     |
+|                  Task                   | Description                     |
+|:---------------------------------------:|---------------------------------|
+|     [AppDelegate](APP_DELEGATE.md)      | Modify AppDelegate.mm file      |
+|            [Plist](PLIST.md)            | Modify Info.plist file          |
+|            [Xcode](XCODE.md)            | Modify Xcode project            |
+|     [Build Gradle](BUILD_GRADLE.md)     | Modify build.gradle files       |
+| [Android Manifest](ANDROID_MANIFEST.md) | Modify AndroidManifest.xml file |
+|          [Podfile](PODFILE.md)          | Modify Podfile in ios folder    |
+|          [File system](FS.md)           | Copy other files into project   |
 
 PreInfo and PostInfo
 --------------------

@@ -1,16 +1,16 @@
-Ios Resources Task Configuration (`ios_resources`)
+Xcode Task Configuration (`xcode`)
 ==================================================
 
 Overview
 ---------
 
-The "ios_resources" task is used to manage resources within the iOS project. This task allows you to specify which resources to add and where to add them, either to the root level of the iOS project or to specific target groups within the project. The task operates within the context of iOS resource management, making it easier to handle asset additions efficiently.
+The "xcode" task is used to manage the iOS xcode project. This task allows you to specify which resources to add and where to add them, either to the root level of the iOS project or to specific target groups within the project.
 
 Task Properties
 ---------------
 
 #### `type` (string, required)
-Specifies the task type, which should be set to "ios_resources" for this task.
+Specifies the task type, which should be set to "xcode" for this task.
 
 #### `name` (string)
 An optional name for the task. If provided, the task state will be saved as a variable.
@@ -55,7 +55,7 @@ Usage Example
 -------------
 
 ```yaml
-type: ios_resources
+type: xcode
 actions:
   - add: "GoogleService-Info.plist"
     target: "app"
@@ -69,4 +69,4 @@ In this example, two resources, `GoogleService-Info.plist` and `splash.png` are 
 Conclusion
 ----------
 
-The `ios_resources` task simplifies the process of adding resources to an iOS project within a React Native application. By utilizing the `actions` array and specifying the `target` field, you can efficiently manage and configure the addition of resources to specific target groups within the project. This task streamlines iOS resource management and enhances the overall development experience.
+The `xcode` task simplifies the process of modifying an iOS project within a React Native application. By utilizing the `actions` array and specifying the `target` field, you can efficiently manage and configure the addition of resources to specific target groups within the project. This task streamlines Xcode project management and enhances the overall development experience.
