@@ -6,7 +6,7 @@ import path from 'path';
 import { parseConfig } from '../../../utils/parseConfig';
 import { mockIntegrateYml } from '../../mocks/mockIntegrateYml';
 
-describe('getProjectPath', () => {
+describe('parseConfig', () => {
   it('should parse yml file correctly', () => {
     const integrateYmlPath = path.resolve(
       __dirname,

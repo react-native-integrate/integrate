@@ -3,7 +3,9 @@ export const mockIntegrateYml = `
 env:
   test: true
 preInfo: Config pre info
-postInfo: Config post info
+postInfo:
+  title: test
+  message: Config post info
 prompts:
   - name: test2
     text: Test prompt

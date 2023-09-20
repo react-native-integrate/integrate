@@ -71,46 +71,8 @@ It gets your approval before each integration so no need to worry about messing 
 If your package requires "additional steps" after installation, follow these steps to allow other developers quickly integrate your package into their projects.
 
 1. Create an `integrate.yml` file in the root directory of your project.
-2. Add the necessary tasks for integrating your package into this file. You can use the example below as a starting point.
+2. Add the necessary tasks for integrating your package into this file. Check **[Configuration](docs/CONFIGURATION.md)** page for detailed instructions.
 3. Encourage developers to run `npx react-native-integrate <your-package>` right after installation of your package.
-
-#### Example
-```yaml
-tasks:
-  - type: app_delegate
-    label: "Updating AppDelegate.mm"
-    actions:
-      - prepend: "#import <YourPackage.h>"
-      - block: didFinishLaunchingWithOptions
-        prepend: "[YourPackage configure];"
-  - type: build_gradle
-    label: "Enabling multidex"
-    location: "app",
-    actions:
-      - block: "android.defaultConfig"
-        after: versionName
-        prepend: multiDexEnabled true
-```
-
-#### Task types
-
-Click on the links below to learn how to use each task type:
-
-- [AppDelegate](docs/APP_DELEGATE.md)
-- [Plist](docs/PLIST.md)
-- [iOS Resources](docs/IOS_RESOURCES.md)
-- [Build Gradle](docs/BUILD_GRADLE.md)
-- [Android Manifest](docs/ANDROID_MANIFEST.md)
-- [Podfile](docs/PODFILE.md)
-- [File system](docs/FS.md)
-
-#### Variables
-
-Check [Variables](docs/VARIABLES.md) page to learn how to assign and use variables in configuration files.
-
-#### Prompts
-
-Visit [Prompts](docs/PROMPTS.md) page to learn how to request input from user.
 
 ### Get help from community
 

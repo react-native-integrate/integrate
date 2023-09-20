@@ -15,7 +15,9 @@ import { IntegrationConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
+import { logInfoNote } from './utils/logInfoNote';
 import { parseConfig } from './utils/parseConfig';
+import { waitInputToContinue } from './utils/waitInputToContinue';
 import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
@@ -139,7 +141,7 @@ export async function integrate(packageName?: string): Promise<void> {
       if (await confirm('would you like to integrate this package?')) {
         let failedTaskCount = 0,
           completedTaskCount = 0;
-        if (config.preInfo) logNote(getText(config.preInfo));
+        await logInfoNote(config.preInfo);
 
         if (config.prompts)
           for (const prompt of config.prompts) {
@@ -167,7 +169,7 @@ export async function integrate(packageName?: string): Promise<void> {
             color.bold(color.inverse(color.cyan(' task '))) +
               color.bold(color.cyan(` ${task.label || task.type} `))
           );
-          if (task.preInfo) logNote(getText(task.preInfo));
+          await logInfoNote(task.preInfo);
 
           if (task.prompts)
             for (const prompt of task.prompts) {
@@ -186,7 +188,7 @@ export async function integrate(packageName?: string): Promise<void> {
               state: 'done',
               error: false,
             });
-            if (task.postInfo) logNote(getText(task.postInfo));
+            await logInfoNote(task.postInfo);
           } catch (e) {
             failedTaskCount++;
             const errMessage = getErrMessage(e);
@@ -199,7 +201,7 @@ export async function integrate(packageName?: string): Promise<void> {
             });
           }
         }
-        if (config.postInfo) logNote(getText(config.postInfo));
+        await logInfoNote(config.postInfo);
 
         if (failedTaskCount) {
           logWarning(

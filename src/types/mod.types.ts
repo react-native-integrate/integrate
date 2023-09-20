@@ -12,6 +12,13 @@ export type TextOrFileValue =
 
 export type TextOrRegex = string | { regex: string; flags?: string };
 
+export type TextOrTitleMessage =
+  | string
+  | {
+      title: string;
+      message: string;
+    };
+
 export type ContentModifierType<TBlock = string> = ActionBase & {
   // adds comment with code
   comment?: string;
@@ -169,8 +176,8 @@ export type ModTaskBase = {
   label?: string;
   prompts?: Prompt[];
   when?: any;
-  preInfo?: string;
-  postInfo?: string;
+  preInfo?: TextOrTitleMessage;
+  postInfo?: TextOrTitleMessage;
 };
 
 export type ModTask =
@@ -202,8 +209,8 @@ export type IntegrationConfig = {
   env?: Record<string, any>;
   prompts?: Prompt[];
   tasks: ModTask[];
-  preInfo?: string;
-  postInfo?: string;
+  preInfo?: TextOrTitleMessage;
+  postInfo?: TextOrTitleMessage;
 };
 
 export type BlockContentType = {
