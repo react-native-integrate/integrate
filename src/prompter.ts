@@ -1,14 +1,14 @@
 import {
+  cancel,
+  confirm as promptConfirm,
   intro,
+  isCancel,
   log as promptLog,
+  multiselect as promptMultiselect,
+  note,
   outro,
   spinner,
-  confirm as promptConfirm,
-  cancel,
-  isCancel,
-  note,
   text as promptText,
-  multiselect as promptMultiselect,
 } from '@clack/prompts';
 import color from 'picocolors';
 import {
@@ -17,48 +17,71 @@ import {
   MultiselectPromptArgs,
   TextPromptArgs,
 } from './types/prompt.types';
+import { listenForKeys } from './utils/waitInputToContinue';
 
 export function log(msg: string): void {
   promptLog.step(msg);
 }
+
 export function logSuccess(msg: string): void {
   promptLog.success(msg);
 }
+
 export function logMessage(msg: string): void {
   promptLog.message('⦿ ' + msg);
 }
+
 export function logMessageGray(msg: string): void {
   promptLog.message(color.gray('⦿ ' + msg));
 }
+
 export function logWarning(msg: string, noColor?: boolean): void {
   promptLog.warning(noColor ? msg : color.yellow(msg));
 }
+
 export function logInfo(msg: string): void {
   promptLog.info(msg);
 }
+
 export function logError(msg: string, noColor?: boolean): void {
   promptLog.error(noColor ? msg : color.red(msg));
 }
+
 export function logNote(msg: string, title?: string): void {
   note(msg, title);
 }
+
 export function logIntro(): void {
   intro(color.inverse(' react-native-integrate '));
 }
+
 export function logOutro(): void {
   outro(color.cyan('completed integration check'));
 }
-const s = spinner();
 
-export function startSpinner(msg: string): void {
+const s = spinner();
+let releaseListener: undefined | (() => void);
+
+export function startSpinner(
+  msg: string,
+  onCancel?: (key: string) => void
+): void {
   s.start(msg);
+  if (onCancel) releaseListener = listenForKeys('s', onCancel);
 }
+
 export function updateSpinner(msg: string): void {
   s.message(msg);
 }
+
 export function stopSpinner(msg: string): void {
   s.stop(msg);
+  if (releaseListener) {
+    releaseListener();
+    releaseListener = undefined;
+  }
 }
+
 export async function multiselect(
   msg: string,
   args: MultiselectPromptArgs
@@ -80,6 +103,7 @@ export async function multiselect(
   // @ts-ignore
   return response;
 }
+
 export async function confirm(
   msg: string,
   args: ConfirmPromptArgs = {}
@@ -96,6 +120,7 @@ export async function confirm(
   }
   return response;
 }
+
 export async function text(
   msg: string,
   args: TextPromptArgs = {}

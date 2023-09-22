@@ -14,15 +14,24 @@ export async function waitForFile(filePath: string): Promise<boolean> {
       return;
     }
 
-    startSpinner(
-      `waiting you to manually place the file to ${color.yellow(relativePath)}`
-    );
     // Create a watcher to monitor changes in the directory
     try {
+      const onCancel = () => {
+        stopSpinner(color.gray('user requested to skip this step'));
+        watcher.close();
+        reject(new Error('skip'));
+      };
+
+      startSpinner(
+        `waiting you to manually place the file to ${color.yellow(
+          relativePath
+        )} (press [s] to skip)`,
+        onCancel
+      );
       const watcher = fs.watch(
         // Extract the directory path from the file path
         filePath.split('/').slice(0, -1).join('/'),
-        { persistent: false }, // Set persistent to false to automatically close the watcher when no longer needed
+        { persistent: false }, // Set persistent as false to automatically close the watcher when no longer needed
         (event, filename) => {
           // Check if the file has been created
           if (event === 'rename' && filename === filePath.split('/').pop()) {

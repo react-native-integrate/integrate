@@ -91,6 +91,43 @@ describe('fsTask', () => {
       })
     ).resolves.not.toThrow();
   });
+  it('should skip if waitForFile throws', async () => {
+    mockPrompter.text.mockReset();
+    mockPrompter.confirm.mockReset();
+    mockPrompter.log.message.mockReset();
+
+    // simulate file exists in path
+    mockFs.writeFileSync(
+      path.join(projectFullPath, 'android', 'file.json'),
+      'test-content'
+    );
+
+    const task: FsTaskType = {
+      type: 'fs',
+      actions: [
+        {
+          copyFile: 'file.json',
+          destination: 'android/file.json',
+        },
+      ],
+    };
+
+    // enter empty string
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockPrompter.confirm.mockImplementationOnce(() => true);
+
+    mockWaitForFile.mockImplementationOnce(() => {
+      return Promise.reject(new Error('skip'));
+    });
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipped copy operation')
+    );
+  });
   it('should wait for user to copy file to destination when not exists', async () => {
     mockPrompter.text.mockReset();
     mockPrompter.confirm.mockReset();
@@ -132,6 +169,7 @@ describe('fsTask', () => {
   it('should wait for user to copy file to destination when exists', async () => {
     mockPrompter.text.mockReset();
     mockPrompter.confirm.mockReset();
+    mockPrompter.log.message.mockReset();
 
     // simulate file exists in path
     mockFs.writeFileSync(

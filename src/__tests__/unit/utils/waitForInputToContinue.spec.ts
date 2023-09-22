@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
+import { listenForKeys } from '../../../utils/waitInputToContinue';
+
 const stdout = {
   write: jest.fn(),
   clearLine: jest.fn(),
@@ -89,5 +91,43 @@ describe('waitForInputToContinue', () => {
 
     expect(process.stdin.isTTY).toBe(true);
     await expect(waitInputToContinue('', 'İı')).resolves.toBe('İ');
+  });
+
+  describe('listenForKeys', () => {
+    it('should resolve', () => {
+      jest.useFakeTimers();
+      // @ts-ignore
+      process.stdin.on = jest.fn((_, listener: (data: string) => void) => {
+        listener('s'); // should accept s
+      });
+      const { listenForKeys } = require('../../../utils/waitInputToContinue');
+
+      const onKey = jest.fn();
+      const release = listenForKeys('s', onKey);
+
+      jest.advanceTimersByTime(0);
+      release();
+
+      expect(process.stdin.isTTY).toBe(true);
+      expect(onKey).toHaveBeenCalledWith('s');
+    });
+    it('should resolve with case sensitive keys', () => {
+      jest.useFakeTimers();
+      // @ts-ignore
+      process.stdin.on = jest.fn((_, listener: (data: string) => void) => {
+        listener('x'); //should ignore random input
+        listener('İ'); //should accept y or n
+      });
+      const { listenForKeys } = require('../../../utils/waitInputToContinue');
+
+      const onKey = jest.fn();
+      const release = listenForKeys('İı', onKey);
+
+      jest.advanceTimersByTime(0);
+      release();
+
+      expect(process.stdin.isTTY).toBe(true);
+      expect(onKey).toHaveBeenCalledWith('İ');
+    });
   });
 });

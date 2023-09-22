@@ -83,7 +83,15 @@ export async function applyFsModification(
       const destination = path.join(getProjectPath(), action.destination);
 
       // wait for file creation
-      const fileExists = await waitForFile(destination);
+      let fileExists;
+      try {
+        fileExists = await waitForFile(destination);
+      } catch (e) {
+        if (getErrMessage(e) == 'skip') {
+          logMessageGray('skipped copy operation');
+          return;
+        } else throw e;
+      }
       if (!fileExists) {
         const confirmed = await confirm(
           `confirm after manually updating the file at ${color.yellow(

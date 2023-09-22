@@ -51,3 +51,35 @@ export function waitInputToContinue(
     process.stdin.on('data', keyListener);
   });
 }
+
+export function listenForKeys(
+  keys: string,
+  onKey: (key: string) => void
+): () => void {
+  if (!process.stdin.isTTY) return () => undefined;
+  const _keys = keys;
+
+  const caseSensitive =
+    _keys.toLowerCase() !== _keys && _keys.toUpperCase() !== _keys;
+
+  function keyListener(buffer: Buffer) {
+    let key = buffer.toString();
+
+    const index = caseSensitive
+      ? _keys.indexOf(key)
+      : _keys.toLowerCase().indexOf(key.toLowerCase());
+    if (index >= 0) {
+      key = _keys.charAt(index);
+      setImmediate(() => onKey(key));
+    }
+  }
+  process.stdin.resume();
+  process.stdin.setRawMode(true);
+  process.stdin.on('data', keyListener);
+
+  return () => {
+    process.stdin.setRawMode(false);
+    process.stdin.off('data', keyListener);
+    process.stdin.pause();
+  };
+}
