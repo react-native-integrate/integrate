@@ -11,5 +11,8 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "ts-node": {
+    "files": true
+  }
 }

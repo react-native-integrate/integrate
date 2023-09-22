@@ -30,12 +30,18 @@ An array of action items that define the modifications to be made in the file. E
 
 ### Action Item
 
+###### Common properties
+
 #### `name` (string)
 An optional name for the action. If provided, the action state will be saved as a variable.
 Visit [Task and Action States](STATES.md) page to learn more.
 
 #### `when` (object)
 Visit [When](WHEN.md) page to learn how to execute action conditionally.
+
+##### _The action item can take these properties based on which action you want to execute._
+
+###### Add a resource file
 
 #### `addFile` (string)
 Specifies the resource file to be added. It can be a string representing the resource file name.
@@ -51,20 +57,28 @@ Specifies the target group within the iOS project where the resource should be a
     - `name`: Name of the target group
     - `path`: Path of the target group
 
+###### Add a new target
+
+#### `addTarget` (string)
+Specifies the target name to be added.
+
+#### `type` (string)
+Specifies target type to be added. It can be one of the following values:
+- `notification-service`: Adds a Notification Service Extension
+
 Usage Example
 -------------
 
 ```yaml
 type: xcode
 actions:
-  - add: "GoogleService-Info.plist"
-    target: "app"
-  - add: "splash.png"
-    target:
-      name: "CustomTarget"
+  - addFile: "GoogleService-Info.plist"
+    target: root
+  - addTarget: OneSignalNotificationService
+    type: notification-extension
 ```
 
-In this example, two resources, `GoogleService-Info.plist` and `splash.png` are specified for addition. The `target` field distinguishes the target groups within the iOS project where each resource should be placed, enabling precise resource management.
+In this example, a resource and a new target, `GoogleService-Info.plist` and `OneSignalNotificationService` are specified for addition. The `target` field distinguishes the target groups within the iOS project where each resource should be placed, enabling precise resource management.
 
 Conclusion
 ----------

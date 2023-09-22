@@ -3,7 +3,6 @@ import fs from 'fs';
 import { parse } from 'yaml';
 import { integrateYmlSchema } from '../schema/integrate.yml';
 import { IntegrationConfig } from '../types/mod.types';
-import { transformTextInObject, variables } from '../variables';
 
 const ajv = new Ajv();
 const yamlSchema = parse(integrateYmlSchema);

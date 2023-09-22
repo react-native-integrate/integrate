@@ -23,6 +23,9 @@ export const mockFs = {
     mockFs.writeFileSync(to, content);
     return true;
   },
+  mkdirSync: (): boolean => {
+    return true;
+  },
   readdirSync: (): string[] => {
     return ['test' + Constants.WORKSPACE_EXT];
   },

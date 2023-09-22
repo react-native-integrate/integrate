@@ -139,7 +139,7 @@ export type XcodeTaskType = ModTaskBase &
     type: 'xcode';
   };
 
-export type XcodeModifierType = ActionBase & {
+export type XcodeAddFileType = {
   addFile: string;
   message?: string;
   target?:
@@ -150,6 +150,13 @@ export type XcodeModifierType = ActionBase & {
         path?: string;
       };
 };
+export type XcodeAddTargetType = {
+  addTarget: string;
+  type: 'notification-service';
+  message?: string;
+};
+export type XcodeModifierType = ActionBase &
+  (XcodeAddFileType | XcodeAddTargetType);
 
 // pod file task
 
