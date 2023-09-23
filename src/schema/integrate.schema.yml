@@ -1,5 +1,4 @@
-// language=yaml
-export const integrateYmlSchema = `
+
 type: object
 required:
   - tasks
@@ -650,4 +649,3 @@ properties:
                   - properties:
                       copyFile:
                         type: string
-`;

@@ -32,6 +32,11 @@ Text prompts request free-form text input from the user. You can use this type t
 prompts:
   - name: user_name
     text: "Enter your name:"
+    validate:
+      - regex: ^[a-z0-9]+$
+        message: must contain only lowercase letters or numbers
+      - regex: ^[a-z]
+        message: must start with a letter
 ```
 
 ### Boolean Prompt
@@ -91,7 +96,6 @@ tasks:
       - name: run_app_delegate
         type: boolean
         text: "Do you want to run the app_delegate task?"
-
 ```
 
 In this example:

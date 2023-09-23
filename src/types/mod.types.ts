@@ -197,8 +197,10 @@ export type ModTask =
   | PodFileTaskType
   | FsTaskType;
 
-export type TextPrompt = TextPromptArgs & {
+export type ValidationType = { regex: string; flags?: string; message: string };
+export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {
   type: undefined;
+  validate?: ValidationType | ValidationType[];
 };
 export type ConfirmPrompt = ConfirmPromptArgs & {
   type: 'boolean';

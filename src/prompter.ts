@@ -130,6 +130,7 @@ export async function text(
     defaultValue: args.defaultValue,
     initialValue: args.initialValue,
     placeholder: args.placeholder,
+    validate: args.validate,
   });
   if (isCancel(response)) {
     cancel('operation cancelled');

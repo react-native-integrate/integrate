@@ -2,6 +2,7 @@ export type TextPromptArgs = {
   defaultValue?: string;
   initialValue?: string;
   placeholder?: string;
+  validate?: (value: string) => string | void;
 };
 
 export type ConfirmPromptArgs = {

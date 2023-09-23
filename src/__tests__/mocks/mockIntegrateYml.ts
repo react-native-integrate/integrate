@@ -9,6 +9,9 @@ postInfo:
 prompts:
   - name: test2
     text: Test prompt
+    validate:
+      regex: .*
+      message: test
   - name: test3
     type: boolean
     text: Test prompt
@@ -30,6 +33,9 @@ tasks:
     prompts:
       - name: test4
         text: Test prompt
+        validate:
+          - regex: .*
+            message: test
     label: 'App Delegate'
     actions:
       - prepend: "#import <Firebase.h>"
