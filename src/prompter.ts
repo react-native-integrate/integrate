@@ -51,12 +51,12 @@ export function logNote(msg: string, title?: string): void {
   note(msg, title);
 }
 
-export function logIntro(): void {
-  intro(color.inverse(' react-native-integrate '));
+export function logIntro(msg?: string): void {
+  intro(color.inverse(` ${msg || 'react-native-integrate'} `));
 }
 
-export function logOutro(): void {
-  outro(color.cyan('completed integration check'));
+export function logOutro(msg?: string): void {
+  outro(color.cyan(msg || 'completed integration check'));
 }
 
 const s = spinner();

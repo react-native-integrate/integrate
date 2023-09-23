@@ -152,3 +152,5 @@ export function runTask(args: {
 
   writePListContent(content, args.task.target);
 }
+
+export const summary = 'Info.plist modification';

@@ -167,3 +167,5 @@ export function runTask(args: {
 
   writeBuildGradleContent(content, args.task.location);
 }
+
+export const summary = 'build.gradle modification';

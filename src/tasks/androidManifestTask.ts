@@ -298,3 +298,5 @@ export function runTask(args: {
 
   writeAndroidManifestContent(content);
 }
+
+export const summary = 'AndroidManifest.xml modification';

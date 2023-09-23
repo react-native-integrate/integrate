@@ -118,3 +118,5 @@ export async function runTask(args: {
 }): Promise<void> {
   return fsTask(args);
 }
+
+export const summary = 'File system operation';

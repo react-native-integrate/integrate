@@ -188,3 +188,5 @@ export function runTask(args: {
 
   writePodFileContent(content);
 }
+
+export const summary = 'Podfile modification';

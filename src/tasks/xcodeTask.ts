@@ -558,3 +558,5 @@ function pbxBuildPhaseObj(file: any): any {
 function longComment(file: any) {
   return `${file.basename} in ${file.group}`;
 }
+
+export const summary = 'Xcode project modification';

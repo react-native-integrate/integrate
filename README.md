@@ -66,6 +66,19 @@ It gets your approval before each integration so no need to worry about messing 
 > **_NOTE:_**  If you are using npm, since 7.0.0 postinstall script does not run after `npm install <some-package>`
 > 
 > In this case you can run `integrate` manually after a package installation.
+
+## Getting Integration Information
+
+To check the availability of integration for a specific package and view related information, you can use the following command:
+
+```bash
+npx react-native-integrate info <package-name>
+# or, if you've installed it as a dev dependency
+integrate info <package-name>
+```
+
+This command allows you to verify the integration status, including the availability of local or remote configuration files.
+
 ## For Package Developers
 
 If your package requires "additional steps" after installation, follow these steps to allow other developers quickly integrate your package into their projects.

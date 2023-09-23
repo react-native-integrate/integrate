@@ -10,6 +10,10 @@ const validate = ajv.compile(yamlSchema);
 
 export function parseConfig(configPath: string): IntegrationConfig {
   const configContent = fs.readFileSync(configPath, 'utf8');
+  return parseConfigString(configContent);
+}
+
+export function parseConfigString(configContent: string): IntegrationConfig {
   const config = parse(configContent) as IntegrationConfig;
   if (!validate(config)) {
     throw new Error(validate.errors?.map(e => e.message).join(', '));

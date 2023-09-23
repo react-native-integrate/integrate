@@ -69,27 +69,4 @@ describe('runTask', () => {
       expect(mocks[taskType].runTask).toHaveBeenCalledTimes(1);
     });
   });
-  ['validate' as const].map(taskType => {
-    it(`should run ${taskType} task`, async () => {
-      mocks.app_delegate.runTask.mockReset();
-
-      const integrateYmlPath = path.resolve(
-        __dirname,
-        '../mock-project/node_modules/test-package/integrate.yml'
-      );
-
-      mockFs.writeFileSync(integrateYmlPath, mockIntegrateYml);
-
-      const task: ModTask = {
-        type: taskType,
-      } as any;
-
-      await runTask({
-        configPath: integrateYmlPath,
-        task,
-        packageName: 'test',
-      });
-      expect(mocks.app_delegate.runTask).toHaveBeenCalledTimes(0);
-    });
-  });
 });

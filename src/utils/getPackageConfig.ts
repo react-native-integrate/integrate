@@ -26,7 +26,7 @@ export function getPackagePath(packageName: string): string {
   return path.join(projectPath, 'node_modules', packageName);
 }
 
-function getLocalPackageConfig(packageName: string) {
+export function getLocalPackageConfig(packageName: string): string | null {
   const localPackagePath = getPackagePath(packageName);
   const localConfigPath = path.join(
     localPackagePath,
@@ -53,10 +53,13 @@ export async function downloadRemotePackageConfig(
   return localConfigPath;
 }
 
-export function getRemotePath(packageName: string): string {
+export function getRemotePath(
+  packageName: string,
+  pathTemplate = Constants.REMOTE_CONFIG_REPO
+): string {
   const md5 = getMd5(packageName);
   const md5Path = md5.substring(0, 3).split('').join('/');
-  return Constants.REMOTE_CONFIG_REPO.replace(
+  return pathTemplate.replace(
     '[package]',
     md5Path +
       '/' +
@@ -68,11 +71,16 @@ export function getRemotePath(packageName: string): string {
 }
 
 async function downloadFile(remotePath: string, localPath: string) {
-  const configContent = await fetch(remotePath).then(x => {
-    if (x.status == 404) return null;
-    return x.text();
-  });
+  const configContent = await getRemoteFile(remotePath);
   if (!configContent) return false;
   fs.writeFileSync(localPath, configContent);
   return true;
+}
+
+export async function getRemoteFile(
+  remotePath: string
+): Promise<string | null> {
+  const response = await fetch(remotePath);
+  if (response.status != 200) return null;
+  return response.text();
 }

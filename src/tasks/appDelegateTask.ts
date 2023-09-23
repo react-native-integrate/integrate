@@ -249,3 +249,5 @@ export function runTask(args: {
 
   writeAppDelegateContent(content);
 }
+
+export const summary = 'AppDelegate.mm modification';
