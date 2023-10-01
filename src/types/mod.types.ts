@@ -55,6 +55,13 @@ export type ContentModifierType<TBlock = string> = ActionBase & {
   replace?: TextOrFileValue;
 };
 
+export type ObjectModifierType = ActionBase & {
+  set: {
+    [key: string]: any;
+  };
+  strategy?: 'merge_concat' | 'merge' | 'assign';
+};
+
 export type ActionBase = {
   name?: string;
   when?: any;
@@ -67,17 +74,18 @@ export type ActionsType<T extends ActionBase> = {
 // plist task
 
 export type PlistTaskType = ModTaskBase &
-  ActionsType<PlistModifierType> & {
+  ActionsType<ObjectModifierType> & {
     type: 'plist';
     target?: string;
   };
 
-export type PlistModifierType = ActionBase & {
-  set: {
-    [key: string]: any;
+// json task
+
+export type JsonTaskType = ModTaskBase &
+  ActionsType<ObjectModifierType> & {
+    type: 'json';
+    path: string;
   };
-  strategy?: 'merge_concat' | 'merge' | 'assign';
-};
 
 // app_delegate task
 
@@ -101,12 +109,12 @@ export type AppDelegateBlockType =
 
 // validation task
 
-export type ValidationTaskType = ModTaskBase & {
-  type: 'validate';
-  file: string | { regex: string; flags?: string };
-  find?: string | { regex: string; flags?: string };
-  errorMsg?: string;
-};
+// export type ValidationTaskType = ModTaskBase & {
+//   type: 'validate';
+//   file: string | { regex: string; flags?: string };
+//   find?: string | { regex: string; flags?: string };
+//   errorMsg?: string;
+// };
 
 // build gradle task
 
@@ -190,12 +198,12 @@ export type ModTaskBase = {
 export type ModTask =
   | PlistTaskType
   | AppDelegateTaskType
-  | ValidationTaskType
   | BuildGradleTaskType
   | AndroidManifestTaskType
   | XcodeTaskType
   | PodFileTaskType
-  | FsTaskType;
+  | FsTaskType
+  | JsonTaskType;
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {

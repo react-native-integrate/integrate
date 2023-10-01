@@ -258,6 +258,30 @@ properties:
                     type: string
                     enum: [merge_concat, merge, assign]
 
+        # json task
+        - required:
+            - path
+          properties:
+            type:
+              type: string
+              enum: [json]
+            path:
+              type: string
+            actions:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  when:
+                    type: object
+                  set:
+                    type: object
+                  strategy:
+                    type: string
+                    enum: [merge_concat, merge, assign]
+
         # app_delegate task
         - properties:
             type:
@@ -333,32 +357,32 @@ properties:
                     type: boolean
 
         # validate task
-        - properties:
-            type:
-              type: string
-              enum: [validate]
-            label:
-              type: string
-            file:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    regex:
-                      type: string
-                    flags:
-                      type: string
-            find:
-              anyOf:
-                - type: string
-                - type: object
-                  properties:
-                    regex:
-                      type: string
-                    flags:
-                      type: string
-            errorMsg:
-              type: string
+        #        - properties:
+        #            type:
+        #              type: string
+        #              enum: [validate]
+        #            label:
+        #              type: string
+        #            file:
+        #              anyOf:
+        #                - type: string
+        #                - type: object
+        #                  properties:
+        #                    regex:
+        #                      type: string
+        #                    flags:
+        #                      type: string
+        #            find:
+        #              anyOf:
+        #                - type: string
+        #                - type: object
+        #                  properties:
+        #                    regex:
+        #                      type: string
+        #                    flags:
+        #                      type: string
+        #            errorMsg:
+        #              type: string
 
         # build gradle task
         - properties:

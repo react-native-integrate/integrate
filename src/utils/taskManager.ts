@@ -5,6 +5,7 @@ import * as xcode from '../tasks/xcodeTask';
 import * as android_manifest from '../tasks/androidManifestTask';
 import * as podfile from '../tasks/podFileTask';
 import * as fs from '../tasks/fsTask';
+import * as json from '../tasks/jsonTask';
 
 export const taskManager: Record<string, TaskExports> = {
   app_delegate,
@@ -14,6 +15,7 @@ export const taskManager: Record<string, TaskExports> = {
   android_manifest,
   podfile,
   fs,
+  json,
 };
 
 export interface RunTaskArgs {

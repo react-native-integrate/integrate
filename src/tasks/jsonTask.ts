@@ -1,21 +1,18 @@
 import fs from 'fs';
 import path from 'path';
-import plist from 'simple-plist';
-import { Constants } from '../constants';
-import { PlistTaskType } from '../types/mod.types';
+import { JsonTaskType } from '../types/mod.types';
 import { applyObjectModification } from '../utils/applyObjectModification';
 import { getErrMessage } from '../utils/getErrMessage';
-import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
 import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { variables } from '../variables';
 
-export function plistTask(args: {
+export function jsonTask(args: {
   configPath: string;
   packageName: string;
   content: Record<string, any>;
-  task: PlistTaskType;
+  task: JsonTaskType;
 }): Record<string, any> {
   let { content } = args;
   const { task } = args;
@@ -51,56 +48,47 @@ export function plistTask(args: {
     }
   }
 
-  content = Object.keys(content)
-    .sort()
-    .reduce((temp_obj, key) => {
-      temp_obj[key] = content[key];
-      return temp_obj;
-    }, {} as Record<string, any>);
-
   return content;
 }
 
-function getPListPath(target: string | undefined) {
-  if (!target) target = getIosProjectName();
+function getJsonPath(filePath: string) {
   const projectPath = getProjectPath();
-  const pListPath = path.join(
-    projectPath,
-    'ios',
-    target,
-    Constants.PLIST_FILE_NAME
-  );
-  if (!fs.existsSync(pListPath))
-    throw new Error(`Plist file not found at ${pListPath}`);
-  return pListPath;
+  const jsonPath = path.join(projectPath, filePath);
+  // security check
+  if (!jsonPath.startsWith(projectPath)) {
+    throw new Error('invalid destination path');
+  }
+  return jsonPath;
 }
 
-function readPListContent(target: string | undefined) {
-  const plistPath = getPListPath(target);
-  return plist.parse(fs.readFileSync(plistPath, 'utf-8'));
+function readJsonContent(filePath: string): Record<string, any> {
+  const jsonPath = getJsonPath(filePath);
+  return fs.existsSync(jsonPath)
+    ? (JSON.parse(fs.readFileSync(jsonPath, 'utf-8')) as Record<string, any>)
+    : {};
 }
 
-function writePListContent(
+function writeJsonContent(
   content: Record<string, any>,
-  target: string | undefined
+  filePath: string
 ): void {
-  const plistPath = getPListPath(target);
-  return fs.writeFileSync(plistPath, plist.stringify(content), 'utf-8');
+  const jsonPath = getJsonPath(filePath);
+  return fs.writeFileSync(jsonPath, JSON.stringify(content, null, 2), 'utf-8');
 }
 
 export function runTask(args: {
   configPath: string;
   packageName: string;
-  task: PlistTaskType;
+  task: JsonTaskType;
 }): void {
-  let content = readPListContent(args.task.target);
+  let content = readJsonContent(args.task.path);
 
-  content = plistTask({
+  content = jsonTask({
     ...args,
     content,
   });
 
-  writePListContent(content, args.task.target);
+  writeJsonContent(content, args.task.path);
 }
 
-export const summary = 'Info.plist modification';
+export const summary = 'Json file modification';

@@ -51,6 +51,16 @@ function writeMockPList(target = 'test'): string {
   mockFs.writeFileSync(plistPath, mockPList);
   return plistPath;
 }
+function writeMockJson(filePath = 'test.json'): string {
+  const jsonPath = path.resolve(__dirname, `../mock-project/${filePath}`);
+  mockFs.writeFileSync(
+    jsonPath,
+    JSON.stringify({
+      mock: 'test',
+    })
+  );
+  return jsonPath;
+}
 function writeMockAndroidManifest(): string {
   const manifestPath = path.resolve(
     __dirname,
@@ -95,5 +105,6 @@ export {
   writeMockLock,
   writeMockAppDelegate,
   writeMockPList,
+  writeMockJson,
   writeMockAndroidManifest,
 };

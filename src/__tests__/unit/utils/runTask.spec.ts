@@ -23,6 +23,9 @@ const mocks = {
   fs: {
     runTask: jest.fn(),
   },
+  json: {
+    runTask: jest.fn(),
+  },
 };
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
@@ -31,6 +34,7 @@ jest.mock('../../../tasks/xcodeTask', () => mocks.xcode);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
 jest.mock('../../../tasks/podFileTask', () => mocks.podfile);
 jest.mock('../../../tasks/fsTask', () => mocks.fs);
+jest.mock('../../../tasks/jsonTask', () => mocks.json);
 
 import path from 'path';
 import { ModTask } from '../../../types/mod.types';
@@ -46,6 +50,7 @@ describe('runTask', () => {
     'android_manifest' as const,
     'podfile' as const,
     'fs' as const,
+    'json' as const,
   ].map(taskType => {
     it(`should run ${taskType} task`, async () => {
       mocks[taskType].runTask.mockReset();

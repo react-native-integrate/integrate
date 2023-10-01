@@ -359,7 +359,7 @@ export function applyContextReduction(
       if (action.strict) throw new Error('Could not find insertion point');
 
       logMessageGray(
-        `insertion point not found, skipping ${color.yellow('before')} criteria`
+        `insertion point not found, ignoring ${color.yellow('before')} criteria`
       );
     } else {
       blockContent.end = action.exact
