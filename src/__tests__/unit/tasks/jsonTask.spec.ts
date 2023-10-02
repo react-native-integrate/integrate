@@ -65,6 +65,46 @@ describe('jsonTask', () => {
       assigned: 'test2',
     });
   });
+  it('should append value if not exists', () => {
+    let content: Record<string, any> = {
+      first: {
+        second: {
+          third: 'test',
+        },
+      },
+    };
+    const task: JsonTaskType = {
+      type: 'json',
+      path: 'test.json',
+      actions: [
+        {
+          set: {
+            first: {
+              assigned: 'test2',
+            },
+            forth: {
+              foo: 'bar',
+            },
+          },
+          strategy: 'append',
+        },
+      ],
+    };
+    content = jsonTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content.first).toEqual({
+      second: {
+        third: 'test',
+      },
+    });
+    expect(content.forth).toEqual({
+      foo: 'bar',
+    });
+  });
   it('should merge value', () => {
     let content: Record<string, any> = {
       first: {
@@ -177,6 +217,42 @@ describe('jsonTask', () => {
     expect(content.first.second).toEqual({
       assigned: 'test2',
       other: ['test2'],
+    });
+  });
+  it('should append inner value if it is new', () => {
+    let content: Record<string, any> = {
+      first: {
+        second: {
+          third: 'test',
+        },
+      },
+    };
+    const task: JsonTaskType = {
+      type: 'json',
+      path: 'test.json',
+      actions: [
+        {
+          set: {
+            first: {
+              second: {
+                assigned: 'test2',
+                $append: true,
+              },
+            },
+          },
+          strategy: 'merge_concat',
+        },
+      ],
+    };
+
+    content = jsonTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content.first.second).toEqual({
+      third: 'test',
     });
   });
   it('should set index value', () => {

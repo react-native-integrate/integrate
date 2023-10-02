@@ -13,6 +13,10 @@ export function applyObjectModification(
 
   if (strategy == 'assign') {
     content = Object.assign(content, action.set);
+  } else if (strategy == 'append') {
+    for (const key in action.set) {
+      if (!(key in content)) content[key] = action.set[key];
+    }
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
     const customizer = function (objValue: any, srcValue: any) {
@@ -23,6 +27,10 @@ export function applyObjectModification(
       if (typeof srcValue === 'object' && srcValue.$assign) {
         delete srcValue.$assign;
         return srcValue;
+      }
+      if (typeof srcValue === 'object' && srcValue.$append) {
+        delete srcValue.$append;
+        return objValue;
       }
       if (
         Array.isArray(objValue) &&
@@ -46,7 +54,7 @@ export function applyObjectModification(
     logMessage(
       `set ${color.yellow(key)} with ${color.yellow(
         strategy
-      )} strategy in json: ${summarize(value)}`
+      )} strategy: ${summarize(value)}`
     );
   });
 

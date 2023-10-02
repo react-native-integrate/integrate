@@ -59,7 +59,7 @@ export type ObjectModifierType = ActionBase & {
   set: {
     [key: string]: any;
   };
-  strategy?: 'merge_concat' | 'merge' | 'assign';
+  strategy?: 'merge_concat' | 'merge' | 'append' | 'assign';
 };
 
 export type ActionBase = {

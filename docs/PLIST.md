@@ -40,6 +40,7 @@ An object containing key-value pairs that you want to add or modify in the plist
 #### `strategy` (string)
 Specifies how to handle merging new and existing values. It can be one of the following:
 -   `assign`: (default) Overwrites the entire key with the new value.
+-   `append`: Appends values only if the key does not already exist.
 -   `merge`: Merges new values into existing dictionaries.
 -   `merge_concat`: Merges dictionaries while concatenating arrays.
 

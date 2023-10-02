@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { listenForKeys } from '../../../utils/waitInputToContinue';
-
 const stdout = {
   write: jest.fn(),
   clearLine: jest.fn(),

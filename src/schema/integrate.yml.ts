@@ -203,7 +203,7 @@ properties:
                     type: object
                   strategy:
                     type: string
-                    enum: [merge_concat, merge, assign]
+                    enum: [merge_concat, merge, append, assign]
 
         # json task
         - required:
@@ -227,7 +227,7 @@ properties:
                     type: object
                   strategy:
                     type: string
-                    enum: [merge_concat, merge, assign]
+                    enum: [merge_concat, merge, append, assign]
 
         # app_delegate task
         - properties:
