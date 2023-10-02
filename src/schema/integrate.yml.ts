@@ -6,7 +6,28 @@ required:
 properties:
   env:
     type: object
-
+  preInfo:
+    oneOf:
+      - type: string
+      - type: object
+        required:
+          - message
+        properties:
+          title:
+            type: string
+          message:
+            type: string
+  postInfo:
+    oneOf:
+      - type: string
+      - type: object
+        required:
+          - message
+        properties:
+          title:
+            type: string
+          message:
+            type: string
   tasks:
     type: array
     items:
@@ -20,6 +41,28 @@ properties:
           type: string
         when:
           type: object
+        preInfo:
+          oneOf:
+            - type: string
+            - type: object
+              required:
+                - message
+              properties:
+                title:
+                  type: string
+                message:
+                  type: string
+        postInfo:
+          oneOf:
+            - type: string
+            - type: object
+              required:
+                - message
+              properties:
+                title:
+                  type: string
+                message:
+                  type: string
 
       anyOf:
         # prompt task
