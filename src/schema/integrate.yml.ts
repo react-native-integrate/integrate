@@ -6,112 +6,6 @@ required:
 properties:
   env:
     type: object
-  prompts:
-    type: array
-    items:
-      type: object
-      oneOf:
-        # text prompt
-        - required:
-            - name
-            - text
-          additionalProperties: false
-          properties:
-            name:
-              type: string
-            text:
-              type: string
-            defaultValue:
-              type: string
-            initialValue:
-              type: string
-            placeholder:
-              type: string
-            validate:
-              oneOf:
-                - type: object
-                  required:
-                    - regex
-                    - message
-                  properties:
-                    regex:
-                      type: string
-                    flags:
-                      type: string
-                    message:
-                      type: string
-                - type: array
-                  items:
-                    type: object
-                    required:
-                      - regex
-                      - message
-                    properties:
-                      regex:
-                        type: string
-                      flags:
-                        type: string
-                      message:
-                        type: string
-
-        # confirm prompt
-        - required:
-            - name
-            - text
-            - type
-          properties:
-            name:
-              type: string
-            text:
-              type: string
-            type:
-              type: string
-              enum: [boolean]
-            initialValue:
-              type: string
-            positive:
-              type: string
-            negative:
-              type: string
-
-        # multiselect prompt
-        - required:
-            - name
-            - text
-            - type
-          properties:
-            name:
-              type: string
-            text:
-              type: string
-            type:
-              type: string
-              enum: [multiselect]
-            required:
-              type: boolean
-            options:
-              type: array
-              items:
-                type: object
-                required:
-                  - value
-                properties:
-                  label:
-                    type: string
-                  hint:
-                    type: string
-                  value:
-                    oneOf:
-                      - type: string
-                      - type: boolean
-                      - type: number
-            initialValues:
-              type: array
-              items:
-                oneOf:
-                  - type: string
-                  - type: boolean
-                  - type: number
 
   tasks:
     type: array
@@ -126,116 +20,126 @@ properties:
           type: string
         when:
           type: object
-        prompts:
-          type: array
-          items:
-            type: object
-            oneOf:
-              # text prompt
-              - required:
-                  - name
-                  - text
-                additionalProperties: false
-                properties:
-                  name:
-                    type: string
-                  text:
-                    type: string
-                  defaultValue:
-                    type: string
-                  initialValue:
-                    type: string
-                  placeholder:
-                    type: string
-                  validate:
-                    oneOf:
-                      - type: object
-                        required:
-                          - regex
-                          - message
-                        properties:
-                          regex:
-                            type: string
-                          flags:
-                            type: string
-                          message:
-                            type: string
-                      - type: array
+
+      anyOf:
+        # prompt task
+        - properties:
+            type:
+              type: string
+              enum: [prompt]
+            actions:
+              type: array
+              items:
+                type: object
+                oneOf:
+                  # text prompt
+                  - required:
+                      - name
+                      - text
+                    additionalProperties: false
+                    properties:
+                      name:
+                        type: string
+                      when:
+                        type: object
+                      text:
+                        type: string
+                      defaultValue:
+                        type: string
+                      initialValue:
+                        type: string
+                      placeholder:
+                        type: string
+                      validate:
+                        oneOf:
+                          - type: object
+                            required:
+                              - regex
+                              - message
+                            properties:
+                              regex:
+                                type: string
+                              flags:
+                                type: string
+                              message:
+                                type: string
+                          - type: array
+                            items:
+                              type: object
+                              required:
+                                - regex
+                                - message
+                              properties:
+                                regex:
+                                  type: string
+                                flags:
+                                  type: string
+                                message:
+                                  type: string
+
+                  # confirm prompt
+                  - required:
+                      - name
+                      - text
+                      - type
+                    properties:
+                      name:
+                        type: string
+                      when:
+                        type: object
+                      text:
+                        type: string
+                      type:
+                        type: string
+                        enum: [ boolean ]
+                      initialValue:
+                        type: string
+                      positive:
+                        type: string
+                      negative:
+                        type: string
+
+                  # multiselect prompt
+                  - required:
+                      - name
+                      - text
+                      - type
+                    properties:
+                      name:
+                        type: string
+                      when:
+                        type: object
+                      text:
+                        type: string
+                      type:
+                        type: string
+                        enum: [ multiselect ]
+                      required:
+                        type: boolean
+                      options:
+                        type: array
                         items:
                           type: object
                           required:
-                            - regex
-                            - message
+                            - value
                           properties:
-                            regex:
+                            label:
                               type: string
-                            flags:
+                            hint:
                               type: string
-                            message:
-                              type: string
-
-
-
-              # confirm prompt
-              - required:
-                  - name
-                  - text
-                  - type
-                properties:
-                  name:
-                    type: string
-                  text:
-                    type: string
-                  type:
-                    type: string
-                    enum: [boolean]
-                  initialValue:
-                    type: string
-                  positive:
-                    type: string
-                  negative:
-                    type: string
-
-              # multiselect prompt
-              - required:
-                  - name
-                  - text
-                  - type
-                properties:
-                  name:
-                    type: string
-                  text:
-                    type: string
-                  type:
-                    type: string
-                    enum: [multiselect]
-                  required:
-                    type: boolean
-                  options:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - value
-                      properties:
-                        label:
-                          type: string
-                        hint:
-                          type: string
-                        value:
+                            value:
+                              oneOf:
+                                - type: string
+                                - type: boolean
+                                - type: number
+                      initialValues:
+                        type: array
+                        items:
                           oneOf:
                             - type: string
                             - type: boolean
                             - type: number
-                  initialValues:
-                    type: array
-                    items:
-                      oneOf:
-                        - type: string
-                        - type: boolean
-                        - type: number
 
-      anyOf:
         # plist task
         - properties:
             type:

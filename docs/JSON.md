@@ -19,9 +19,6 @@ An optional label or description for the task.
 #### `when` (object)
 Visit [When](WHEN.md) page to learn how to execute task conditionally.
 
-#### `prompts` (array)
-Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
-
 #### `path` (string)
 Specifies the path of the json file to create or modify.
 

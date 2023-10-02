@@ -16,32 +16,6 @@ env:
 ```
 Check [Variables](VARIABLES.md) page to learn more about how to assign and use variables in configuration files.
 
-
-Prompts
--------
-
-The `prompts` section lets you collect user input before the integration process starts. You can define questions or prompts that the user must answer. The responses are then stored in variables for later use.
-
-#### Example:
-
-```yaml
-prompts:
-  - name: app_id
-    text: "Enter your app ID:"
-  - name: integrate_platforms
-    text: "Select platforms to integrate:"
-    type: multiselect
-    options:
-      - value: android
-        label: Android
-        hint: Integrate to Android platform
-      - value: ios
-        label: iOS
-        hint: Integrate to iOS platform
-```
-
-Visit [Prompts](PROMPTS.md) page to learn more about how to request input from user.
- 
 Tasks
 -----
 

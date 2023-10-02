@@ -22,9 +22,6 @@ An optional label or description for the task.
 #### `when` (object)
 Visit [When](WHEN.md) page to learn how to execute task conditionally.
 
-#### `prompts` (array)
-Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
-
 #### `location` (string)
 Specifies the target location within the project structure, distinguishing between the root and app folders. It helps determine which build.gradle file to modify during the configuration process.
     -   `root`: (default) Modifies `android/build.gradle` file.

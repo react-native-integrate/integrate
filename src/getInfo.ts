@@ -90,9 +90,9 @@ export async function getInfo(packageName: string): Promise<void> {
 
     log(
       'tasks: ' +
-        color.yellow(_config.tasks.length) +
+        color.yellow(taskManager.getNonSystemTasks(_config.tasks).length) +
         '\n' +
-        Object.entries(taskManager)
+        Object.entries(taskManager.task)
           .map(([taskType, value]) => {
             const configTasks = _config.tasks.filter(x => x.type == taskType);
             if (!configTasks.length) return null;

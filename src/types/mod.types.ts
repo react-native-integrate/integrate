@@ -186,10 +186,18 @@ export type FsModifierType = ActionBase & {
   destination: string;
 };
 
+// prompt task
+
+export type PromptTaskType = ModTaskBase &
+  ActionsType<PromptActionType> & {
+    type: 'prompt';
+  };
+
+export type PromptActionType = ActionBase & Prompt;
+
 export type ModTaskBase = {
   name?: string;
   label?: string;
-  prompts?: Prompt[];
   when?: any;
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
@@ -203,7 +211,8 @@ export type ModTask =
   | XcodeTaskType
   | PodFileTaskType
   | FsTaskType
-  | JsonTaskType;
+  | JsonTaskType
+  | PromptTaskType;
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {
@@ -224,7 +233,6 @@ export type Prompt = {
 
 export type IntegrationConfig = {
   env?: Record<string, any>;
-  prompts?: Prompt[];
   tasks: ModTask[];
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;

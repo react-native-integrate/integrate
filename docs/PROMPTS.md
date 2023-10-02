@@ -1,35 +1,65 @@
-Prompts in Configuration
+Prompt Task Configuration (`prompt`)
 ========================
 
 Overview
 --------
 
-Prompts are interactive elements within your configuration that allow you to collect user input and make your configuration more dynamic and customizable. With prompts, you can request specific information or decisions from the user before executing tasks, enabling you to adapt your configuration to different scenarios.
+The prompt task type allows you to gather user input during the integration process.
 
-### Prompt Syntax
+Task Properties
+---------------
 
-Prompts are defined in the configuration file using the following syntax:
+#### `type` (string, required)
+Specifies the task type, which should be set to "prompt" for this task.
 
+#### `name` (string)
+An optional name for the task. If provided, the task state will be saved as a variable.
+Visit [Task and Action States](STATES.md) page to learn more.
+
+#### `label` (string)
+An optional label or description for the task.
+
+#### `when` (object)
+Visit [When](WHEN.md) page to learn how to execute task conditionally.
+
+#### `actions` (array of objects, required)
+An array of action items that define the questions to be asked to the user. Each action item contains the following fields:
+
+### Action Item
+
+#### `name` (string, required)
+A unique identifier for the prompt. You will use this name to reference the user's input or decision later in the configuration.
+
+#### `type` (string, required): 
+Specifies the type of prompt to display. Currently supported types include:
+
+-   `boolean`: Displays a yes/no confirmation for the user to choose from.
+-   `multiselect`: Displays a list of options for the user to select multiple items from.
+
+Omit the property to request a text input
+
+##### Additional Properties Per Type
+
+###### Text Prompt
+
+#### `defaultValue` (string)
+The value that is assigned if user does not enter any value.
+
+#### `initialValue` (string)
+The initial text value.
+
+#### `placeholder` (string)
+The hint text to be shown when user does not enter any value.
+
+#### `validate` (array of objects)
+Validates the user input before submit. A validation item can have following fields:
+-   `regex`: **(string, required)** Displays a yes/no confirmation for the user to choose from.
+-   `message`: **(string)** Message to be displayed if validation fails.
+
+Example:
 ```yaml
-prompts:
-  - name: prompt_name
-    type: prompt_type
-    text: prompt_text
-```
-
--   `name`: A unique identifier for the prompt. You will use this name to reference the user's input or decision later in the configuration.
--   `type`: The type of prompt, which determines the format of the expected user input (e.g., text, boolean, number).
--   `text`: The text displayed to the user as the prompt message or question.
-
-Prompt Types
-------------
-
-### Text Prompt
-
-Text prompts request free-form text input from the user. You can use this type to collect strings, names, paths, or any other textual information.
-
-```yaml
-prompts:
+type: prompt
+actions:
   - name: user_name
     text: "Enter your name:"
     validate:
@@ -38,24 +68,44 @@ prompts:
       - regex: ^[a-z]
         message: must start with a letter
 ```
+###### Boolean Prompt
 
-### Boolean Prompt
+#### `positive` (string)
+The text to be displayed instead of 'yes'.
 
-Boolean prompts present a yes/no or true/false question to the user. These prompts are useful for obtaining binary decisions.
+#### `negative` (string)
+The text to be displayed instead of 'no'.
 
+#### `initialValue` (string)
+Default selection value.
+
+Example:
 ```yaml
-prompts:
+type: prompt
+actions:
   - name: run_task
     type: boolean
     text: "Do you want to run this task?"
 ```
 
-### Multi Select Prompt
+###### Multi Select Prompt
 
-Multi select prompts request multiple values by presenting a list of options.
+#### `required` (boolean)
+Defines that user must select at least one of select items.
 
+#### `options` (array of objects)
+An array of options items. Can have these fields:
+-   `value`: **(string | boolean | number, required)** The value of the option item
+-   `label`: **(string)** A text to be shown as label.
+-   `hint`: **(string)** Displays information about this option item.
+
+#### `initialValues` (string)
+Default selection values.
+
+Example:
 ```yaml
-prompts:
+type: prompt
+actions:
   - name: platforms
     type: multiselect
     required: true
@@ -69,39 +119,27 @@ prompts:
         hint: will integrate into iOS platform
 ```
 
-<!--
-### Numeric Prompt
-
-Numeric prompts are used to gather numerical data from the user. You can specify whether you expect an integer or a floating-point number.
-
-```yaml
-prompts:
-  - name: age
-    type: number
-    text: "Enter your age:"
-```
--->
 Usage Example
 -------------
 
 Here's an example of how to use prompts in a configuration file:
 
 ```yaml
-prompts:
-  - name: app_id
-    text: "Enter your app ID:"
 tasks:
-  - type: app_delegate
-    prompts:
+  - type: prompt
+    actions:
       - name: run_app_delegate
         type: boolean
         text: "Do you want to run the app_delegate task?"
+  - type: app_delegate
+    when:
+      run_app_delegate: true
 ```
 
 In this example:
 
--   We define a text prompt to collect the app ID from the user.
--   Within the `app_delegate` task, we define a boolean prompt to ask if the user wants to execute the task.
+-   We define a boolean prompt to ask if the user wants to execute the task.
+-   Within the `app_delegate` task, we check if the user confirmed to run the task.
 
 The values entered by the user in response to prompts are stored as variables and can be referenced later in the configuration.
 

@@ -6,22 +6,30 @@ preInfo: Config pre info
 postInfo:
   title: test
   message: Config post info
-prompts:
-  - name: test2
-    text: Test prompt
-    validate:
-      regex: .*
-      message: test
-  - name: test3
-    type: boolean
-    text: Test prompt
-  - name: testMulti
-    type: multiselect
-    text: Test prompt
-    options:
-      - value: opt1
-      - value: opt2
 tasks:
+  - type: prompt
+    actions:
+      - name: test2
+        text: Test prompt
+        when:
+          test: true
+        validate:
+          regex: .*
+          message: test
+      - name: test3
+        type: boolean
+        text: Test prompt
+        when:
+          test: false
+      - name: test12
+        type: boolean
+        text: Test prompt
+      - name: testMulti
+        type: multiselect
+        text: Test prompt
+        options:
+          - value: opt1
+          - value: opt2
   - type: app_delegate
     name: app_delegate
     label: 'Will not run'
@@ -30,12 +38,6 @@ tasks:
   - type: app_delegate
     when:
       test: true
-    prompts:
-      - name: test4
-        text: Test prompt
-        validate:
-          - regex: .*
-            message: test
     label: 'App Delegate'
     actions:
       - prepend: "#import <Firebase.h>"

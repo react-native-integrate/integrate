@@ -16,10 +16,10 @@ import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { logInfoNote } from './utils/logInfoNote';
 import { parseConfig } from './utils/parseConfig';
-import { runPrompt } from './utils/runPrompt';
 import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
 import { setState } from './utils/setState';
+import { taskManager } from './utils/taskManager';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { getText, transformTextInObject, variables } from './variables';
 
@@ -148,10 +148,6 @@ export async function integrate(packageName?: string): Promise<void> {
           completedTaskCount = 0;
         await logInfoNote(config.preInfo);
 
-        if (config.prompts)
-          for (const prompt of config.prompts) {
-            await runPrompt(prompt);
-          }
         for (const task of config.tasks) {
           if (
             task.when &&
@@ -169,17 +165,15 @@ export async function integrate(packageName?: string): Promise<void> {
             error: false,
           });
 
-          if (task.label) task.label = getText(task.label);
-          logInfo(
-            color.bold(color.inverse(color.cyan(' task '))) +
-              color.bold(color.cyan(` ${task.label || task.type} `))
-          );
+          const isNonSystemTask = !taskManager.isSystemTask(task.type);
+          if (isNonSystemTask) {
+            if (task.label) task.label = getText(task.label);
+            logInfo(
+              color.bold(color.inverse(color.cyan(' task '))) +
+                color.bold(color.cyan(` ${task.label || task.type} `))
+            );
+          }
           await logInfoNote(task.preInfo);
-
-          if (task.prompts)
-            for (const prompt of task.prompts) {
-              await runPrompt(prompt);
-            }
 
           try {
             await runTask({

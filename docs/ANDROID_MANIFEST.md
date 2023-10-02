@@ -21,9 +21,6 @@ An optional label or description for the task.
 #### `when` (object)
 Visit [When](WHEN.md) page to learn how to execute task conditionally.
 
-#### `prompts` (array)
-Visit [Prompts](PROMPTS.md) page to learn how to request input from user.
-
 #### `actions` (array of objects, required)
 An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 

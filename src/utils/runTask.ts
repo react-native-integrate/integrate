@@ -7,7 +7,7 @@ export async function runTask(args: {
   task: ModTask;
 }): Promise<void> {
   const { task, packageName, configPath } = args;
-  await taskManager[task.type].runTask({
+  await taskManager.task[task.type].runTask({
     configPath,
     packageName,
     task,
