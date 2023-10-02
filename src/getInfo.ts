@@ -94,6 +94,7 @@ export async function getInfo(packageName: string): Promise<void> {
         '\n' +
         Object.entries(taskManager.task)
           .map(([taskType, value]) => {
+            if (taskManager.isSystemTask(taskType)) return null;
             const configTasks = _config.tasks.filter(x => x.type == taskType);
             if (!configTasks.length) return null;
             let summary = value.summary;
