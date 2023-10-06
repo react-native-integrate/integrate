@@ -10,7 +10,7 @@ import {
   stopSpinner,
 } from './prompter';
 import { AnalyzedPackages, LockProjectData } from './types/integrator.types';
-import { IntegrationConfig } from './types/mod.types';
+import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
@@ -20,13 +20,15 @@ import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
 import { setState } from './utils/setState';
 import { taskManager } from './utils/taskManager';
+import { topologicalSort } from './utils/topologicalSort';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages(packageName);
-  const { deletedPackages, installedPackages } = analyzedPackages;
+  const { deletedPackages, installedPackages, integratedPackages } =
+    analyzedPackages;
   let { newPackages } = analyzedPackages;
 
   const shouldBreak = checkIfJustCreatedLockFile(analyzedPackages);
@@ -70,12 +72,9 @@ export async function integrate(packageName?: string): Promise<void> {
     packageName: string;
     lockProjectData: LockProjectData;
   }[] = [];
-  const packagesToIntegrate: {
-    packageName: string;
-    version: string;
-    configPath: string;
-  }[] = [];
+  let packagesToIntegrate: PackageWithConfig[] = [];
   if (newPackages.length) {
+    const globalInfo = [];
     startSpinner('checking package configuration');
     for (let i = 0; i < newPackages.length; i++) {
       const [packageName, version] = newPackages[i];
@@ -91,12 +90,75 @@ export async function integrate(packageName?: string): Promise<void> {
             integrated: false,
           },
         });
-      else
+      else {
+        let config: IntegrationConfig;
+        try {
+          config = parseConfig(configPath);
+        } catch (e) {
+          logError(
+            color.bold(color.bgRed(' error ')) +
+              color.bold(color.blue(` ${packageName} `)) +
+              color.red('could not parse package configuration\n') +
+              color.gray(getErrMessage(e, 'validation')),
+            true
+          );
+          continue;
+        }
+        if (config.dependencies?.length) {
+          let warn = null;
+          const packageInfo = [];
+          for (const dependentPackageName of config.dependencies) {
+            // check if dependency is not integrated and not already in new package list
+            const isInNewPackages = newPackages.every(
+              ([packageName]) => packageName != dependentPackageName
+            );
+            const isNotIntegrated = integratedPackages.every(
+              ([packageName]) => packageName != dependentPackageName
+            );
+            if (isInNewPackages && isNotIntegrated) {
+              //check if dependent is installed
+              const installedPackage = installedPackages.find(
+                ([packageName]) => packageName == dependentPackageName
+              );
+              if (!installedPackage) {
+                warn = `${color.bold(
+                  color.blue(dependentPackageName)
+                )} is not installed - please install it first and try again`;
+                break;
+              } else {
+                // installed but not new, force add as new
+                newPackages.push(installedPackage);
+                packageInfo.push(
+                  `${color.bold(color.blue(dependentPackageName))}`
+                );
+              }
+            }
+          }
+          if (warn) {
+            stopSpinner('checked package configuration');
+            logWarning(
+              `${color.bold(
+                color.blue(packageName)
+              )} has dependencies that require integration: \n${warn}`
+            );
+            return;
+          } else if (packageInfo.length) {
+            globalInfo.push(
+              `${color.bold(
+                color.blue(packageName)
+              )} has dependencies that require integration: ${getInnerLogList(
+                packageInfo
+              )}`
+            );
+          }
+        }
         packagesToIntegrate.push({
           packageName,
           version,
           configPath,
+          config,
         });
+      }
     }
     let msg = 'checked package configuration';
     if (packageName) {
@@ -115,23 +177,14 @@ export async function integrate(packageName?: string): Promise<void> {
       }
     }
     stopSpinner(msg);
+    if (globalInfo.length) globalInfo.forEach(logInfo);
   }
   if (packagesToIntegrate.length) {
+    packagesToIntegrate = topologicalSort(packagesToIntegrate);
     for (let i = 0; i < packagesToIntegrate.length; i++) {
-      const { packageName, version, configPath } = packagesToIntegrate[i];
-      let config: IntegrationConfig;
-      try {
-        config = parseConfig(configPath);
-      } catch (e) {
-        logError(
-          color.bold(color.bgRed(' error ')) +
-            color.bold(color.blue(` ${packageName} `)) +
-            color.red('could not parse package configuration\n') +
-            color.gray(getErrMessage(e, 'validation')),
-          true
-        );
-        continue;
-      }
+      const { packageName, version, configPath, config } =
+        packagesToIntegrate[i];
+
       logInfo(
         color.bold(color.bgBlue(' new package ')) +
           color.bold(color.blue(` ${packageName} `))
@@ -278,4 +331,10 @@ function checkIfJustCreatedLockFile(analyzedPackages: AnalyzedPackages) {
     return true;
   }
   return false;
+}
+
+function getInnerLogList(strings: string[]): string {
+  return strings.reduce((o, s, index) => {
+    return o + color.gray(index == strings.length - 1 ? '\n└ ' : '\n├ ') + s;
+  }, '');
 }

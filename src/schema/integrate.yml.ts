@@ -28,6 +28,10 @@ properties:
             type: string
           message:
             type: string
+  dependencies:
+    type: array
+    items:
+      type: string
   tasks:
     type: array
     items:

@@ -8,6 +8,7 @@ export type AnalyzedPackages = {
   newPackages: PackageTuples;
   updatedPackages: PackageTuples;
   deletedPackages: [string, LockProjectData][];
+  integratedPackages: [string, LockProjectData][];
   justCreatedLockFile: boolean;
   forceIntegratePackageName: string | undefined;
 };

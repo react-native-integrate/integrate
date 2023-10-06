@@ -16,29 +16,33 @@ jest.spyOn(process, 'abort').mockImplementation(() => {
   throw new Error('program aborted');
 });
 
-function writeMockProject(projectJson: Record<any, any>): string {
+function writeMockProject(
+  projectJson: Record<any, any>,
+  name = 'mock-project'
+): string {
   const packageJsonPath = path.resolve(
     __dirname,
-    `../mock-project/${Constants.PACKAGE_JSON_FILE_NAME}`
+    `../${name}/${Constants.PACKAGE_JSON_FILE_NAME}`
   );
   mockFs.writeFileSync(packageJsonPath, JSON.stringify(projectJson, null, 2));
   return packageJsonPath;
 }
 
-function writeMockLock(lockData: LockData): string {
+function writeMockLock(lockData: LockData, name = 'mock-project'): string {
   const lockPath = path.resolve(
     __dirname,
-    `../mock-project/${Constants.LOCK_FILE_NAME}`
+    `../${name}/${Constants.LOCK_FILE_NAME}`
   );
   mockFs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2));
   return lockPath;
 }
 function writeMockAppDelegate(
-  appDelegateContent = mockAppDelegateTemplate
+  appDelegateContent = mockAppDelegateTemplate,
+  name = 'mock-project'
 ): string {
   const appDelegatePath = path.resolve(
     __dirname,
-    `../mock-project/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
+    `../${name}/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
   );
   mockFs.writeFileSync(appDelegatePath, appDelegateContent);
   return appDelegatePath;

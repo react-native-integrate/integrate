@@ -26,11 +26,15 @@ export function analyzePackages(
         ([installedPackageName]) => installedPackageName != packageName
       )
   );
+  const integratedPackages = Object.entries(lockData.packages).filter(
+    ([, packageLock]) => packageLock.integrated
+  );
   return {
     installedPackages,
     newPackages,
     updatedPackages,
     deletedPackages,
+    integratedPackages,
     justCreatedLockFile,
     forceIntegratePackageName,
   };

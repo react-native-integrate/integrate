@@ -236,6 +236,14 @@ export type IntegrationConfig = {
   tasks: ModTask[];
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
+  dependencies?: string[];
+};
+
+export type PackageWithConfig = {
+  packageName: string;
+  version: string;
+  configPath: string;
+  config: IntegrationConfig;
 };
 
 export type BlockContentType = {

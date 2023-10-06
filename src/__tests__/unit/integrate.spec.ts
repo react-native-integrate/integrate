@@ -255,4 +255,139 @@ describe('integrate', () => {
     );
     expect(content).not.toContain('[FIRApp configure];');
   });
+  it('should add dependencies to integration queue', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-deps': '^1.2.3',
+        'dep-package': '^1.2.3',
+        'dep-package-2': '^1.2.3',
+      },
+    });
+    const appDelegatePath = writeMockAppDelegate();
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain('[FIRApp configure];');
+    expect(content).toContain('// with-deps');
+  });
+  it('should add dependencies to integration queue', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-deps': '^1.2.3',
+        'dep-package': '^1.2.3',
+        'dep-package-2': '^1.2.3',
+      },
+    });
+    const appDelegatePath = writeMockAppDelegate();
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain('[FIRApp configure];');
+    expect(content).toContain('// with-deps');
+  });
+  it('should skip dependencies when already integrated', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-deps': '^1.2.3',
+        'dep-package': '^1.2.3',
+        'dep-package-2': '^1.2.3',
+      },
+    });
+    const appDelegatePath = writeMockAppDelegate();
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {
+        'dep-package': {
+          version: '1.2.3',
+          integrated: true,
+        },
+        'dep-package-2': {
+          version: '1.2.3',
+          integrated: true,
+        },
+      },
+    });
+
+    await integrate();
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
+    expect(content).toContain('// with-deps');
+  });
+  it('should add installed but non integrated dependencies to integration queue', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-deps': '^1.2.3',
+        'dep-package': '^1.2.3',
+        'dep-package-2': '^1.2.3',
+      },
+    });
+    const appDelegatePath = writeMockAppDelegate();
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {
+        'dep-package': {
+          version: '1.2.3',
+          integrated: false,
+        },
+        'dep-package-2': {
+          version: '1.2.3',
+          integrated: false,
+        },
+      },
+    });
+    mockPrompter.log.info.mockClear();
+
+    await integrate();
+
+    const content = mockFs.readFileSync(appDelegatePath);
+    expect(content).toContain('[FIRApp configure];');
+    expect(content).toContain('// with-deps');
+    expect(mockPrompter.log.info).toHaveBeenCalledWith(
+      expect.stringContaining('has dependencies that require integration')
+    );
+  });
+  it('should warn and exist when dependencies is not installed', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-deps': '^1.2.3',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('please install it first and try again')
+    );
+  });
 });
