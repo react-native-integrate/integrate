@@ -137,6 +137,70 @@ describe('xcodeTask', () => {
       expect.stringContaining('skipped adding target')
     );
   });
+  it('should add notification content to project', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addTarget: 'test',
+          type: 'notification-content',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).toMatch(/\{.*?\bNotificationViewController\.m.*?}/s);
+
+    mockPrompter.log.message.mockReset();
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipped adding target')
+    );
+  });
+  it('should add notification content to project even if products section does not exist', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(
+      pbxFilePath,
+      mockPbxProjTemplate.replace(/\/\* Products \*\//g, '/* SomethingElse */')
+    );
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addTarget: 'test',
+          type: 'notification-content',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).toMatch(/\{.*?\bNotificationViewController\.m.*?}/s);
+  });
   it('should add resource to root', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);

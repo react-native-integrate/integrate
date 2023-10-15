@@ -9,7 +9,10 @@ export function getInstalledPackages(): PackageTuples {
     const packageJsonPath = getPackageJsonPath();
     const packageJsonFile = fs.readFileSync(packageJsonPath, 'utf-8');
     const packageJson = JSON.parse(packageJsonFile);
-    return Object.entries(packageJson.dependencies || {});
+    return Object.entries({
+      ...packageJson.dependencies,
+      ...packageJson.devDependencies,
+    });
   } catch (error) {
     console.error('Error fetching installed packages:', error);
     process.abort();

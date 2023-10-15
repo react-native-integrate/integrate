@@ -526,7 +526,7 @@ properties:
                         type: string
                       type:
                         type: string
-                        enum: [notification-service]
+                        enum: [notification-service, notification-content]
 
         # podfile task
         - properties:
