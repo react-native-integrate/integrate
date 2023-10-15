@@ -147,7 +147,7 @@ export type XcodeTaskType = ModTaskBase &
     type: 'xcode';
   };
 
-export type XcodeAddFile = {
+export type XcodeAddFile = ActionBase & {
   addFile: string;
   message?: string;
   target?:
@@ -158,7 +158,7 @@ export type XcodeAddFile = {
         path?: string;
       };
 };
-export type XcodeAddTarget = {
+export type XcodeAddTarget = ActionBase & {
   addTarget: string;
   type: XcodeAddTargetType;
   message?: string;
@@ -167,7 +167,7 @@ export type XcodeAddTarget = {
 export type XcodeAddTargetType =
   | 'notification-service'
   | 'notification-content';
-export type XcodeModifierType = ActionBase & (XcodeAddFile | XcodeAddTarget);
+export type XcodeModifierType = XcodeAddFile | XcodeAddTarget;
 
 // pod file task
 

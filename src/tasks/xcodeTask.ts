@@ -150,6 +150,7 @@ async function applyAddTarget(
     placeholder: action.addTarget,
   });
   if (!targetName) targetName = action.addTarget;
+  if (action.name) variables.set(action.name + '.target', targetName);
 
   const mainGroup = content.getFirstProject().firstProject.mainGroup;
 
