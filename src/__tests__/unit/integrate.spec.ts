@@ -14,6 +14,7 @@ const mockParseConfig = jest.spyOn(
 import path from 'path';
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
+import { variables } from '../../variables';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {
@@ -38,7 +39,6 @@ describe('integrate', () => {
     const appDelegatePath = writeMockAppDelegate();
 
     await integrate();
-
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
 

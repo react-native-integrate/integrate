@@ -7,9 +7,16 @@ const mockWaitForFile = jest.spyOn(
   'waitForFile'
 );
 
-import { xcodeTask, runTask } from '../../../tasks/xcodeTask';
+import path from 'path';
+import { xcodeTask, runTask } from '../../../tasks/xcode/xcodeTask';
 import { XcodeTaskType } from '../../../types/mod.types';
-import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
+import {
+  getIosProjectName,
+  getIosProjectPath,
+  getPbxProjectPath,
+} from '../../../utils/getIosProjectPath';
+import { getProjectPath } from '../../../utils/getProjectPath';
+import { variables } from '../../../variables';
 import { mockPrompter } from '../../mocks/mockAll';
 import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
 import xcode from 'xcode';
@@ -57,6 +64,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'notification.service',
           addTarget: 'test',
           type: 'notification-service',
         },
@@ -70,6 +78,7 @@ describe('xcodeTask', () => {
     });
     const content = proj.writeSync();
     expect(content).toMatch(/\{.*?\bNotificationService\.m.*?}/s);
+    expect(variables.get('notification.service.target')).toEqual('test');
 
     mockPrompter.log.message.mockReset();
     await xcodeTask({
@@ -200,6 +209,118 @@ describe('xcodeTask', () => {
     });
     const content = proj.writeSync();
     expect(content).toMatch(/\{.*?\bNotificationViewController\.m.*?}/s);
+  });
+  it('should add notification content to project', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addTarget: 'test',
+          type: 'notification-content',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).toMatch(/\{.*?\bNotificationViewController\.m.*?}/s);
+
+    mockPrompter.log.message.mockReset();
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipped adding target')
+    );
+  });
+  it('should add capabilities to project', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addCapability: 'push',
+          target: {
+            name: 'ReactNativeCliTemplates',
+            path: '',
+          },
+        },
+        {
+          addCapability: 'groups',
+          target: 'app',
+          groups: ['group.test'],
+        },
+        {
+          addCapability: 'keychain-sharing',
+          target: 'app',
+          groups: ['group.test'],
+        },
+        {
+          addCapability: 'background-mode',
+          target: 'app',
+          modes: ['fetch'],
+        },
+        {
+          addCapability: 'game-controllers',
+          target: 'app',
+          controllers: ['directional'],
+        },
+        {
+          addCapability: 'maps',
+          target: 'app',
+          routing: ['car', 'bus'],
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).toMatch(
+      /\{.*?\bReactNativeCliTemplates\.entitlements.*?}/s
+    );
+    const targetName = 'ReactNativeCliTemplates';
+    const entitlementsContent = mockFs.readFileSync(
+      path.join(
+        getProjectPath(),
+        'ios',
+        targetName,
+        targetName + '.entitlements'
+      )
+    );
+    const infoContent = mockFs.readFileSync(
+      path.join(getProjectPath(), 'ios', targetName, 'Info.plist')
+    );
+
+    expect(entitlementsContent).toContain('aps-environment');
+    expect(entitlementsContent).toContain(
+      'com.apple.security.application-groups'
+    );
+    expect(entitlementsContent).toContain('keychain-access-groups');
+    expect(infoContent).toContain('UIBackgroundModes');
+    expect(infoContent).toContain('DirectionalGamepad');
+    expect(infoContent).toContain('MKDirectionsModeBus');
   });
   it('should add resource to root', async () => {
     const pbxFilePath = getPbxProjectPath();
@@ -425,7 +546,7 @@ describe('xcodeTask', () => {
         })
       ).rejects.toThrowError('project.pbxproj file not found');
     });
-    it('should throw when workspace does not exist', async () => {
+    it('should throw when project does not exist', async () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
@@ -445,7 +566,7 @@ describe('xcodeTask', () => {
           task: task,
           packageName: 'test-package',
         })
-      ).rejects.toThrowError('workspace not found');
+      ).rejects.toThrowError('project not found');
       mock.mockRestore();
     });
   });

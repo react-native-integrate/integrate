@@ -35,6 +35,7 @@ tasks:
     label: 'Will not run'
     when:
       test: false
+    actions: []
   - type: app_delegate
     when:
       test: true

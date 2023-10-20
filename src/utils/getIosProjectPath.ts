@@ -11,16 +11,16 @@ export function getIosProjectPath(): string {
 
 export function getIosProjectName(): string {
   const projectPath = getProjectPath();
-  let workspaceFolder: string | undefined;
+  let xcodeProjFolder: string | undefined;
   try {
-    workspaceFolder = fs
+    xcodeProjFolder = fs
       .readdirSync(path.join(projectPath, 'ios'))
-      .find(x => x.endsWith(Constants.WORKSPACE_EXT));
+      .find(x => x.endsWith(Constants.XCODEPROJ_EXT));
   } catch (e) {
-    workspaceFolder = undefined;
+    xcodeProjFolder = undefined;
   }
-  if (!workspaceFolder) throw new Error('iOS workspace not found.');
-  return workspaceFolder.replace(Constants.WORKSPACE_EXT, '');
+  if (!xcodeProjFolder) throw new Error('iOS project not found.');
+  return xcodeProjFolder.replace(Constants.XCODEPROJ_EXT, '');
 }
 
 export function getPbxProjectPath(): string {

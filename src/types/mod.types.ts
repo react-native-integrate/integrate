@@ -59,7 +59,7 @@ export type ObjectModifierType = ActionBase & {
   set: {
     [key: string]: any;
   };
-  strategy?: 'merge_concat' | 'merge' | 'append' | 'assign';
+  strategy?: 'merge_concat' | 'merge_distinct' | 'merge' | 'append' | 'assign';
 };
 
 export type ActionBase = {
@@ -167,7 +167,97 @@ export type XcodeAddTarget = ActionBase & {
 export type XcodeAddTargetType =
   | 'notification-service'
   | 'notification-content';
-export type XcodeModifierType = XcodeAddFile | XcodeAddTarget;
+
+export type XcodeAddCapabilityBase = ActionBase & {
+  target:
+    | 'app'
+    | {
+        name?: string;
+        path?: string;
+      };
+};
+
+export type XcodeAddCommonCapability = XcodeAddCapabilityBase & {
+  addCapability: XcodeAddCommonCapabilityType;
+};
+
+export type XcodeAddCommonCapabilityType =
+  | 'push'
+  | 'wireless-configuration'
+  | 'app-attest'
+  | 'data-protection'
+  | 'homekit'
+  | 'healthkit'
+  | 'inter-app-audio'
+  | 'increased-memory';
+
+export type XcodeAddGroupCapability = XcodeAddCapabilityBase & {
+  addCapability: 'groups';
+  groups: string[];
+};
+
+export type XcodeAddBMCapability = XcodeAddCapabilityBase & {
+  addCapability: 'background-mode';
+  modes: XcodeAddBMCapabilityModes[];
+};
+export type XcodeAddBMCapabilityModes =
+  | 'audio'
+  | 'bluetooth-central'
+  | 'bluetooth-peripheral'
+  | 'external-accessory'
+  | 'fetch'
+  | 'location'
+  | 'nearby-interaction'
+  | 'processing'
+  | 'push-to-talk'
+  | 'remote-notification'
+  | 'voip';
+
+export type XcodeAddGCCapability = XcodeAddCapabilityBase & {
+  addCapability: 'game-controllers';
+  controllers: XcodeAddGCCapabilityControllers[];
+};
+
+export type XcodeAddGCCapabilityControllers =
+  | 'extended'
+  | 'micro'
+  | 'directional';
+
+export type XcodeAddMapsCapability = XcodeAddCapabilityBase & {
+  addCapability: 'maps';
+  routing: XcodeAddMapsCapabilityRouting[];
+};
+export type XcodeAddMapsCapabilityRouting =
+  | 'bike'
+  | 'bus'
+  | 'car'
+  | 'ferry'
+  | 'other'
+  | 'pedestrian'
+  | 'plane'
+  | 'ride-share'
+  | 'street-car'
+  | 'subway'
+  | 'taxi'
+  | 'train';
+
+export type XcodeAddKSCapability = XcodeAddCapabilityBase & {
+  addCapability: 'keychain-sharing';
+  groups: string[];
+};
+
+export type XcodeAddCapability =
+  | XcodeAddCommonCapability
+  | XcodeAddGroupCapability
+  | XcodeAddBMCapability
+  | XcodeAddGCCapability
+  | XcodeAddMapsCapability
+  | XcodeAddKSCapability;
+
+export type XcodeModifierType =
+  | XcodeAddFile
+  | XcodeAddTarget
+  | XcodeAddCapability;
 
 // pod file task
 

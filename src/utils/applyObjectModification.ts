@@ -3,6 +3,7 @@ import color from 'picocolors';
 import { logMessage, summarize } from '../prompter';
 import { ObjectModifierType } from '../types/mod.types';
 import { transformTextInObject } from '../variables';
+import { deepEquals } from './satisfies';
 
 export function applyObjectModification(
   content: Record<string, any>,
@@ -20,9 +21,17 @@ export function applyObjectModification(
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
     const customizer = function (objValue: any, srcValue: any) {
-      if (strategy == 'merge_concat')
+      if (strategy == 'merge_concat') {
         if (Array.isArray(objValue) && Array.isArray(srcValue)) {
           return objValue.concat(srcValue);
+        }
+      } else if (strategy == 'merge_distinct')
+        if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+          return objValue.concat(
+            srcValue.filter(objB =>
+              objValue.every(objA => !deepEquals(objA, objB))
+            )
+          );
         }
       if (typeof srcValue === 'object' && srcValue.$assign) {
         delete srcValue.$assign;

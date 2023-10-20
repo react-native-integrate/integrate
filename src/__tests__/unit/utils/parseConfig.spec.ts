@@ -29,6 +29,6 @@ describe('parseConfig', () => {
     );
     expect(() => {
       parseConfig(integrateYmlPath);
-    }).toThrowError('one of the allowed values');
+    }).toThrowError('must be equal to constant');
   });
 });

@@ -160,7 +160,7 @@ describe('jsonTask', () => {
           set: {
             first: {
               assigned: 'test2',
-              other: ['test2'],
+              other: ['test', 'test2'],
             },
           },
           strategy: 'merge_concat',
@@ -178,7 +178,45 @@ describe('jsonTask', () => {
         third: 'test',
       },
       assigned: 'test2',
-      other: ['test', 'test2'],
+      other: ['test', 'test', 'test2'],
+    });
+  });
+  it('should merge distinct values', () => {
+    let content: Record<string, any> = {
+      first: {
+        second: {
+          third: 'test',
+        },
+        other: [{ test: 1 }],
+      },
+    };
+    const task: JsonTaskType = {
+      type: 'json',
+      path: 'test.json',
+      actions: [
+        {
+          set: {
+            first: {
+              assigned: 'test2',
+              other: [{ test: 1 }, { test2: 1 }],
+            },
+          },
+          strategy: 'merge_distinct',
+        },
+      ],
+    };
+    content = jsonTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content.first).toEqual({
+      second: {
+        third: 'test',
+      },
+      assigned: 'test2',
+      other: [{ test: 1 }, { test2: 1 }],
     });
   });
   it('should assign inner value', () => {

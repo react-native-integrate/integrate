@@ -1,5 +1,6 @@
 require('../mocks/mockAll');
 import { getText, transformTextInObject, variables } from '../../variables';
+import { mockFs } from '../mocks/mockFs';
 
 describe('variables', () => {
   beforeEach(() => {
@@ -14,11 +15,17 @@ describe('variables', () => {
     const iosProjectName = variables.get('IOS_PROJECT_NAME');
     expect(iosProjectName).toEqual('test');
   });
+  it('should get null ios project name when no project', () => {
+    const mock = jest.spyOn(mockFs, 'readdirSync');
+    mock.mockImplementationOnce(() => ['random']);
+    const iosProjectName = variables.get('IOS_PROJECT_NAME');
+    expect(iosProjectName).toEqual(null);
+    mock.mockRestore();
+  });
   it('should get and set the default value', () => {
     variables.set('test', 'value');
     expect(variables.get('test')).toEqual('value');
   });
-
   describe('getText', () => {
     it('should return text', () => {
       const replaced = getText('this has no var');

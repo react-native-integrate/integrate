@@ -1,7 +1,7 @@
 import * as app_delegate from '../tasks/appDelegateTask';
 import * as plist from '../tasks/plistTask';
 import * as build_gradle from '../tasks/buildGradleTask';
-import * as xcode from '../tasks/xcodeTask';
+import * as xcode from '../tasks/xcode/xcodeTask';
 import * as android_manifest from '../tasks/androidManifestTask';
 import * as podfile from '../tasks/podFileTask';
 import * as fs from '../tasks/fsTask';

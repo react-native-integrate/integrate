@@ -1,10 +1,22 @@
+import { getIosBundleId } from './utils/getBundleId';
 import { getIosProjectName } from './utils/getIosProjectPath';
 
 // Predefined variables
 const predefinedVariables: Record<string, any> = {
   PLATFORM: process.platform,
   get IOS_PROJECT_NAME() {
-    return getIosProjectName();
+    try {
+      return getIosProjectName();
+    } catch (e) {
+      return null;
+    }
+  },
+  get IOS_BUNDLE_ID() {
+    try {
+      return getIosBundleId();
+    } catch (e) {
+      return null;
+    }
   },
   ...Object.entries(process.env).reduce((o, [name, value]) => {
     o[`ENV.${name}`] = value;

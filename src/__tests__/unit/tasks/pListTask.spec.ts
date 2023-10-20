@@ -349,7 +349,7 @@ describe('pListTask', () => {
         });
       }).toThrowError('Plist file not found');
     });
-    it('should throw when workspace does not exist', () => {
+    it('should throw when project does not exist', () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
@@ -370,7 +370,7 @@ describe('pListTask', () => {
           task: task,
           packageName: 'test-package',
         });
-      }).toThrowError('workspace not found');
+      }).toThrowError('project not found');
       mock.mockRestore();
     });
   });

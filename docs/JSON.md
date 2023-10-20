@@ -43,6 +43,7 @@ Specifies how to handle merging new and existing values. It can be one of the fo
 -   `append`: Appends values only if the key does not already exist.
 -   `merge`: Merges new values into existing dictionaries.
 -   `merge_concat`: Merges dictionaries while concatenating arrays.
+-   `merge_distinct`: Merges dictionaries while ensuring that objects with deep equality are distinct.
 
 ### Example Usage
 

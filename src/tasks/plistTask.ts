@@ -61,30 +61,35 @@ export function plistTask(args: {
   return content;
 }
 
-function getPListPath(target: string | undefined) {
+function getPListPath(
+  target: string | undefined,
+  filename: string,
+  skipCheck: boolean
+) {
   if (!target) target = getIosProjectName();
   const projectPath = getProjectPath();
-  const pListPath = path.join(
-    projectPath,
-    'ios',
-    target,
-    Constants.PLIST_FILE_NAME
-  );
-  if (!fs.existsSync(pListPath))
+  const pListPath = path.join(projectPath, 'ios', target, filename);
+  if (!skipCheck && !fs.existsSync(pListPath))
     throw new Error(`Plist file not found at ${pListPath}`);
   return pListPath;
 }
 
-function readPListContent(target: string | undefined) {
-  const plistPath = getPListPath(target);
+export function readPListContent(
+  target: string | undefined,
+  filename = Constants.PLIST_FILE_NAME,
+  skipCheck = false
+): Record<string, any> {
+  const plistPath = getPListPath(target, filename, skipCheck);
+  if (skipCheck && !fs.existsSync(plistPath)) return {};
   return plist.parse(fs.readFileSync(plistPath, 'utf-8'));
 }
 
-function writePListContent(
+export function writePListContent(
   content: Record<string, any>,
-  target: string | undefined
+  target: string | undefined,
+  filename = Constants.PLIST_FILE_NAME
 ): void {
-  const plistPath = getPListPath(target);
+  const plistPath = getPListPath(target, filename, true);
   return fs.writeFileSync(plistPath, plist.stringify(content), 'utf-8');
 }
 

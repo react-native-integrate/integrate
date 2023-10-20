@@ -94,7 +94,7 @@ function equals(left: TAny, right: TAny): boolean {
   return left == right;
 }
 
-function deepEquals(left: TAny, right: TAny): boolean {
+export function deepEquals(left: TAny, right: TAny): boolean {
   if (equals(left, right)) return true;
 
   if (

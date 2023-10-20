@@ -27,7 +27,7 @@ export const mockFs = {
     return true;
   },
   readdirSync: (): string[] => {
-    return ['test' + Constants.WORKSPACE_EXT];
+    return ['test' + Constants.XCODEPROJ_EXT];
   },
   watch: (
     filePath: string,
