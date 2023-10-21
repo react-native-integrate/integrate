@@ -8,7 +8,7 @@ export function getModContent(
   textOrFile: TextOrFileValue
 ): string {
   if (typeof textOrFile == 'string') return getText(textOrFile);
-  const fullConfigPath = path.join(configPath, textOrFile.file);
+  const fullConfigPath = path.join(configPath, '..', textOrFile.file);
   if (!fs.existsSync(fullConfigPath))
     throw new Error(`File not found at ${fullConfigPath}`);
   return getText(fs.readFileSync(fullConfigPath, 'utf-8'));

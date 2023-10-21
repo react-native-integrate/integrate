@@ -107,6 +107,17 @@ export type AppDelegateBlockType =
   | 'didReceiveRemoteNotification'
   | 'fetchCompletionHandler';
 
+// notification_service task
+
+export type NotificationServiceTaskType = ModTaskBase &
+  ActionsType<ContentModifierType<NotificationServiceBlockType>> & {
+    type: 'notification_service';
+    target: string;
+  };
+export type NotificationServiceBlockType =
+  | 'didReceiveNotificationRequest'
+  | 'serviceExtensionTimeWillExpire';
+
 // validation task
 
 // export type ValidationTaskType = ModTaskBase & {
@@ -301,6 +312,7 @@ export type ModTask =
   | AppDelegateTaskType
   | BuildGradleTaskType
   | AndroidManifestTaskType
+  | NotificationServiceTaskType
   | XcodeTaskType
   | PodFileTaskType
   | FsTaskType

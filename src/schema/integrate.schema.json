@@ -18,7 +18,7 @@
                     "$ref": "#/definitions/TextOrRegex"
                 },
                 "block": {
-                    "$ref": "#/definitions/TBlock_1"
+                    "$ref": "#/definitions/TBlock_2"
                 },
                 "comment": {
                     "type": "string"
@@ -204,6 +204,49 @@
             },
             "type": "object"
         },
+        "ContentModifierType<NotificationServiceBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_1"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
         "ContentModifierType<string>": {
             "additionalProperties": false,
             "properties": {
@@ -351,6 +394,9 @@
                     "$ref": "#/definitions/AppDelegateTaskType"
                 },
                 {
+                    "$ref": "#/definitions/NotificationServiceTaskType"
+                },
+                {
                     "$ref": "#/definitions/BuildGradleTaskType"
                 },
                 {
@@ -376,6 +422,43 @@
                 "number",
                 "boolean"
             ]
+        },
+        "NotificationServiceTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<NotificationServiceBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "notification_service",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "target",
+                "type"
+            ],
+            "type": "object"
         },
         "ObjectModifierType": {
             "additionalProperties": false,
@@ -683,6 +766,13 @@
             "type": "string"
         },
         "TBlock_1": {
+            "enum": [
+                "didReceiveNotificationRequest",
+                "serviceExtensionTimeWillExpire"
+            ],
+            "type": "string"
+        },
+        "TBlock_2": {
             "enum": [
                 "activity",
                 "application",

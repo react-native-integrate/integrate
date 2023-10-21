@@ -3,6 +3,7 @@ export const Constants = {
   LOCK_FILE_NAME: 'integrate-lock.json',
   PACKAGE_JSON_FILE_NAME: 'package.json',
   APP_DELEGATE_FILE_NAME: 'AppDelegate.mm',
+  NOTIFICATION_SERVICE_FILE_NAME: 'NotificationService.m',
   PLIST_FILE_NAME: 'Info.plist',
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',

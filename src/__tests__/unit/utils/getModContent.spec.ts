@@ -4,7 +4,7 @@ const { mockFs } = require('../../mocks/mockAll');
 import path from 'path';
 import { getModContent } from '../../../utils/getModContent';
 
-const configPath = 'path/to/config';
+const configPath = 'path/to/config/integrate.yml';
 const file = 'folder/file.txt';
 const fileContent = 'test';
 
@@ -14,7 +14,7 @@ describe('getModContent', () => {
     expect(content).toBe(fileContent);
   });
   it('should return file content', () => {
-    const filePath = path.join(configPath, file);
+    const filePath = path.join(configPath, '..', file);
     mockFs.writeFileSync(filePath, fileContent);
     const content = getModContent(configPath, {
       file: file,

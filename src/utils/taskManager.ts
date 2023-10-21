@@ -7,6 +7,7 @@ import * as podfile from '../tasks/podFileTask';
 import * as fs from '../tasks/fsTask';
 import * as json from '../tasks/jsonTask';
 import * as prompt from '../tasks/promptTask';
+import * as notification_service from '../tasks/notificationServiceTask';
 import { ModTask } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
@@ -19,6 +20,7 @@ const task: Record<string, TaskExports> = {
   fs,
   json,
   prompt,
+  notification_service,
 };
 
 const systemTaskTypes = Object.entries(task)

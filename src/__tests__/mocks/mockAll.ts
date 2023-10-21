@@ -11,6 +11,7 @@ import { LockData } from '../../types/integrator.types';
 import { mockAndroidManifestTemplate } from './mockAndroidManifestTemplate';
 import { mockAppDelegateTemplate } from './mockAppDelegateTemplate';
 import { mockPList } from './mockPList';
+import { notificationServiceM as mockNotificationServiceTemplate } from '../../scaffold/notification-service/notificationServiceM';
 
 jest.spyOn(process, 'abort').mockImplementation(() => {
   throw new Error('program aborted');
@@ -46,6 +47,17 @@ function writeMockAppDelegate(
   );
   mockFs.writeFileSync(appDelegatePath, appDelegateContent);
   return appDelegatePath;
+}
+function writeMockNotificationService(
+  notificationServiceContent = mockNotificationServiceTemplate,
+  name = 'mock-project'
+): string {
+  const notificationServicePath = path.resolve(
+    __dirname,
+    `../${name}/ios/test/${Constants.NOTIFICATION_SERVICE_FILE_NAME}`
+  );
+  mockFs.writeFileSync(notificationServicePath, notificationServiceContent);
+  return notificationServicePath;
 }
 function writeMockPList(target = 'test'): string {
   const plistPath = path.resolve(
@@ -108,6 +120,7 @@ export {
   writeMockProject,
   writeMockLock,
   writeMockAppDelegate,
+  writeMockNotificationService,
   writeMockPList,
   writeMockJson,
   writeMockAndroidManifest,

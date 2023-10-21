@@ -9,7 +9,7 @@ import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
 import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
-import { variables } from '../variables';
+import { getText, variables } from '../variables';
 
 export function plistTask(args: {
   configPath: string;
@@ -98,6 +98,7 @@ export function runTask(args: {
   packageName: string;
   task: PlistTaskType;
 }): void {
+  if (args.task.target) args.task.target = getText(args.task.target);
   let content = readPListContent(args.task.target);
 
   content = plistTask({
