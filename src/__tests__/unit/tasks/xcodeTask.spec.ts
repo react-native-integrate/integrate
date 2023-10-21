@@ -10,11 +10,7 @@ const mockWaitForFile = jest.spyOn(
 import path from 'path';
 import { xcodeTask, runTask } from '../../../tasks/xcode/xcodeTask';
 import { XcodeTaskType } from '../../../types/mod.types';
-import {
-  getIosProjectName,
-  getIosProjectPath,
-  getPbxProjectPath,
-} from '../../../utils/getIosProjectPath';
+import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
 import { getProjectPath } from '../../../utils/getProjectPath';
 import { variables } from '../../../variables';
 import { mockPrompter } from '../../mocks/mockAll';

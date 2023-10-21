@@ -12,7 +12,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "attributes": {
-                    "$ref": "#/definitions/Record<string,any>"
+                    "$ref": "#/definitions/AnyObject"
                 },
                 "before": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -79,6 +79,10 @@
                 "actions",
                 "type"
             ],
+            "type": "object"
+        },
+        "AnyObject": {
+            "additionalProperties": true,
             "type": "object"
         },
         "AppDelegateTaskType": {
@@ -661,10 +665,6 @@
             ],
             "type": "object"
         },
-        "Record<string,any>": {
-            "additionalProperties": false,
-            "type": "object"
-        },
         "TBlock": {
             "enum": [
                 "applicationDidBecomeActive",
@@ -1212,7 +1212,7 @@
             "type": "array"
         },
         "env": {
-            "$ref": "#/definitions/Record<string,any>"
+            "$ref": "#/definitions/AnyObject"
         },
         "postInfo": {
             "$ref": "#/definitions/TextOrTitleMessage"

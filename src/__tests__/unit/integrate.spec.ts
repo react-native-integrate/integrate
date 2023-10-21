@@ -14,7 +14,6 @@ const mockParseConfig = jest.spyOn(
 import path from 'path';
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
-import { variables } from '../../variables';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {

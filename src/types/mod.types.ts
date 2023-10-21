@@ -137,7 +137,7 @@ export type AndroidManifestBlockType = 'manifest' | 'application' | 'activity';
 
 export type AndroidManifestModifierType =
   ContentModifierType<AndroidManifestBlockType> & {
-    attributes?: Record<string, any>;
+    attributes?: AnyObject;
   };
 
 // add resource task
@@ -324,8 +324,13 @@ export type Prompt = {
   text: string;
 } & (TextPrompt | ConfirmPrompt | MultiselectPrompt);
 
+/**
+ * @TJS-additionalProperties true
+ */
+export type AnyObject = Record<string, any>;
+
 export type IntegrationConfig = {
-  env?: Record<string, any>;
+  env?: AnyObject;
   tasks: ModTask[];
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
