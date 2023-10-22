@@ -39,10 +39,13 @@ export const variables = {
     _store = {};
   },
   getStore(): Record<string, any> {
-    return {
-      ...predefinedVariables,
-      ..._store,
-    };
+    return Object.assign(
+      Object.create(
+        Object.getPrototypeOf(predefinedVariables),
+        Object.getOwnPropertyDescriptors(predefinedVariables)
+      ),
+      _store
+    ) as Record<string, any>;
   },
 };
 
