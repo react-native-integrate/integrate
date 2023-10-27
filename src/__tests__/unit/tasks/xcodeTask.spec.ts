@@ -12,6 +12,7 @@ import { xcodeTask, runTask } from '../../../tasks/xcode/xcodeTask';
 import { XcodeTaskType } from '../../../types/mod.types';
 import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
 import { getProjectPath } from '../../../utils/getProjectPath';
+import { xcodeContext } from '../../../utils/xcode.context';
 import { variables } from '../../../variables';
 import { mockPrompter } from '../../mocks/mockAll';
 import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
@@ -254,34 +255,31 @@ describe('xcodeTask', () => {
       actions: [
         {
           addCapability: 'push',
-          target: {
-            name: 'ReactNativeCliTemplates',
-            path: '',
-          },
+          target: 'ReactNativeCliTemplates',
         },
         {
           addCapability: 'groups',
-          target: 'app',
+          target: 'main',
           groups: ['group.test'],
         },
         {
           addCapability: 'keychain-sharing',
-          target: 'app',
+          target: 'main',
           groups: ['group.test'],
         },
         {
           addCapability: 'background-mode',
-          target: 'app',
+          target: 'main',
           modes: ['fetch'],
         },
         {
           addCapability: 'game-controllers',
-          target: 'app',
+          target: 'main',
           controllers: ['directional'],
         },
         {
           addCapability: 'maps',
-          target: 'app',
+          target: 'main',
           routing: ['car', 'bus'],
         },
       ],
@@ -355,7 +353,118 @@ describe('xcodeTask', () => {
       expect.stringContaining('skipped adding resource')
     );
   });
-  it('should add resource to app', async () => {
+  it('should set higher deployment version of main', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    xcodeContext.set(proj);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          setDeploymentVersion: '13.0',
+          target: 'root',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('13.0');
+    xcodeContext.clear();
+  });
+  it('should set higher deployment version of new added exntension', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    xcodeContext.set(proj);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          name: 'notification.service',
+          addTarget: 'test',
+          type: 'notification-service',
+        },
+        {
+          setDeploymentVersion: '13.0',
+          target: 'test',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(
+      proj.getBuildProperty('IPHONEOS_DEPLOYMENT_TARGET', 'Release', '"test"')
+    ).toEqual('13.0');
+    xcodeContext.clear();
+  });
+  it('should set lower deployment version of main', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    xcodeContext.set(proj);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          setDeploymentVersion: '13.0',
+          target: 'main',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('13.0');
+    xcodeContext.clear();
+  });
+  it('should not change deployment version when current is higher than minimum', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    xcodeContext.set(proj);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          setDeploymentVersion: { min: '8.0' },
+          target: 'main',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('10.0');
+    xcodeContext.clear();
+  });
+  it('should add resource to main', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -366,7 +475,7 @@ describe('xcodeTask', () => {
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
-          target: 'app',
+          target: 'main',
         },
       ],
     };
@@ -394,7 +503,7 @@ describe('xcodeTask', () => {
         {
           when: { test: 'random' },
           addFile: 'GoogleService-Info.plist',
-          target: 'app',
+          target: 'main',
         },
       ],
     };
@@ -421,10 +530,7 @@ describe('xcodeTask', () => {
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
-          target: {
-            name: 'Resources',
-            path: '',
-          },
+          target: 'Resources',
         },
       ],
     };
@@ -508,7 +614,7 @@ describe('xcodeTask', () => {
         actions: [
           {
             addFile: 'GoogleService-Info.plist',
-            target: 'app',
+            target: 'main',
           },
         ],
       };
@@ -528,7 +634,7 @@ describe('xcodeTask', () => {
         actions: [
           {
             addFile: 'GoogleService-Info.plist',
-            target: 'app',
+            target: 'main',
           },
         ],
       };
@@ -551,7 +657,7 @@ describe('xcodeTask', () => {
         actions: [
           {
             addFile: 'GoogleService-Info.plist',
-            target: 'app',
+            target: 'main',
           },
         ],
       };

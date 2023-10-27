@@ -1,6 +1,8 @@
 require('../mocks/mockAll');
+import { getPbxProjectPath } from '../../utils/getIosProjectPath';
 import { getText, transformTextInObject, variables } from '../../variables';
 import { mockFs } from '../mocks/mockFs';
+import { mockPbxProjTemplate } from '../mocks/mockPbxProjTemplate';
 
 describe('variables', () => {
   beforeEach(() => {
@@ -14,6 +16,32 @@ describe('variables', () => {
   it('should get ios project name', () => {
     const iosProjectName = variables.get('IOS_PROJECT_NAME');
     expect(iosProjectName).toEqual('test');
+  });
+  it('should get ios bundle id', () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+    const iosBundleId = variables.get('IOS_BUNDLE_ID');
+    expect(iosBundleId).toEqual(
+      'org.reactjs.native.example.ReactNativeCliTemplates'
+    );
+  });
+  it('should get ios bundle id as null when no project exists', () => {
+    const iosBundleId = variables.get('IOS_BUNDLE_ID');
+    expect(iosBundleId).toEqual(null);
+  });
+  it('should get ios deployment version', () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+    const iosDeploymentVersion = variables.get('IOS_DEPLOYMENT_VERSION');
+    expect(iosDeploymentVersion).toEqual('10.0');
+  });
+  it('should get ios bundle id as null when no project exists', () => {
+    const iosBundleId = variables.get('IOS_BUNDLE_ID');
+    expect(iosBundleId).toEqual(null);
+  });
+  it('should get ios deployment version as null when no project exists', () => {
+    const iosBundleId = variables.get('IOS_DEPLOYMENT_VERSION');
+    expect(iosBundleId).toEqual(null);
   });
   it('should get null ios project name when no project', () => {
     const mock = jest.spyOn(mockFs, 'readdirSync');

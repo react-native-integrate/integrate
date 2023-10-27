@@ -2,6 +2,7 @@ import path from 'path';
 import xcode from 'xcode';
 import pbxFile from 'xcode/lib/pbxFile';
 
+const COMMENT_KEY = /_comment$/;
 export function patchXcodeProject(opts: {
   push: (
     array: any[],
@@ -278,6 +279,108 @@ xcode.project.prototype.addExtensionLocalizationVariantGroup = function (
   this.addToPbxResourcesBuildPhase(localizationVariantGroup); //PBXResourcesBuildPhase
 
   return localizationVariantGroup;
+};
+
+xcode.project.prototype.findPBXGroupKeyByAny = function (nameOrPath: string) {
+  const groups = this.hash.project.objects['PBXGroup'];
+  let target;
+
+  for (const key in groups) {
+    // only look for comments
+    if (COMMENT_KEY.test(key)) continue;
+
+    const group = groups[key];
+    if (nameOrPath) {
+      if (nameOrPath === group.path || nameOrPath === group.name) {
+        target = key;
+        break;
+      }
+    }
+  }
+
+  return target;
+};
+
+xcode.project.prototype.getBuildPropertyByTarget = function (
+  prop: string,
+  build: string,
+  target: any
+) {
+  let value;
+  const validConfigs = [];
+
+  if (target) {
+    const targetBuildConfigs = target.buildConfigurationList;
+
+    const xcConfigList = this.pbxXCConfigurationList();
+
+    // Collect the UUID's from the configuration of our target
+    for (const configName in xcConfigList) {
+      if (!COMMENT_KEY.test(configName) && targetBuildConfigs === configName) {
+        const buildVariants = xcConfigList[configName].buildConfigurations;
+
+        for (const item of buildVariants) {
+          validConfigs.push(item.value);
+        }
+
+        break;
+      }
+    }
+  }
+
+  const configs = this.pbxXCBuildConfigurationSection();
+  for (const configName in configs) {
+    if (!COMMENT_KEY.test(configName)) {
+      if (target && !validConfigs.includes(configName)) continue;
+      const config = configs[configName];
+      if ((build && config.name === build) || build === undefined) {
+        if (config.buildSettings[prop] !== undefined) {
+          value = config.buildSettings[prop];
+        }
+      }
+    }
+  }
+  return value;
+};
+
+xcode.project.prototype.updateBuildPropertyByTarget = function (
+  prop: string,
+  value: string,
+  build: string,
+  target: any
+) {
+  const validConfigs = [];
+
+  if (target) {
+    const targetBuildConfigs = target.buildConfigurationList;
+
+    const xcConfigList = this.pbxXCConfigurationList();
+
+    // Collect the UUID's from the configuration of our target
+    for (const configName in xcConfigList) {
+      if (!COMMENT_KEY.test(configName) && targetBuildConfigs === configName) {
+        const buildVariants = xcConfigList[configName].buildConfigurations;
+
+        for (const item of buildVariants) {
+          validConfigs.push(item.value);
+        }
+
+        break;
+      }
+    }
+  }
+
+  const configs = this.pbxXCBuildConfigurationSection();
+  for (const configName in configs) {
+    if (!COMMENT_KEY.test(configName)) {
+      if (target && !validConfigs.includes(configName)) continue;
+
+      const config = configs[configName];
+      if ((build && config.name === build) || !build) {
+        config.buildSettings[prop] = value;
+      }
+    }
+  }
 };
 
 export function pbxBuildPhaseObj(file: {

@@ -14,7 +14,7 @@ export async function applyAddFile(
 ): Promise<XcodeProjectType> {
   let { target } = action;
   target = target || 'root';
-  if (typeof target == 'string') target = getText(target) as 'root' | 'app';
+  target = getText(target);
   action.addFile = getText(action.addFile);
 
   const fileName = path.basename(action.addFile);
@@ -27,7 +27,7 @@ export async function applyAddFile(
       group = content.getFirstProject().firstProject.mainGroup;
       logTarget = 'project root';
       break;
-    case 'app':
+    case 'main':
       group = content.findPBXGroupKey({
         name: nativeTarget.target.name,
       });
@@ -35,11 +35,10 @@ export async function applyAddFile(
       destination += `/${nativeTarget.target.name}`;
       break;
     default:
-      if (target.name != null) target.name = getText(target.name);
-      if (target.path != null) target.path = getText(target.path);
-      group = content.findPBXGroupKey(target);
-      logTarget = `${target.name} target`;
-      destination += `/${target.name}`;
+      target = getText(target);
+      group = content.findPBXGroupKeyByAny(target);
+      logTarget = `${target} target`;
+      destination += `/${target}`;
       break;
   }
   destination += `/${fileName}`;

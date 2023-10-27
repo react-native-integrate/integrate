@@ -130,6 +130,8 @@ declare module 'xcode' {
 
     findPBXGroupKeyAndType(criteria: any, groupType: any): any;
 
+    findPBXGroupKeyByAny(nameOrPath: string): any;
+
     findPBXVariantGroupKey(criteria: any): any;
 
     findTargetKey(name: any): any;
@@ -139,6 +141,8 @@ declare module 'xcode' {
     getBuildConfigByName(name: any): any;
 
     getBuildProperty(prop: any, build: any, targetName: any): any;
+
+    getBuildPropertyByTarget(prop: any, build: any, target: any): any;
 
     getFirstProject(): any;
 
@@ -265,6 +269,13 @@ declare module 'xcode' {
       targetName: any
     ): void;
 
+    updateBuildPropertyByTarget(
+      prop: any,
+      value: any,
+      build: any,
+      target: any
+    ): void;
+
     updateProductName(name: any): void;
 
     writeSync(options?: any): any;
@@ -274,6 +285,7 @@ declare module 'xcode' {
 
   export interface GroupObject {
     name: string;
+    path: string;
     children: { comment: string }[];
   }
 }

@@ -5,10 +5,12 @@ import { getErrMessage } from '../../utils/getErrMessage';
 import { getPbxProjectPath } from '../../utils/getIosProjectPath';
 import { satisfies } from '../../utils/satisfies';
 import { setState } from '../../utils/setState';
+import { xcodeContext } from '../../utils/xcode.context';
 import { variables } from '../../variables';
 import { applyAddCapability } from './xcodeTask.addCapability';
 import { applyAddFile } from './xcodeTask.addFile';
 import { applyAddTarget } from './xcodeTask.addTarget';
+import { applySetDeploymentVersion } from './xcodeTask.setDeploymentVersion';
 
 export async function xcodeTask(args: {
   configPath: string;
@@ -59,6 +61,8 @@ async function applyXcodeModification(
   if ('addFile' in action) return applyAddFile(content, action);
   if ('addTarget' in action) return applyAddTarget(content, action);
   if ('addCapability' in action) return applyAddCapability(content, action);
+  if ('setDeploymentVersion' in action)
+    return applySetDeploymentVersion(content, action);
   return content;
 }
 
@@ -89,13 +93,17 @@ export async function runTask(args: {
   task: XcodeTaskType;
 }): Promise<void> {
   let content = readPbxProjContent();
+  try {
+    xcodeContext.set(content);
+    content = await xcodeTask({
+      ...args,
+      content,
+    });
 
-  content = await xcodeTask({
-    ...args,
-    content,
-  });
-
-  writePbxProjContent(content);
+    writePbxProjContent(content);
+  } finally {
+    xcodeContext.clear();
+  }
 }
 
 export const summary = 'Xcode project modification';

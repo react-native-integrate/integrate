@@ -161,13 +161,7 @@ export type XcodeTaskType = ModTaskBase &
 export type XcodeAddFile = ActionBase & {
   addFile: string;
   message?: string;
-  target?:
-    | 'root'
-    | 'app'
-    | {
-        name?: string;
-        path?: string;
-      };
+  target?: 'root' | 'main' | string;
 };
 export type XcodeAddTarget = ActionBase & {
   addTarget: string;
@@ -180,12 +174,7 @@ export type XcodeAddTargetType =
   | 'notification-content';
 
 export type XcodeAddCapabilityBase = ActionBase & {
-  target:
-    | 'app'
-    | {
-        name?: string;
-        path?: string;
-      };
+  target: 'main' | string;
 };
 
 export type XcodeAddCommonCapability = XcodeAddCapabilityBase & {
@@ -265,10 +254,19 @@ export type XcodeAddCapability =
   | XcodeAddMapsCapability
   | XcodeAddKSCapability;
 
+export type XcodeSetDeploymentVersion = ActionBase & {
+  setDeploymentVersion:
+    | string
+    | number
+    | { min: string | number; max?: string | number };
+  target: 'root' | 'main' | string;
+};
+
 export type XcodeModifierType =
   | XcodeAddFile
   | XcodeAddTarget
-  | XcodeAddCapability;
+  | XcodeAddCapability
+  | XcodeSetDeploymentVersion;
 
 // pod file task
 

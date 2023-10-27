@@ -861,24 +861,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -915,24 +898,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -968,27 +934,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "enum": [
-                                "app",
-                                "root"
-                            ],
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -1014,24 +960,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -1067,24 +996,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -1112,24 +1024,7 @@
                     "type": "string"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -1157,24 +1052,7 @@
                     "type": "array"
                 },
                 "target": {
-                    "anyOf": [
-                        {
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        },
-                        {
-                            "const": "app",
-                            "type": "string"
-                        }
-                    ]
+                    "type": "string"
                 },
                 "when": {}
             },
@@ -1257,8 +1135,59 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeAddKSCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeSetDeploymentVersion"
                 }
             ]
+        },
+        "XcodeSetDeploymentVersion": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "setDeploymentVersion": {
+                    "anyOf": [
+                        {
+                            "additionalProperties": false,
+                            "properties": {
+                                "max": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "min": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "min"
+                            ],
+                            "type": "object"
+                        },
+                        {
+                            "type": [
+                                "string",
+                                "number"
+                            ]
+                        }
+                    ]
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "setDeploymentVersion",
+                "target"
+            ],
+            "type": "object"
         },
         "XcodeTaskType": {
             "additionalProperties": false,

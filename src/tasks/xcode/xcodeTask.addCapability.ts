@@ -16,23 +16,23 @@ export function applyAddCapability(
   content: XcodeProjectType,
   action: XcodeAddCapability
 ): XcodeProjectType {
-  const { addCapability, target } = action;
+  const { addCapability } = action;
+  let { target } = action;
+  target = getText(target);
 
   const nativeTarget = content.getTarget(Constants.XCODE_APPLICATION_TYPE);
   let group;
   let destination = 'ios';
   switch (target) {
-    case 'app':
+    case 'main':
       group = content.findPBXGroupKey({
         name: nativeTarget.target.name,
       });
       destination += `/${nativeTarget.target.name}`;
       break;
     default:
-      if (target.name != null) target.name = getText(target.name);
-      if (target.path != null) target.path = getText(target.path);
-      group = content.findPBXGroupKey(target);
-      destination += `/${target.name}`;
+      group = content.findPBXGroupKeyByAny(target);
+      destination += `/${target}`;
       break;
   }
   const groupObj = content.getPBXGroupByKey(group);
