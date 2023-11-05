@@ -15,14 +15,14 @@ import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { variables } from '../variables';
 
-export function appDelegateTask(args: {
+export async function appDelegateTask(args: {
   configPath: string;
   packageName: string;
   content: string;
   task: AppDelegateTaskType;
-}): string {
+}): Promise<string> {
   let { content } = args;
-  const { task, configPath } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
@@ -40,10 +40,11 @@ export function appDelegateTask(args: {
       error: false,
     });
     try {
-      content = applyContentModification({
+      content = await applyContentModification({
         action,
         findOrCreateBlock,
         configPath,
+        packageName,
         content,
         indentation: 2,
       });
@@ -235,14 +236,14 @@ function writeAppDelegateContent(content: string): void {
   return fs.writeFileSync(appDelegatePath, content, 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: AppDelegateTaskType;
-}): void {
+}): Promise<void> {
   let content = readAppDelegateContent();
 
-  content = appDelegateTask({
+  content = await appDelegateTask({
     ...args,
     content,
   });

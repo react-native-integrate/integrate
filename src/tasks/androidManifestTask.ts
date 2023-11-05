@@ -25,14 +25,14 @@ import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { transformTextInObject, variables } from '../variables';
 
-export function androidManifestTask(args: {
+export async function androidManifestTask(args: {
   configPath: string;
   packageName: string;
   content: string;
   task: AndroidManifestTaskType;
-}): string {
+}): Promise<string> {
   let { content } = args;
-  const { task, configPath } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
@@ -54,10 +54,11 @@ export function androidManifestTask(args: {
         content: string;
         blockContent: BlockContentType;
       }) => applyAttributeModification({ ...args, action });
-      content = applyContentModification({
+      content = await applyContentModification({
         action,
         findOrCreateBlock,
         configPath,
+        packageName,
         content,
         indentation: 0,
         additionalModification,
@@ -284,14 +285,14 @@ function writeAndroidManifestContent(content: string): void {
   return fs.writeFileSync(manifestPath, content, 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: AndroidManifestTaskType;
-}): void {
+}): Promise<void> {
   let content = readAndroidManifestContent();
 
-  content = androidManifestTask({
+  content = await androidManifestTask({
     ...args,
     content,
   });

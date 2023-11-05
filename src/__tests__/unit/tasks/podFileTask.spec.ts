@@ -9,7 +9,7 @@ import { podFileTask, runTask } from '../../../tasks/podFileTask';
 import { PodFileTaskType } from '../../../types/mod.types';
 
 describe('podFileTask', () => {
-  it('should prepend text into empty body ', () => {
+  it('should prepend text into empty body ', async () => {
     let content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
@@ -21,13 +21,13 @@ describe('podFileTask', () => {
         },
       ],
     };
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -39,7 +39,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should prepend text into empty body without block', () => {
+  it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
@@ -50,13 +50,13 @@ end
         },
       ],
     };
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -66,7 +66,7 @@ end
 config = use_native_modules!
 `);
   });
-  it('should skip insert when ifNotPresent exists', () => {
+  it('should skip insert when ifNotPresent exists', async () => {
     const content = `
 target 'TestApp' do 
   config = use_native_modules!
@@ -88,7 +88,7 @@ end
       ],
     };
 
-    podFileTask({
+    await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -98,7 +98,7 @@ end
       expect.stringContaining('found existing ')
     );
   });
-  it('should prepend text into partial body ', () => {
+  it('should prepend text into partial body ', async () => {
     let content = `
 target 'TestApp' do end
 `;
@@ -112,7 +112,7 @@ target 'TestApp' do end
       ],
     };
 
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -126,7 +126,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should prepend text into existing body ', () => {
+  it('should prepend text into existing body ', async () => {
     let content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -144,7 +144,7 @@ end
       ],
     };
 
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -159,7 +159,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should append text into existing body ', () => {
+  it('should append text into existing body ', async () => {
     let content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -176,7 +176,7 @@ end
         },
       ],
     };
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -191,7 +191,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should insert text after point with comment', () => {
+  it('should insert text after point with comment', async () => {
     let content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -211,7 +211,7 @@ end
       ],
     };
 
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -227,7 +227,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should insert text when empty', () => {
+  it('should insert text when empty', async () => {
     let content = `
 target 'TestApp' do end
 `;
@@ -242,7 +242,7 @@ target 'TestApp' do end
       ],
     };
 
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -256,7 +256,7 @@ target 'TestApp' do
 end
 `);
   });
-  it('should insert text before point', () => {
+  it('should insert text before point', async () => {
     let content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -276,7 +276,7 @@ end
       ],
     };
 
-    content = podFileTask({
+    content = await podFileTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -286,7 +286,7 @@ end
     test2;
     test3;`);
   });
-  it('should throw when insertion point not found with strict', () => {
+  it('should throw when insertion point not found with strict', async () => {
     const content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -317,22 +317,22 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: taskInsertBeforeNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: PodFileTaskType = {
       type: 'podfile',
       actions: [
@@ -356,24 +356,24 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: taskInsertAfterNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
   });
-  it('should throw when block could not be added', () => {
+  it('should throw when block could not be added', async () => {
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: PodFileTaskType = {
@@ -386,16 +386,16 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('block could not be inserted');
+    ).rejects.toThrowError('block could not be inserted');
   });
-  it('should throw when block does not exist', () => {
+  it('should throw when block does not exist', async () => {
     const content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
@@ -407,16 +407,16 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('target not found');
+    ).rejects.toThrowError('target not found');
   });
-  it('should skip if condition not met', () => {
+  it('should skip if condition not met', async () => {
     const content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
@@ -429,16 +429,16 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('target not found');
+    ).resolves.not.toThrowError('target not found');
   });
-  it('should throw invalid block', () => {
+  it('should throw invalid block', async () => {
     const content = '';
     const task: PodFileTaskType = {
       type: 'podfile',
@@ -450,18 +450,18 @@ end
       ],
     };
 
-    expect(() =>
+    await expect(
       podFileTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('invalid block');
+    ).rejects.toThrowError('invalid block');
   });
 
   describe('runTask', () => {
-    it('should read and write pod file file', () => {
+    it('should read and write pod file file', async () => {
       let content = `
 target 'TestApp' do 
   pre_install do |installer| 
@@ -485,7 +485,7 @@ end
         ],
       };
 
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
@@ -494,7 +494,7 @@ end
       // @ts-ignore
       expect(content).toContain(task.actions[0].prepend);
     });
-    it('should throw when pod file does not exist', () => {
+    it('should throw when pod file does not exist', async () => {
       const task: PodFileTaskType = {
         type: 'podfile',
         actions: [
@@ -505,13 +505,13 @@ end
         ],
       };
 
-      expect(() => {
+      await expect(
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('Pod file not found');
+        })
+      ).rejects.toThrowError('Pod file not found');
     });
   });
 });

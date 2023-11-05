@@ -18,6 +18,7 @@ export type FindOrCreateBlockType = (
   block: string
 ) => { blockContent: BlockContentType; content: string };
 export type ApplyContentModificationArgType = {
+  packageName: string;
   configPath: string;
   content: string;
   action: ContentModifierType;
@@ -30,12 +31,13 @@ export type ApplyContentModificationArgType = {
   buildComment?: (comment: string) => string[];
 };
 
-export function applyContentModification(
+export async function applyContentModification(
   args: ApplyContentModificationArgType
-): string {
+): Promise<string> {
   let { content } = args;
   const {
     configPath,
+    packageName,
     action,
     findOrCreateBlock,
     indentation,
@@ -82,14 +84,18 @@ export function applyContentModification(
   const splittingMsg = splittingMsgArr.length
     ? ` (${splittingMsgArr.join(', ')})`
     : '';
-  const runModifiers = (
+  const runModifiers = async (
     spliceCallback?: (start: number, rem: number, insert: string) => void
   ) => {
-    Object.keys(action).forEach(key => {
+    for (const key of Object.keys(action)) {
       switch (key) {
         case 'prepend':
           if (action.prepend) {
-            const prependText = getModContent(configPath, action.prepend);
+            const prependText = await getModContent(
+              configPath,
+              packageName,
+              action.prepend
+            );
             const codeToInsert = action.exact
               ? prependText
               : getCodeToInsert(prependText);
@@ -137,7 +143,11 @@ export function applyContentModification(
           break;
         case 'append':
           if (action.append) {
-            const appendText = getModContent(configPath, action.append);
+            const appendText = await getModContent(
+              configPath,
+              packageName,
+              action.append
+            );
             const codeToInsert = action.exact
               ? appendText
               : getCodeToInsert(appendText);
@@ -189,7 +199,11 @@ export function applyContentModification(
           break;
         case 'replace':
           if (action.replace) {
-            const replaceText = getModContent(configPath, action.replace);
+            const replaceText = await getModContent(
+              configPath,
+              packageName,
+              action.replace
+            );
             if (
               action.ifNotPresent &&
               blockContent.match.includes(getText(action.ifNotPresent))
@@ -232,7 +246,7 @@ export function applyContentModification(
           }
           break;
       }
-    });
+    }
   };
   if (action.search) {
     const searchBlockContent = { ...blockContent };
@@ -265,14 +279,14 @@ export function applyContentModification(
         searchBlockContent.start + match.index + match[0].length;
       blockContent.match = match[0];
 
-      runModifiers((start, rem, insert) => {
+      await runModifiers((start, rem, insert) => {
         searchMatcher.lastIndex += -rem + insert.length;
         updateBlockContent(searchBlockContent, rem, insert, content);
       });
 
       if (searchOnce) searching = false;
     }
-  } else runModifiers();
+  } else await runModifiers();
   if (additionalModification) {
     content = additionalModification({
       content,

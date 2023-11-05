@@ -70,7 +70,10 @@ export function getRemotePath(
   );
 }
 
-async function downloadFile(remotePath: string, localPath: string) {
+export async function downloadFile(
+  remotePath: string,
+  localPath: string
+): Promise<boolean> {
   const configContent = await getRemoteFile(remotePath);
   if (!configContent) return false;
   fs.writeFileSync(localPath, configContent);

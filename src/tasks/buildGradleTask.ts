@@ -15,14 +15,14 @@ import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { variables } from '../variables';
 
-export function buildGradleTask(args: {
+export async function buildGradleTask(args: {
   configPath: string;
   packageName: string;
   content: string;
   task: BuildGradleTaskType;
-}): string {
+}): Promise<string> {
   let { content } = args;
-  const { task, configPath } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
@@ -40,10 +40,11 @@ export function buildGradleTask(args: {
       error: false,
     });
     try {
-      content = applyContentModification({
+      content = await applyContentModification({
         action,
         findOrCreateBlock,
         configPath,
+        packageName,
         content,
         indentation: 4,
       });
@@ -153,14 +154,14 @@ function writeBuildGradleContent(
   return fs.writeFileSync(buildGradlePath, content, 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: BuildGradleTaskType;
-}): void {
+}): Promise<void> {
   let content = readBuildGradleContent(args.task.location);
 
-  content = buildGradleTask({
+  content = await buildGradleTask({
     ...args,
     content,
   });

@@ -10,7 +10,7 @@ import { BuildGradleTaskType } from '../../../types/mod.types';
 import { mockPrompter } from '../../mocks/mockAll';
 
 describe('buildGradleTask', () => {
-  it('should prepend text into empty body ', () => {
+  it('should prepend text into empty body ', async () => {
     let content = '';
     const task: BuildGradleTaskType = {
       type: 'build_gradle',
@@ -22,13 +22,13 @@ describe('buildGradleTask', () => {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -42,7 +42,7 @@ buildscript {
 }
 `);
   });
-  it('should prepend text into empty body without block', () => {
+  it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: BuildGradleTaskType = {
       type: 'build_gradle',
@@ -53,13 +53,13 @@ buildscript {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -69,7 +69,7 @@ buildscript {
 google();
 `);
   });
-  it('should skip insert when ifNotPresent exists', () => {
+  it('should skip insert when ifNotPresent exists', async () => {
     const content = `
 buildscript {
     ext {
@@ -93,7 +93,7 @@ buildscript {
       ],
     };
 
-    buildGradleTask({
+    await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -103,7 +103,7 @@ buildscript {
       expect.stringContaining('found existing ')
     );
   });
-  it('should prepend text into partial body ', () => {
+  it('should prepend text into partial body ', async () => {
     let content = `
 buildscript {}
 `;
@@ -117,7 +117,7 @@ buildscript {}
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -131,7 +131,7 @@ buildscript {
 }
 `);
   });
-  it('should prepend text into existing body ', () => {
+  it('should prepend text into existing body ', async () => {
     let content = `
 buildscript {
     ext {
@@ -149,7 +149,7 @@ buildscript {
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -164,7 +164,7 @@ buildscript {
 }
 `);
   });
-  it('should append text into existing body ', () => {
+  it('should append text into existing body ', async () => {
     let content = `
 buildscript {
     ext {
@@ -181,7 +181,7 @@ buildscript {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -196,7 +196,7 @@ buildscript {
 }
 `);
   });
-  it('should replace text with existing body ', () => {
+  it('should replace text with existing body ', async () => {
     let content = `
 buildscript {
     ext {
@@ -215,7 +215,7 @@ buildscript {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -230,7 +230,7 @@ buildscript {
 }
 `);
   });
-  it('should append text exactly with existing body ', () => {
+  it('should append text exactly with existing body ', async () => {
     let content = `
 buildscript {
     ext {
@@ -253,7 +253,7 @@ buildscript {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -267,7 +267,7 @@ buildscript {
 }
 `);
   });
-  it('should replace all text with existing body ', () => {
+  it('should replace all text with existing body ', async () => {
     let content = `
 buildscript {
     ext {
@@ -289,7 +289,7 @@ buildscript {
         },
       ],
     };
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -304,7 +304,7 @@ buildscript {
 }
 `);
   });
-  it('should skip replace when ifNotPresent exists', () => {
+  it('should skip replace when ifNotPresent exists', async () => {
     const content = `
 buildscript {
     ext {
@@ -330,7 +330,7 @@ buildscript {
       ],
     };
 
-    buildGradleTask({
+    await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -340,7 +340,7 @@ buildscript {
       expect.stringContaining('found existing ')
     );
   });
-  it('should insert text after point with comment', () => {
+  it('should insert text after point with comment', async () => {
     let content = `
 buildscript {
     ext {
@@ -361,7 +361,7 @@ buildscript {
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -372,7 +372,7 @@ buildscript {
         test2;
         test3;`);
   });
-  it('should insert text when empty', () => {
+  it('should insert text when empty', async () => {
     let content = `
 buildscript {}
 `;
@@ -387,7 +387,7 @@ buildscript {}
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -401,7 +401,7 @@ buildscript {
 }
 `);
   });
-  it('should insert text before point', () => {
+  it('should insert text before point', async () => {
     let content = `
 buildscript {
     ext {
@@ -421,7 +421,7 @@ buildscript {
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -431,7 +431,7 @@ buildscript {
         test2;
         test3;`);
   });
-  it('should skip if condition not met', () => {
+  it('should skip if condition not met', async () => {
     let content = `
 buildscript {
     ext {
@@ -452,7 +452,7 @@ buildscript {
       ],
     };
 
-    content = buildGradleTask({
+    content = await buildGradleTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -462,7 +462,7 @@ buildscript {
         test2;
         test3;`);
   });
-  it('should throw when insertion point not found with strict', () => {
+  it('should throw when insertion point not found with strict', async () => {
     const content = `
 buildscript {
     ext {
@@ -493,22 +493,22 @@ buildscript {
       ],
     };
 
-    expect(() =>
+    await expect(
       buildGradleTask({
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       buildGradleTask({
         configPath: 'path/to/config',
         task: taskInsertBeforeNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: BuildGradleTaskType = {
       type: 'build_gradle',
       actions: [
@@ -532,24 +532,24 @@ buildscript {
       ],
     };
 
-    expect(() =>
+    await expect(
       buildGradleTask({
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       buildGradleTask({
         configPath: 'path/to/config',
         task: taskInsertAfterNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
   });
-  it('should throw when block could not be added', () => {
+  it('should throw when block could not be added', async () => {
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: BuildGradleTaskType = {
@@ -562,18 +562,18 @@ buildscript {
       ],
     };
 
-    expect(() =>
+    await expect(
       buildGradleTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('block could not be inserted');
+    ).rejects.toThrowError('block could not be inserted');
   });
 
   describe('runTask', () => {
-    it('should read and write build gradle file', () => {
+    it('should read and write build gradle file', async () => {
       let content = `
 buildscript {
     ext {
@@ -597,7 +597,7 @@ buildscript {
         ],
       };
 
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
@@ -606,7 +606,7 @@ buildscript {
       // @ts-ignore
       expect(content).toContain(task.actions[0].prepend);
     });
-    it('should read and write app build gradle file', () => {
+    it('should read and write app build gradle file', async () => {
       let content = `
 buildscript {
     ext {
@@ -631,7 +631,7 @@ buildscript {
         ],
       };
 
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
@@ -640,7 +640,7 @@ buildscript {
       // @ts-ignore
       expect(content).toContain(task.actions[0].prepend);
     });
-    it('should throw when build gradle does not exist', () => {
+    it('should throw when build gradle does not exist', async () => {
       const task: BuildGradleTaskType = {
         type: 'build_gradle',
         actions: [
@@ -651,13 +651,13 @@ buildscript {
         ],
       };
 
-      expect(() => {
+      await expect(
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('build.gradle file not found');
+        })
+      ).rejects.toThrowError('build.gradle file not found');
     });
   });
 });

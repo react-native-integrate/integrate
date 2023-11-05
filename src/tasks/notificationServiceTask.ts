@@ -15,14 +15,14 @@ import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { getText, variables } from '../variables';
 
-export function notificationServiceTask(args: {
+export async function notificationServiceTask(args: {
   configPath: string;
   packageName: string;
   content: string;
   task: NotificationServiceTaskType;
-}): string {
+}): Promise<string> {
   let { content } = args;
-  const { task, configPath } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
@@ -40,10 +40,11 @@ export function notificationServiceTask(args: {
       error: false,
     });
     try {
-      content = applyContentModification({
+      content = await applyContentModification({
         action,
         findOrCreateBlock,
         configPath,
+        packageName,
         content,
         indentation: 4,
       });
@@ -181,15 +182,15 @@ function writeNotificationServiceContent(
   return fs.writeFileSync(notificationServicePath, content, 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: NotificationServiceTaskType;
-}): void {
+}): Promise<void> {
   args.task.target = getText(args.task.target);
   let content = readNotificationServiceContent(args.task.target);
 
-  content = notificationServiceTask({
+  content = await notificationServiceTask({
     ...args,
     content,
   });

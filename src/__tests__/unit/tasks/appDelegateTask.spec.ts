@@ -9,7 +9,7 @@ import { writeMockAppDelegate } from '../../mocks/mockAll';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
 describe('appDelegateTask', () => {
-  it('should skip insert when ifNotPresent exists', () => {
+  it('should skip insert when ifNotPresent exists', async () => {
     mockPrompter.log.message.mockReset();
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
@@ -27,7 +27,7 @@ describe('appDelegateTask', () => {
         },
       ],
     };
-    appDelegateTask({
+    await appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -37,7 +37,7 @@ describe('appDelegateTask', () => {
       expect.stringContaining('found existing ')
     );
   });
-  it('should prepend text into didLaunchWithOptions', () => {
+  it('should prepend text into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -51,7 +51,7 @@ describe('appDelegateTask', () => {
         },
       ],
     };
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -60,7 +60,7 @@ describe('appDelegateTask', () => {
     // @ts-ignore
     expect(content).toContain(task.actions[1].prepend);
   });
-  it('should append text into didLaunchWithOptions', () => {
+  it('should append text into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -74,7 +74,7 @@ describe('appDelegateTask', () => {
         },
       ],
     };
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -83,7 +83,7 @@ describe('appDelegateTask', () => {
     // @ts-ignore
     expect(content).toContain(task.actions[1].append);
   });
-  it('should insert text after point into didLaunchWithOptions', () => {
+  it('should insert text after point into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -99,7 +99,7 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -109,7 +109,7 @@ describe('appDelegateTask', () => {
       .toContain(`RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   [FIRApp configure];`);
   });
-  it('should insert text before point into didLaunchWithOptions', () => {
+  it('should insert text before point into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -124,7 +124,7 @@ describe('appDelegateTask', () => {
         },
       ],
     };
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -135,7 +135,7 @@ describe('appDelegateTask', () => {
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 `);
   });
-  it('should throw when didLaunchWithOptions does not exist', () => {
+  it('should throw when didLaunchWithOptions does not exist', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -150,16 +150,16 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('didFinishLaunchingWithOptions not implemented');
+    ).rejects.toThrowError('didFinishLaunchingWithOptions not implemented');
   });
-  it('should skip if condition not met', () => {
+  it('should skip if condition not met', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -176,16 +176,16 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrow();
+    ).resolves.not.toThrow();
   });
-  it('should throw when insertion point not found', () => {
+  it('should throw when insertion point not found', async () => {
     const content = mockAppDelegateTemplate;
     const taskInsertBefore: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -203,14 +203,14 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
+    ).rejects.toThrowError('insertion point');
     const taskInsertAfter: AppDelegateTaskType = {
       type: 'app_delegate',
       actions: [
@@ -226,16 +226,16 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
+    ).rejects.toThrowError('insertion point');
   });
-  it('should throw when AppDelegate implementation not found', () => {
+  it('should throw when AppDelegate implementation not found', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -250,16 +250,16 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('@implementation AppDelegate');
+    ).rejects.toThrowError('@implementation AppDelegate');
   });
-  it('should throw for invalid method', () => {
+  it('should throw for invalid method', async () => {
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -274,16 +274,16 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('Invalid block');
+    ).rejects.toThrowError('Invalid block');
   });
-  it('should append text into non existing applicationDidBecomeActive', () => {
+  it('should append text into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -298,7 +298,7 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -309,7 +309,7 @@ describe('appDelegateTask', () => {
     // @ts-ignore
     expect(content).toContain(task.actions[1].append);
   });
-  it('should insert text before point into non existing applicationDidBecomeActive', () => {
+  it('should insert text before point into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -325,7 +325,7 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -336,7 +336,7 @@ describe('appDelegateTask', () => {
     // @ts-ignore
     expect(content).toContain(task.actions[1].append);
   });
-  it('should insert text after point into non existing applicationDidBecomeActive', () => {
+  it('should insert text after point into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
       type: 'app_delegate',
@@ -352,7 +352,7 @@ describe('appDelegateTask', () => {
       ],
     };
 
-    content = appDelegateTask({
+    content = await appDelegateTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -363,8 +363,8 @@ describe('appDelegateTask', () => {
     // @ts-ignore
     expect(content).toContain(task.actions[1].prepend);
   });
-  it('should append/prepend/insert after/before text into non existing blocks}', () => {
-    [
+  it('should append/prepend/insert after/before text into non existing blocks}', async () => {
+    for (const block of [
       'applicationDidBecomeActive' as const,
       'applicationWillResignActive' as const,
       'applicationDidEnterBackground' as const,
@@ -376,7 +376,7 @@ describe('appDelegateTask', () => {
       'didFailToRegisterForRemoteNotificationsWithError' as const,
       'didReceiveRemoteNotification' as const,
       'fetchCompletionHandler' as const,
-    ].map(block => {
+    ]) {
       let content = mockAppDelegateTemplate;
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
@@ -389,7 +389,7 @@ describe('appDelegateTask', () => {
         ],
       };
 
-      content = appDelegateTask({
+      content = await appDelegateTask({
         configPath: 'path/to/config',
         task,
         content,
@@ -415,7 +415,7 @@ describe('appDelegateTask', () => {
         ],
       };
 
-      content = appDelegateTask({
+      content = await appDelegateTask({
         configPath: 'path/to/config',
         task: task2,
         content,
@@ -430,9 +430,9 @@ describe('appDelegateTask', () => {
       expect(mockPrompter.log.message).toHaveBeenCalledWith(
         expect.stringContaining('code already exists')
       );
-    });
+    }
   });
-  it('should throw when block could not be added', () => {
+  it('should throw when block could not be added', async () => {
     const content = mockAppDelegateTemplate;
     mock.mockImplementationOnce(content => content);
     const task: AppDelegateTaskType = {
@@ -444,18 +444,18 @@ describe('appDelegateTask', () => {
         },
       ],
     };
-    expect(() =>
+    await expect(
       appDelegateTask({
         configPath: 'path/to/config',
         task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('block could not be inserted');
+    ).rejects.toThrowError('block could not be inserted');
   });
 
   describe('runTask', () => {
-    it('should read and write app delegate file', () => {
+    it('should read and write app delegate file', async () => {
       const appDelegatePath = writeMockAppDelegate();
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
@@ -470,7 +470,7 @@ describe('appDelegateTask', () => {
         ],
       };
 
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task: task,
         packageName: 'test-package',
@@ -479,7 +479,7 @@ describe('appDelegateTask', () => {
       // @ts-ignore
       expect(content).toContain(task.actions[1].prepend);
     });
-    it('should throw when app delegate does not exist', () => {
+    it('should throw when app delegate does not exist', async () => {
       const task: AppDelegateTaskType = {
         type: 'app_delegate',
         actions: [
@@ -492,15 +492,15 @@ describe('appDelegateTask', () => {
           },
         ],
       };
-      expect(() => {
+      await expect(
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('AppDelegate file not found');
+        })
+      ).rejects.toThrowError('AppDelegate file not found');
     });
-    it('should throw when project does not exist', () => {
+    it('should throw when project does not exist', async () => {
       const mock = jest.spyOn(mockFs, 'readdirSync').mockImplementation(() => {
         throw new Error('Directory not found');
       });
@@ -516,13 +516,13 @@ describe('appDelegateTask', () => {
           },
         ],
       };
-      expect(() => {
+      await expect(
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('project not found');
+        })
+      ).rejects.toThrowError('project not found');
       mock.mockRestore();
     });
   });

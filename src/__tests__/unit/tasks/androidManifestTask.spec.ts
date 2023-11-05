@@ -13,7 +13,7 @@ import { mockPrompter } from '../../mocks/mockAll';
 import { mockAndroidManifestTemplate } from '../../mocks/mockAndroidManifestTemplate';
 
 describe('androidManifestTask', () => {
-  it('should throw if setting attributes with empty block', () => {
+  it('should throw if setting attributes with empty block', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
@@ -25,16 +25,16 @@ describe('androidManifestTask', () => {
         },
       ],
     };
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('you must set block');
+    ).rejects.toThrowError('you must set block');
   });
-  it('should skip if condition not met', () => {
+  it('should skip if condition not met', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
@@ -47,16 +47,16 @@ describe('androidManifestTask', () => {
         },
       ],
     };
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrow();
+    ).resolves.not.toThrow();
   });
-  it('should throw if block is invalid', () => {
+  it('should throw if block is invalid', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
@@ -66,16 +66,16 @@ describe('androidManifestTask', () => {
         },
       ],
     };
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('Invalid block');
+    ).rejects.toThrowError('Invalid block');
   });
-  it('should throw text into empty body ', () => {
+  it('should throw text into empty body ', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
@@ -86,16 +86,16 @@ describe('androidManifestTask', () => {
         },
       ],
     };
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: task,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('block could not be found');
+    ).rejects.toThrowError('block could not be found');
   });
-  it('should prepend text into empty body without block', () => {
+  it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: AndroidManifestTaskType = {
       type: 'android_manifest',
@@ -107,13 +107,13 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task: task,
       content,
       packageName: 'test-package',
     });
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -123,7 +123,7 @@ describe('androidManifestTask', () => {
 <test />
 `);
   });
-  it('should skip insert when ifNotPresent exists', () => {
+  it('should skip insert when ifNotPresent exists', async () => {
     const content = mockAndroidManifestTemplate;
 
     const task: AndroidManifestTaskType = {
@@ -142,7 +142,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    androidManifestTask({
+    await androidManifestTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -152,7 +152,7 @@ describe('androidManifestTask', () => {
       expect.stringContaining('found existing ')
     );
   });
-  it('should prepend text into existing body ', () => {
+  it('should prepend text into existing body ', async () => {
     let content = `
 <manifest>
   <test3 />
@@ -173,7 +173,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -191,7 +191,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `);
   });
-  it('should set, replace and delete attributes', () => {
+  it('should set, replace and delete attributes', async () => {
     let content = `
 <manifest>
   <test3 />
@@ -219,7 +219,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -238,7 +238,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `);
   });
-  it('should append text into existing body ', () => {
+  it('should append text into existing body ', async () => {
     let content = `
 <manifest>
     <test3 />
@@ -259,7 +259,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task,
       content,
@@ -277,7 +277,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `);
   });
-  it('should insert text after point with comment', () => {
+  it('should insert text after point with comment', async () => {
     let content = `
 <manifest>
     <test3 />
@@ -300,7 +300,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -319,7 +319,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `);
   });
-  it('should insert text before point', () => {
+  it('should insert text before point', async () => {
     let content = `
 <manifest>
     <test3 />
@@ -341,7 +341,7 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    content = androidManifestTask({
+    content = await androidManifestTask({
       configPath: 'path/to/config',
       task: task,
       content,
@@ -359,7 +359,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `);
   });
-  it('should throw when insertion point not found with strict', () => {
+  it('should throw when insertion point not found with strict', async () => {
     const content = `
 <manifest>
     <test3 />
@@ -392,22 +392,22 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: taskInsertBefore,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: taskInsertBeforeNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: AndroidManifestTaskType = {
       type: 'android_manifest',
       actions: [
@@ -431,26 +431,26 @@ describe('androidManifestTask', () => {
       ],
     };
 
-    expect(() =>
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: taskInsertAfter,
         content,
         packageName: 'test-package',
       })
-    ).toThrowError('insertion point');
-    expect(() =>
+    ).rejects.toThrowError('insertion point');
+    await expect(
       androidManifestTask({
         configPath: 'path/to/config',
         task: taskInsertAfterNonStrict,
         content,
         packageName: 'test-package',
       })
-    ).not.toThrowError('insertion point');
+    ).resolves.not.toThrowError('insertion point');
   });
 
   describe('runTask', () => {
-    it('should read and write android manifest file', () => {
+    it('should read and write android manifest file', async () => {
       let content = `
 <manifest>
     <test3 />
@@ -476,7 +476,7 @@ describe('androidManifestTask', () => {
         ],
       };
 
-      runTask({
+      await runTask({
         configPath: 'path/to/config',
         task,
         packageName: 'test-package',
@@ -485,7 +485,7 @@ describe('androidManifestTask', () => {
       // @ts-ignore
       expect(content).toContain(task.actions[0].prepend);
     });
-    it('should throw when android manifest does not exist', () => {
+    it('should throw when android manifest does not exist', async () => {
       const task: AndroidManifestTaskType = {
         type: 'android_manifest',
         actions: [
@@ -496,13 +496,13 @@ describe('androidManifestTask', () => {
         ],
       };
 
-      expect(() => {
+      await expect(
         runTask({
           configPath: 'path/to/config',
           task: task,
           packageName: 'test-package',
-        });
-      }).toThrowError('AndroidManifest.xml file not found');
+        })
+      ).rejects.toThrowError('AndroidManifest.xml file not found');
     });
   });
 });

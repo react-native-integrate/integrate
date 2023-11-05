@@ -1,15 +1,26 @@
 import fs from 'fs';
 import path from 'path';
+import { Constants } from '../constants';
 import { TextOrFileValue } from '../types/mod.types';
 import { getText } from '../variables';
+import { downloadFile, getRemotePath } from './getPackageConfig';
 
-export function getModContent(
+export async function getModContent(
   configPath: string,
+  packageName: string,
   textOrFile: TextOrFileValue
-): string {
+): Promise<string> {
   if (typeof textOrFile == 'string') return getText(textOrFile);
-  const fullConfigPath = path.join(configPath, '..', textOrFile.file);
-  if (!fs.existsSync(fullConfigPath))
-    throw new Error(`File not found at ${fullConfigPath}`);
-  return getText(fs.readFileSync(fullConfigPath, 'utf-8'));
+  const fullFilePath = path.join(configPath, '..', textOrFile.file);
+  if (!fs.existsSync(fullFilePath)) {
+    const remotePath =
+      getRemotePath(packageName, Constants.REMOTE_REPO) +
+      fullFilePath.replace(path.join(configPath, '../'), '');
+
+    const localDir = path.join(fullFilePath, '..');
+    if (!fs.existsSync(localDir)) fs.mkdirSync(localDir, { recursive: true });
+    const success = await downloadFile(remotePath, fullFilePath);
+    if (!success) throw new Error(`File not found at ${fullFilePath}`);
+  }
+  return getText(fs.readFileSync(fullFilePath, 'utf-8'));
 }

@@ -14,14 +14,14 @@ import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { variables } from '../variables';
 
-export function podFileTask(args: {
+export async function podFileTask(args: {
   configPath: string;
   packageName: string;
   content: string;
   task: PodFileTaskType;
-}): string {
+}): Promise<string> {
   let { content } = args;
-  const { task, configPath } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
@@ -39,10 +39,11 @@ export function podFileTask(args: {
       error: false,
     });
     try {
-      content = applyContentModification({
+      content = await applyContentModification({
         action,
         findOrCreateBlock,
         configPath,
+        packageName,
         content,
         indentation: 2,
         buildComment: buildPodComment,
@@ -174,14 +175,14 @@ function writePodFileContent(content: string): void {
   return fs.writeFileSync(podFilePath, content, 'utf-8');
 }
 
-export function runTask(args: {
+export async function runTask(args: {
   configPath: string;
   packageName: string;
   task: PodFileTaskType;
-}): void {
+}): Promise<void> {
   let content = readPodFileContent();
 
-  content = podFileTask({
+  content = await podFileTask({
     ...args,
     content,
   });
