@@ -30,9 +30,12 @@ An array of action items that define the questions to be asked to the user. Each
 #### `name` (string, required)
 A unique identifier for the prompt. You will use this name to reference the user's input or decision later in the configuration.
 
+#### `text` (string, required)
+The text displayed to prompt the user.
+
 #### `type` (string, required): 
 Specifies the type of prompt to display. Currently supported types include:
-
+-   `text`: Displays a text input for the user to enter.
 -   `boolean`: Displays a yes/no confirmation for the user to choose from.
 -   `multiselect`: Displays a list of options for the user to select multiple items from.
 

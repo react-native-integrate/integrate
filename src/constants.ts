@@ -4,6 +4,7 @@ export const Constants = {
   PACKAGE_JSON_FILE_NAME: 'package.json',
   APP_DELEGATE_FILE_NAME: 'AppDelegate.mm',
   NOTIFICATION_SERVICE_FILE_NAME: 'NotificationService.m',
+  NOTIFICATION_VIEW_CONTROLLER_FILE_NAME: 'NotificationViewController.m',
   PLIST_FILE_NAME: 'Info.plist',
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',

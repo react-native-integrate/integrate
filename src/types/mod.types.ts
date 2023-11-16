@@ -118,6 +118,22 @@ export type NotificationServiceBlockType =
   | 'didReceiveNotificationRequest'
   | 'serviceExtensionTimeWillExpire';
 
+// notification_view_controller task
+
+export type NotificationViewControllerTaskType = ModTaskBase &
+  ActionsType<ContentModifierType<NotificationContentBlockType>> & {
+    type: 'notification_view_controller';
+    target: string;
+  };
+export type NotificationContentBlockType =
+  | 'viewDidLoad'
+  | 'viewWillAppear'
+  | 'viewDidAppear'
+  | 'viewWillDisappear'
+  | 'dealloc'
+  | 'didReceiveNotification'
+  | 'didReceiveNotificationResponse';
+
 // validation task
 
 // export type ValidationTaskType = ModTaskBase & {
@@ -311,6 +327,7 @@ export type ModTask =
   | BuildGradleTaskType
   | AndroidManifestTaskType
   | NotificationServiceTaskType
+  | NotificationViewControllerTaskType
   | XcodeTaskType
   | PodFileTaskType
   | FsTaskType
@@ -319,7 +336,7 @@ export type ModTask =
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {
-  type: undefined;
+  type: 'text';
   validate?: ValidationType | ValidationType[];
 };
 export type ConfirmPrompt = ConfirmPromptArgs & {

@@ -10,6 +10,7 @@ tasks:
   - type: prompt
     actions:
       - name: test2
+        type: text
         text: Test prompt
         when:
           test: true

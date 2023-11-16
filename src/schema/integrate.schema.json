@@ -18,7 +18,7 @@
                     "$ref": "#/definitions/TextOrRegex"
                 },
                 "block": {
-                    "$ref": "#/definitions/TBlock_2"
+                    "$ref": "#/definitions/TBlock_3"
                 },
                 "comment": {
                     "type": "string"
@@ -175,6 +175,49 @@
                 },
                 "block": {
                     "$ref": "#/definitions/TBlock"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "ContentModifierType<NotificationContentBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_2"
                 },
                 "comment": {
                     "type": "string"
@@ -397,6 +440,9 @@
                     "$ref": "#/definitions/NotificationServiceTaskType"
                 },
                 {
+                    "$ref": "#/definitions/NotificationViewControllerTaskType"
+                },
+                {
                     "$ref": "#/definitions/BuildGradleTaskType"
                 },
                 {
@@ -422,6 +468,43 @@
                 "number",
                 "boolean"
             ]
+        },
+        "NotificationViewControllerTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<NotificationContentBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "notification_view_controller",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "target",
+                "type"
+            ],
+            "type": "object"
         },
         "NotificationServiceTaskType": {
             "additionalProperties": false,
@@ -576,6 +659,10 @@
                         "text": {
                             "type": "string"
                         },
+                        "type": {
+                            "const": "text",
+                            "type": "string"
+                        },
                         "validate": {
                             "anyOf": [
                                 {
@@ -625,7 +712,8 @@
                     },
                     "required": [
                         "name",
-                        "text"
+                        "text",
+                        "type"
                     ],
                     "type": "object"
                 },
@@ -773,6 +861,18 @@
             "type": "string"
         },
         "TBlock_2": {
+            "enum": [
+                "dealloc",
+                "didReceiveNotification",
+                "didReceiveNotificationResponse",
+                "viewDidAppear",
+                "viewDidLoad",
+                "viewWillAppear",
+                "viewWillDisappear"
+            ],
+            "type": "string"
+        },
+        "TBlock_3": {
             "enum": [
                 "activity",
                 "application",

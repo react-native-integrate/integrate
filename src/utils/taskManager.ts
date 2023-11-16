@@ -8,6 +8,7 @@ import * as fs from '../tasks/fsTask';
 import * as json from '../tasks/jsonTask';
 import * as prompt from '../tasks/promptTask';
 import * as notification_service from '../tasks/notificationServiceTask';
+import * as notification_view_controller from '../tasks/notificationViewControllerTask';
 import { ModTask } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
@@ -21,6 +22,7 @@ const task: Record<string, TaskExports> = {
   json,
   prompt,
   notification_service,
+  notification_view_controller,
 };
 
 const systemTaskTypes = Object.entries(task)
