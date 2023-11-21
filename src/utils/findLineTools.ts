@@ -1,7 +1,8 @@
 export function findLineStart(
   content: string,
   characterIndex: number,
-  minIndex?: number
+  minIndex?: number,
+  includeLineBreak = false
 ): number {
   minIndex = Math.max(minIndex ?? 0, 0);
   let lineStart = characterIndex;
@@ -10,7 +11,9 @@ export function findLineStart(
     lineStart--;
   }
 
-  return content[lineStart] === '\n' ? lineStart + 1 : lineStart;
+  return !includeLineBreak && content[lineStart] === '\n'
+    ? lineStart + 1
+    : lineStart;
 }
 
 export function findLineEnd(

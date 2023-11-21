@@ -27,6 +27,19 @@ An array of action items that define the modifications to be made in the file. E
 
 ### Action Item
 
+###### Special properties
+
+#### `useFrameworks` (string)
+Sets `use_frameworks` value and handles compatibility accordingly. Can be one of these values:
+-   `dynamic`: Sets useFrameworks value with dynamic linkage. In this case static libs will be set in pre_install hook.
+-   `static`: Sets useFrameworks value with static linkage. This action is skipped or overridden by dynamic linkage action.
+
+#### `staticLibrary` (string or array of strings)
+Defines name of pods that will be set as static library in case some module requires `use_frameworks` with dynamic linkage.
+
+#### `disableFlipper` (boolean)
+Disables flipper usage.
+
 ###### Common properties
 
 #### `name` (string)

@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { Constants } from '../constants';
-import { BlockContentType, PodFileTaskType } from '../types/mod.types';
+import {
+  BlockContentType,
+  ContentModifierType,
+  PodFileTaskType,
+} from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
 import {
   findClosingTagIndex,
@@ -39,6 +43,30 @@ export async function podFileTask(args: {
       error: false,
     });
     try {
+      if (action.staticLibrary) {
+        content = await applyStaticLibraryModification(
+          content,
+          action.staticLibrary,
+          configPath,
+          packageName
+        );
+      }
+      if (action.useFrameworks) {
+        content = await applyUseFrameworksModification(
+          content,
+          action.useFrameworks,
+          configPath,
+          packageName
+        );
+      }
+      if (action.disableFlipper) {
+        content = await applyDisableFlipperModification(
+          content,
+          action.disableFlipper,
+          configPath,
+          packageName
+        );
+      }
       content = await applyContentModification({
         action,
         findOrCreateBlock,
@@ -61,6 +89,179 @@ export async function podFileTask(args: {
       throw e;
     }
   }
+  return content;
+}
+
+async function applyStaticLibraryModification(
+  content: string,
+  staticLibrary: string | string[],
+  configPath: string,
+  packageName: string
+) {
+  const regExp = /\$static_libs.*?=.*?\[(.*?)]/s;
+  const match = regExp.exec(content);
+  const normalizedStaticLibrary = Array.isArray(staticLibrary)
+    ? staticLibrary
+    : [staticLibrary];
+  let action: ContentModifierType;
+  if (!match) {
+    action = {
+      block: 'target',
+      prepend:
+        '$static_libs = [\n' +
+        normalizedStaticLibrary.map(x => `  '${x}'`).join(',\n') +
+        '\n]',
+    };
+  } else {
+    const existingLibs = match[1]
+      .replace(/\n/g, '')
+      .split(',')
+      .map(x => x.trim().replace(/'/g, ''));
+    for (const staticLib of normalizedStaticLibrary) {
+      if (!existingLibs.includes(staticLib)) existingLibs.push(staticLib);
+    }
+    action = {
+      block: 'target',
+      search: {
+        regex: regExp.source,
+        flags: regExp.flags,
+      },
+      replace:
+        '$static_libs = [\n' +
+        existingLibs.map(x => `  '${x}'`).join(',\n') +
+        '\n]',
+    };
+  }
+  content = await applyContentModification({
+    action,
+    findOrCreateBlock,
+    configPath,
+    packageName,
+    content,
+    indentation: 2,
+    buildComment: buildPodComment,
+  });
+
+  return content;
+}
+async function applyUseFrameworksModification(
+  content: string,
+  useFrameworks: 'static' | 'dynamic',
+  configPath: string,
+  packageName: string
+) {
+  let action: ContentModifierType;
+  if (useFrameworks == 'static') {
+    // should not change dynamic to static
+    if (
+      /:linkage => :dynamic/.test(content) ||
+      /linkage = ['"]dynamic['"]/.test(content)
+    ) {
+      return content;
+    }
+    if (/linkage = /.test(content))
+      action = {
+        search: 'linkage = ',
+        replace: "linkage = 'static'",
+      };
+    else
+      action = {
+        before: 'target',
+        append: 'use_frameworks! :linkage => :static',
+      };
+  } else {
+    if (/linkage = /.test(content))
+      action = {
+        search: 'linkage = ',
+        replace: "linkage = 'dynamic'",
+      };
+    else
+      action = {
+        before: 'target',
+        append: 'use_frameworks! :linkage => :dynamic',
+      };
+    if (!/\$static_libs.*?=.*?\[(.*?)]/s.test(content)) {
+      content = await applyContentModification({
+        action: {
+          block: 'target',
+          prepend: '$static_libs = []',
+        },
+        findOrCreateBlock,
+        configPath,
+        packageName,
+        content,
+        indentation: 2,
+        buildComment: buildPodComment,
+      });
+    }
+    content = await applyContentModification({
+      action: {
+        block: 'target.pre_install',
+        ifNotPresent:
+          'Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies',
+        prepend: `Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+  installer.pod_targets.each do |pod|
+    if $static_libs.include?(pod.name)
+      def pod.build_type;
+      Pod::BuildType.static_library
+    end
+  end
+end`,
+      },
+      findOrCreateBlock,
+      configPath,
+      packageName,
+      content,
+      indentation: 2,
+      buildComment: buildPodComment,
+    });
+  }
+  content = await applyContentModification({
+    action: action,
+    findOrCreateBlock,
+    configPath,
+    packageName,
+    content,
+    indentation: 2,
+    buildComment: buildPodComment,
+  });
+
+  return content;
+}
+
+async function applyDisableFlipperModification(
+  content: string,
+  disableFlipper: boolean,
+  configPath: string,
+  packageName: string
+) {
+  let action: ContentModifierType;
+  {
+    if (/flipper_config = /.test(content))
+      action = {
+        search: 'flipper_config = ',
+        replace: 'flipper_config = FlipperConfiguration.disabled',
+      };
+    else
+      action = {
+        search: {
+          regex: ':flipper_configuration =>.*?,',
+          flags: 's',
+        },
+        replace: ':flipper_configuration => FlipperConfiguration.disabled,',
+        exact: true,
+      };
+  }
+  content = await applyContentModification({
+    action: action,
+    findOrCreateBlock,
+    configPath,
+    packageName,
+    content,
+    indentation: 2,
+    buildComment: buildPodComment,
+  });
+
   return content;
 }
 

@@ -210,7 +210,7 @@ buildscript {
       actions: [
         {
           block: 'buildscript.ext',
-          search: 'jcenter();',
+          search: 'enter',
           replace: 'google();',
         },
       ],
@@ -299,6 +299,44 @@ buildscript {
 buildscript {
     ext {
         google();
+        google();
+    }
+}
+`);
+  });
+  it('should replace all text with existing body exactly', async () => {
+    let content = `
+buildscript {
+    ext {
+        jcenter(); // some comment
+        jcenter();
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      actions: [
+        {
+          block: 'buildscript.ext',
+          search: {
+            regex: 'jcenter\\(\\);',
+            flags: 'g',
+          },
+          exact: true,
+          replace: 'google();',
+        },
+      ],
+    };
+    content = await buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+buildscript {
+    ext {
+        google(); // some comment
         google();
     }
 }

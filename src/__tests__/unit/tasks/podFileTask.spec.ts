@@ -459,6 +459,326 @@ end
       })
     ).rejects.toThrowError('invalid block');
   });
+  it('should define string static library', async () => {
+    let content = `
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          staticLibrary: 'TestPod',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+target 'TestApp' do 
+  $static_libs = [
+    'TestPod'
+  ]
+end
+`);
+  });
+  it('should define array static library', async () => {
+    let content = `
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          staticLibrary: ['TestPod', 'TestPod2', 'TestPod3'],
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+target 'TestApp' do 
+  $static_libs = [
+    'TestPod',
+    'TestPod2',
+    'TestPod3'
+  ]
+end
+`);
+  });
+  it('should define array static library with existing libs', async () => {
+    let content = `
+target 'TestApp' do 
+  $static_libs = [
+    'TestPod',
+    'TestPod2'
+  ]
+end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          staticLibrary: ['TestPod', 'TestPod3'],
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+target 'TestApp' do 
+  $static_libs = [
+    'TestPod',
+    'TestPod2',
+    'TestPod3'
+  ]
+end
+`);
+  });
+  it('should define use frameworks static when linkage exists', async () => {
+    let content = `
+linkage = 'something'
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'static',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+linkage = 'static'
+target 'TestApp' do end
+`);
+  });
+  it('should define use frameworks static when no linkage exists', async () => {
+    let content = `
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'static',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+use_frameworks! :linkage => :static
+target 'TestApp' do end
+`);
+  });
+  it('should not define use frameworks static when linkage is dynamic', async () => {
+    let content = `
+use_frameworks! :linkage => :dynamic
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'static',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+use_frameworks! :linkage => :dynamic
+target 'TestApp' do end
+`);
+  });
+  it('should not define use frameworks static when new linkage is dynamic', async () => {
+    let content = `
+linkage = 'dynamic'
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'static',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+linkage = 'dynamic'
+target 'TestApp' do end
+`);
+  });
+  it('should define use frameworks dynamic when linkage exists', async () => {
+    let content = `
+linkage = 'something'
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'dynamic',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+linkage = 'dynamic'
+target 'TestApp' do 
+  $static_libs = []
+
+  pre_install do |installer| 
+    Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+      installer.pod_targets.each do |pod|
+        if $static_libs.include?(pod.name)
+          def pod.build_type;
+          Pod::BuildType.static_library
+        end
+      end
+    end
+  end
+end
+`);
+  });
+  it('should define use frameworks dynamic when no linkage exists', async () => {
+    let content = `
+target 'TestApp' do end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          useFrameworks: 'dynamic',
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+use_frameworks! :linkage => :dynamic
+target 'TestApp' do 
+  $static_libs = []
+
+  pre_install do |installer| 
+    Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+      installer.pod_targets.each do |pod|
+        if $static_libs.include?(pod.name)
+          def pod.build_type;
+          Pod::BuildType.static_library
+        end
+      end
+    end
+  end
+end
+`);
+  });
+  it('should disable flipper when no flipper_config exists', async () => {
+    let content = `
+target 'TestApp' do 
+    :flipper_configuration => anything,
+end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          disableFlipper: true,
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+target 'TestApp' do 
+    :flipper_configuration => FlipperConfiguration.disabled,
+end
+`);
+  });
+  it('should disable flipper when flipper_config exists', async () => {
+    let content = `
+flipper_config = anything
+target 'TestApp' do 
+    :flipper_configuration => flipper_config,
+end
+`;
+    const task: PodFileTaskType = {
+      type: 'podfile',
+      actions: [
+        {
+          disableFlipper: true,
+        },
+      ],
+    };
+
+    content = await podFileTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toEqual(`
+flipper_config = FlipperConfiguration.disabled
+target 'TestApp' do 
+    :flipper_configuration => flipper_config,
+end
+`);
+  });
 
   describe('runTask', () => {
     it('should read and write pod file file', async () => {

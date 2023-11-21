@@ -66,7 +66,11 @@ export async function applyContentModification(
       closingNewLine = `\n${isBlockSameLine ? blockContent.space : ''}`;
     const isAppend = 'append' in action || 'before' in action;
     if (!isBlockSameLine) {
-      if (isAppend || blockContent.start == 0) openingNewLine = '';
+      if (
+        isAppend ||
+        (blockContent.start == 0 && blockContent.match[0] != '\n')
+      )
+        openingNewLine = '';
       else closingNewLine = '';
     }
 
@@ -78,6 +82,7 @@ export async function applyContentModification(
         comment += `${blockContent.space}${blockIndentation}${line}\n`;
       });
     }
+    text = text.replace(/\n/g, `\n${blockContent.space}${blockIndentation}`);
     return `${openingNewLine}${comment}${blockContent.space}${blockIndentation}${text}${closingNewLine}`;
   };
   const splittingMsgArr = applyContextReduction(action, blockContent, content);
@@ -204,6 +209,9 @@ export async function applyContentModification(
               packageName,
               action.replace
             );
+            const codeToInsert = action.exact
+              ? replaceText
+              : getCodeToInsert(replaceText);
             if (
               action.ifNotPresent &&
               blockContent.match.includes(getText(action.ifNotPresent))
@@ -221,7 +229,7 @@ export async function applyContentModification(
             } else if (!blockContent.match.includes(replaceText)) {
               const start = blockContent.start,
                 rem = blockContent.end - blockContent.start,
-                insert = replaceText;
+                insert = codeToInsert;
               content = stringSplice(content, start, rem, insert);
 
               if (spliceCallback) spliceCallback(start, rem, insert);
@@ -278,6 +286,28 @@ export async function applyContentModification(
       blockContent.end =
         searchBlockContent.start + match.index + match[0].length;
       blockContent.match = match[0];
+
+      if (!action.exact) {
+        //find context start
+        blockContent.start = findLineStart(
+          content,
+          blockContent.start,
+          searchBlockContent.start,
+          true
+        );
+        //find context end
+        const lineEnd = findLineEnd(
+          content,
+          blockContent.end,
+          searchBlockContent.end
+        );
+        searchMatcher.lastIndex += lineEnd - blockContent.end;
+        blockContent.end = lineEnd;
+        blockContent.match = content.substring(
+          blockContent.start,
+          blockContent.end
+        );
+      }
 
       await runModifiers((start, rem, insert) => {
         searchMatcher.lastIndex += -rem + insert.length;

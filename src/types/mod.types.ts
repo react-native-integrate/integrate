@@ -287,9 +287,15 @@ export type XcodeModifierType =
 // pod file task
 
 export type PodFileTaskType = ModTaskBase &
-  ActionsType<ContentModifierType> & {
+  ActionsType<PodFileModifierType> & {
     type: 'podfile';
   };
+
+export type PodFileModifierType = ContentModifierType & {
+  useFrameworks?: 'dynamic' | 'static';
+  staticLibrary?: string | string[];
+  disableFlipper?: boolean;
+};
 
 // fs task
 

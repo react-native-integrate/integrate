@@ -469,43 +469,6 @@
                 "boolean"
             ]
         },
-        "NotificationViewControllerTaskType": {
-            "additionalProperties": false,
-            "properties": {
-                "actions": {
-                    "items": {
-                        "$ref": "#/definitions/ContentModifierType<NotificationContentBlockType>"
-                    },
-                    "type": "array"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "postInfo": {
-                    "$ref": "#/definitions/TextOrTitleMessage"
-                },
-                "preInfo": {
-                    "$ref": "#/definitions/TextOrTitleMessage"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "type": {
-                    "const": "notification_view_controller",
-                    "type": "string"
-                },
-                "when": {}
-            },
-            "required": [
-                "actions",
-                "target",
-                "type"
-            ],
-            "type": "object"
-        },
         "NotificationServiceTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -532,6 +495,43 @@
                 },
                 "type": {
                     "const": "notification_service",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "target",
+                "type"
+            ],
+            "type": "object"
+        },
+        "NotificationViewControllerTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<NotificationContentBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "notification_view_controller",
                     "type": "string"
                 },
                 "when": {}
@@ -606,12 +606,78 @@
             ],
             "type": "object"
         },
+        "PodFileModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "disableFlipper": {
+                    "type": "boolean"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "staticLibrary": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "useFrameworks": {
+                    "enum": [
+                        "dynamic",
+                        "static"
+                    ],
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
         "PodFileTaskType": {
             "additionalProperties": false,
             "properties": {
                 "actions": {
                     "items": {
-                        "$ref": "#/definitions/ContentModifierType<string>"
+                        "$ref": "#/definitions/PodFileModifierType"
                     },
                     "type": "array"
                 },
