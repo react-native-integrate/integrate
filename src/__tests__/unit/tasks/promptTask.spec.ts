@@ -16,7 +16,7 @@ describe('promptTask', () => {
         {
           name: 'test',
           text: 'test',
-          type: undefined,
+          type: 'text',
         },
       ],
     };
