@@ -368,6 +368,7 @@ export type IntegrationConfig = {
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
   dependencies?: string[];
+  minRNVersion?: number | string;
 };
 
 export type PackageWithConfig = {

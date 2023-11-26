@@ -1,4 +1,5 @@
 import color from 'picocolors';
+import semver from 'semver/preload';
 import {
   confirm,
   log,
@@ -103,6 +104,28 @@ export async function integrate(packageName?: string): Promise<void> {
             true
           );
           continue;
+        }
+        if (config.minRNVersion) {
+          const rnVersionEntry = installedPackages.find(
+            entry => entry[0] === 'react-native'
+          );
+          if (
+            !rnVersionEntry ||
+            semver.lt(
+              semver.coerce(rnVersionEntry[1]) || '0.0.0',
+              semver.coerce(config.minRNVersion) || '0.0.0'
+            )
+          ) {
+            stopSpinner('checked package configuration');
+            logWarning(
+              `${color.bold(
+                color.blue(packageName)
+              )} requires React Native version ${color.bold(
+                color.blue(config.minRNVersion)
+              )}`
+            );
+            return;
+          }
         }
         if (config.dependencies?.length) {
           let warn = null;

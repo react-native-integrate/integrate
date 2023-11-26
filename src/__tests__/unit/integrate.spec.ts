@@ -277,29 +277,6 @@ describe('integrate', () => {
     expect(content).toContain('[FIRApp configure];');
     expect(content).toContain('// with-deps');
   });
-  it('should add dependencies to integration queue', async () => {
-    writeMockProject({
-      name: 'mock-project',
-      version: '0.0.0',
-      description: 'Mock project',
-      dependencies: {
-        'mock-package-with-deps': '^1.2.3',
-        'dep-package': '^1.2.3',
-        'dep-package-2': '^1.2.3',
-      },
-    });
-    const appDelegatePath = writeMockAppDelegate();
-    writeMockLock({
-      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
-      packages: {},
-    });
-
-    await integrate();
-
-    const content = mockFs.readFileSync(appDelegatePath);
-    expect(content).toContain('[FIRApp configure];');
-    expect(content).toContain('// with-deps');
-  });
   it('should skip dependencies when already integrated', async () => {
     writeMockProject({
       name: 'mock-project',
@@ -368,7 +345,7 @@ describe('integrate', () => {
       expect.stringContaining('has dependencies that require integration')
     );
   });
-  it('should warn and exist when dependencies is not installed', async () => {
+  it('should warn and exit when dependencies is not installed', async () => {
     writeMockProject({
       name: 'mock-project',
       version: '0.0.0',
@@ -387,6 +364,93 @@ describe('integrate', () => {
 
     expect(mockPrompter.log.warning).toHaveBeenCalledWith(
       expect.stringContaining('please install it first and try again')
+    );
+  });
+  it('should warn and exit when minimum rn version is not installed', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-rn': '^1.2.3',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
+  it('should warn and exit when minimum rn version is less than installed one', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-rn': '^1.2.3',
+        'react-native': '^0.0.0',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
+  it('should not warn and exit when minimum rn version is higher than installed one', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-rn': '^1.2.3',
+        'react-native': '^1.0.0',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).not.toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
+  it('should not warn and exit when minimum rn version is invalid', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-invalid-min-rn': '^1.2.3',
+        'react-native': '^invalid',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).not.toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
     );
   });
 });

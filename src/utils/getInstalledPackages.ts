@@ -6,9 +6,7 @@ import { getProjectPath } from './getProjectPath';
 
 export function getInstalledPackages(): PackageTuples {
   try {
-    const packageJsonPath = getPackageJsonPath();
-    const packageJsonFile = fs.readFileSync(packageJsonPath, 'utf-8');
-    const packageJson = JSON.parse(packageJsonFile);
+    const packageJson = getPackageJson();
     return Object.entries({
       ...packageJson.dependencies,
       ...packageJson.devDependencies,
@@ -17,6 +15,12 @@ export function getInstalledPackages(): PackageTuples {
     console.error('Error fetching installed packages:', error);
     process.abort();
   }
+}
+
+export function getPackageJson(): Record<string, any> {
+  const packageJsonPath = getPackageJsonPath();
+  const packageJsonFile = fs.readFileSync(packageJsonPath, 'utf-8');
+  return JSON.parse(packageJsonFile) as Record<string, any>;
 }
 
 export function getPackageJsonPath(): string {

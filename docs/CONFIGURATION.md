@@ -63,6 +63,17 @@ postInfo:
 
 These fields can be used in the config file to provide information at the beginning and end of the entire integration process.
 
+MinRNVersion
+---
+
+The `minRNVersion` value is used to set the minimum React Native version required for the integration of the package.
+
+#### Example:
+
+```yaml
+minRNVersion: 0.72
+```
+
 Example in production
 ---------------------
 
