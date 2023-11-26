@@ -369,6 +369,7 @@ export type IntegrationConfig = {
   postInfo?: TextOrTitleMessage;
   dependencies?: string[];
   minRNVersion?: number | string;
+  minVersion?: number | string;
 };
 
 export type PackageWithConfig = {

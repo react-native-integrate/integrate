@@ -453,4 +453,67 @@ describe('integrate', () => {
       expect.stringContaining('requires React Native')
     );
   });
+  it('should warn and exit when minimum package version is not installed', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-v': '^0.0.0',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('requires version')
+    );
+  });
+  it('should not warn and exit when minimum package version is higher than installed one', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-v': '^1.2.3',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).not.toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
+  it('should not warn and exit when minimum package version is invalid', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-invalid-min-v': '^invalid',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).not.toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
 });

@@ -1,7 +1,9 @@
 import { mockIntegrateWithDepsYml } from './mockIntegrateWithDepsYml';
 import {
   mockIntegrateWithInvalidMinRNVersionYml,
+  mockIntegrateWithInvalidMinVersionYml,
   mockIntegrateWithMinRNVersionYml,
+  mockIntegrateWithMinVersionYml,
 } from './mockIntegrateWithMinRNVersion';
 import { mockIntegrateYml } from './mockIntegrateYml';
 
@@ -16,6 +18,10 @@ global.fetch = jest.fn((url: string) =>
         return Promise.resolve(mockIntegrateWithMinRNVersionYml);
       else if (url.includes('with-invalid-min-rn'))
         return Promise.resolve(mockIntegrateWithInvalidMinRNVersionYml);
+      else if (url.includes('with-min-v'))
+        return Promise.resolve(mockIntegrateWithMinVersionYml);
+      else if (url.includes('with-invalid-min-v'))
+        return Promise.resolve(mockIntegrateWithInvalidMinVersionYml);
       else if (url.endsWith('integrate.yml'))
         return Promise.resolve(mockIntegrateYml);
     },

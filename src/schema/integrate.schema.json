@@ -1405,6 +1405,12 @@
                 "number"
             ]
         },
+        "minVersion": {
+            "type": [
+                "string",
+                "number"
+            ]
+        },
         "postInfo": {
             "$ref": "#/definitions/TextOrTitleMessage"
         },

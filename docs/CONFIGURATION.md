@@ -66,12 +66,23 @@ These fields can be used in the config file to provide information at the beginn
 MinRNVersion
 ---
 
-The `minRNVersion` value is used to set the minimum React Native version required for the integration of the package.
+The `minRNVersion` value is used to set the minimum React Native version supported for the integration of the package.
 
 #### Example:
 
 ```yaml
 minRNVersion: 0.72
+```
+
+MinVersion
+---
+
+The `minVersion` value is used to set the minimum package version supported for the integration of the package.
+
+#### Example:
+
+```yaml
+minVersion: 1.4
 ```
 
 Example in production

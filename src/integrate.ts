@@ -127,6 +127,24 @@ export async function integrate(packageName?: string): Promise<void> {
             return;
           }
         }
+        if (config.minVersion) {
+          if (
+            semver.lt(
+              semver.coerce(version) || '0.0.0',
+              semver.coerce(config.minVersion) || '0.0.0'
+            )
+          ) {
+            stopSpinner('checked package configuration');
+            logWarning(
+              `${color.bold(
+                color.blue(packageName)
+              )} requires version ${color.bold(
+                color.blue(config.minVersion)
+              )} - please update it first and try again`
+            );
+            return;
+          }
+        }
         if (config.dependencies?.length) {
           let warn = null;
           const packageInfo = [];
