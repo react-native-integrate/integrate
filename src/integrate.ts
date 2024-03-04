@@ -282,7 +282,7 @@ export async function integrate(packageName?: string): Promise<void> {
             else task.label = taskManager.task[task.type].summary;
             logInfo(
               color.bold(color.inverse(color.cyan(' task '))) +
-                color.bold(color.cyan(` ${task.label || task.type} `))
+                color.bold(color.cyan(` ${task.label} `))
             );
           }
           await logInfoNote(task.preInfo);
