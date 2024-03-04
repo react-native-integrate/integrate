@@ -10,6 +10,7 @@ import * as prompt from '../tasks/promptTask';
 import * as notification_service from '../tasks/notificationServiceTask';
 import * as notification_view_controller from '../tasks/notificationViewControllerTask';
 import * as main_application from '../tasks/mainApplicationTask';
+import * as settings_gradle from '../tasks/settingsGradleTask';
 import { ModTask } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
@@ -25,6 +26,7 @@ const task: Record<string, TaskExports> = {
   notification_service,
   notification_view_controller,
   main_application,
+  settings_gradle,
 };
 
 const systemTaskTypes = Object.entries(task)

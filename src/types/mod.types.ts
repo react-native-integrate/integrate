@@ -153,6 +153,13 @@ export type BuildGradleTaskType = ModTaskBase &
 
 export type BuildGradleLocationType = 'root' | 'app';
 
+// settings gradle task
+
+export type SettingsGradleTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    type: 'settings_gradle';
+  };
+
 // main application task
 
 export type MainApplicationTaskType = ModTaskBase &
@@ -341,6 +348,7 @@ export type ModTask =
   | PlistTaskType
   | AppDelegateTaskType
   | BuildGradleTaskType
+  | SettingsGradleTaskType
   | MainApplicationTaskType
   | AndroidManifestTaskType
   | NotificationServiceTaskType

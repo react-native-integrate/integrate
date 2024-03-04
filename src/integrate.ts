@@ -279,6 +279,7 @@ export async function integrate(packageName?: string): Promise<void> {
           const isNonSystemTask = !taskManager.isSystemTask(task.type);
           if (isNonSystemTask) {
             if (task.label) task.label = getText(task.label);
+            else task.label = taskManager.task[task.type].summary;
             logInfo(
               color.bold(color.inverse(color.cyan(' task '))) +
                 color.bold(color.cyan(` ${task.label || task.type} `))

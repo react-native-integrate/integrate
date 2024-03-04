@@ -1,16 +1,16 @@
-MainApplication Task Configuration (`main_application`)
+Settings Gradle Task Configuration (`settings_gradle`)
 ================================================
 
 Overview
 --------
 
-The `main_application` task is designed to facilitate modifications to the `MainApplication` java or kotlin files in Android projects. It is the main entry file of the android application. This task provides the flexibility to make changes to different sections of the `MainApplication` java or kotlin file.
+The `settings_gradle` task is designed to facilitate modifications to the `settings.gradle` files in Android projects. It is the main entry file of the android application. This task provides the flexibility to make changes to different sections of the `settings.gradle` file.
 
 Task Properties
 ---------------
 
 #### `type` (string, required)
-Specifies the task type, which should be set to "main_application" for this task.
+Specifies the task type, which should be set to "settings_gradle" for this task.
 
 #### `name` (string)
 An optional name for the task. If provided, the task state will be saved as a variable.
@@ -22,11 +22,6 @@ An optional label or description for the task.
 #### `when` (object)
 Visit [When](WHEN.md) page to learn how to execute task conditionally.
 
-#### `lang` (string)
-Specifies the language of the file, distinguishing between the java and kt file. It helps determine which MainApplication file to modify during the configuration process.
-    -   `java`: (default) Modifies `MainApplication.java` file.
-    -   `kotlin`: Modifies `MainApplication.kt` file.
-    
 #### `actions` (array of objects, required)
 An array of action items that define the modifications to be made in the file. Each action item contains the following fields:
 
@@ -81,16 +76,17 @@ Usage Example
 -------------
 
 ```yaml
-type: main_application
-label: "Adding import"
-lang: "kotlin",
+type: settings_gradle
+label: "Including code push"
 actions:
-  - prepend: import com.some.lib
+  - append: |-
+      include ':app', ':react-native-code-push'
+      project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 ```
 
-In this example, the `main_application` task adds an import to the file.
+In this example, the `settings_gradle` task adds an import to the file.
 
 Conclusion
 ----------
 
-The `main_application` task is a powerful tool for customizing Android project configurations by making precise modifications to the `MainApplication` file. It allows you to perform customizations with ease. The `actions` property enhances this task's capabilities by allowing multiple modifications within the specified block.
+The `settings_gradle` task is a powerful tool for customizing Android project configurations by making precise modifications to the `settings.gradle` file. It allows you to perform customizations with ease. The `actions` property enhances this task's capabilities by allowing multiple modifications within the specified block.

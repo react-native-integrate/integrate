@@ -11,6 +11,9 @@ const mocks = {
   build_gradle: {
     runTask: jest.fn(),
   },
+  settings_gradle: {
+    runTask: jest.fn(),
+  },
   main_application: {
     runTask: jest.fn(),
   },
@@ -33,6 +36,7 @@ const mocks = {
 jest.mock('../../../tasks/appDelegateTask', () => mocks.app_delegate);
 jest.mock('../../../tasks/plistTask', () => mocks.plist);
 jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
+jest.mock('../../../tasks/settingsGradleTask', () => mocks.settings_gradle);
 jest.mock('../../../tasks/mainApplicationTask', () => mocks.main_application);
 jest.mock('../../../tasks/xcode/xcodeTask', () => mocks.xcode);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);

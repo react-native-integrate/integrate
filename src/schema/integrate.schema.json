@@ -489,6 +489,9 @@
                     "$ref": "#/definitions/BuildGradleTaskType"
                 },
                 {
+                    "$ref": "#/definitions/SettingsGradleTaskType"
+                },
+                {
                     "$ref": "#/definitions/MainApplicationTaskType"
                 },
                 {
@@ -938,6 +941,39 @@
                 },
                 "type": {
                     "const": "prompt",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "SettingsGradleTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "settings_gradle",
                     "type": "string"
                 },
                 "when": {}

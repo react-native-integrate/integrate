@@ -9,6 +9,7 @@ export const Constants = {
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',
   BUILD_GRADLE_FILE_NAME: 'build.gradle',
+  SETTINGS_GRADLE_FILE_NAME: 'settings.gradle',
   MAIN_APPLICATION_JAVA_FILE_NAME: 'MainApplication.java',
   MAIN_APPLICATION_KT_FILE_NAME: 'MainApplication.kt',
   POD_FILE_NAME: 'Podfile',
