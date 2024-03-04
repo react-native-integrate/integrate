@@ -2,6 +2,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "additionalProperties": false,
     "definitions": {
+        "AndroidCodeType": {
+            "enum": [
+                "java",
+                "kotlin"
+            ],
+            "type": "string"
+        },
         "AndroidManifestModifierType": {
             "additionalProperties": false,
             "properties": {
@@ -425,6 +432,42 @@
             ],
             "type": "object"
         },
+        "MainApplicationTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lang": {
+                    "$ref": "#/definitions/AndroidCodeType"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "main_application",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
         "ModTask": {
             "anyOf": [
                 {
@@ -444,6 +487,9 @@
                 },
                 {
                     "$ref": "#/definitions/BuildGradleTaskType"
+                },
+                {
+                    "$ref": "#/definitions/MainApplicationTaskType"
                 },
                 {
                     "$ref": "#/definitions/AndroidManifestTaskType"

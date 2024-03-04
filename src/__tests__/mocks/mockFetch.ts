@@ -25,6 +25,9 @@ global.fetch = jest.fn((url: string) =>
       else if (url.endsWith('integrate.yml'))
         return Promise.resolve(mockIntegrateYml);
     },
-    status: url.includes('fail') ? 404 : 200,
+    status:
+      url.includes('fail') || url.endsWith('react-native/integrate.yml')
+        ? 404
+        : 200,
   })
 );

@@ -18,6 +18,17 @@ There are three main types of variables:
     - `PLATFORM`: Gets value of `process.platform`.
     - `ENV.(VAR_NAME)`: You can access `process.env` values by using this convention. For example: `$[ENV.USER]`.
     - `IOS_PROJECT_NAME`: Name of the application target in the ios project.
+    - `IOS_BUNDLE_ID`: Main bundle id of the ios project.
+    - `IOS_DEPLOYMENT_VERSION`: Target iOS version defined in the ios project.
+    - `RN_VERSION`: An object that specifies current react native version in the following interface `{major: number, minor: number, patch: number}`.
+      > You can use this variable in your tasks to target specific rn versions.
+      _Example_:
+      ```yaml
+       when:
+         RN_VERSION:
+           minor:
+             $gte: 73
+       ```
 
 2.  Static Variables: You can define your own variables with static values directly within `env` field of your configuration. These values remain constant throughout the execution.
 

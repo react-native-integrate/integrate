@@ -22,6 +22,6 @@ describe('analyzePackages', () => {
     });
     const { newPackages } = analyzePackages();
     expect(newPackages).toBeTruthy();
-    expect(newPackages).toEqual([]);
+    expect(newPackages).toEqual([['react-native', '^1.2.3']]);
   });
 });

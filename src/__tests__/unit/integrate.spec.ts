@@ -261,6 +261,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-deps': '^1.2.3',
+        'react-native': '^0.0.0',
         'dep-package': '^1.2.3',
         'dep-package-2': '^1.2.3',
       },
@@ -270,10 +271,12 @@ describe('integrate', () => {
       lockfileVersion: Constants.CURRENT_LOCK_VERSION,
       packages: {},
     });
+    let content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
 
     await integrate();
 
-    const content = mockFs.readFileSync(appDelegatePath);
+    content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
     expect(content).toContain('// with-deps');
   });
@@ -284,6 +287,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-deps': '^1.2.3',
+        'react-native': '^0.0.0',
         'dep-package': '^1.2.3',
         'dep-package-2': '^1.2.3',
       },
@@ -303,9 +307,12 @@ describe('integrate', () => {
       },
     });
 
+    let content = mockFs.readFileSync(appDelegatePath);
+    expect(content).not.toContain('[FIRApp configure];');
+
     await integrate();
 
-    const content = mockFs.readFileSync(appDelegatePath);
+    content = mockFs.readFileSync(appDelegatePath);
     expect(content).not.toContain('[FIRApp configure];');
     expect(content).toContain('// with-deps');
   });
@@ -316,6 +323,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-deps': '^1.2.3',
+        'react-native': '^0.0.0',
         'dep-package': '^1.2.3',
         'dep-package-2': '^1.2.3',
       },
@@ -352,6 +360,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-deps': '^1.2.3',
+        'react-native': '^0.0.0',
       },
     });
     writeMockLock({
@@ -384,7 +393,7 @@ describe('integrate', () => {
     await integrate();
 
     expect(mockPrompter.log.warning).toHaveBeenCalledWith(
-      expect.stringContaining('requires React Native')
+      expect.stringContaining('React Native not installed')
     );
   });
   it('should warn and exit when minimum rn version is less than installed one', async () => {
@@ -438,6 +447,28 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-invalid-min-rn': '^1.2.3',
+        'react-native': '^1.2.3',
+      },
+    });
+    writeMockLock({
+      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
+      packages: {},
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await integrate();
+
+    expect(mockPrompter.log.warning).not.toHaveBeenCalledWith(
+      expect.stringContaining('requires React Native')
+    );
+  });
+  it('should not warn and exit when rn version is invalid', async () => {
+    writeMockProject({
+      name: 'mock-project',
+      version: '0.0.0',
+      description: 'Mock project',
+      dependencies: {
+        'mock-package-with-min-rn': '^1.2.3',
         'react-native': '^invalid',
       },
     });
@@ -460,6 +491,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-min-v': '^0.0.0',
+        'react-native': '^0.0.0',
       },
     });
     writeMockLock({
@@ -481,6 +513,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-min-v': '^1.2.3',
+        'react-native': '^0.0.0',
       },
     });
     writeMockLock({
@@ -502,6 +535,7 @@ describe('integrate', () => {
       description: 'Mock project',
       dependencies: {
         'mock-package-with-invalid-min-v': '^invalid',
+        'react-native': '^0.0.0',
       },
     });
     writeMockLock({

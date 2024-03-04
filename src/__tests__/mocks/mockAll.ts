@@ -4,6 +4,7 @@ require('./mockProjectPath');
 require('./mockFetch');
 const { mockPrompter } = require('./mockPrompter');
 const { mockFs } = require('./mockFs');
+const { mockGlob } = require('./mockGlob');
 
 import path from 'path';
 import { Constants } from '../../constants';
@@ -120,6 +121,7 @@ if (!didSetup) {
       description: 'Mock project',
       dependencies: {
         'mock-package': '^1.2.3',
+        'react-native': '^1.2.3',
       },
     });
   });
@@ -128,6 +130,7 @@ if (!didSetup) {
 
 export {
   mockFs,
+  mockGlob,
   mockPrompter,
   writeMockProject,
   writeMockLock,

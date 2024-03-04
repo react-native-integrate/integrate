@@ -153,6 +153,16 @@ export type BuildGradleTaskType = ModTaskBase &
 
 export type BuildGradleLocationType = 'root' | 'app';
 
+// main application task
+
+export type MainApplicationTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    type: 'main_application';
+    lang?: AndroidCodeType;
+  };
+
+export type AndroidCodeType = 'java' | 'kotlin';
+
 // android manifest task
 
 export type AndroidManifestTaskType = ModTaskBase &
@@ -331,6 +341,7 @@ export type ModTask =
   | PlistTaskType
   | AppDelegateTaskType
   | BuildGradleTaskType
+  | MainApplicationTaskType
   | AndroidManifestTaskType
   | NotificationServiceTaskType
   | NotificationViewControllerTaskType

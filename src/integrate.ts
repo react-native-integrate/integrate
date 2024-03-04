@@ -105,14 +105,31 @@ export async function integrate(packageName?: string): Promise<void> {
           );
           continue;
         }
+
+        const rnVersionEntry = installedPackages.find(
+          entry => entry[0] === 'react-native'
+        );
+        if (!rnVersionEntry) {
+          stopSpinner('checked package configuration');
+          logWarning('React Native not installed!?');
+          return;
+        }
+        const rnVersion = rnVersionEntry[1];
+        const semRnVersion = semver.coerce(rnVersion);
+        if (!semRnVersion) {
+          stopSpinner('checked package configuration');
+          logWarning(`React Native version (${rnVersion}) is invalid!?`);
+          return;
+        }
+        variables.setPredefined('RN_VERSION', {
+          major: semRnVersion.major,
+          minor: semRnVersion.minor,
+          patch: semRnVersion.patch,
+        });
         if (config.minRNVersion) {
-          const rnVersionEntry = installedPackages.find(
-            entry => entry[0] === 'react-native'
-          );
           if (
-            !rnVersionEntry ||
             semver.lt(
-              semver.coerce(rnVersionEntry[1]) || '0.0.0',
+              semRnVersion,
               semver.coerce(config.minRNVersion) || '0.0.0'
             )
           ) {

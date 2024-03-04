@@ -43,6 +43,9 @@ export const variables = {
   set<T>(name: string, value: T): void {
     _store[name] = value;
   },
+  setPredefined<T>(name: string, value: T): void {
+    predefinedVariables[name] = value;
+  },
   clear(): void {
     _store = {};
   },
