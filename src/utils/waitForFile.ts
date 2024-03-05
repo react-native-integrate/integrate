@@ -30,11 +30,14 @@ export async function waitForFile(filePath: string): Promise<boolean> {
       );
       const watcher = fs.watch(
         // Extract the directory path from the file path
-        filePath.split('/').slice(0, -1).join('/'),
+        filePath.split(path.sep).slice(0, -1).join(path.sep),
         { persistent: false }, // Set persistent as false to automatically close the watcher when no longer needed
         (event, filename) => {
           // Check if the file has been created
-          if (event === 'rename' && filename === filePath.split('/').pop()) {
+          if (
+            event === 'rename' &&
+            filename === filePath.split(path.sep).pop()
+          ) {
             // Stop watching
 
             stopSpinner(`file was placed to ${color.yellow(relativePath)}`);

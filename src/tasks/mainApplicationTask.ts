@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { globSync } from 'glob';
-import path from 'path';
 import { Constants } from '../constants';
 import {
   AndroidCodeType,
@@ -134,7 +133,7 @@ function getMainApplicationPath(lang?: AndroidCodeType) {
   const projectPath = getProjectPath();
 
   const mainApplicationPath = globSync(
-    path.join(
+    [
       projectPath,
       'android',
       'app',
@@ -144,8 +143,8 @@ function getMainApplicationPath(lang?: AndroidCodeType) {
       '**',
       lang === 'kotlin'
         ? Constants.MAIN_APPLICATION_KT_FILE_NAME
-        : Constants.MAIN_APPLICATION_JAVA_FILE_NAME
-    )
+        : Constants.MAIN_APPLICATION_JAVA_FILE_NAME,
+    ].join('/')
   )[0];
   if (!mainApplicationPath)
     throw new Error(
