@@ -8,6 +8,7 @@ export const Constants = {
   PLIST_FILE_NAME: 'Info.plist',
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',
+  STRINGS_XML_FILE_NAME: 'strings.xml',
   BUILD_GRADLE_FILE_NAME: 'build.gradle',
   SETTINGS_GRADLE_FILE_NAME: 'settings.gradle',
   MAIN_APPLICATION_JAVA_FILE_NAME: 'MainApplication.java',

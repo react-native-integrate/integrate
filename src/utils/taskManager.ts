@@ -3,6 +3,7 @@ import * as plist from '../tasks/plistTask';
 import * as build_gradle from '../tasks/buildGradleTask';
 import * as xcode from '../tasks/xcode/xcodeTask';
 import * as android_manifest from '../tasks/androidManifestTask';
+import * as strings_xml from '../tasks/stringsXmlTask';
 import * as podfile from '../tasks/podFileTask';
 import * as fs from '../tasks/fsTask';
 import * as json from '../tasks/jsonTask';
@@ -27,6 +28,7 @@ const task: Record<string, TaskExports> = {
   notification_view_controller,
   main_application,
   settings_gradle,
+  strings_xml,
 };
 
 const systemTaskTypes = Object.entries(task)

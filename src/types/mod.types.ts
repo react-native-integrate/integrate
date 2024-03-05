@@ -184,6 +184,13 @@ export type AndroidManifestModifierType =
     attributes?: AnyObject;
   };
 
+// strings xml task
+
+export type StringsXmlTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    type: 'strings_xml';
+  };
+
 // add resource task
 
 export type XcodeTaskType = ModTaskBase &
@@ -351,6 +358,7 @@ export type ModTask =
   | SettingsGradleTaskType
   | MainApplicationTaskType
   | AndroidManifestTaskType
+  | StringsXmlTaskType
   | NotificationServiceTaskType
   | NotificationViewControllerTaskType
   | XcodeTaskType

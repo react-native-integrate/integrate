@@ -498,6 +498,9 @@
                     "$ref": "#/definitions/AndroidManifestTaskType"
                 },
                 {
+                    "$ref": "#/definitions/StringsXmlTaskType"
+                },
+                {
                     "$ref": "#/definitions/XcodeTaskType"
                 },
                 {
@@ -974,6 +977,39 @@
                 },
                 "type": {
                     "const": "settings_gradle",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "StringsXmlTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "strings_xml",
                     "type": "string"
                 },
                 "when": {}
