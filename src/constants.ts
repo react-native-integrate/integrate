@@ -17,6 +17,7 @@ export const Constants = {
   XCODEPROJ_EXT: '.xcodeproj',
   CONFIG_FILE_NAME: 'integrate.yml',
   XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',
+  XCConfig_FILE_NAME: 'Config.xcconfig',
   REMOTE_CONFIG_REPO:
     'https://raw.githubusercontent.com/murat-mehmet/react-native-integrate-configs/main/packages/[package]/integrate.yml',
   REMOTE_REPO:

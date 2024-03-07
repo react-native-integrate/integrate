@@ -1,0 +1,145 @@
+{
+  "lockfileVersion": 1,
+  "packages": {
+    "@clack/prompts": {
+      "version": "^0.7.0",
+      "integrated": false
+    },
+    "@ryansonshine/commitizen": {
+      "version": "^4.2.8",
+      "integrated": false
+    },
+    "@ryansonshine/cz-conventional-changelog": {
+      "version": "^3.3.4",
+      "integrated": false
+    },
+    "@types/jest": {
+      "version": "^27.5.2",
+      "integrated": false
+    },
+    "@types/lodash.mergewith": {
+      "version": "^4.6.7",
+      "integrated": false
+    },
+    "@types/node": {
+      "version": "^12.20.11",
+      "integrated": false
+    },
+    "@types/semver": {
+      "version": "^7.5.6",
+      "integrated": false
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "version": "^4.22.0",
+      "integrated": false
+    },
+    "@typescript-eslint/parser": {
+      "version": "^4.22.0",
+      "integrated": false
+    },
+    "ajv": {
+      "version": "^8.12.0",
+      "integrated": false
+    },
+    "chalk": {
+      "version": "^4.1.1",
+      "integrated": false
+    },
+    "commander": {
+      "version": "^11.0.0",
+      "integrated": false
+    },
+    "conventional-changelog-conventionalcommits": {
+      "version": "^5.0.0",
+      "integrated": false
+    },
+    "eslint": {
+      "version": "^7.25.0",
+      "integrated": false
+    },
+    "eslint-config-prettier": {
+      "version": "^8.3.0",
+      "integrated": false
+    },
+    "eslint-plugin-node": {
+      "version": "^11.1.0",
+      "integrated": false
+    },
+    "eslint-plugin-prettier": {
+      "version": "^3.4.0",
+      "integrated": false
+    },
+    "execa": {
+      "version": "^5.1.1",
+      "integrated": false
+    },
+    "glob": {
+      "version": "^10.3.10",
+      "integrated": false
+    },
+    "husky": {
+      "version": "^6.0.0",
+      "integrated": false
+    },
+    "isomorphic-fetch": {
+      "version": "^3.0.0",
+      "integrated": false
+    },
+    "jest": {
+      "version": "^27.2.0",
+      "integrated": false
+    },
+    "lint-staged": {
+      "version": "^13.2.1",
+      "integrated": false
+    },
+    "lodash.mergewith": {
+      "version": "^4.6.2",
+      "integrated": false
+    },
+    "picocolors": {
+      "version": "^1.0.0",
+      "integrated": false
+    },
+    "prettier": {
+      "version": "^2.2.1",
+      "integrated": false
+    },
+    "semantic-release": {
+      "version": "^21.0.1",
+      "integrated": false
+    },
+    "semver": {
+      "version": "^7.5.4",
+      "integrated": false
+    },
+    "simple-plist": {
+      "version": "^1.3.1",
+      "integrated": false
+    },
+    "ts-jest": {
+      "version": "^27.0.5",
+      "integrated": false
+    },
+    "ts-node": {
+      "version": "^10.2.1",
+      "integrated": false
+    },
+    "typescript": {
+      "version": "^4.2.4",
+      "integrated": false
+    },
+    "typescript-json-schema": {
+      "version": "^0.62.0",
+      "integrated": false
+    },
+    "xcode": {
+      "version": "^3.0.1",
+      "integrated": false
+    },
+    "yaml": {
+      "version": "^2.3.1",
+      "integrated": false
+    }
+  }
+}

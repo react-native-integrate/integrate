@@ -302,11 +302,16 @@ export type XcodeSetDeploymentVersion = ActionBase & {
   target: 'root' | 'main' | string;
 };
 
+export type XcodeAddConfiguration = ActionBase & {
+  addConfiguration: TextOrFileValue;
+};
+
 export type XcodeModifierType =
   | XcodeAddFile
   | XcodeAddTarget
   | XcodeAddCapability
-  | XcodeSetDeploymentVersion;
+  | XcodeSetDeploymentVersion
+  | XcodeAddConfiguration;
 
 // pod file task
 

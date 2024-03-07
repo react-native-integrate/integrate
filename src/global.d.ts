@@ -286,6 +286,6 @@ declare module 'xcode' {
   export interface GroupObject {
     name: string;
     path: string;
-    children: { comment: string }[];
+    children: { comment: string; value: string }[];
   }
 }

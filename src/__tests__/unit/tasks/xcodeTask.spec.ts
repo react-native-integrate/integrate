@@ -8,6 +8,7 @@ const mockWaitForFile = jest.spyOn(
 );
 
 import path from 'path';
+import { Constants } from '../../../constants';
 import { xcodeTask, runTask } from '../../../tasks/xcode/xcodeTask';
 import { XcodeTaskType } from '../../../types/mod.types';
 import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
@@ -463,6 +464,74 @@ describe('xcodeTask', () => {
     });
     expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('10.0');
     xcodeContext.clear();
+  });
+  it('should add configuration', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    let proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addConfiguration: 'TEST=true',
+        },
+      ],
+    };
+
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    let content = proj.writeSync();
+    const configFilePath = path.join(
+      getProjectPath(),
+      'ios',
+      Constants.XCConfig_FILE_NAME
+    );
+    expect(mockFs.readFileSync(configFilePath)).toBe('TEST=true\n');
+    expect(content).toMatch(
+      /baseConfigurationReference = .*? Config\.xcconfig \*\/;/s
+    );
+
+    mockPrompter.log.message.mockReset();
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('code already exists')
+    );
+
+    mockFs.writeFileSync(configFilePath, 'TEST=false');
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockFs.readFileSync(configFilePath)).toBe('TEST=false\nTEST=true\n');
+
+    content = proj.writeSync();
+    content = content.replace(/baseConfigurationReference/g, 'random');
+    mockFs.writeFileSync(pbxFilePath, content);
+    proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+    mockPrompter.log.message.mockReset();
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipped adding resource')
+    );
   });
   it('should add resource to main', async () => {
     const pbxFilePath = getPbxProjectPath();

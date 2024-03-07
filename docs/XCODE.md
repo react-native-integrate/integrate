@@ -158,6 +158,11 @@ Specifies the deployment target iOS version. It can take the listed values.
 - `main`: Sets deployment target version of the main target
 - Or target name or path to set the deployment version
 
+###### Add configuration
+
+#### `addConfiguration` (string or object)
+Creates or updates xcconfig configuration file.  It can be a string or an object with a `file` field that points to a file containing the code to append.
+
 Usage Example
 -------------
 

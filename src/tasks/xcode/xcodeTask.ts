@@ -8,6 +8,7 @@ import { setState } from '../../utils/setState';
 import { xcodeContext } from '../../utils/xcode.context';
 import { variables } from '../../variables';
 import { applyAddCapability } from './xcodeTask.addCapability';
+import { applyAddConfiguration } from './xcodeTask.addConfiguration';
 import { applyAddFile } from './xcodeTask.addFile';
 import { applyAddTarget } from './xcodeTask.addTarget';
 import { applySetDeploymentVersion } from './xcodeTask.setDeploymentVersion';
@@ -19,7 +20,7 @@ export async function xcodeTask(args: {
   task: XcodeTaskType;
 }): Promise<XcodeProjectType> {
   let { content } = args;
-  const { task } = args;
+  const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
     if (action.when && !satisfies(variables.getStore(), action.when)) {
@@ -36,7 +37,12 @@ export async function xcodeTask(args: {
       error: false,
     });
     try {
-      content = await applyXcodeModification(content, action);
+      content = await applyXcodeModification(
+        content,
+        action,
+        configPath,
+        packageName
+      );
       setState(action.name, {
         state: 'done',
         error: false,
@@ -56,13 +62,17 @@ export async function xcodeTask(args: {
 
 async function applyXcodeModification(
   content: XcodeProjectType,
-  action: XcodeModifierType
+  action: XcodeModifierType,
+  configPath: string,
+  packageName: string
 ) {
   if ('addFile' in action) return applyAddFile(content, action);
   if ('addTarget' in action) return applyAddTarget(content, action);
   if ('addCapability' in action) return applyAddCapability(content, action);
   if ('setDeploymentVersion' in action)
     return applySetDeploymentVersion(content, action);
+  if ('addConfiguration' in action)
+    return applyAddConfiguration(content, action, configPath, packageName);
   return content;
 }
 

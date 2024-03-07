@@ -48,7 +48,6 @@
   "homepage": "https://github.com/murat-mehmet/react-native-integrate#readme",
   "dependencies": {
     "@clack/prompts": "^0.7.0",
-    "@types/lodash.mergewith": "^4.6.7",
     "ajv": "^8.12.0",
     "commander": "^11.0.0",
     "glob": "^10.3.10",
@@ -64,6 +63,7 @@
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
     "@types/jest": "^27.5.2",
+    "@types/lodash.mergewith": "^4.6.7",
     "@types/node": "^12.20.11",
     "@types/semver": "^7.5.6",
     "@typescript-eslint/eslint-plugin": "^4.22.0",

@@ -408,3 +408,7 @@ export function normalizeBundleId(
     .replace(/"/g, '')
     .replace(/\$\(PRODUCT_NAME.*?\)/g, opts.productName);
 }
+
+export function unquote(str: string): string {
+  return str?.replace(/^"(.*)"$/, '$1');
+}

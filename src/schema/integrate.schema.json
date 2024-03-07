@@ -1205,6 +1205,22 @@
             ],
             "type": "string"
         },
+        "XcodeAddConfiguration": {
+            "additionalProperties": false,
+            "properties": {
+                "addConfiguration": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addConfiguration"
+            ],
+            "type": "object"
+        },
         "XcodeAddFile": {
             "additionalProperties": false,
             "properties": {
@@ -1422,6 +1438,9 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeSetDeploymentVersion"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddConfiguration"
                 }
             ]
         },
