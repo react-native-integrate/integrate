@@ -306,12 +306,17 @@ export type XcodeAddConfiguration = ActionBase & {
   addConfiguration: TextOrFileValue;
 };
 
+export type XcodeAddPreBuildRunScriptAction = ActionBase & {
+  addPreBuildRunScriptAction: TextOrFileValue;
+};
+
 export type XcodeModifierType =
   | XcodeAddFile
   | XcodeAddTarget
   | XcodeAddCapability
   | XcodeSetDeploymentVersion
-  | XcodeAddConfiguration;
+  | XcodeAddConfiguration
+  | XcodeAddPreBuildRunScriptAction;
 
 // pod file task
 

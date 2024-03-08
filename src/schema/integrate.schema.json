@@ -1380,6 +1380,22 @@
             ],
             "type": "string"
         },
+        "XcodeAddPreBuildRunScriptAction": {
+            "additionalProperties": false,
+            "properties": {
+                "addPreBuildRunScriptAction": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addPreBuildRunScriptAction"
+            ],
+            "type": "object"
+        },
         "XcodeAddTarget": {
             "additionalProperties": false,
             "properties": {
@@ -1441,6 +1457,9 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeAddConfiguration"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddPreBuildRunScriptAction"
                 }
             ]
         },

@@ -11,13 +11,18 @@ import path from 'path';
 import { Constants } from '../../../constants';
 import { xcodeTask, runTask } from '../../../tasks/xcode/xcodeTask';
 import { XcodeTaskType } from '../../../types/mod.types';
-import { getPbxProjectPath } from '../../../utils/getIosProjectPath';
+import {
+  getIosProjectName,
+  getIosProjectPath,
+  getPbxProjectPath,
+} from '../../../utils/getIosProjectPath';
 import { getProjectPath } from '../../../utils/getProjectPath';
 import { xcodeContext } from '../../../utils/xcode.context';
 import { variables } from '../../../variables';
 import { mockPrompter } from '../../mocks/mockAll';
 import { mockPbxProjTemplate } from '../../mocks/mockPbxProjTemplate';
 import xcode from 'xcode';
+import { mockXCSchemeTemplate } from '../../mocks/mockXCSchemeTemplate';
 
 describe('xcodeTask', () => {
   beforeEach(() => {
@@ -531,6 +536,50 @@ describe('xcodeTask', () => {
     });
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
       expect.stringContaining('skipped adding resource')
+    );
+  });
+  it('should add pre build run script action', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addPreBuildRunScriptAction: 'TESTSCRIPT();',
+        },
+      ],
+    };
+
+    const projectName = getIosProjectName();
+    const iosProjectPath = getIosProjectPath();
+    const schemePath = path.join(
+      iosProjectPath + '.xcodeproj',
+      'xcshareddata',
+      'xcschemes',
+      `${projectName}.xcscheme`
+    );
+    mockFs.writeFileSync(schemePath, mockXCSchemeTemplate);
+
+    mockPrompter.log.message.mockReset();
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockFs.readFileSync(schemePath)).toMatch('TESTSCRIPT();');
+
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('code already exists')
     );
   });
   it('should add resource to main', async () => {

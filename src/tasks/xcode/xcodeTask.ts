@@ -10,6 +10,7 @@ import { variables } from '../../variables';
 import { applyAddCapability } from './xcodeTask.addCapability';
 import { applyAddConfiguration } from './xcodeTask.addConfiguration';
 import { applyAddFile } from './xcodeTask.addFile';
+import { applyAddPreBuildRunScriptAction } from './xcodeTask.addPreBuildRunScriptAction';
 import { applyAddTarget } from './xcodeTask.addTarget';
 import { applySetDeploymentVersion } from './xcodeTask.setDeploymentVersion';
 
@@ -73,6 +74,13 @@ async function applyXcodeModification(
     return applySetDeploymentVersion(content, action);
   if ('addConfiguration' in action)
     return applyAddConfiguration(content, action, configPath, packageName);
+  if ('addPreBuildRunScriptAction' in action)
+    return applyAddPreBuildRunScriptAction(
+      content,
+      action,
+      configPath,
+      packageName
+    );
   return content;
 }
 
