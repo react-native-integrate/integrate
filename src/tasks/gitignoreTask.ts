@@ -102,4 +102,4 @@ export async function runTask(args: {
   writeGitignoreContent(content);
 }
 
-export const summary = 'Gitignore modification';
+export const summary = '.gitignore modification';
