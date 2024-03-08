@@ -36,19 +36,20 @@ tasks:
 
 Click on the links below to learn how to use each task type:
 
-|                  Task                   | Description                              |
-|:---------------------------------------:|------------------------------------------|
-|     [AppDelegate](APP_DELEGATE.md)      | Modify AppDelegate.mm file               |
-|            [Plist](PLIST.md)            | Modify Info.plist file                   |
-|             [Json](JSON.md)             | Create or modify any json file           |
-|            [Xcode](XCODE.md)            | Modify Xcode project                     |
-|     [Build Gradle](BUILD_GRADLE.md)     | Modify build.gradle files                |
-|  [Settings Gradle](SETTINGS_GRADLE.md)  | Modify settings.gradle file              |
-| [Android Manifest](ANDROID_MANIFEST.md) | Modify AndroidManifest.xml file          |
-|      [Strings Xml](STRINGS_XML.md)      | Modify strings.xml file                  |
-|          [Podfile](PODFILE.md)          | Modify Podfile in ios folder             |
-|          [File system](FS.md)           | Copy other files into project            |
-| [MainApplication](MAIN_APPLICATION.md)  | Modify MainApplication java or kt file   |
+|                  Task                   | Description                            |
+|:---------------------------------------:|----------------------------------------|
+|     [AppDelegate](APP_DELEGATE.md)      | Modify AppDelegate.mm file             |
+|            [Plist](PLIST.md)            | Modify Info.plist file                 |
+|             [Json](JSON.md)             | Create or modify any json file         |
+|            [Xcode](XCODE.md)            | Modify Xcode project                   |
+|     [Build Gradle](BUILD_GRADLE.md)     | Modify build.gradle files              |
+|  [Settings Gradle](SETTINGS_GRADLE.md)  | Modify settings.gradle file            |
+| [Android Manifest](ANDROID_MANIFEST.md) | Modify AndroidManifest.xml file        |
+|      [Strings Xml](STRINGS_XML.md)      | Modify strings.xml file                |
+|          [Podfile](PODFILE.md)          | Modify Podfile in ios folder           |
+|        [Gitignore](GITIGNORE.md)        | Modify .gitignore file                 |
+|          [File system](FS.md)           | Copy other files into project          |
+| [MainApplication](MAIN_APPLICATION.md)  | Modify MainApplication java or kt file |
 
 PreInfo and PostInfo
 --------------------

@@ -5,6 +5,7 @@ import * as xcode from '../tasks/xcode/xcodeTask';
 import * as android_manifest from '../tasks/androidManifestTask';
 import * as strings_xml from '../tasks/stringsXmlTask';
 import * as podfile from '../tasks/podFileTask';
+import * as gitignore from '../tasks/gitignoreTask';
 import * as fs from '../tasks/fsTask';
 import * as json from '../tasks/jsonTask';
 import * as prompt from '../tasks/promptTask';
@@ -21,6 +22,7 @@ const task: Record<string, TaskExports> = {
   xcode,
   android_manifest,
   podfile,
+  gitignore,
   fs,
   json,
   prompt,

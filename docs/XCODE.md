@@ -163,6 +163,11 @@ Specifies the deployment target iOS version. It can take the listed values.
 #### `addConfiguration` (string or object)
 Creates or updates xcconfig configuration file.  It can be a string or an object with a `file` field that points to a file containing the code to append.
 
+###### Add pre build run script action
+
+#### `addPreBuildRunScriptAction` (string or object)
+Adds a pre build run script action into shared scheme.  It can be a string or an object with a `file` field that points to a file containing the code to append.
+
 Usage Example
 -------------
 

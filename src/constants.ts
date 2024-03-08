@@ -14,6 +14,7 @@ export const Constants = {
   MAIN_APPLICATION_JAVA_FILE_NAME: 'MainApplication.java',
   MAIN_APPLICATION_KT_FILE_NAME: 'MainApplication.kt',
   POD_FILE_NAME: 'Podfile',
+  GITIGNORE_FILE_NAME: '.gitignore',
   XCODEPROJ_EXT: '.xcodeproj',
   CONFIG_FILE_NAME: 'integrate.yml',
   XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',

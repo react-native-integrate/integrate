@@ -331,6 +331,13 @@ export type PodFileModifierType = ContentModifierType & {
   disableFlipper?: boolean;
 };
 
+// gitignore task
+
+export type GitignoreTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    type: 'gitignore';
+  };
+
 // fs task
 
 export type FsTaskType = ModTaskBase &
@@ -373,6 +380,7 @@ export type ModTask =
   | NotificationViewControllerTaskType
   | XcodeTaskType
   | PodFileTaskType
+  | GitignoreTaskType
   | FsTaskType
   | JsonTaskType
   | PromptTaskType;

@@ -395,6 +395,39 @@
             ],
             "type": "object"
         },
+        "GitignoreTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "gitignore",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
         "JsonTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -505,6 +538,9 @@
                 },
                 {
                     "$ref": "#/definitions/PodFileTaskType"
+                },
+                {
+                    "$ref": "#/definitions/GitignoreTaskType"
                 },
                 {
                     "$ref": "#/definitions/FsTaskType"
