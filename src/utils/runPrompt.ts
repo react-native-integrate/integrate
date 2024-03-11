@@ -1,28 +1,35 @@
 import { confirm, multiselect, text } from '../prompter';
 import { Prompt, ValidationType } from '../types/mod.types';
 import { transformTextInObject, variables } from '../variables';
+import { handlePackageUpgradeInput } from './getPackageUpgradeInput';
+import { addPackageUpgradeInput } from './packageUpgradeConfig';
 
-export async function runPrompt(prompt: Prompt): Promise<void> {
+export async function runPrompt(
+  prompt: Prompt,
+  packageName: string
+): Promise<void> {
+  if (handlePackageUpgradeInput(packageName, prompt.name)) return;
+
   prompt = transformTextInObject(prompt);
+  let inputValue: any;
   switch (prompt.type) {
     case 'boolean':
-      variables.set(prompt.name, await confirm(prompt.text, prompt));
+      inputValue = await confirm(prompt.text, prompt);
       break;
     case 'multiselect':
-      variables.set(prompt.name, await multiselect(prompt.text, prompt));
+      inputValue = await multiselect(prompt.text, prompt);
       break;
     default:
-      variables.set(
-        prompt.name,
-        await text(prompt.text, {
-          placeholder: prompt.placeholder,
-          defaultValue: prompt.defaultValue,
-          initialValue: prompt.initialValue,
-          validate: getValidate(prompt.validate),
-        })
-      );
+      inputValue = await text(prompt.text, {
+        placeholder: prompt.placeholder,
+        defaultValue: prompt.defaultValue,
+        initialValue: prompt.initialValue,
+        validate: getValidate(prompt.validate),
+      });
       break;
   }
+  variables.set(prompt.name, inputValue);
+  addPackageUpgradeInput(packageName, prompt.name, inputValue);
 }
 
 export function getValidate(

@@ -10,7 +10,7 @@ export async function promptTask(args: {
   packageName: string;
   task: PromptTaskType;
 }): Promise<void> {
-  const { task } = args;
+  const { task, packageName } = args;
 
   for (const action of task.actions) {
     if (action.when && !satisfies(variables.getStore(), action.when)) {
@@ -27,7 +27,7 @@ export async function promptTask(args: {
       error: false,
     });
     try {
-      await runPrompt(action);
+      await runPrompt(action, packageName);
     } catch (e) {
       setState(action.name, {
         state: 'error',

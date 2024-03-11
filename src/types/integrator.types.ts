@@ -28,3 +28,8 @@ export interface LockProjectData {
   integrated: boolean;
   deleted?: boolean;
 }
+
+export interface PackageUpgradeConfig {
+  inputs?: Record<string, any>;
+  files?: Record<string, string>;
+}

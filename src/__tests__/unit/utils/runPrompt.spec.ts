@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { getValidate } from '../../../utils/runPrompt';
+const { mockFs } = require('../../mocks/mockAll');
+
+import path from 'path';
+import { getProjectPath } from '../../../utils/getProjectPath';
+import { getValidate, runPrompt } from '../../../utils/runPrompt';
+import { variables } from '../../../variables';
+import { mockPrompter } from '../../mocks/mockAll';
 
 describe('getValidate', () => {
   it('should get success validation fn', () => {
@@ -30,5 +36,43 @@ describe('getValidate', () => {
   it('should handle undefined', () => {
     const fn = getValidate(undefined);
     expect(fn).toBeUndefined();
+  });
+});
+
+describe('runPrompt', () => {
+  it('should handle upgrade when input value is in upgrade.json', async () => {
+    variables.set('__UPGRADE__', true);
+    mockFs.writeFileSync(
+      path.join(
+        getProjectPath(),
+        '.upgrade',
+        'packages',
+        'test-package',
+        'upgrade.json'
+      ),
+      JSON.stringify(
+        {
+          inputs: {
+            testInput: 'testValue',
+          },
+        },
+        null,
+        2
+      )
+    );
+    mockPrompter.text.mockReset();
+
+    await runPrompt(
+      {
+        name: 'testInput',
+        type: 'text',
+        text: 'random',
+      },
+      'test-package'
+    );
+    expect(mockPrompter.text).not.toHaveBeenCalled();
+
+    expect(variables.get('testInput')).toBe('testValue');
+    variables.clear();
   });
 });

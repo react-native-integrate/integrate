@@ -4,6 +4,7 @@ import { getInfo } from './getInfo';
 import { integrate } from './integrate';
 import { options } from './options';
 import { logIntro, logOutro } from './prompter';
+import { upgrade } from './upgrade';
 
 const { version } = require('../package.json');
 
@@ -31,6 +32,17 @@ program
     logIntro('react-native-integrate - package information');
     await getInfo(packageName);
     logOutro('completed package information');
+  });
+
+program
+  .command('upgrade')
+  .description(
+    'Upgrade React Native project. Re-integrate previously integrated modules and apply own changes.'
+  )
+  .action(async () => {
+    logIntro('react-native-integrate - upgrade project');
+    await upgrade();
+    logOutro('completed project upgrade');
   });
 
 program.parseAsync().catch(console.warn);

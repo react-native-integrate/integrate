@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const { mockFs, mockPrompter } = require('../../mocks/mockAll');
-const mock = jest.spyOn(require('../../../utils/stringSplice'), 'stringSplice');
 
 import path from 'path';
 import { Constants } from '../../../constants';

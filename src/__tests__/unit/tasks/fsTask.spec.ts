@@ -10,6 +10,8 @@ const mockWaitForFile = jest.spyOn(
 import path from 'path';
 import { fsTask, runTask } from '../../../tasks/fsTask';
 import { FsTaskType } from '../../../types/mod.types';
+import { getProjectPath } from '../../../utils/getProjectPath';
+import { variables } from '../../../variables';
 import { mockPrompter } from '../../mocks/mockAll';
 
 const projectFullPath = path.resolve(__dirname, '../../mock-project');
@@ -17,6 +19,137 @@ const projectFullPath = path.resolve(__dirname, '../../mock-project');
 describe('fsTask', () => {
   beforeEach(() => {
     mockFs.writeFileSync('/test/file.json', 'test-content');
+  });
+  it('should handle upgrade when file is not in .upgrade folder', async () => {
+    variables.set('__UPGRADE__', true);
+    mockPrompter.text.mockReset();
+
+    const task: FsTaskType = {
+      type: 'fs',
+      actions: [
+        {
+          copyFile: 'file.json',
+          destination: 'android/file.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    mockPrompter.text.mockImplementationOnce(() => '/test/file.json');
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.text).toHaveBeenCalled();
+
+    expect(
+      mockFs.readFileSync(path.join(projectFullPath, 'android', 'file.json'))
+    ).toEqual('test-content');
+    variables.clear();
+  });
+  it('should handle upgrade when file is in upgrade.json but not in files folder', async () => {
+    variables.set('__UPGRADE__', true);
+    mockFs.writeFileSync(
+      path.join(
+        getProjectPath(),
+        '.upgrade',
+        'packages',
+        'test-package',
+        'upgrade.json'
+      ),
+      JSON.stringify(
+        {
+          files: {
+            'android/file.json': 'file.json',
+          },
+        },
+        null,
+        2
+      )
+    );
+    mockPrompter.text.mockReset();
+
+    const task: FsTaskType = {
+      type: 'fs',
+      actions: [
+        {
+          copyFile: 'file.json',
+          destination: 'android/file.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    mockPrompter.text.mockImplementationOnce(() => '/test/file.json');
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.text).toHaveBeenCalled();
+
+    expect(
+      mockFs.readFileSync(path.join(projectFullPath, 'android', 'file.json'))
+    ).toEqual('test-content');
+    variables.clear();
+  });
+  it('should handle upgrade when file is in upgrade.json and in files folder', async () => {
+    variables.set('__UPGRADE__', true);
+    mockFs.writeFileSync(
+      path.join(
+        getProjectPath(),
+        '.upgrade',
+        'packages',
+        'test-package',
+        'upgrade.json'
+      ),
+      JSON.stringify(
+        {
+          files: {
+            'android/file.json': 'file.json',
+          },
+        },
+        null,
+        2
+      )
+    );
+    mockFs.writeFileSync(
+      path.join(
+        getProjectPath(),
+        '.upgrade',
+        'packages',
+        'test-package',
+        'files',
+        'file.json'
+      ),
+      'test-upgrade-content'
+    );
+    mockPrompter.text.mockReset();
+
+    const task: FsTaskType = {
+      type: 'fs',
+      actions: [
+        {
+          copyFile: 'file.json',
+          destination: 'android/file.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    mockPrompter.text.mockImplementationOnce(() => '/test/file.json');
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+    expect(mockPrompter.text).not.toHaveBeenCalled();
+
+    expect(
+      mockFs.readFileSync(path.join(projectFullPath, 'android', 'file.json'))
+    ).toEqual('test-upgrade-content');
+    variables.clear();
   });
   it('should copy entered file to destination', async () => {
     mockPrompter.text.mockReset();

@@ -10,7 +10,8 @@ import { patchXcodeProject } from './xcodeTask.helpers';
 
 export async function applyAddFile(
   content: XcodeProjectType,
-  action: XcodeAddFile
+  action: XcodeAddFile,
+  packageName: string
 ): Promise<XcodeProjectType> {
   let { target } = action;
   target = target || 'root';
@@ -53,11 +54,14 @@ export async function applyAddFile(
   }
 
   // copy file
-  await applyFsModification({
-    copyFile: fileName,
-    destination,
-    message: action.message,
-  });
+  await applyFsModification(
+    {
+      copyFile: fileName,
+      destination,
+      message: action.message,
+    },
+    packageName
+  );
 
   const releasePatch = patchXcodeProject({
     push: (array, item) => array.unshift(item),

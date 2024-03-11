@@ -3,8 +3,10 @@ import path from 'path';
 import color from 'picocolors';
 import { confirm, logMessage, logMessageGray, text } from '../prompter';
 import { FsModifierType, FsTaskType } from '../types/mod.types';
+import { handlePackageUpgradeCopyFile } from '../utils/copyPackageUpgradeFile';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
+import { addPackageUpgradeFile } from '../utils/packageUpgradeConfig';
 import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { waitForFile } from '../utils/waitForFile';
@@ -15,7 +17,7 @@ export async function fsTask(args: {
   packageName: string;
   task: FsTaskType;
 }): Promise<void> {
-  const { task } = args;
+  const { task, packageName } = args;
 
   for (const action of task.actions) {
     if (action.when && !satisfies(variables.getStore(), action.when)) {
@@ -32,7 +34,7 @@ export async function fsTask(args: {
       error: false,
     });
     try {
-      await applyFsModification(action);
+      await applyFsModification(action, packageName);
       setState(action.name, {
         state: 'done',
         error: false,
@@ -49,9 +51,15 @@ export async function fsTask(args: {
 }
 
 export async function applyFsModification(
-  action: FsModifierType
+  action: FsModifierType,
+  packageName: string
 ): Promise<void> {
   if (action.copyFile) {
+    if (
+      handlePackageUpgradeCopyFile(packageName, getText(action.destination))
+    ) {
+      return;
+    }
     action.copyFile = getText(action.copyFile);
 
     const file = await text(
@@ -108,6 +116,7 @@ export async function applyFsModification(
         } else logMessage(`file was updated at ${color.yellow(destination)}`);
       }
     }
+    addPackageUpgradeFile(packageName, action.destination);
   }
 }
 

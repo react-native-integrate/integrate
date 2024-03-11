@@ -6,6 +6,10 @@ const mockWaitForFile = jest.spyOn(
   require('../../../utils/waitForFile'),
   'waitForFile'
 );
+const mockAddPackageUpgradeFile = jest.spyOn(
+  require('../../../utils/packageUpgradeConfig'),
+  'addPackageUpgradeFile'
+);
 
 import path from 'path';
 import { Constants } from '../../../constants';
@@ -29,6 +33,9 @@ describe('xcodeTask', () => {
     mockPrompter.text.mockImplementationOnce(() => '');
     mockWaitForFile.mockImplementationOnce(() => {
       return Promise.resolve(true);
+    });
+    mockAddPackageUpgradeFile.mockImplementationOnce(() => {
+      /* empty */
     });
   });
   it('should not change project', async () => {
