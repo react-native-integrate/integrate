@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import color from 'picocolors';
+import { logMessage } from '../prompter';
 import { variables } from '../variables';
 import { getProjectPath } from './getProjectPath';
 import { getPackageUpgradeConfig } from './packageUpgradeConfig';
@@ -30,7 +32,9 @@ export function copyPackageUpgradeFile(
   }
 
   fs.mkdirSync(path.dirname(destination), { recursive: true });
-  console.log(`Copying ${filePathInUpgradeFolder} to ${destination}`);
+  logMessage(
+    `copying ${color.yellow(fileNameInUpgradeFolder)} to ${color.yellow(destination)}`
+  );
   fs.copyFileSync(filePathInUpgradeFolder, path.join(projectPath, destination));
   return true;
 }
