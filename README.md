@@ -20,8 +20,8 @@ You can focus more on coding and development, while the tool takes care of integ
 
 - Automatic integration of additional code into React Native iOS and Android projects.
 - Simplifies the process of handling code changes required by various packages.
+- Makes it possible to upgrade to new RN versions with a single command.
 - Saves time and effort by automating integration tasks.
-- Works seamlessly with your project's package management.
 
 ## Usage
 
@@ -78,6 +78,22 @@ integrate info <package-name>
 ```
 
 This command allows you to verify the integration status, including the availability of local or remote configuration files.
+
+## Upgrading React Native
+
+This tool keeps track of integrations in `integrate-lock.json`. Also input values and files that are required by integrations will be saved in `.upgrade` folder.
+
+When upgrading to a new RN version;
+1. Create a new React Native project
+2. Move `package.json` dependencies, `integrate-lock.json` and `.upgrade` folder to the new project
+3. Run `npm install` to install node modules.
+4. Run:
+```bash
+npx react-native-integrate upgrade
+# or, if you've installed it as a dev dependency
+upgrade
+```
+All previously integrated packages will be re-integrated into your new RN project.
 
 ## For Package Developers
 
