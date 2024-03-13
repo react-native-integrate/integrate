@@ -12,7 +12,7 @@ export function getIosBundleId(): string {
     'PRODUCT_BUNDLE_IDENTIFIER',
     'Release',
     nativeTarget.target.name
-  ) as string;
+  );
   if (bundleId)
     bundleId = normalizeBundleId(bundleId, {
       productName: nativeTarget.target.name,

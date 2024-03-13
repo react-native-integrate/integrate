@@ -73,9 +73,12 @@ export function updateIntegrationStatus(
   });
   lockData.packages = Object.keys(lockData.packages)
     .sort()
-    .reduce((temp_obj, key) => {
-      temp_obj[key] = lockData.packages[key];
-      return temp_obj;
-    }, {} as Record<string, any>);
+    .reduce(
+      (temp_obj, key) => {
+        temp_obj[key] = lockData.packages[key];
+        return temp_obj;
+      },
+      {} as Record<string, any>
+    );
   writeLockFile(lockData);
 }

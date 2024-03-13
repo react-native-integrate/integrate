@@ -26,10 +26,13 @@ const predefinedVariables: Record<string, any> = {
       return null;
     }
   },
-  ...Object.entries(process.env).reduce((o, [name, value]) => {
-    o[`ENV.${name}`] = value;
-    return o;
-  }, {} as Record<string, any>),
+  ...Object.entries(process.env).reduce(
+    (o, [name, value]) => {
+      o[`ENV.${name}`] = value;
+      return o;
+    },
+    {} as Record<string, any>
+  ),
 };
 
 // User-defined variables
@@ -52,7 +55,7 @@ export const variables = {
   getStore(): Record<string, any> {
     return Object.assign(
       Object.create(
-        Object.getPrototypeOf(predefinedVariables),
+        Object.getPrototypeOf(predefinedVariables) as object,
         Object.getOwnPropertyDescriptors(predefinedVariables)
       ),
       _store
@@ -92,7 +95,7 @@ export function transformTextInObject<T>(obj: T): T {
 
   // If obj is an array, process its elements.
   if (Array.isArray(obj)) {
-    return <T>obj.map(item => transformTextInObject<T>(item));
+    return <T>obj.map((item: T) => transformTextInObject<T>(item));
   }
 
   // If obj is a string, add a "+" sign to it.

@@ -164,7 +164,7 @@ function applyAttributeModification(args: {
             logMessage(
               `set existing attribute in ${summarize(
                 getBlockName(action)
-              )} - ${summarize(name)}: ${summarize(value)}`
+              )} - ${summarize(name)}: ${summarize(value as string)}`
             );
           } else {
             // set
@@ -180,7 +180,7 @@ function applyAttributeModification(args: {
             logMessage(
               `set new attribute in ${summarize(
                 getBlockName(action)
-              )} - ${summarize(name)}: ${summarize(value)}`
+              )} - ${summarize(name)}: ${summarize(value as string)}`
             );
           }
         }

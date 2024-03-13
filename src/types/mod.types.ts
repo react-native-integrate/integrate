@@ -64,7 +64,7 @@ export type ObjectModifierType = ActionBase & {
 
 export type ActionBase = {
   name?: string;
-  when?: any;
+  when?: AnyObject;
 };
 
 export type ActionsType<T extends ActionBase> = {
@@ -201,6 +201,7 @@ export type XcodeTaskType = ModTaskBase &
 export type XcodeAddFile = ActionBase & {
   addFile: string;
   message?: string;
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   target?: 'root' | 'main' | string;
 };
 export type XcodeAddTarget = ActionBase & {
@@ -214,6 +215,7 @@ export type XcodeAddTargetType =
   | 'notification-content';
 
 export type XcodeAddCapabilityBase = ActionBase & {
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   target: 'main' | string;
 };
 
@@ -299,6 +301,7 @@ export type XcodeSetDeploymentVersion = ActionBase & {
     | string
     | number
     | { min: string | number; max?: string | number };
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   target: 'root' | 'main' | string;
 };
 
@@ -363,7 +366,7 @@ export type PromptActionType = ActionBase & Prompt;
 export type ModTaskBase = {
   name?: string;
   label?: string;
-  when?: any;
+  when?: AnyObject;
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
 };

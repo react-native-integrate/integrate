@@ -53,10 +53,13 @@ export function plistTask(args: {
 
   content = Object.keys(content)
     .sort()
-    .reduce((temp_obj, key) => {
-      temp_obj[key] = content[key];
-      return temp_obj;
-    }, {} as Record<string, any>);
+    .reduce(
+      (temp_obj, key) => {
+        temp_obj[key] = content[key];
+        return temp_obj;
+      },
+      {} as Record<string, any>
+    );
 
   return content;
 }

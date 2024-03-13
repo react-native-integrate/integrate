@@ -64,7 +64,12 @@ declare module 'xcode' {
 
     addTarget(name: any, type: any, subfolder: any, bundleId: any): any;
 
-    addExtensionTarget(name: any, type: any, subfolder: any, opts: any): any;
+    addExtensionTarget(
+      name: any,
+      type: any,
+      subfolder: any,
+      opts: any
+    ): { uuid: string };
 
     addTargetAttribute(prop: any, value: any, target: any): void;
 
@@ -140,7 +145,7 @@ declare module 'xcode' {
 
     getBuildConfigByName(name: any): any;
 
-    getBuildProperty(prop: any, build: any, targetName: any): any;
+    getBuildProperty(prop: any, build: any, targetName: any): string;
 
     getBuildPropertyByTarget(prop: any, build: any, target: any): any;
 

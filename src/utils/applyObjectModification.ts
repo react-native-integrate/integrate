@@ -29,6 +29,7 @@ export function applyObjectModification(
         if (Array.isArray(objValue) && Array.isArray(srcValue)) {
           return objValue.concat(
             srcValue.filter(objB =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               objValue.every(objA => !deepEquals(objA, objB))
             )
           );
@@ -59,11 +60,11 @@ export function applyObjectModification(
   }
 
   Object.entries(action.set).forEach(([key, value]) => {
-    value = typeof value === 'string' ? value : JSON.stringify(value);
+    const strValue = typeof value === 'string' ? value : JSON.stringify(value);
     logMessage(
       `set ${color.yellow(key)} with ${color.yellow(
         strategy
-      )} strategy: ${summarize(value)}`
+      )} strategy: ${summarize(strValue)}`
     );
   });
 

@@ -10,7 +10,7 @@ export function getInstalledPackages(): PackageTuples {
     return Object.entries({
       ...packageJson.dependencies,
       ...packageJson.devDependencies,
-    });
+    } as Record<string, any>) as PackageTuples;
   } catch (error) {
     console.error('Error fetching installed packages:', error);
     process.abort();

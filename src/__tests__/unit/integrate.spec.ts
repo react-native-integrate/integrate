@@ -41,7 +41,7 @@ describe('integrate', () => {
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
 
-    const lockContent = mockFs.readFileSync(lockPath);
+    const lockContent = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(lockContent);
     expect(lockData.packages['mock-package']).toEqual({
       version: '^1.2.3',
@@ -59,7 +59,7 @@ describe('integrate', () => {
 
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
-    const lockContent = mockFs.readFileSync(lockPath);
+    const lockContent = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(lockContent);
     expect(lockData.packages['mock-package']).toEqual({
       version: '^1.2.3',
@@ -77,7 +77,7 @@ describe('integrate', () => {
 
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
-    const lockContent = mockFs.readFileSync(lockPath);
+    const lockContent = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(lockContent);
     expect(lockData.packages['mock-package']).toEqual({
       version: '^1.2.3',
@@ -127,7 +127,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(content);
     expect(lockData.packages).toEqual({});
   });
@@ -152,7 +152,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(content);
     expect(lockData.packages['mock-package']).toEqual({
       version: '1.2.3',
@@ -175,7 +175,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(content);
     // console.log('mockFs',mockFs.getStore());
     expect(lockData.packages['mock-package']).toEqual(undefined);
@@ -190,7 +190,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.step).toHaveBeenCalledWith(
       expect.stringContaining('skipped package integration')
@@ -209,7 +209,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('test error')
@@ -228,7 +228,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('error occurred')
@@ -247,7 +247,7 @@ describe('integrate', () => {
 
     await integrate();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('test error')

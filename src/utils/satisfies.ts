@@ -110,7 +110,7 @@ export function deepEquals(left: TAny, right: TAny): boolean {
   if (isLeftArray && isRightArray) {
     if (left.length != right.length) return false;
     for (let i = 0; i < left.length; i++) {
-      if (!deepEquals(left[i], right[i])) return false;
+      if (!deepEquals(left[i] as TAny, right[i] as TAny)) return false;
     }
     return true;
   }
@@ -123,7 +123,7 @@ export function deepEquals(left: TAny, right: TAny): boolean {
 
   for (const key of keysA) {
     if (!keysB.includes(key)) return false;
-    if (!deepEquals(left[key], right[key])) return false;
+    if (!deepEquals(left[key] as TAny, right[key] as TAny)) return false;
   }
 
   return true;
@@ -163,14 +163,14 @@ const arrayOperands: Record<string, (left: TArray, right: TAny) => boolean> = {
   $all(left: TArray, right: TAny) {
     if (Array.isArray(right))
       return right.every((rightChild: TAny) =>
-        left.some(leftChild => satisfies(leftChild, rightChild))
+        left.some((leftChild: TAny) => satisfies(leftChild, rightChild))
       );
     return left.every((leftChild: TAny) => satisfies(leftChild, right));
   },
   $any(left: TArray, right: TAny) {
     if (Array.isArray(right))
       return right.some((rightChild: TAny) =>
-        left.some(leftChild => satisfies(leftChild, rightChild))
+        left.some((leftChild: TAny) => satisfies(leftChild, rightChild))
       );
     return left.some((leftChild: TAny) => satisfies(leftChild, right));
   },

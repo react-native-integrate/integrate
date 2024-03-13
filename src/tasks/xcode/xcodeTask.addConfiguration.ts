@@ -42,7 +42,11 @@ export async function applyAddConfiguration(
 
       const fileRefSection = content.pbxFileReferenceSection();
       const fileRef = fileRefSection[buildConfig.baseConfigurationReference];
-      const filePath = path.join(projectPath, 'ios', unquote(fileRef.path));
+      const filePath = path.join(
+        projectPath,
+        'ios',
+        unquote(fileRef.path as string)
+      );
       if (!processedFiles.includes(filePath)) {
         processedFiles.push(filePath);
 
@@ -62,7 +66,7 @@ export async function applyAddConfiguration(
           logMessage(
             `added ${summarize(
               configurationContent
-            )} configuration in ${color.yellow(fileRef.path)}`
+            )} configuration in ${color.yellow(fileRef.path as string)}`
           );
         }
       }
@@ -116,9 +120,9 @@ export async function applyAddConfiguration(
 
       logMessage(
         `set ${color.yellow(
-          createdFile.basename
+          createdFile.basename as string
         )} as base configuration for ${color.yellow(
-          buildConfiguration.comment
+          buildConfiguration.comment as string
         )} build`
       );
     }

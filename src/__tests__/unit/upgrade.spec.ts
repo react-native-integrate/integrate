@@ -45,7 +45,7 @@ describe('upgrade', () => {
     const content = mockFs.readFileSync(appDelegatePath);
     expect(content).toContain('[FIRApp configure];');
 
-    const lockContent = mockFs.readFileSync(lockPath);
+    const lockContent = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(lockContent);
     expect(lockData.packages['mock-package']).toEqual({
       version: '^1.2.3',
@@ -73,7 +73,7 @@ describe('upgrade', () => {
 
     await upgrade();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(content);
     expect(lockData.packages['mock-package']).toEqual({
       version: '1.2.3',
@@ -101,7 +101,7 @@ describe('upgrade', () => {
 
     await upgrade();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
     const lockData = JSON.parse(content);
     // console.log('mockFs',mockFs.getStore());
     expect(lockData.packages['mock-package']).toEqual(undefined);
@@ -123,7 +123,7 @@ describe('upgrade', () => {
 
     await upgrade();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('test error')
@@ -147,7 +147,7 @@ describe('upgrade', () => {
 
     await upgrade();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('error occurred')
@@ -171,7 +171,7 @@ describe('upgrade', () => {
 
     await upgrade();
 
-    const content = mockFs.readFileSync(lockPath);
+    const content = mockFs.readFileSync(lockPath) as string;
 
     expect(mockPrompter.log.error).toHaveBeenCalledWith(
       expect.stringContaining('test error')

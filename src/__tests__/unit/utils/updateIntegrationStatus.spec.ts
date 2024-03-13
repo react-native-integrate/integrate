@@ -20,7 +20,7 @@ describe('updateIntegrationStatus', () => {
     ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
-    const fileContent = mockFs.readFileSync(filePath);
+    const fileContent = mockFs.readFileSync(filePath) as string;
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
     expect(content.packages).toEqual({
@@ -45,7 +45,7 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
 
-    const fileContent = mockFs.readFileSync(filePath);
+    const fileContent = mockFs.readFileSync(filePath) as string;
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
     expect(content.packages).toEqual({
@@ -76,7 +76,7 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
 
-    const fileContent = mockFs.readFileSync(filePath);
+    const fileContent = mockFs.readFileSync(filePath) as string;
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
     expect(content.packages).toEqual({});
@@ -98,7 +98,7 @@ describe('updateIntegrationStatus', () => {
     ]);
 
     const filePath = path.join(getProjectPath(), Constants.LOCK_FILE_NAME);
-    const fileContent = mockFs.readFileSync(filePath);
+    const fileContent = mockFs.readFileSync(filePath) as string;
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
     expect(content.packages).toEqual({
@@ -123,7 +123,7 @@ describe('updateIntegrationStatus', () => {
       },
     ]);
 
-    const fileContent = mockFs.readFileSync(filePath);
+    const fileContent = mockFs.readFileSync(filePath) as string;
     expect(fileContent).toBeTruthy();
     const content = JSON.parse(fileContent);
     expect(content.packages).toEqual({

@@ -207,6 +207,7 @@ xcode.project.prototype.addExtensionTarget = function (
       productFile.target
     );
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   sources.files.push(pbxBuildPhaseObj(productFile));
 
   // Target: Add uuid to root project
@@ -224,7 +225,7 @@ xcode.project.prototype.addExtensionSourceFile = function (
   path: string,
   opt: { target: string },
   group: string
-): any | boolean {
+): any {
   const file = this.addFile(path, group, opt);
 
   file.target = opt.target;
