@@ -66,7 +66,7 @@ export function writePackageUpgradeConfig(
         fs.readFileSync(upgradeJsonPath, 'utf8')
       ) as PackageUpgradeConfig;
     } catch (e: any) {
-      logWarning(e?.message);
+      logWarning(e?.message as string);
       existingConfig = {};
     }
   }
