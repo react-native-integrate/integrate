@@ -1,4 +1,4 @@
-export const notificationServiceH = `#import <UserNotifications/UserNotifications.h>
+export const notificationServiceH: string = `#import <UserNotifications/UserNotifications.h>
 
 @interface NotificationService : UNNotificationServiceExtension
 

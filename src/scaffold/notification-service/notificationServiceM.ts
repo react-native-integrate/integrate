@@ -1,4 +1,4 @@
-export const notificationServiceM = `#import "NotificationService.h"
+export const notificationServiceM: string = `#import "NotificationService.h"
 
 @interface NotificationService ()
 

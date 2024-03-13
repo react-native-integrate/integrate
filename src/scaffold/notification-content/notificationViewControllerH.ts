@@ -1,4 +1,4 @@
-export const notificationViewControllerH = `#import <UIKit/UIKit.h>
+export const notificationViewControllerH: string = `#import <UIKit/UIKit.h>
 
 @interface NotificationViewController : UIViewController
 

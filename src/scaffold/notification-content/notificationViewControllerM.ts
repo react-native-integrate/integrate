@@ -1,4 +1,4 @@
-export const notificationViewControllerM = `#import "NotificationViewController.h"
+export const notificationViewControllerM: string = `#import "NotificationViewController.h"
 #import <UserNotifications/UserNotifications.h>
 #import <UserNotificationsUI/UserNotificationsUI.h>
 
