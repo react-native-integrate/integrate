@@ -1,0 +1,1600 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "AndroidCodeType": {
+            "enum": [
+                "java",
+                "kotlin"
+            ],
+            "type": "string"
+        },
+        "AndroidManifestModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "attributes": {
+                    "$ref": "#/definitions/AnyObject"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_3"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "AndroidManifestTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/AndroidManifestModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "android_manifest",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "AnyObject": {
+            "additionalProperties": true,
+            "type": "object"
+        },
+        "AppDelegateTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<AppDelegateBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "app_delegate",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "BuildGradleLocationType": {
+            "enum": [
+                "app",
+                "root"
+            ],
+            "type": "string"
+        },
+        "BuildGradleTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/BuildGradleLocationType"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "build_gradle",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ContentModifierType<AppDelegateBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "ContentModifierType<NotificationContentBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_2"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "ContentModifierType<NotificationServiceBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_1"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "ContentModifierType<string>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "FsModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "copyFile": {
+                    "type": "string"
+                },
+                "destination": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "destination"
+            ],
+            "type": "object"
+        },
+        "FsTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/FsModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "fs",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "GitignoreTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "gitignore",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "JsonTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ObjectModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "json",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "path",
+                "type"
+            ],
+            "type": "object"
+        },
+        "MainApplicationTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lang": {
+                    "$ref": "#/definitions/AndroidCodeType"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "main_application",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ModTask": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/PlistTaskType"
+                },
+                {
+                    "$ref": "#/definitions/JsonTaskType"
+                },
+                {
+                    "$ref": "#/definitions/AppDelegateTaskType"
+                },
+                {
+                    "$ref": "#/definitions/NotificationServiceTaskType"
+                },
+                {
+                    "$ref": "#/definitions/NotificationViewControllerTaskType"
+                },
+                {
+                    "$ref": "#/definitions/BuildGradleTaskType"
+                },
+                {
+                    "$ref": "#/definitions/SettingsGradleTaskType"
+                },
+                {
+                    "$ref": "#/definitions/MainApplicationTaskType"
+                },
+                {
+                    "$ref": "#/definitions/AndroidManifestTaskType"
+                },
+                {
+                    "$ref": "#/definitions/StringsXmlTaskType"
+                },
+                {
+                    "$ref": "#/definitions/XcodeTaskType"
+                },
+                {
+                    "$ref": "#/definitions/PodFileTaskType"
+                },
+                {
+                    "$ref": "#/definitions/GitignoreTaskType"
+                },
+                {
+                    "$ref": "#/definitions/FsTaskType"
+                },
+                {
+                    "$ref": "#/definitions/PromptTaskType"
+                }
+            ]
+        },
+        "MultiselectOptionValue": {
+            "type": [
+                "string",
+                "number",
+                "boolean"
+            ]
+        },
+        "NotificationServiceTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<NotificationServiceBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "notification_service",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "target",
+                "type"
+            ],
+            "type": "object"
+        },
+        "NotificationViewControllerTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<NotificationContentBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "notification_view_controller",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "target",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ObjectModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "set": {
+                    "additionalProperties": {},
+                    "type": "object"
+                },
+                "strategy": {
+                    "enum": [
+                        "append",
+                        "assign",
+                        "merge",
+                        "merge_concat",
+                        "merge_distinct"
+                    ],
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "set"
+            ],
+            "type": "object"
+        },
+        "PlistTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ObjectModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "plist",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "PodFileModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "disableFlipper": {
+                    "type": "boolean"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "staticLibrary": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "useFrameworks": {
+                    "enum": [
+                        "dynamic",
+                        "static"
+                    ],
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "type": "object"
+        },
+        "PodFileTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/PodFileModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "podfile",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "PromptActionType": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "defaultValue": {
+                            "type": "string"
+                        },
+                        "initialValue": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "placeholder": {
+                            "type": "string"
+                        },
+                        "text": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "const": "text",
+                            "type": "string"
+                        },
+                        "validate": {
+                            "anyOf": [
+                                {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "flags": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "regex": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "regex"
+                                    ],
+                                    "type": "object"
+                                },
+                                {
+                                    "items": {
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "flags": {
+                                                "type": "string"
+                                            },
+                                            "message": {
+                                                "type": "string"
+                                            },
+                                            "regex": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "message",
+                                            "regex"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            ]
+                        },
+                        "when": {}
+                    },
+                    "required": [
+                        "name",
+                        "text",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "initialValue": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "negative": {
+                            "type": "string"
+                        },
+                        "positive": {
+                            "type": "string"
+                        },
+                        "text": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "const": "boolean",
+                            "type": "string"
+                        },
+                        "when": {}
+                    },
+                    "required": [
+                        "name",
+                        "text",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "initialValues": {
+                            "items": {
+                                "$ref": "#/definitions/MultiselectOptionValue"
+                            },
+                            "type": "array"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "options": {
+                            "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                    "hint": {
+                                        "type": "string"
+                                    },
+                                    "label": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "$ref": "#/definitions/MultiselectOptionValue"
+                                    }
+                                },
+                                "required": [
+                                    "value"
+                                ],
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "text": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "const": "multiselect",
+                            "type": "string"
+                        },
+                        "when": {}
+                    },
+                    "required": [
+                        "name",
+                        "options",
+                        "text",
+                        "type"
+                    ],
+                    "type": "object"
+                }
+            ]
+        },
+        "PromptTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/PromptActionType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "prompt",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "SettingsGradleTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "settings_gradle",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "StringsXmlTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "strings_xml",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "TBlock": {
+            "enum": [
+                "applicationDidBecomeActive",
+                "applicationDidEnterBackground",
+                "applicationWillEnterForeground",
+                "applicationWillResignActive",
+                "applicationWillTerminate",
+                "didFailToRegisterForRemoteNotificationsWithError",
+                "didFinishLaunchingWithOptions",
+                "didReceiveRemoteNotification",
+                "didRegisterForRemoteNotificationsWithDeviceToken",
+                "fetchCompletionHandler",
+                "openURL",
+                "restorationHandler"
+            ],
+            "type": "string"
+        },
+        "TBlock_1": {
+            "enum": [
+                "didReceiveNotificationRequest",
+                "serviceExtensionTimeWillExpire"
+            ],
+            "type": "string"
+        },
+        "TBlock_2": {
+            "enum": [
+                "dealloc",
+                "didReceiveNotification",
+                "didReceiveNotificationResponse",
+                "viewDidAppear",
+                "viewDidLoad",
+                "viewWillAppear",
+                "viewWillDisappear"
+            ],
+            "type": "string"
+        },
+        "TBlock_3": {
+            "enum": [
+                "activity",
+                "application",
+                "manifest"
+            ],
+            "type": "string"
+        },
+        "TextOrFileValue": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "file": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "file"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "TextOrRegex": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "flags": {
+                            "type": "string"
+                        },
+                        "regex": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "regex"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "TextOrTitleMessage": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "title": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "message",
+                        "title"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "XcodeAddBMCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "background-mode",
+                    "type": "string"
+                },
+                "modes": {
+                    "items": {
+                        "$ref": "#/definitions/XcodeAddBMCapabilityModes"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "modes",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddBMCapabilityModes": {
+            "enum": [
+                "audio",
+                "bluetooth-central",
+                "bluetooth-peripheral",
+                "external-accessory",
+                "fetch",
+                "location",
+                "nearby-interaction",
+                "processing",
+                "push-to-talk",
+                "remote-notification",
+                "voip"
+            ],
+            "type": "string"
+        },
+        "XcodeAddCommonCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "$ref": "#/definitions/XcodeAddCommonCapabilityType"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddCommonCapabilityType": {
+            "enum": [
+                "app-attest",
+                "data-protection",
+                "healthkit",
+                "homekit",
+                "increased-memory",
+                "inter-app-audio",
+                "push",
+                "wireless-configuration"
+            ],
+            "type": "string"
+        },
+        "XcodeAddConfiguration": {
+            "additionalProperties": false,
+            "properties": {
+                "addConfiguration": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addConfiguration"
+            ],
+            "type": "object"
+        },
+        "XcodeAddFile": {
+            "additionalProperties": false,
+            "properties": {
+                "addFile": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addFile"
+            ],
+            "type": "object"
+        },
+        "XcodeAddGCCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "game-controllers",
+                    "type": "string"
+                },
+                "controllers": {
+                    "items": {
+                        "$ref": "#/definitions/XcodeAddGCCapabilityControllers"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "controllers",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddGCCapabilityControllers": {
+            "enum": [
+                "directional",
+                "extended",
+                "micro"
+            ],
+            "type": "string"
+        },
+        "XcodeAddGroupCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "groups",
+                    "type": "string"
+                },
+                "groups": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "groups",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddKSCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "keychain-sharing",
+                    "type": "string"
+                },
+                "groups": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "groups",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddMapsCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "maps",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "routing": {
+                    "items": {
+                        "$ref": "#/definitions/XcodeAddMapsCapabilityRouting"
+                    },
+                    "type": "array"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addCapability",
+                "routing",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeAddMapsCapabilityRouting": {
+            "enum": [
+                "bike",
+                "bus",
+                "car",
+                "ferry",
+                "other",
+                "pedestrian",
+                "plane",
+                "ride-share",
+                "street-car",
+                "subway",
+                "taxi",
+                "train"
+            ],
+            "type": "string"
+        },
+        "XcodeAddPreBuildRunScriptAction": {
+            "additionalProperties": false,
+            "properties": {
+                "addPreBuildRunScriptAction": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "addPreBuildRunScriptAction"
+            ],
+            "type": "object"
+        },
+        "XcodeAddTarget": {
+            "additionalProperties": false,
+            "properties": {
+                "addTarget": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/XcodeAddTargetType"
+                },
+                "when": {}
+            },
+            "required": [
+                "addTarget",
+                "type"
+            ],
+            "type": "object"
+        },
+        "XcodeAddTargetType": {
+            "enum": [
+                "notification-content",
+                "notification-service"
+            ],
+            "type": "string"
+        },
+        "XcodeModifierType": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/XcodeAddFile"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddTarget"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddCommonCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddGroupCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddBMCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddGCCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddMapsCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddKSCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeSetDeploymentVersion"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddConfiguration"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddPreBuildRunScriptAction"
+                }
+            ]
+        },
+        "XcodeSetDeploymentVersion": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "setDeploymentVersion": {
+                    "anyOf": [
+                        {
+                            "additionalProperties": false,
+                            "properties": {
+                                "max": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "min": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "min"
+                            ],
+                            "type": "object"
+                        },
+                        {
+                            "type": [
+                                "string",
+                                "number"
+                            ]
+                        }
+                    ]
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "setDeploymentVersion",
+                "target"
+            ],
+            "type": "object"
+        },
+        "XcodeTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/XcodeModifierType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "xcode",
+                    "type": "string"
+                },
+                "when": {}
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "env": {
+            "$ref": "#/definitions/AnyObject"
+        },
+        "tasks": {
+            "items": {
+                "$ref": "#/definitions/ModTask"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "tasks"
+    ],
+    "type": "object"
+}
+

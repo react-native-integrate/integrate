@@ -23,7 +23,8 @@
     "test:watch": "jest --watch",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "generate-schema": "typescript-json-schema ./src/types/mod.types.ts IntegrationConfig --ignoreErrors --noExtraProps --required -o ./src/schema/integrate.schema.json"
+    "generate-schema": "typescript-json-schema ./src/types/mod.types.ts IntegrationConfig --ignoreErrors --noExtraProps --required -o ./src/schema/integrate.schema.json",
+    "generate-upgrade-schema": "typescript-json-schema ./src/types/upgrade.types.ts UpgradeConfig --ignoreErrors --noExtraProps --required -o ./src/schema/upgrade.schema.json"
   },
   "repository": {
     "type": "git",

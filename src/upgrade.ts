@@ -3,10 +3,12 @@ import semver from 'semver/preload';
 import {
   logError,
   logInfo,
+  logMessageGray,
   logSuccess,
   logWarning,
   startSpinner,
   stopSpinner,
+  text,
 } from './prompter';
 import { LockProjectData } from './types/integrator.types';
 import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
@@ -20,9 +22,40 @@ import { setState } from './utils/setState';
 import { taskManager } from './utils/taskManager';
 import { topologicalSort } from './utils/topologicalSort';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
+import { importFromOldProject } from './utils/upgrade/importFromOldProject';
+import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function upgrade(): Promise<void> {
+  logInfo(
+    color.bold(color.inverse(color.magenta(' stage 1 '))) +
+      color.bold(color.magenta(' Import old project data '))
+  );
+  // get old project path
+  const oldProjectPath = await text(
+    'Enter old project path to import some basic data (display name, icons, etc.)',
+    {
+      placeholder: 'leave empty to skip',
+      validate: validateOldProjectPath,
+    }
+  );
+  if (oldProjectPath) {
+    const didImport = await importFromOldProject(oldProjectPath);
+    if (didImport) {
+      logSuccess(
+        color.inverse(color.bold(color.green(' imported '))) +
+          color.green(' imported project data successfully')
+      );
+    }
+  } else {
+    logMessageGray('skipping import from old project');
+  }
+
+  logInfo(
+    color.bold(color.inverse(color.magenta(' stage 2 '))) +
+      color.bold(color.magenta(' Re-integrate packages '))
+  );
+
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages();
   const { installedPackages, integratedPackages } = analyzedPackages;
