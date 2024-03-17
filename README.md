@@ -93,7 +93,7 @@ npx react-native-integrate upgrade
 # or, if you've installed it as a dev dependency
 upgrade
 ```
-All previously integrated packages will be re-integrated into your new RN project.
+Your old project data will be imported and all previously integrated packages will be re-integrated into your new RN project.
 
 ## For Package Developers
 
