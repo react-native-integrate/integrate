@@ -8,7 +8,7 @@
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
-**Automate Integration of Additional Code into React Native Projects**
+**Single-command integration of React Native packages**
 
 ## Introduction
 
