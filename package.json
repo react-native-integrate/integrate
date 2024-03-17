@@ -8,9 +8,9 @@
     "bin/**/*"
   ],
   "bin": {
-    "react-native-integrate": "./bin/index.js",
     "integrate": "./bin/index.js",
-    "upgrade": "./bin/upgrade-cli.js"
+    "upgrade": "./bin/upgrade-cli.js",
+    "react-native-integrate": "./bin/index.js"
   },
   "scripts": {
     "build": "tsc",
