@@ -21,6 +21,8 @@ export function getIosDisplayName(projectPath: string): ImportGetter | null {
       fs.readFileSync(plistPath, 'utf-8')
     );
     const displayName = content.CFBundleDisplayName as string;
+
+    if (!displayName) return null;
     return {
       id: 'iosDisplayName',
       title: 'Ios Display Name',

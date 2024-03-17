@@ -35,8 +35,8 @@ export async function importFromOldProject(
   ].filter(d => d != null) as ImportGetter[];
 
   logMessage(
-    'importing project data:\n' +
-      importedData.map(d => `${d.title}: ${color.green(d.value)}`).join('\n')
+    'importing following project data:\n\n' +
+      importedData.map(d => `➤ ${d.title}: ${color.green(d.value)}`).join('\n')
   );
 
   const confirmed = await confirm('Would you like to proceed?', {
@@ -55,7 +55,7 @@ export async function importFromOldProject(
       color.bold(color.inverse(color.cyan(' import '))) +
         color.bold(color.cyan(` ${d.title} `))
     );
-    await d.setter(d.value).catch((e: Error) => {
+    await d.setter().catch((e: Error) => {
       logWarning(e.message);
     });
   }

@@ -3,6 +3,7 @@ import color from 'picocolors';
 import xcode from 'xcode';
 import { Constants } from '../../../constants';
 import { logMessage } from '../../../prompter';
+import '../../../tasks/xcode/xcodeTask.helpers';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getPbxProjectPath } from '../../getIosProjectPath';
 
@@ -19,7 +20,7 @@ export function getIosProjectVersion(projectPath: string): ImportGetter | null {
     );
 
     if (!projectVersion) return null;
-    const versionVariable = projectVersion.match(/\$\{(.*?)}/)?.[1];
+    const versionVariable = projectVersion.toString().match(/\$\{(.*?)}/)?.[1];
     let versionVariableValue: string | undefined;
     if (versionVariable) {
       const buildConfigurationLists = proj.pbxXCConfigurationList();

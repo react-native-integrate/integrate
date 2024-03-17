@@ -3,6 +3,7 @@ import color from 'picocolors';
 import xcode from 'xcode';
 import { Constants } from '../../../constants';
 import { logMessage } from '../../../prompter';
+import '../../../tasks/xcode/xcodeTask.helpers';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getPbxProjectPath } from '../../getIosProjectPath';
 

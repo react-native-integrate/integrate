@@ -18,10 +18,11 @@ export function getIosBundleId(projectPath: string): ImportGetter | null {
       'Release',
       nativeTarget.target.name
     );
-    if (bundleId)
-      bundleId = normalizeBundleId(bundleId, {
-        productName: nativeTarget.target.name,
-      });
+    if (!bundleId) return null;
+
+    bundleId = normalizeBundleId(bundleId, {
+      productName: nativeTarget.target.name,
+    });
 
     return {
       id: 'iosBundleId',

@@ -18,6 +18,8 @@ export function getIosAssets(projectPath: string): ImportGetter | null {
       path.join(projectPath, 'ios', iosProjectName, 'LaunchScreen.storyboard')
     );
 
+    if (!imagesAssets.length && !launchScreen.length) return null;
+
     return {
       id: 'iosAssets',
       title: 'Ios Assets',
@@ -40,7 +42,7 @@ async function setIosAssets(assets: string[], launchScreen: string) {
   }
   logMessage('deleted existing images');
 
-  // copy new mipmaps
+  // copy new assets
   for (const asset of assets) {
     // get path after ios
     const imagesPath = asset.substring(asset.indexOf('Images.xcassets/'));

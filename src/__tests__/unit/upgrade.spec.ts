@@ -16,6 +16,16 @@ import { upgrade } from '../../upgrade';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('upgrade', () => {
+  it('should skip import when import path is empty', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockPrompter.log.message.mockClear();
+
+    await upgrade();
+
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipping import from old project')
+    );
+  });
   it('should not run tasks when lock does not exist', async () => {
     const spinner = mockPrompter.spinner();
     spinner.stop.mockReset();
