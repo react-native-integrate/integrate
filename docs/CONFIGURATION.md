@@ -92,7 +92,7 @@ minVersion: 1.4
 Example in production
 ---------------------
 
-#### Check out the [configuration of @react-native-firebase/app](https://github.com/murat-mehmet/react-native-integrate-configs/blob/main/packages/1/a/b/%40react-native-firebase/app/integrate.yml)  to see the usage in production.
+#### Check out the [configuration of @react-native-firebase/app](https://github.com/react-native-integrate/configs/blob/main/packages/1/a/b/%40react-native-firebase/app/integrate.yml)  to see the usage in production.
 
 ### Conclusion
 

@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/murat-mehmet/react-native-integrate.git"
+    "url": "git+https://github.com/react-native-integrate/integrate.git"
   },
   "license": "MIT",
   "author": {
@@ -46,9 +46,9 @@
     "typescript"
   ],
   "bugs": {
-    "url": "https://github.com/murat-mehmet/react-native-integrate/issues"
+    "url": "https://github.com/react-native-integrate/integrate/issues"
   },
-  "homepage": "https://github.com/murat-mehmet/react-native-integrate#readme",
+  "homepage": "https://github.com/react-native-integrate/integrate#readme",
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "ajv": "^8.12.0",

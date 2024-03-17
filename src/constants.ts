@@ -20,9 +20,9 @@ export const Constants = {
   XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',
   XCConfig_FILE_NAME: 'Config.xcconfig',
   REMOTE_CONFIG_REPO:
-    'https://raw.githubusercontent.com/murat-mehmet/react-native-integrate-configs/main/packages/[package]/integrate.yml',
+    'https://raw.githubusercontent.com/react-native-integrate/configs/main/packages/[package]/integrate.yml',
   REMOTE_REPO:
-    'https://raw.githubusercontent.com/murat-mehmet/react-native-integrate-configs/main/packages/[package]/',
+    'https://raw.githubusercontent.com/react-native-integrate/configs/main/packages/[package]/',
   REMOTE_CONFIG_REPO_HOME:
-    'https://github.com/murat-mehmet/react-native-integrate-configs/tree/main/packages/[package]/integrate.yml',
+    'https://github.com/react-native-integrate/configs/tree/main/packages/[package]/integrate.yml',
 };
