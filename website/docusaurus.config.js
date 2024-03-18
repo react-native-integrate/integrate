@@ -134,8 +134,9 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} React Native Integrate, Inc. Built with Docusaurus.`,
       },
       prism: {
-        theme: prismThemes.vsDark,
-        darkTheme: prismThemes.palenight,
+        theme: prismThemes.duotoneLight,
+        darkTheme: prismThemes.shadesOfPurple,
+        additionalLanguages: ['bash'],
       },
     }),
   plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
