@@ -2,7 +2,7 @@
 slug: introducing-react-native-integrate
 title: Introducing React Native Integrate!
 authors: murat
-tags: [introducing, integrate]
+tags: [introducing, integrate, upgrade]
 ---
 I'm thrilled to introduce the launch of React Native Integrate, a powerful tool designed to simplify the integration and upgrade process for React Native projects.
 
