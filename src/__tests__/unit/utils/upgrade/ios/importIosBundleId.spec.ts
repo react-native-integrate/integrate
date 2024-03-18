@@ -2,11 +2,11 @@ require('../../../../mocks/mockAll');
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { escapeRegExp } from '../../../../../utils/escapeRegExp';
 import { getPbxProjectPath } from '../../../../../utils/getIosProjectPath';
-import { getIosBundleId } from '../../../../../utils/upgrade/ios/iosBundleId';
+import { getIosBundleId } from '../../../../../utils/upgrade/ios/importIosBundleId';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPbxProjTemplate } from '../../../../mocks/mockPbxProjTemplate';
 
-describe('iosBundleId', () => {
+describe('importIosBundleId', () => {
   it('should get bundle id', async () => {
     mockFs.writeFileSync(
       getPbxProjectPath('/oldProject'),

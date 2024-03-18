@@ -3,11 +3,11 @@ import path from 'path';
 import { Constants } from '../../../../../constants';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getIosDisplayName } from '../../../../../utils/upgrade/ios/iosDisplayName';
+import { getIosDisplayName } from '../../../../../utils/upgrade/ios/importIosDisplayName';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPList } from '../../../../mocks/mockPList';
 
-describe('iosDisplayName', () => {
+describe('importIosDisplayName', () => {
   it('should get display name', async () => {
     const plistPath = `/oldProject/ios/test/${Constants.PLIST_FILE_NAME}`;
     mockFs.writeFileSync(

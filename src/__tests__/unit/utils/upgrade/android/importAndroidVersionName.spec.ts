@@ -2,10 +2,10 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidVersionName } from '../../../../../utils/upgrade/android/androidVersionName';
+import { getAndroidVersionName } from '../../../../../utils/upgrade/android/importAndroidVersionName';
 import { mockFs } from '../../../../mocks/mockFs';
 
-describe('androidVersionName', () => {
+describe('importAndroidVersionName', () => {
   it('should get version name', async () => {
     mockFs.writeFileSync(
       '/oldProject/android/app/build.gradle',

@@ -2,10 +2,10 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidLaunchIcon } from '../../../../../utils/upgrade/android/androidLaunchIcon';
+import { getAndroidLaunchIcon } from '../../../../../utils/upgrade/android/importAndroidLaunchIcon';
 import { mockFs } from '../../../../mocks/mockFs';
 
-describe('androidLaunchIcon', () => {
+describe('importAndroidLaunchIcon', () => {
   it('should get launch icon', async () => {
     mockFs.writeFileSync(
       '/oldProject/android/app/src/main/res/mipmap-any/ic_launcher.png',

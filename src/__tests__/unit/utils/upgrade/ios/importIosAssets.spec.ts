@@ -2,10 +2,10 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getIosAssets } from '../../../../../utils/upgrade/ios/iosAssets';
+import { getIosAssets } from '../../../../../utils/upgrade/ios/importIosAssets';
 import { mockFs } from '../../../../mocks/mockFs';
 
-describe('iosAssets', () => {
+describe('importIosAssets', () => {
   it('should get launch icon', async () => {
     mockFs.writeFileSync(
       '/oldProject/ios/test/Images.xcassets/someImage.png',

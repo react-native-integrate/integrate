@@ -6,10 +6,10 @@ const mockSearchReplaceAllFiles = jest.spyOn(
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidAppId } from '../../../../../utils/upgrade/android/androidAppId';
+import { getAndroidAppId } from '../../../../../utils/upgrade/android/importAndroidAppId';
 import { mockFs } from '../../../../mocks/mockFs';
 
-describe('androidAppId', () => {
+describe('importAndroidAppId', () => {
   it('should get app id', async () => {
     mockFs.writeFileSync(
       '/oldProject/android/app/build.gradle',

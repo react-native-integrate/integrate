@@ -2,10 +2,10 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidDisplayName } from '../../../../../utils/upgrade/android/androidDisplayName';
+import { getAndroidDisplayName } from '../../../../../utils/upgrade/android/importAndroidDisplayName';
 import { mockFs } from '../../../../mocks/mockFs';
 
-describe('androidDisplayName', () => {
+describe('importAndroidDisplayName', () => {
   it('should get display name', async () => {
     mockFs.writeFileSync(
       '/oldProject/android/app/src/main/res/values/strings.xml',

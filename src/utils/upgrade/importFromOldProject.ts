@@ -7,16 +7,16 @@ import {
   logWarning,
 } from '../../prompter';
 import { ImportGetter } from '../../types/upgrade.types';
-import { getAndroidAppId } from './android/androidAppId';
-import { getAndroidDisplayName } from './android/androidDisplayName';
-import { getAndroidLaunchIcon } from './android/androidLaunchIcon';
-import { getAndroidVersionCode } from './android/androidVersionCode';
-import { getAndroidVersionName } from './android/androidVersionName';
-import { getIosAssets } from './ios/iosAssets';
-import { getIosBundleId } from './ios/iosBundleId';
-import { getIosDisplayName } from './ios/iosDisplayName';
-import { getIosMarketingVersion } from './ios/iosMarketingVersion';
-import { getIosProjectVersion } from './ios/iosProjectVersion';
+import { getAndroidAppId } from './android/importAndroidAppId';
+import { getAndroidDisplayName } from './android/importAndroidDisplayName';
+import { getAndroidLaunchIcon } from './android/importAndroidLaunchIcon';
+import { getAndroidVersionCode } from './android/importAndroidVersionCode';
+import { getAndroidVersionName } from './android/importAndroidVersionName';
+import { getIosAssets } from './ios/importIosAssets';
+import { getIosBundleId } from './ios/importIosBundleId';
+import { getIosDisplayName } from './ios/importIosDisplayName';
+import { getIosMarketingVersion } from './ios/importIosMarketingVersion';
+import { getIosProjectVersion } from './ios/importIosProjectVersion';
 
 export async function importFromOldProject(
   oldProjectPath: string

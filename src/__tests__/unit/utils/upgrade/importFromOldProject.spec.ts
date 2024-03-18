@@ -1,43 +1,43 @@
 require('../../../mocks/mockAll');
 
 const getAndroidAppId = jest.spyOn(
-  require('../../../../utils/upgrade/android/androidAppId'),
+  require('../../../../utils/upgrade/android/importAndroidAppId'),
   'getAndroidAppId'
 );
 const getAndroidDisplayName = jest.spyOn(
-  require('../../../../utils/upgrade/android/androidDisplayName'),
+  require('../../../../utils/upgrade/android/importAndroidDisplayName'),
   'getAndroidDisplayName'
 );
 const getAndroidLaunchIcon = jest.spyOn(
-  require('../../../../utils/upgrade/android/androidLaunchIcon'),
+  require('../../../../utils/upgrade/android/importAndroidLaunchIcon'),
   'getAndroidLaunchIcon'
 );
 const getAndroidVersionCode = jest.spyOn(
-  require('../../../../utils/upgrade/android/androidVersionCode'),
+  require('../../../../utils/upgrade/android/importAndroidVersionCode'),
   'getAndroidVersionCode'
 );
 const getAndroidVersionName = jest.spyOn(
-  require('../../../../utils/upgrade/android/androidVersionName'),
+  require('../../../../utils/upgrade/android/importAndroidVersionName'),
   'getAndroidVersionName'
 );
 const getIosAssets = jest.spyOn(
-  require('../../../../utils/upgrade/ios/iosAssets'),
+  require('../../../../utils/upgrade/ios/importIosAssets'),
   'getIosAssets'
 );
 const getIosBundleId = jest.spyOn(
-  require('../../../../utils/upgrade/ios/iosBundleId'),
+  require('../../../../utils/upgrade/ios/importIosBundleId'),
   'getIosBundleId'
 );
 const getIosDisplayName = jest.spyOn(
-  require('../../../../utils/upgrade/ios/iosDisplayName'),
+  require('../../../../utils/upgrade/ios/importIosDisplayName'),
   'getIosDisplayName'
 );
 const getIosMarketingVersion = jest.spyOn(
-  require('../../../../utils/upgrade/ios/iosMarketingVersion'),
+  require('../../../../utils/upgrade/ios/importIosMarketingVersion'),
   'getIosMarketingVersion'
 );
 const getIosProjectVersion = jest.spyOn(
-  require('../../../../utils/upgrade/ios/iosProjectVersion'),
+  require('../../../../utils/upgrade/ios/importIosProjectVersion'),
   'getIosProjectVersion'
 );
 import { ImportGetter } from '../../../../types/upgrade.types';
