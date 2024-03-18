@@ -19,7 +19,7 @@
 
 ## Getting Started
 
-Check the [documentation](https://react-native-integrate.github.io/integrate/docs/get-started) to get started.
+Check the [documentation](https://react-native-integrate.github.io/integrate) to get started.
 
 ## Contribution
 
