@@ -1,0 +1,40 @@
+name: Website Deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "website/**"
+
+permissions:
+  contents: write
+  
+jobs:
+  deploy:
+    name: Deploy website
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Cache/restore dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./website
+
+      - name: Build website
+        run: npm run build
+        working-directory: ./website
+        
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Build output to publish to the `gh-pages` branch:
+          publish_dir: ./website/build
