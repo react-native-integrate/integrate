@@ -104,7 +104,7 @@ const config = {
             items: [
               {
                 label: 'Installation',
-                to: '/docs/install',
+                to: '/docs/usage',
               },
             ],
           },
