@@ -1,8 +1,0 @@
-{
-  "label": "Android Modifications",
-  "position": 4,
-  "link": {
-    "type": "generated-index",
-    "description": "Android specific files that can be modified through configuration."
-  }
-}

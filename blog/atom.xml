@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://react-native-integrate.github.io/integrate/blog</id>
+    <title>React Native Integrate Blog</title>
+    <updated>2024-03-17T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://react-native-integrate.github.io/integrate/blog"/>
+    <subtitle>React Native Integrate Blog</subtitle>
+    <icon>https://react-native-integrate.github.io/integrate/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Introducing React Native Integrate!]]></title>
+        <id>https://react-native-integrate.github.io/integrate/blog/introducing-react-native-integrate</id>
+        <link href="https://react-native-integrate.github.io/integrate/blog/introducing-react-native-integrate"/>
+        <updated>2024-03-17T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm thrilled to introduce the launch of React Native Integrate, a powerful tool designed to simplify the integration and upgrade process for React Native projects.]]></summary>
+        <content type="html"><![CDATA[<p>I'm thrilled to introduce the launch of React Native Integrate, a powerful tool designed to simplify the integration and upgrade process for React Native projects.</p>
+<p>Developed with developers in mind, React Native Integrate aims to manage the native code changes, making project integration smoother and more efficient than ever before.</p>
+<p>With React-Native Integrate, gone are the days of manually copying and pasting code snippets or navigating through extensive documentation. This tool empowers developers to integrate popular packages, configure project settings, and manage dependencies with just a few simple commands.</p>
+<p>Whether you're an experienced developer or just starting with React Native, RN Integrate is here to revolutionize the way you work. Try it out today and let us know the experience.</p>
+<p>For more information and to get started, visit <a href="https://react-native-integrate.github.io/integrate/docs/introduction">docs</a>.</p>
+<p>Happy coding!</p>]]></content>
+        <author>
+            <name>Murat Mehmet</name>
+            <email>muratmehmetbt@gmail.com</email>
+            <uri>https://github.com/murat-mehmet</uri>
+        </author>
+        <category label="introducing" term="introducing"/>
+        <category label="integrate" term="integrate"/>
+        <category label="upgrade" term="upgrade"/>
+    </entry>
+</feed>
