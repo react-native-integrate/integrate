@@ -5,7 +5,7 @@ import { logMessage } from '../../../prompter';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getAndroidVersionName(
+export function importAndroidVersionName(
   projectPath: string
 ): ImportGetter | null {
   try {
@@ -19,7 +19,7 @@ export function getAndroidVersionName(
       id: 'androidVersionName',
       title: 'Android Version Name',
       value: versionName,
-      setter: () => setAndroidVersionName(versionName),
+      apply: () => setAndroidVersionName(versionName),
     };
   } catch (e) {
     return null;

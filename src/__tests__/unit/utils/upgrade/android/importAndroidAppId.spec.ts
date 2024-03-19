@@ -6,7 +6,7 @@ const mockSearchReplaceAllFiles = jest.spyOn(
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidAppId } from '../../../../../utils/upgrade/android/importAndroidAppId';
+import { importAndroidAppId } from '../../../../../utils/upgrade/android/importAndroidAppId';
 import { mockFs } from '../../../../mocks/mockFs';
 
 describe('importAndroidAppId', () => {
@@ -37,12 +37,12 @@ describe('importAndroidAppId', () => {
         targetSdkVersion rootProject.ext.targetSdkVersion
     ...`
     );
-    const importGetter = getAndroidAppId('/oldProject') as ImportGetter;
+    const importGetter = importAndroidAppId('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('com.testapp');
 
     mockSearchReplaceAllFiles.mockImplementationOnce(() => 1);
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(mockSearchReplaceAllFiles).toHaveBeenCalledWith(
       path.join(getProjectPath(), 'android'),
@@ -55,7 +55,7 @@ describe('importAndroidAppId', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getAndroidAppId('/oldProject') as ImportGetter;
+    const importGetter = importAndroidAppId('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding app id', () => {
@@ -67,7 +67,7 @@ describe('importAndroidAppId', () => {
       path.join(getProjectPath(), 'android/app/build.gradle'),
       'random'
     );
-    const importGetter = getAndroidAppId('/oldProject') as ImportGetter;
+    const importGetter = importAndroidAppId('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should not replace when app ids are same', async () => {
@@ -79,11 +79,11 @@ describe('importAndroidAppId', () => {
       path.join(getProjectPath(), 'android/app/build.gradle'),
       'applicationId "com.testapp"'
     );
-    const importGetter = getAndroidAppId('/oldProject') as ImportGetter;
+    const importGetter = importAndroidAppId('/oldProject') as ImportGetter;
     expect(importGetter).not.toBeFalsy();
     expect(importGetter.value).toEqual('com.testapp');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(mockSearchReplaceAllFiles).not.toHaveBeenCalled();
   });

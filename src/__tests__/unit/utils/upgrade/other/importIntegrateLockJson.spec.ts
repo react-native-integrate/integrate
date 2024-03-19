@@ -34,7 +34,7 @@ describe('importIntegrateLockJson', () => {
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('2 total, 1 integrated packages');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(path.join(getProjectPath(), Constants.LOCK_FILE_NAME))

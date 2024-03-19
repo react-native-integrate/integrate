@@ -53,7 +53,7 @@ describe('importPackageJson', () => {
       },
     }));
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(
@@ -86,7 +86,7 @@ describe('importPackageJson', () => {
     }));
     mockPrompter.multiselect.mockClear();
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockPrompter.multiselect).toHaveBeenCalled();
   });
   it('should handle errors', () => {

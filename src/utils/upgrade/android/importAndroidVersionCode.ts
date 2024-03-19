@@ -5,7 +5,7 @@ import { logMessage } from '../../../prompter';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getAndroidVersionCode(
+export function importAndroidVersionCode(
   projectPath: string
 ): ImportGetter | null {
   try {
@@ -19,7 +19,7 @@ export function getAndroidVersionCode(
       id: 'androidVersionCode',
       title: 'Android Version Code',
       value: versionCode,
-      setter: () => setAndroidVersionCode(versionCode),
+      apply: () => setAndroidVersionCode(versionCode),
     };
   } catch (e) {
     return null;

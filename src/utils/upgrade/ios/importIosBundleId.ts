@@ -7,7 +7,7 @@ import { normalizeBundleId } from '../../../tasks/xcode/xcodeTask.helpers';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getPbxProjectPath } from '../../getIosProjectPath';
 
-export function getIosBundleId(projectPath: string): ImportGetter | null {
+export function importIosBundleId(projectPath: string): ImportGetter | null {
   try {
     const pbxFilePath = getPbxProjectPath(projectPath);
     const proj = xcode.project(pbxFilePath);
@@ -28,7 +28,7 @@ export function getIosBundleId(projectPath: string): ImportGetter | null {
       id: 'iosBundleId',
       title: 'Ios Bundle Id',
       value: bundleId,
-      setter: () => setIosBundleId(bundleId),
+      apply: () => setIosBundleId(bundleId),
     };
   } catch (e) {
     return null;

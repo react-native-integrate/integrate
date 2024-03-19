@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getIosAssets } from '../../../../../utils/upgrade/ios/importIosAssets';
+import { importIosAssets } from '../../../../../utils/upgrade/ios/importIosAssets';
 import { mockFs } from '../../../../mocks/mockFs';
 
 describe('importIosAssets', () => {
@@ -25,13 +25,13 @@ describe('importIosAssets', () => {
       'existing launch screen'
     );
 
-    const importGetter = getIosAssets('/oldProject') as ImportGetter;
+    const importGetter = importIosAssets('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual(
       'Images.xcassets, LaunchScreen.storyboard'
     );
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.existsSync(
@@ -52,11 +52,11 @@ describe('importIosAssets', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getIosAssets('/oldProject') as ImportGetter;
+    const importGetter = importIosAssets('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding assets', () => {
-    const importGetter = getIosAssets('/oldProject') as ImportGetter;
+    const importGetter = importIosAssets('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

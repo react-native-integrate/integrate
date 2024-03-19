@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { escapeRegExp } from '../../../../../utils/escapeRegExp';
 import { getPbxProjectPath } from '../../../../../utils/getIosProjectPath';
-import { getIosProjectVersion } from '../../../../../utils/upgrade/ios/importIosProjectVersion';
+import { importIosProjectVersion } from '../../../../../utils/upgrade/ios/importIosProjectVersion';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPbxProjTemplate } from '../../../../mocks/mockPbxProjTemplate';
 
@@ -17,11 +17,11 @@ describe('importIosProjectVersion', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = getIosProjectVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosProjectVersion('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('5');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
       'CURRENT_PROJECT_VERSION = 5'
     );
@@ -29,7 +29,7 @@ describe('importIosProjectVersion', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getIosProjectVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosProjectVersion('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding project version', () => {
@@ -40,7 +40,7 @@ describe('importIosProjectVersion', () => {
         'random = "random"'
       )
     );
-    const importGetter = getIosProjectVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosProjectVersion('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
 
@@ -59,11 +59,11 @@ describe('importIosProjectVersion', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = getIosProjectVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosProjectVersion('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('"${VARIABLE}" (5)');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
       'CURRENT_PROJECT_VERSION = "${VARIABLE}"'
     );

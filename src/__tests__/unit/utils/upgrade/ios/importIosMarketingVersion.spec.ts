@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { escapeRegExp } from '../../../../../utils/escapeRegExp';
 import { getPbxProjectPath } from '../../../../../utils/getIosProjectPath';
-import { getIosMarketingVersion } from '../../../../../utils/upgrade/ios/importIosMarketingVersion';
+import { importIosMarketingVersion } from '../../../../../utils/upgrade/ios/importIosMarketingVersion';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPbxProjTemplate } from '../../../../mocks/mockPbxProjTemplate';
 
@@ -17,11 +17,13 @@ describe('importIosMarketingVersion', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = getIosMarketingVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosMarketingVersion(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('"5.5"');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
       'MARKETING_VERSION = "5.5"'
     );
@@ -29,12 +31,16 @@ describe('importIosMarketingVersion', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getIosMarketingVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosMarketingVersion(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding marketing version', () => {
     mockFs.writeFileSync(getPbxProjectPath('/oldProject'), mockPbxProjTemplate);
-    const importGetter = getIosMarketingVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosMarketingVersion(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
 
@@ -53,11 +59,13 @@ describe('importIosMarketingVersion', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = getIosMarketingVersion('/oldProject') as ImportGetter;
+    const importGetter = importIosMarketingVersion(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('"${VARIABLE}" (5)');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
       'MARKETING_VERSION = "${VARIABLE}"'
     );

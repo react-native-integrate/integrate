@@ -6,7 +6,9 @@ import { logMessage } from '../../../prompter';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getAndroidLaunchIcon(projectPath: string): ImportGetter | null {
+export function importAndroidLaunchIcon(
+  projectPath: string
+): ImportGetter | null {
   try {
     const mipmaps = globSync(
       path.join(projectPath, 'android/app/src/main/res/mipmap-*/*'),
@@ -28,7 +30,7 @@ export function getAndroidLaunchIcon(projectPath: string): ImportGetter | null {
       id: 'androidLaunchIcon',
       title: 'Android Launch Icon',
       value: icon,
-      setter: () => setAndroidLaunchIcon(mipmaps, icon, roundIcon),
+      apply: () => setAndroidLaunchIcon(mipmaps, icon, roundIcon),
     };
   } catch (e) {
     return null;

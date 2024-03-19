@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidLaunchIcon } from '../../../../../utils/upgrade/android/importAndroidLaunchIcon';
+import { importAndroidLaunchIcon } from '../../../../../utils/upgrade/android/importAndroidLaunchIcon';
 import { mockFs } from '../../../../mocks/mockFs';
 
 describe('importAndroidLaunchIcon', () => {
@@ -34,11 +34,11 @@ describe('importAndroidLaunchIcon', () => {
       android:allowBackup="false"`
     );
 
-    const importGetter = getAndroidLaunchIcon('/oldProject') as ImportGetter;
+    const importGetter = importAndroidLaunchIcon('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('@mipmap/test_ic_launcher');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(
@@ -57,8 +57,8 @@ describe('importAndroidLaunchIcon', () => {
       android:roundIcon="@mipmap/ic_launcher_round"`
     );
 
-    const importGetter = getAndroidLaunchIcon('/oldProject') as ImportGetter;
-    await importGetter.setter();
+    const importGetter = importAndroidLaunchIcon('/oldProject') as ImportGetter;
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(
@@ -69,7 +69,7 @@ describe('importAndroidLaunchIcon', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getAndroidLaunchIcon('/oldProject') as ImportGetter;
+    const importGetter = importAndroidLaunchIcon('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding icon', () => {
@@ -77,7 +77,7 @@ describe('importAndroidLaunchIcon', () => {
       '/oldProject/android/app/src/main/AndroidManifest.xml',
       'random'
     );
-    const importGetter = getAndroidLaunchIcon('/oldProject') as ImportGetter;
+    const importGetter = importAndroidLaunchIcon('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

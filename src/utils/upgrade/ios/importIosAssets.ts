@@ -7,7 +7,7 @@ import { ImportGetter } from '../../../types/upgrade.types';
 import { getIosProjectName } from '../../getIosProjectPath';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getIosAssets(projectPath: string): ImportGetter | null {
+export function importIosAssets(projectPath: string): ImportGetter | null {
   try {
     const iosProjectName = getIosProjectName(projectPath);
 
@@ -26,7 +26,7 @@ export function getIosAssets(projectPath: string): ImportGetter | null {
       id: 'iosAssets',
       title: 'Ios Assets',
       value: 'Images.xcassets, LaunchScreen.storyboard',
-      setter: () => setIosAssets(imagesAssets, launchScreen[0]),
+      apply: () => setIosAssets(imagesAssets, launchScreen[0]),
     };
   } catch (e) {
     return null;

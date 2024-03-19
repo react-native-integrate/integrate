@@ -7,7 +7,9 @@ import '../../../tasks/xcode/xcodeTask.helpers';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getPbxProjectPath } from '../../getIosProjectPath';
 
-export function getIosProjectVersion(projectPath: string): ImportGetter | null {
+export function importIosProjectVersion(
+  projectPath: string
+): ImportGetter | null {
   try {
     const pbxFilePath = getPbxProjectPath(projectPath);
     const proj = xcode.project(pbxFilePath);
@@ -44,7 +46,7 @@ export function getIosProjectVersion(projectPath: string): ImportGetter | null {
       value:
         projectVersion +
         (versionVariableValue ? ` (${versionVariableValue})` : ''),
-      setter: () =>
+      apply: () =>
         setIosProjectVersion(
           projectVersion,
           versionVariable,

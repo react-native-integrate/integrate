@@ -5,7 +5,7 @@ import { logMessage } from '../../../prompter';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getAndroidDisplayName(
+export function importAndroidDisplayName(
   projectPath: string
 ): ImportGetter | null {
   try {
@@ -23,7 +23,7 @@ export function getAndroidDisplayName(
       id: 'androidDisplayName',
       title: 'Android Display Name',
       value: displayName,
-      setter: () => setAndroidDisplayName(displayName),
+      apply: () => setAndroidDisplayName(displayName),
     };
   } catch (e) {
     return null;

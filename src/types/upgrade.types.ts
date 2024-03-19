@@ -9,5 +9,5 @@ export type ImportGetter = {
   id: string;
   title: string;
   value: string;
-  setter: () => Promise<any>;
+  apply: () => Promise<any>;
 };

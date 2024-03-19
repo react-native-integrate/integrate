@@ -3,7 +3,7 @@ import path from 'path';
 import { Constants } from '../../../../../constants';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getIosDisplayName } from '../../../../../utils/upgrade/ios/importIosDisplayName';
+import { importIosDisplayName } from '../../../../../utils/upgrade/ios/importIosDisplayName';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPList } from '../../../../mocks/mockPList';
 
@@ -19,11 +19,11 @@ describe('importIosDisplayName', () => {
       mockPList
     );
 
-    const importGetter = getIosDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importIosDisplayName('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('old-name');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(
       mockFs.readFileSync(path.join(getProjectPath(), 'ios/test/Info.plist'))
     ).toContain('<string>old-name</string>');
@@ -31,7 +31,7 @@ describe('importIosDisplayName', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getIosDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importIosDisplayName('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding display name', () => {
@@ -41,7 +41,7 @@ describe('importIosDisplayName', () => {
       mockPList.replace('CFBundleDisplayName', 'random')
     );
 
-    const importGetter = getIosDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importIosDisplayName('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

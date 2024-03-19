@@ -2,43 +2,43 @@ require('../../../mocks/mockAll');
 
 const getAndroidAppId = jest.spyOn(
   require('../../../../utils/upgrade/android/importAndroidAppId'),
-  'getAndroidAppId'
+  'importAndroidAppId'
 );
 const getAndroidDisplayName = jest.spyOn(
   require('../../../../utils/upgrade/android/importAndroidDisplayName'),
-  'getAndroidDisplayName'
+  'importAndroidDisplayName'
 );
 const getAndroidLaunchIcon = jest.spyOn(
   require('../../../../utils/upgrade/android/importAndroidLaunchIcon'),
-  'getAndroidLaunchIcon'
+  'importAndroidLaunchIcon'
 );
 const getAndroidVersionCode = jest.spyOn(
   require('../../../../utils/upgrade/android/importAndroidVersionCode'),
-  'getAndroidVersionCode'
+  'importAndroidVersionCode'
 );
 const getAndroidVersionName = jest.spyOn(
   require('../../../../utils/upgrade/android/importAndroidVersionName'),
-  'getAndroidVersionName'
+  'importAndroidVersionName'
 );
 const getIosAssets = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosAssets'),
-  'getIosAssets'
+  'importIosAssets'
 );
 const getIosBundleId = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosBundleId'),
-  'getIosBundleId'
+  'importIosBundleId'
 );
 const getIosDisplayName = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosDisplayName'),
-  'getIosDisplayName'
+  'importIosDisplayName'
 );
 const getIosMarketingVersion = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosMarketingVersion'),
-  'getIosMarketingVersion'
+  'importIosMarketingVersion'
 );
 const getIosProjectVersion = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosProjectVersion'),
-  'getIosProjectVersion'
+  'importIosProjectVersion'
 );
 import { ImportGetter } from '../../../../types/upgrade.types';
 import { importFromOldProject } from '../../../../utils/upgrade/importFromOldProject';
@@ -48,7 +48,7 @@ const exampleGetter = {
   id: 'androidAppId',
   value: 'someAppId',
   title: 'Android App Id',
-  setter: jest.fn(() => Promise.resolve()),
+  apply: jest.fn(() => Promise.resolve()),
 };
 describe('importFromOldProject', () => {
   beforeAll(() => {
@@ -58,7 +58,7 @@ describe('importFromOldProject', () => {
         id: 'androidDisplayName',
         value: 'someDisplayName',
         title: 'Android Display Name',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getAndroidLaunchIcon.mockImplementation(
@@ -66,7 +66,7 @@ describe('importFromOldProject', () => {
         id: 'androidLaunchIcon',
         value: 'someIcon',
         title: 'Android Launch Icon',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getAndroidVersionCode.mockImplementation(
@@ -74,7 +74,7 @@ describe('importFromOldProject', () => {
         id: 'androidVersionCode',
         value: 'someVersionCode',
         title: 'Android Version Code',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getAndroidVersionName.mockImplementation(
@@ -82,7 +82,7 @@ describe('importFromOldProject', () => {
         id: 'androidVersionName',
         value: 'someVersionName',
         title: 'Android Version Name',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getIosAssets.mockImplementation(
@@ -90,7 +90,7 @@ describe('importFromOldProject', () => {
         id: 'iosAssets',
         value: 'someAssets',
         title: 'iOS Assets',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getIosBundleId.mockImplementation(
@@ -98,7 +98,7 @@ describe('importFromOldProject', () => {
         id: 'iosBundleId',
         value: 'someBundleId',
         title: 'iOS Bundle Id',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getIosDisplayName.mockImplementation(
@@ -106,7 +106,7 @@ describe('importFromOldProject', () => {
         id: 'iosDisplayName',
         value: 'someDisplayName',
         title: 'iOS Display Name',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getIosMarketingVersion.mockImplementation(
@@ -114,7 +114,7 @@ describe('importFromOldProject', () => {
         id: 'iosMarketingVersion',
         value: 'someMarketingVersion',
         title: 'iOS Marketing Version',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
     getIosProjectVersion.mockImplementation(
@@ -122,7 +122,7 @@ describe('importFromOldProject', () => {
         id: 'iosProjectVersion',
         value: 'someProjectVersion',
         title: 'iOS Project Version',
-        setter: jest.fn(() => Promise.resolve()),
+        apply: jest.fn(() => Promise.resolve()),
       })
     );
   });
@@ -148,16 +148,16 @@ describe('importFromOldProject', () => {
     );
     mockPrompter.confirm.mockReset();
   });
-  it('should call importer setters', async () => {
+  it('should call importer apply', async () => {
     mockPrompter.confirm.mockImplementationOnce(() => true);
     expect(await importFromOldProject('/oldProject')).toBeTruthy();
 
-    expect(exampleGetter.setter).toHaveBeenCalled();
+    expect(exampleGetter.apply).toHaveBeenCalled();
   });
   it('should log warning on some error', async () => {
     mockPrompter.confirm.mockImplementationOnce(() => true);
     mockPrompter.log.warning.mockReset();
-    exampleGetter.setter.mockImplementationOnce(() =>
+    exampleGetter.apply.mockImplementationOnce(() =>
       Promise.reject(new Error('some error'))
     );
     expect(await importFromOldProject('/oldProject')).toBeTruthy();

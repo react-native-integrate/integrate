@@ -7,7 +7,7 @@ import '../../../tasks/xcode/xcodeTask.helpers';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { getPbxProjectPath } from '../../getIosProjectPath';
 
-export function getIosMarketingVersion(
+export function importIosMarketingVersion(
   projectPath: string
 ): ImportGetter | null {
   try {
@@ -46,7 +46,7 @@ export function getIosMarketingVersion(
       value:
         marketingVersion +
         (versionVariableValue ? ` (${versionVariableValue})` : ''),
-      setter: () =>
+      apply: () =>
         setIosMarketingVersion(
           marketingVersion,
           versionVariable,

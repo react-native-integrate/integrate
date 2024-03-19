@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { escapeRegExp } from '../../../../../utils/escapeRegExp';
 import { getPbxProjectPath } from '../../../../../utils/getIosProjectPath';
-import { getIosBundleId } from '../../../../../utils/upgrade/ios/importIosBundleId';
+import { importIosBundleId } from '../../../../../utils/upgrade/ios/importIosBundleId';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPbxProjTemplate } from '../../../../mocks/mockPbxProjTemplate';
 
@@ -22,11 +22,11 @@ describe('importIosBundleId', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = getIosBundleId('/oldProject') as ImportGetter;
+    const importGetter = importIosBundleId('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('com.oldProject');
 
-    await importGetter.setter();
+    await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
       'PRODUCT_BUNDLE_IDENTIFIER = com.oldProject'
     );
@@ -34,7 +34,7 @@ describe('importIosBundleId', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getIosBundleId('/oldProject') as ImportGetter;
+    const importGetter = importIosBundleId('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding bundle id', () => {
@@ -50,7 +50,7 @@ describe('importIosBundleId', () => {
         'random = "random"'
       )
     );
-    const importGetter = getIosBundleId('/oldProject') as ImportGetter;
+    const importGetter = importIosBundleId('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

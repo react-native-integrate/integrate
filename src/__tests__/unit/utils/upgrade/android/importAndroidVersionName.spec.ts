@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidVersionName } from '../../../../../utils/upgrade/android/importAndroidVersionName';
+import { importAndroidVersionName } from '../../../../../utils/upgrade/android/importAndroidVersionName';
 import { mockFs } from '../../../../mocks/mockFs';
 
 describe('importAndroidVersionName', () => {
@@ -23,11 +23,13 @@ describe('importAndroidVersionName', () => {
         versionName "1.0"
     ...`
     );
-    const importGetter = getAndroidVersionName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidVersionName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('"5.5"');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(
@@ -38,12 +40,16 @@ describe('importAndroidVersionName', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getAndroidVersionName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidVersionName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding version name', () => {
     mockFs.writeFileSync('/oldProject/android/app/build.gradle', 'random');
-    const importGetter = getAndroidVersionName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidVersionName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

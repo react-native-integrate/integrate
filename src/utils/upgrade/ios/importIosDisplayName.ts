@@ -8,7 +8,7 @@ import { ImportGetter } from '../../../types/upgrade.types';
 import { getIosProjectName } from '../../getIosProjectPath';
 import { getProjectPath } from '../../getProjectPath';
 
-export function getIosDisplayName(projectPath: string): ImportGetter | null {
+export function importIosDisplayName(projectPath: string): ImportGetter | null {
   try {
     const target = getIosProjectName(projectPath);
     const plistPath = path.join(
@@ -27,7 +27,7 @@ export function getIosDisplayName(projectPath: string): ImportGetter | null {
       id: 'iosDisplayName',
       title: 'Ios Display Name',
       value: displayName,
-      setter: () => setIosDisplayName(displayName),
+      apply: () => setIosDisplayName(displayName),
     };
   } catch (e) {
     return null;

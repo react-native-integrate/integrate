@@ -2,7 +2,7 @@ require('../../../../mocks/mockAll');
 import path from 'path';
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { getProjectPath } from '../../../../../utils/getProjectPath';
-import { getAndroidDisplayName } from '../../../../../utils/upgrade/android/importAndroidDisplayName';
+import { importAndroidDisplayName } from '../../../../../utils/upgrade/android/importAndroidDisplayName';
 import { mockFs } from '../../../../mocks/mockFs';
 
 describe('importAndroidDisplayName', () => {
@@ -26,11 +26,13 @@ describe('importAndroidDisplayName', () => {
 </resources>
 `
     );
-    const importGetter = getAndroidDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidDisplayName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('test app');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(
@@ -44,7 +46,9 @@ describe('importAndroidDisplayName', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = getAndroidDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidDisplayName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
   it('should handle not finding display name', () => {
@@ -52,7 +56,9 @@ describe('importAndroidDisplayName', () => {
       '/oldProject/android/app/src/main/res/values/strings.xml',
       'random'
     );
-    const importGetter = getAndroidDisplayName('/oldProject') as ImportGetter;
+    const importGetter = importAndroidDisplayName(
+      '/oldProject'
+    ) as ImportGetter;
     expect(importGetter).toBeNull();
   });
 });

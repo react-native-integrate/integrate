@@ -29,7 +29,7 @@ export function importPackageJson(projectPath: string): ImportGetter | null {
       id: 'packageJson',
       title: 'package.json',
       value: `${packageJson.name}@${packageJson.version}`,
-      setter: () => setPackageJson(projectPath, packageJson),
+      apply: () => setPackageJson(projectPath, packageJson),
     };
   } catch (e) {
     return null;

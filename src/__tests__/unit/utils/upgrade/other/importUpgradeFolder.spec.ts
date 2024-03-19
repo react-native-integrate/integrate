@@ -13,7 +13,7 @@ describe('importUpgradeFolder', () => {
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('1 files');
 
-    await importGetter.setter();
+    await importGetter.apply();
 
     expect(
       mockFs.readFileSync(path.join(getProjectPath(), '.upgrade/some.file'))
@@ -39,6 +39,6 @@ describe('importUpgradeFolder', () => {
       }
     );
     const importGetter = importUpgradeFolder('/oldProject') as ImportGetter;
-    await expect(importGetter.setter()).rejects.toThrow('random');
+    await expect(importGetter.apply()).rejects.toThrow('random');
   });
 });

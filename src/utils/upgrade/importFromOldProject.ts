@@ -7,16 +7,16 @@ import {
   logWarning,
 } from '../../prompter';
 import { ImportGetter } from '../../types/upgrade.types';
-import { getAndroidAppId } from './android/importAndroidAppId';
-import { getAndroidDisplayName } from './android/importAndroidDisplayName';
-import { getAndroidLaunchIcon } from './android/importAndroidLaunchIcon';
-import { getAndroidVersionCode } from './android/importAndroidVersionCode';
-import { getAndroidVersionName } from './android/importAndroidVersionName';
-import { getIosAssets } from './ios/importIosAssets';
-import { getIosBundleId } from './ios/importIosBundleId';
-import { getIosDisplayName } from './ios/importIosDisplayName';
-import { getIosMarketingVersion } from './ios/importIosMarketingVersion';
-import { getIosProjectVersion } from './ios/importIosProjectVersion';
+import { importAndroidAppId } from './android/importAndroidAppId';
+import { importAndroidDisplayName } from './android/importAndroidDisplayName';
+import { importAndroidLaunchIcon } from './android/importAndroidLaunchIcon';
+import { importAndroidVersionCode } from './android/importAndroidVersionCode';
+import { importAndroidVersionName } from './android/importAndroidVersionName';
+import { importIosAssets } from './ios/importIosAssets';
+import { importIosBundleId } from './ios/importIosBundleId';
+import { importIosDisplayName } from './ios/importIosDisplayName';
+import { importIosMarketingVersion } from './ios/importIosMarketingVersion';
+import { importIosProjectVersion } from './ios/importIosProjectVersion';
 import { importIntegrateLockJson } from './other/importIntegrateLockJson';
 import { importPackageJson } from './other/importPackageJson';
 import { importUpgradeFolder } from './other/importUpgradeFolder';
@@ -28,16 +28,16 @@ export async function importFromOldProject(
     importPackageJson(oldProjectPath),
     importIntegrateLockJson(oldProjectPath),
     importUpgradeFolder(oldProjectPath),
-    getAndroidDisplayName(oldProjectPath),
-    getAndroidAppId(oldProjectPath),
-    getAndroidLaunchIcon(oldProjectPath),
-    getAndroidVersionCode(oldProjectPath),
-    getAndroidVersionName(oldProjectPath),
-    getIosBundleId(oldProjectPath),
-    getIosDisplayName(oldProjectPath),
-    getIosProjectVersion(oldProjectPath),
-    getIosMarketingVersion(oldProjectPath),
-    getIosAssets(oldProjectPath),
+    importAndroidDisplayName(oldProjectPath),
+    importAndroidAppId(oldProjectPath),
+    importAndroidLaunchIcon(oldProjectPath),
+    importAndroidVersionCode(oldProjectPath),
+    importAndroidVersionName(oldProjectPath),
+    importIosBundleId(oldProjectPath),
+    importIosDisplayName(oldProjectPath),
+    importIosProjectVersion(oldProjectPath),
+    importIosMarketingVersion(oldProjectPath),
+    importIosAssets(oldProjectPath),
   ].filter(d => d != null) as ImportGetter[];
 
   logMessage(
@@ -61,7 +61,7 @@ export async function importFromOldProject(
       color.bold(color.inverse(color.cyan(' import '))) +
         color.bold(color.cyan(` ${d.title} `))
     );
-    await d.setter().catch((e: Error) => {
+    await d.apply().catch((e: Error) => {
       logWarning(e.message);
     });
   }

@@ -7,7 +7,7 @@ import { escapeRegExp } from '../../escapeRegExp';
 import { getProjectPath } from '../../getProjectPath';
 import { searchReplaceAllFiles } from '../../searchReplaceAllFiles';
 
-export function getAndroidAppId(projectPath: string): ImportGetter | null {
+export function importAndroidAppId(projectPath: string): ImportGetter | null {
   try {
     const buildGradlePath = path.join(projectPath, 'android/app/build.gradle');
     const buildGradle = fs.readFileSync(buildGradlePath, 'utf8');
@@ -26,7 +26,7 @@ export function getAndroidAppId(projectPath: string): ImportGetter | null {
       id: 'androidAppId',
       title: 'Android App Id',
       value: appId,
-      setter: () => setAndroidAppId(currentAppId, appId),
+      apply: () => setAndroidAppId(currentAppId, appId),
     };
   } catch (e) {
     return null;
