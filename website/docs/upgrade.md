@@ -21,17 +21,7 @@ Your JS/TS files are usually in `src` folder. Copy this folder along with `index
 In a future version we may try to do this using this tool. For now bear with us.
 :::
 
-### 3. Install modules
-
-Install the modules defined in package.json.
-
-```bash
-npm install
-# or
-yarn
-```
-
-### 4. Let the magic happen
+### 3. Let the magic happen
 
 Run the upgrade command.
 

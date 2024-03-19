@@ -28,12 +28,12 @@ export const mockFs = {
   },
   copyFile: jest.fn((from: string, to: string, cb: CallableFunction) => {
     mockFs.copyFileSync(from, to);
-    cb(true);
+    cb();
   }),
   mkdirSync: (): boolean => {
     return true;
   },
-  mkdir: jest.fn((_path, _opts, cb: CallableFunction) => cb(true) as void),
+  mkdir: jest.fn((_path, _opts, cb: CallableFunction) => cb() as void),
   readdirSync: (): string[] => {
     return ['test' + Constants.XCODEPROJ_EXT];
   },

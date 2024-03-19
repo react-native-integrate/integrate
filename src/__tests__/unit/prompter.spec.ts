@@ -16,6 +16,7 @@ import {
   logSuccess,
   logWarning,
   multiselect,
+  select,
   startSpinner,
   stopSpinner,
   summarize,
@@ -154,6 +155,15 @@ describe('prompter', () => {
     expect(mockPrompter.multiselect).toHaveBeenCalled();
     expect(opts).toEqual(['opt1', 'opt2']);
   });
+  it('should prompt select', async () => {
+    mockPrompter.select.mockClear();
+    const opts = await select('test', {
+      options: [{ value: 'opt1' }, { value: 'opt2' }],
+    });
+
+    expect(mockPrompter.select).toHaveBeenCalled();
+    expect(opts).toEqual('opt1');
+  });
   it('should cancel confirm', async () => {
     mockPrompter.confirm.mockClear();
     mockPrompter.isCancel.mockImplementationOnce(() => true);
@@ -195,6 +205,21 @@ it('should cancel multiselect', async () => {
   ).rejects.toThrowError('program aborted');
 
   expect(mockPrompter.multiselect).toHaveBeenCalled();
+});
+it('should cancel select', async () => {
+  mockPrompter.select.mockClear();
+  mockPrompter.isCancel.mockImplementationOnce(() => true);
+
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
+  await expect(async () =>
+    select('test', {
+      options: [{ value: 'opt1' }, { value: 'opt2' }],
+    })
+  ).rejects.toThrowError('program aborted');
+
+  expect(mockPrompter.select).toHaveBeenCalled();
 });
 
 describe('summarize', () => {

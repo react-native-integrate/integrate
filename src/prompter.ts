@@ -7,14 +7,16 @@ import {
   multiselect as promptMultiselect,
   note,
   outro,
+  select as promptSelect,
   spinner,
   text as promptText,
 } from '@clack/prompts';
 import color from 'picocolors';
 import {
   ConfirmPromptArgs,
-  MultiselectOptionValue,
   MultiselectPromptArgs,
+  OptionValue,
+  SelectPromptArgs,
   TextPromptArgs,
 } from './types/prompt.types';
 import { listenForKeys } from './utils/waitInputToContinue';
@@ -85,7 +87,7 @@ export function stopSpinner(msg: string): void {
 export async function multiselect(
   msg: string,
   args: MultiselectPromptArgs
-): Promise<MultiselectOptionValue[]> {
+): Promise<OptionValue[]> {
   const response = await promptMultiselect({
     message: msg,
     required: args.required,
@@ -95,6 +97,28 @@ export async function multiselect(
       hint: x.hint,
     })),
     initialValues: args.initialValues,
+  });
+  if (isCancel(response)) {
+    cancel('operation cancelled');
+    process.abort();
+  }
+  // @ts-ignore
+  return response;
+}
+
+export async function select(
+  msg: string,
+  args: SelectPromptArgs
+): Promise<OptionValue> {
+  const response = await promptSelect({
+    message: msg,
+    options: args.options.map(x => ({
+      value: x.value,
+      label: x.label || x.value.toString(),
+      hint: x.hint,
+    })),
+    initialValue: args.initialValue,
+    maxItems: args.maxItems,
   });
   if (isCancel(response)) {
     cancel('operation cancelled');

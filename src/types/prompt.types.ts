@@ -13,14 +13,20 @@ export type ConfirmPromptArgs = {
 
 export type MultiselectPromptArgs = {
   required?: boolean;
-  options: MultiselectOption[];
-  initialValues?: MultiselectOptionValue[];
+  options: SelectOption[];
+  initialValues?: OptionValue[];
 };
 
-export type MultiselectOption = {
-  value: MultiselectOptionValue;
+export type SelectPromptArgs = {
+  options: SelectOption[];
+  initialValue?: OptionValue;
+  maxItems?: number;
+};
+
+export type SelectOption = {
+  value: OptionValue;
   label?: string;
   hint?: string;
 };
 
-export type MultiselectOptionValue = Readonly<string | boolean | number>;
+export type OptionValue = Readonly<string | boolean | number>;

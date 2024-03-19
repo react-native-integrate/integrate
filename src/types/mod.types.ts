@@ -59,8 +59,15 @@ export type ObjectModifierType = ActionBase & {
   set: {
     [key: string]: any;
   };
-  strategy?: 'merge_concat' | 'merge_distinct' | 'merge' | 'append' | 'assign';
+  strategy?: ObjectModifierStrategy;
 };
+
+export type ObjectModifierStrategy =
+  | 'merge_concat'
+  | 'merge_distinct'
+  | 'merge'
+  | 'append'
+  | 'assign';
 
 export type ActionBase = {
   name?: string;
@@ -440,3 +447,11 @@ export type TaskState = {
   error: boolean;
   reason?: string;
 };
+
+export type PackageJsonType = {
+  name: string;
+  version?: string;
+  scripts?: Record<string, string>;
+  dependencies: Record<string, string>;
+  devDependencies?: Record<string, string>;
+} & Record<string, any>;

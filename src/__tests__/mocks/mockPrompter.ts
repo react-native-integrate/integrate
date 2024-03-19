@@ -22,6 +22,7 @@ export const mockPrompter = {
   multiselect: jest.fn(({ options }: MultiselectPromptArgs) =>
     options.map(x => x.value)
   ),
+  select: jest.fn(({ options }: MultiselectPromptArgs) => options[0].value),
   text: jest.fn(() => 'test'),
   cancel: jest.fn(),
   isCancel: jest.fn(() => false),

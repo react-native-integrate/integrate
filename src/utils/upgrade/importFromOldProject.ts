@@ -17,11 +17,17 @@ import { getIosBundleId } from './ios/importIosBundleId';
 import { getIosDisplayName } from './ios/importIosDisplayName';
 import { getIosMarketingVersion } from './ios/importIosMarketingVersion';
 import { getIosProjectVersion } from './ios/importIosProjectVersion';
+import { importIntegrateLockJson } from './other/importIntegrateLockJson';
+import { importPackageJson } from './other/importPackageJson';
+import { importUpgradeFolder } from './other/importUpgradeFolder';
 
 export async function importFromOldProject(
   oldProjectPath: string
 ): Promise<boolean> {
   const importedData: ImportGetter[] = [
+    importPackageJson(oldProjectPath),
+    importIntegrateLockJson(oldProjectPath),
+    importUpgradeFolder(oldProjectPath),
     getAndroidDisplayName(oldProjectPath),
     getAndroidAppId(oldProjectPath),
     getAndroidLaunchIcon(oldProjectPath),

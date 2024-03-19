@@ -144,7 +144,8 @@ function getMainApplicationPath(lang?: AndroidCodeType) {
       lang === 'kotlin'
         ? Constants.MAIN_APPLICATION_KT_FILE_NAME
         : Constants.MAIN_APPLICATION_JAVA_FILE_NAME,
-    ].join('/')
+    ].join('/'),
+    { nodir: true }
   )[0];
   if (!mainApplicationPath)
     throw new Error(

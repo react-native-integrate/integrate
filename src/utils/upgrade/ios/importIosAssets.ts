@@ -12,10 +12,12 @@ export function getIosAssets(projectPath: string): ImportGetter | null {
     const iosProjectName = getIosProjectName(projectPath);
 
     const imagesAssets = globSync(
-      path.join(projectPath, 'ios', iosProjectName, 'Images.xcassets/**/*')
+      path.join(projectPath, 'ios', iosProjectName, 'Images.xcassets/**/*'),
+      { nodir: true }
     );
     const launchScreen = globSync(
-      path.join(projectPath, 'ios', iosProjectName, 'LaunchScreen.storyboard')
+      path.join(projectPath, 'ios', iosProjectName, 'LaunchScreen.storyboard'),
+      { nodir: true }
     );
 
     if (!imagesAssets.length && !launchScreen.length) return null;
@@ -34,7 +36,8 @@ export function getIosAssets(projectPath: string): ImportGetter | null {
 async function setIosAssets(assets: string[], launchScreen: string) {
   const iosProjectName = getIosProjectName();
   const existingAssets = globSync(
-    path.join(getProjectPath(), 'ios', iosProjectName, 'Images.xcassets/**/*')
+    path.join(getProjectPath(), 'ios', iosProjectName, 'Images.xcassets/**/*'),
+    { nodir: true }
   );
   // delete existing image assets
   for (const asset of existingAssets) {

@@ -9,7 +9,8 @@ import { getProjectPath } from '../../getProjectPath';
 export function getAndroidLaunchIcon(projectPath: string): ImportGetter | null {
   try {
     const mipmaps = globSync(
-      path.join(projectPath, 'android/app/src/main/res/mipmap-*/*')
+      path.join(projectPath, 'android/app/src/main/res/mipmap-*/*'),
+      { nodir: true }
     );
     // get launcher icon and launcher round icon name from AndroidManifest.xml
     const manifestPath = path.join(

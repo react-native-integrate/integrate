@@ -123,6 +123,9 @@ if (!didSetup) {
         'mock-package': '^1.2.3',
         'react-native': '^1.2.3',
       },
+      engines: {
+        node: '>=16',
+      },
     });
   });
   didSetup = true;
