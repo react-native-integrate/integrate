@@ -27,7 +27,7 @@ export function importPackageJson(projectPath: string): ImportGetter | null {
 
     return {
       id: 'packageJson',
-      title: 'package.json',
+      title: 'Package.json',
       value: `${packageJson.name}@${packageJson.version}`,
       apply: () => setPackageJson(projectPath, packageJson),
     };

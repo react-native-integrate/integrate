@@ -17,6 +17,7 @@ import { importIosBundleId } from './ios/importIosBundleId';
 import { importIosDisplayName } from './ios/importIosDisplayName';
 import { importIosMarketingVersion } from './ios/importIosMarketingVersion';
 import { importIosProjectVersion } from './ios/importIosProjectVersion';
+import { importGitFolder } from './other/importGitFolder';
 import { importIntegrateLockJson } from './other/importIntegrateLockJson';
 import { importPackageJson } from './other/importPackageJson';
 import { importUpgradeFolder } from './other/importUpgradeFolder';
@@ -38,6 +39,7 @@ export async function importFromOldProject(
     importIosProjectVersion(oldProjectPath),
     importIosMarketingVersion(oldProjectPath),
     importIosAssets(oldProjectPath),
+    importGitFolder(oldProjectPath),
   ].filter(d => d != null) as ImportGetter[];
 
   logMessage(

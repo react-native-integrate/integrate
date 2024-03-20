@@ -11,6 +11,14 @@ const permissions = {
 export const mockFs = {
   existsSync: (path: string): boolean =>
     Object.keys(store).some(key => key.startsWith(path)),
+  renameSync: (from: string, to: string) => {
+    Object.keys(store)
+      .filter(([key]) => key.startsWith(from))
+      .forEach(([key, value]) => {
+        store[key.replace(from, to)] = value;
+        delete store[key];
+      });
+  },
   readFileSync: (path: string): string => {
     if (!permissions.read) throw new Error('[mock] permission denied');
     if (!(path in store)) throw new Error('[mock] file not found');
@@ -33,6 +41,16 @@ export const mockFs = {
   mkdirSync: (): boolean => {
     return true;
   },
+  rmdirSync: (_path: string) => {
+    Object.keys(store)
+      .filter(key => key.startsWith(_path))
+      .forEach(key => delete store[key]);
+    return true;
+  },
+  rmdir: jest.fn((_path: string, _opts, cb: CallableFunction) => {
+    mockFs.rmdirSync(_path);
+    cb();
+  }),
   mkdir: jest.fn((_path, _opts, cb: CallableFunction) => cb() as void),
   readdirSync: (): string[] => {
     return ['test' + Constants.XCODEPROJ_EXT];

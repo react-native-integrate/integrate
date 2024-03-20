@@ -26,6 +26,9 @@ import { importFromOldProject } from './utils/upgrade/importFromOldProject';
 import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
+// TODO: remove when we upgrade min supported node and start using fs.rm instead of fs.rmdir
+process.removeAllListeners('warning');
+
 export async function upgrade(): Promise<void> {
   logInfo(
     color.bold(color.inverse(color.magenta(' stage 1 '))) +

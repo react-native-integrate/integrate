@@ -22,7 +22,7 @@ export function importIntegrateLockJson(
 
     return {
       id: 'integrateLockJson',
-      title: 'integrate-lock.json',
+      title: 'Integrate Lock File',
       value: `${Object.keys(lockData.packages).length} total, ${Object.values(lockData.packages).filter(x => x.integrated).length} integrated packages`,
       apply: () => setIntegrateLockJson(lockData),
     };
