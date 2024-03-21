@@ -12,17 +12,17 @@ The "fs" task is used to perform filesystem operations within your configuration
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | type     | "fs", required                                  | Specifies the task type, which should be set to "fs" for this task.                                                                                          |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
 | actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
 
 ## Action Properties
 
 | Property    | Type             | Description                                                                                                                                                                                                       |
 |:------------|:-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name        | string           | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more.                                                      |
-| when        | object           | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                                                                         |
+| name        | string           | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                      |
+| when        | object           | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                                         |
 | copyFile    | string           | A string that specifies the name of the file needed to be copied.                                                                                                                                                 |
 | destination | string, required | A relative path from the project's root directory specifying the destination where the file will be copied. This field determines where the copied file will be placed within your project's directory structure. |
 | message     | string           | A string that serves as the user prompt message when collecting input. If provided, this message will replace the default message.                                                                                |

@@ -12,7 +12,7 @@ npx react-native-integrate <package-name>
 ```
 
 #### Example
-```bash
+```bash npm2yarn
 # First install the package
 npm install @react-native-firebase/app
 
@@ -24,11 +24,8 @@ npx react-native-integrate@latest @react-native-firebase/app
 
 First, install this package as globally once.
 
-```bash
-# Global installation
+```bash npm2yarn
 npm install react-native-integrate -g
-# or
-yarn global add react-native-integrate
 ```
 
 Then simply run the command to complete the integration:

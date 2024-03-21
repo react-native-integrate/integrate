@@ -7,7 +7,7 @@ To check the availability of integration for a specific package and view related
 
 ```bash
 npx react-native-integrate info <package-name>
-# or, if you've installed it as a dev dependency
+# or, if you've installed it globally
 rni info <package-name>
 ```
 

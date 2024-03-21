@@ -23,6 +23,7 @@ import { taskManager } from './utils/taskManager';
 import { topologicalSort } from './utils/topologicalSort';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { importFromOldProject } from './utils/upgrade/importFromOldProject';
+import { restoreBackupFiles } from './utils/upgrade/restoreBackupFiles';
 import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
@@ -310,4 +311,19 @@ export async function upgrade(): Promise<void> {
   }
 
   updateIntegrationStatus(packageLockUpdates);
+
+  logInfo(
+    color.bold(color.inverse(color.magenta(' stage 3 '))) +
+      color.bold(color.magenta(' Restore backup files '))
+  );
+
+  const didRestore = await restoreBackupFiles().catch((e: Error) => {
+    logWarning(e.message);
+  });
+  if (didRestore) {
+    logSuccess(
+      color.inverse(color.bold(color.green(' restored '))) +
+        color.green(' backup files were restored successfully')
+    );
+  }
 }

@@ -45,15 +45,15 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: 'v2.x',
-              badge: true
+              label: 'v2.x'
             },
           },
-          // Please change this to your repo.
+          remarkPlugins: [
+            [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
+          ],
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
         },
         theme: {
           customCss: './src/css/custom.css',

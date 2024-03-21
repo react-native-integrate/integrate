@@ -10,6 +10,10 @@ const mockParseConfig = jest.spyOn(
   require('../../utils/parseConfig'),
   'parseConfig'
 );
+const mockRestoreBackupFiles = jest.spyOn(
+  require('../../utils/upgrade/restoreBackupFiles'),
+  'restoreBackupFiles'
+);
 
 import { Constants } from '../../constants';
 import { upgrade } from '../../upgrade';
@@ -19,6 +23,26 @@ describe('upgrade', () => {
   it('should skip import when import path is empty', async () => {
     mockPrompter.text.mockImplementationOnce(() => '');
     mockPrompter.log.message.mockClear();
+
+    await upgrade();
+
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipping import from old project')
+    );
+  });
+  it('should restore files', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockRestoreBackupFiles.mockReturnValueOnce(Promise.resolve(true));
+
+    await upgrade();
+
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipping import from old project')
+    );
+  });
+  it('should handle restore error', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockRestoreBackupFiles.mockRejectedValueOnce(new Error('test'));
 
     await upgrade();
 

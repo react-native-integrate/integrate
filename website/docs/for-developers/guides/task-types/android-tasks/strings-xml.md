@@ -1,21 +1,21 @@
 ---
-sidebar_position: 3
-title: settings.gradle
+sidebar_position: 4
+title: strings.xml
 ---
-# Settings Gradle Task Configuration (`settings_gradle`)
-_Modify settings.gradle file_
+# Strings Xml Task Configuration (`strings_xml`)
+_Modify strings.xml file_
 
-The `settings_gradle` task is designed to facilitate modifications to the `settings.gradle` files in Android projects. It is the main entry file of the android application. This task provides the flexibility to make changes to different sections of the `settings.gradle` file.
+The `strings_xml` task allows you to modify the strings.xml file in an Android project. You can add any resource within the strings.xml file.
 
 ## Task Properties
 
-| Property | Type                                            | Description                                                                                                                                                  |
-|:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "settings_gradle", required                     | Specifies the task type, which should be set to "settings_gradle" for this task.                                                                             |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
-| label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
-| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                               |
+| Property | Type                                            | Description                                                                                                                                                                                                                                                                                        |
+|:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| type     | "strings_xml", required                         | Specifies the task type, which should be set to "strings_xml" for this task.                                                                                                                                                                                                                       |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                                                                                                       |
+| label    | string                                          | An optional label or description for the task.                                                                                                                                                                                                                                                     |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                                                                                                                                                             |
+| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                                                                                                                                                                     |
 
 ## Action Properties
 
@@ -23,8 +23,8 @@ The `settings_gradle` task is designed to facilitate modifications to the `setti
 
 | Property   | Type                                       | Description                                                                                                                                                                                             |
 |:-----------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more.                                            |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                                                               |
+| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                            |
+| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                               |
 
 ### Context reduction properties
 
@@ -53,13 +53,12 @@ The `settings_gradle` task is designed to facilitate modifications to the `setti
 
 ## Example
 
+Here's an example of how to use the `strings_xml` task to modify the strings.xml file:
 ```yaml
-type: settings_gradle
-label: "Including code push"
+type: strings_xml
+label: "Modify strings.xml"
 actions:
-  - append: |-
-      include ':app', ':react-native-code-push'
-      project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
+  - append: <string name="resource">value</string>
 ```
 
-In this example, the `settings_gradle` task adds an import to the file.
+In this example, we add a string resource in strings.xml.

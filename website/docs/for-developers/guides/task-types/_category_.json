@@ -1,0 +1,8 @@
+{
+  "label": "Task Types",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "All possible task types that can be defined in configuration."
+  }
+}

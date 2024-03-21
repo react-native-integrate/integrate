@@ -12,9 +12,9 @@ The `plist` task allows you to modify property list (plist) files, typically use
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | type     | "plist", required                               | Specifies the task type, which should be set to "plist" for this task.                                                                                       |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
 | target   | string                                          | Specifies the target which contains the plist file. Omitting this field means the plist of main app will be modified.                                        |
 | actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
 
@@ -22,8 +22,8 @@ The `plist` task allows you to modify property list (plist) files, typically use
 
 | Property  | Type                                  | Description                                                                                                                                                  |
 |:----------|:--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name      | string                                | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
-| when      | object                                | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                    |
+| name      | string                                | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when      | object                                | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 | set       | object                                | An object containing key-value pairs that you want to add or modify in the plist.                                                                            |
 | strategy  | one of [Strategy](#strategy-property) | Specifies how to handle merging new and existing values.                                                                                                     |
 

@@ -12,17 +12,17 @@ The `prompt` task type allows you to gather user input during the integration pr
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | type     | "prompt", required                              | Specifies the task type, which should be set to "prompt" for this task.                                                                                      |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
 | actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
 
 ## Action Properties
 
 | Property | Type                                           | Description                                                                                                                                                  |
 |:---------|:-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name     | string                                         | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
-| when     | object                                         | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                    |
+| name     | string                                         | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object                                         | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 | text     | "text" or "boolean" or "multiselect", required | The text displayed to prompt the user.                                                                                                                       |
 | type     | string, required                               | Specifies the type of prompt to display.                                                                                                                     |
 | message  | string                                         | A string that serves as the user prompt message when collecting input. If provided, this message will replace the default message.                           |

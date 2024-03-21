@@ -12,9 +12,9 @@ The `podfile` task allows you to customize your iOS project's Podfile, which is 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | type     | "podfile", required                             | Specifies the task type, which should be set to "podfile" for this task.                                                                                     |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
 | actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
 
 ## Action Properties
@@ -23,8 +23,8 @@ The `podfile` task allows you to customize your iOS project's Podfile, which is 
 
 | Property   | Type                                       | Description                                                                                                                                                                                             |
 |:-----------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more.                                            |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                                                               |
+| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                            |
+| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                               |
 
 ### Special properties
 

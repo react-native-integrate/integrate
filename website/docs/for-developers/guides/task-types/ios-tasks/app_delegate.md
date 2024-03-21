@@ -1,20 +1,20 @@
 ---
-sidebar_position: 2
-title: .gitignore
+sidebar_position: 1
+title: AppDelegate.mm
 ---
-# Gitignore Task Configuration (`gitignore`)
-_Modify .gitignore file_
+# App Delegate Task Configuration (`app_delegate`)
+_Modify AppDelegate.mm file_
 
-The `gitignore` task allows you to customize .gitignore file, which is used to ignore some files from getting added to version control.
+The `app_delegate` task is used to modify the AppDelegate.mm file in an iOS project. This task allows you to insert code, import statements, or comments into specific methods within the AppDelegate.mm file. The modifications can be made before or after a specified point in the method. This task is particularly useful for integrating third-party libraries or SDKs that require changes to the AppDelegate file.
 
 ## Task Properties
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "gitignore", required                           | Specifies the task type, which should be set to "gitignore" for this task.                                                                                   |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more. |
+| type     | "app_delegate", required                        | Specifies the task type, which should be set to "app_delegate" for this task.                                                                                |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../guides/when) page to learn how to execute task conditionally.                                                       |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
 | actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
 
 ## Action Properties
@@ -23,13 +23,14 @@ The `gitignore` task allows you to customize .gitignore file, which is used to i
 
 | Property   | Type                                       | Description                                                                                                                                                                                             |
 |:-----------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../guides/states) page to learn more.                                            |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../guides/when)  page to learn how to execute action conditionally.                                                                                               |
+| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                            |
+| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                               |
 
 ### Context reduction properties
 
 | Property | Type                                                 | Description                                                                                                                                                                                                                                                                                |
 |:---------|:-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| block    | one of [Allowed Method Names](#allowed-method-names) | Specifies the name of the method within AppDelegate.mm where the modification should be applied. It must match one of the allowed method names. See [Allowed Method Names](#allowed-method-names) section for details. Omitting this field instructs the action item to modify whole file. |
 | before   | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                    |
 | after    | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                     |
 | search   | string or `{regex: string, flags: string}`           | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                                                                                                           |
@@ -51,15 +52,43 @@ The `gitignore` task allows you to customize .gitignore file, which is used to i
 | ifNotPresent   | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                                                    |
 | comment        | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                                                |
 
+### Allowed Method Names
+
+The `block` field within the action items must match one of the allowed method names within the AppDelegate.mm file. The method is created if it does not exist. The following method names are allowed:
+
+-   `didFinishLaunchingWithOptions`
+-   `applicationDidBecomeActive`
+-   `applicationWillResignActive`
+-   `applicationDidEnterBackground`
+-   `applicationWillEnterForeground`
+-   `applicationWillTerminate`
+-   `openURL`
+-   `restorationHandler`
+-   `didRegisterForRemoteNotificationsWithDeviceToken`
+-   `didFailToRegisterForRemoteNotificationsWithError`
+-   `didReceiveRemoteNotification`
+-   `fetchCompletionHandler`
+
 ## Example
 
-Here's an example of a configuration file (`integrate.yml`) that utilizes the `gitignore` task to modify the .gitignore file:
+Here's an example of how to use the `app_delegate` task:
 
 ```yaml
-type: gitignore
-label: "Modify .gitignore"
+type: app_delegate
+label: "Integrate Firebase"
 actions:
-  - append: ios/tmp.xcconfig
+  - prepend: "#import <Firebase.h>"
+  - block: "didFinishLaunchingWithOptions"
+    prepend: "[FIRApp configure];"
+  - block: "openURL"
+    before: "return YES;"
+    append: "// Handle custom URL schemes here."
 ```
 
-In this example, we append a declaration within .gitignore to prevent tmp.xcconfig from getting added to version control.
+In this example, the task is labeled "Integrate Firebase." It defines three action items:
+
+1.  It prepends the header import to the file `#import <Firebase.h>`.
+
+2.  In the `didFinishLaunchingWithOptions` method, it prepends the code `[FIRApp configure];`.
+
+3.  In the `openURL` method, it adds a comment before the `return YES;` statement, followed by code to handle custom URL schemes.

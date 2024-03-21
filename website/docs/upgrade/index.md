@@ -3,7 +3,7 @@ sidebar_position: 3
 ---
 # Upgrade React Native
 
-You can use this tool to assist you while upgrading your project to new React Native versions. 
+You can use this tool to assist you while upgrading your project to new React Native versions.
 
 ## Steps to follow
 
@@ -35,20 +35,22 @@ rnu
 
 ## How it works?
 
-It works by keeping track of every integration. 
+It works by keeping track of every integration.
 
 - Integrated packages are saved in `integrate-lock.json`.
 - Prompt inputs are saved in `.upgrade` folder.
 - Imported files are also saved in `.upgrade` folder.
 
 When upgrading;
-1. First, basic data like display name, bundle ids, icons etc. is imported.
-2. Old `package.json` is carefully merged with the new one.
+1. First, basic data like display name, bundle ids, icons, versions etc. is imported.
+2. Old `package.json` is carefully merged with the new one, without overwriting any dependency.
 3. `integrate-lock.json` and `.upgrade` folder is imported.
-4. All previously integrated packages will be re-integrated by using input values from `.upgrade` folder.
-  
+4. `.git` folder is imported.
+5. All previously integrated packages are re-integrated by using input values from `.upgrade/packages`.
+
    :::tip
    If you don't want to keep track of user inputs, you can delete `.upgrade` or add it to .gitignore.
-   
+
    `upgrade` command will ask inputs from you on the process if it cannot find in `.upgrade` folder.
    :::
+6. If exists, files in `.upgrade/backup` will be copied to their respective paths.
