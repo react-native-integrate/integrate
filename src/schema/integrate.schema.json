@@ -576,13 +576,6 @@
                 }
             ]
         },
-        "MultiselectOptionValue": {
-            "type": [
-                "string",
-                "number",
-                "boolean"
-            ]
-        },
         "NotificationServiceTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -661,6 +654,16 @@
             ],
             "type": "object"
         },
+        "ObjectModifierStrategy": {
+            "enum": [
+                "append",
+                "assign",
+                "merge",
+                "merge_concat",
+                "merge_distinct"
+            ],
+            "type": "string"
+        },
         "ObjectModifierType": {
             "additionalProperties": false,
             "properties": {
@@ -672,14 +675,7 @@
                     "type": "object"
                 },
                 "strategy": {
-                    "enum": [
-                        "append",
-                        "assign",
-                        "merge",
-                        "merge_concat",
-                        "merge_distinct"
-                    ],
-                    "type": "string"
+                    "$ref": "#/definitions/ObjectModifierStrategy"
                 },
                 "when": {
                     "$ref": "#/definitions/AnyObject"
@@ -689,6 +685,13 @@
                 "set"
             ],
             "type": "object"
+        },
+        "OptionValue": {
+            "type": [
+                "string",
+                "number",
+                "boolean"
+            ]
         },
         "PlistTaskType": {
             "additionalProperties": false,
@@ -949,7 +952,7 @@
                     "properties": {
                         "initialValues": {
                             "items": {
-                                "$ref": "#/definitions/MultiselectOptionValue"
+                                "$ref": "#/definitions/OptionValue"
                             },
                             "type": "array"
                         },
@@ -967,7 +970,7 @@
                                         "type": "string"
                                     },
                                     "value": {
-                                        "$ref": "#/definitions/MultiselectOptionValue"
+                                        "$ref": "#/definitions/OptionValue"
                                     }
                                 },
                                 "required": [

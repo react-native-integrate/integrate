@@ -12,7 +12,10 @@ export async function getModContent(
 ): Promise<string> {
   if (typeof textOrFile == 'string') return getText(textOrFile);
   const fullFilePath = path.join(configPath, '..', textOrFile.file);
-  if (!fs.existsSync(fullFilePath)) {
+  if (
+    !fs.existsSync(fullFilePath) &&
+    packageName !== Constants.UPGRADE_CONFIG_FILE_NAME
+  ) {
     const remotePath =
       getRemotePath(packageName, Constants.REMOTE_REPO) +
       fullFilePath.replace(path.join(configPath, '../'), '');

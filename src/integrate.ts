@@ -94,7 +94,7 @@ export async function integrate(packageName?: string): Promise<void> {
       else {
         let config: IntegrationConfig;
         try {
-          config = parseConfig(configPath);
+          config = parseConfig(configPath) as IntegrationConfig;
         } catch (e) {
           logError(
             color.bold(color.bgRed(' error ')) +

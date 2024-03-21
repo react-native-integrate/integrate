@@ -11,3 +11,13 @@ export type ImportGetter = {
   value: string;
   apply: () => Promise<any>;
 };
+
+export type RunUpgradeTaskResult =
+  | {
+      didRun: false;
+    }
+  | {
+      failedTaskCount: number;
+      completedTaskCount: number;
+      didRun: true;
+    };

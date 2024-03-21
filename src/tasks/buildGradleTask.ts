@@ -80,13 +80,11 @@ function findOrCreateBlock(
   };
 
   const blockPath = block.split('.');
+  let contentOffset = 0;
+
   for (let i = 0; i < blockPath.length; i++) {
-    const partialPath = blockPath.slice(0, i + 1);
-    const matcherRegex = new RegExp(
-      `^((\\s+)?)${partialPath.join('.*?^(\\s+)?')}\\s+\\{`,
-      'ms'
-    );
-    let blockStart = matcherRegex.exec(content);
+    const matcherRegex = new RegExp(`^((\\s+)?)${blockPath[i]}\\s+\\{`, 'ms');
+    let blockStart = matcherRegex.exec(blockContent.match);
 
     const justCreated = !blockStart;
     if (!blockStart) {
@@ -98,27 +96,34 @@ function findOrCreateBlock(
       const codeToInsert = `
 ${newBlock}
 ${previousSpace}`;
+      const contentLengthBeforeInsert = content.length;
       content = stringSplice(content, blockContent.end, 0, codeToInsert);
-      blockStart = matcherRegex.exec(content);
+      if (codeToInsert.length && contentLengthBeforeInsert < content.length) {
+        blockContent.match += codeToInsert;
+        blockContent.end += codeToInsert.length;
+        blockStart = matcherRegex.exec(blockContent.match);
+      }
     }
     if (!blockStart) {
       throw new Error('block could not be inserted, something wrong?');
     }
+
     const blockEndIndex = findClosingTagIndex(
       content,
-      blockStart.index + blockStart[0].length
+      contentOffset + blockStart.index + blockStart[0].length
     );
     const blockBody = content.substring(
-      blockStart.index + blockStart[0].length,
+      contentOffset + blockStart.index + blockStart[0].length,
       blockEndIndex
     );
     blockContent = {
-      start: blockStart.index + blockStart[0].length,
+      start: contentOffset + blockStart.index + blockStart[0].length,
       end: blockEndIndex,
       match: blockBody,
       justCreated,
       space: ' '.repeat(4 * i),
     };
+    contentOffset += blockStart.index + blockStart[0].length;
   }
 
   return {

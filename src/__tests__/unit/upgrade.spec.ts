@@ -14,6 +14,10 @@ const mockRestoreBackupFiles = jest.spyOn(
   require('../../utils/upgrade/restoreBackupFiles'),
   'restoreBackupFiles'
 );
+const mockRunUpgradeTasks = jest.spyOn(
+  require('../../utils/upgrade/runUpgradeTasks'),
+  'runUpgradeTasks'
+);
 
 import { Constants } from '../../constants';
 import { upgrade } from '../../upgrade';
@@ -48,6 +52,45 @@ describe('upgrade', () => {
 
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
       expect.stringContaining('skipping import from old project')
+    );
+  });
+  it('should execute upgrade.yml', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockRunUpgradeTasks.mockResolvedValueOnce({
+      didRun: true,
+      completedTaskCount: 1,
+    });
+    mockPrompter.log.success.mockClear();
+
+    await upgrade();
+
+    expect(mockPrompter.log.success).toHaveBeenCalledWith(
+      expect.stringContaining('task(s) successfully')
+    );
+  });
+  it('should handle upgrade.yml execution error', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockRunUpgradeTasks.mockRejectedValueOnce(new Error('test'));
+    mockPrompter.log.warning.mockClear();
+
+    await upgrade();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('test')
+    );
+  });
+  it('should handle upgrade.yml failed tasks', async () => {
+    mockPrompter.text.mockImplementationOnce(() => '');
+    mockRunUpgradeTasks.mockResolvedValueOnce({
+      didRun: true,
+      failedTaskCount: 1,
+    });
+    mockPrompter.log.warning.mockClear();
+
+    await upgrade();
+
+    expect(mockPrompter.log.warning).toHaveBeenCalledWith(
+      expect.stringContaining('task(s) - please complete upgrade manually')
     );
   });
   it('should not run tasks when lock does not exist', async () => {

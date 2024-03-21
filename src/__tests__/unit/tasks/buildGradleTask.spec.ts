@@ -469,6 +469,51 @@ buildscript {
         test2;
         test3;`);
   });
+  it('should append in non existing deep path correctly', async () => {
+    let content = `
+buildscript {
+    ext {
+        debug {
+            test1;
+            test3;
+        }
+    }
+    random {
+        release {
+            test1;
+            test3;
+        }
+    }
+}
+`;
+    const task: BuildGradleTaskType = {
+      type: 'build_gradle',
+      actions: [
+        {
+          block: 'buildscript.ext.release',
+          append: 'test2;',
+        },
+      ],
+    };
+
+    content = await buildGradleTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content).toContain(`
+    ext {
+        debug {
+            test1;
+            test3;
+        }
+    
+        release {
+            test2;
+        }
+    }`);
+  });
   it('should skip if condition not met', async () => {
     let content = `
 buildscript {

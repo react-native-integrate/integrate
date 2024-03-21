@@ -51,7 +51,9 @@
                 "strict": {
                     "type": "boolean"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -80,7 +82,9 @@
                     "const": "android_manifest",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -117,7 +121,9 @@
                     "const": "app_delegate",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -160,7 +166,9 @@
                     "const": "build_gradle",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -207,7 +215,9 @@
                 "strict": {
                     "type": "boolean"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -250,7 +260,9 @@
                 "strict": {
                     "type": "boolean"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -293,7 +305,9 @@
                 "strict": {
                     "type": "boolean"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -336,7 +350,9 @@
                 "strict": {
                     "type": "boolean"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -355,7 +371,9 @@
                 "name": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "destination"
@@ -387,7 +405,9 @@
                     "const": "fs",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -420,7 +440,9 @@
                     "const": "gitignore",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -456,7 +478,9 @@
                     "const": "json",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -493,7 +517,9 @@
                     "const": "main_application",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -550,13 +576,6 @@
                 }
             ]
         },
-        "MultiselectOptionValue": {
-            "type": [
-                "string",
-                "number",
-                "boolean"
-            ]
-        },
         "NotificationServiceTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -585,7 +604,9 @@
                     "const": "notification_service",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -622,7 +643,9 @@
                     "const": "notification_view_controller",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -630,6 +653,16 @@
                 "type"
             ],
             "type": "object"
+        },
+        "ObjectModifierStrategy": {
+            "enum": [
+                "append",
+                "assign",
+                "merge",
+                "merge_concat",
+                "merge_distinct"
+            ],
+            "type": "string"
         },
         "ObjectModifierType": {
             "additionalProperties": false,
@@ -642,21 +675,23 @@
                     "type": "object"
                 },
                 "strategy": {
-                    "enum": [
-                        "append",
-                        "assign",
-                        "merge",
-                        "merge_concat",
-                        "merge_distinct"
-                    ],
-                    "type": "string"
+                    "$ref": "#/definitions/ObjectModifierStrategy"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "set"
             ],
             "type": "object"
+        },
+        "OptionValue": {
+            "type": [
+                "string",
+                "number",
+                "boolean"
+            ]
         },
         "PlistTaskType": {
             "additionalProperties": false,
@@ -686,7 +721,9 @@
                     "const": "plist",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -756,7 +793,9 @@
                     ],
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "type": "object"
         },
@@ -785,7 +824,9 @@
                     "const": "podfile",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -862,7 +903,9 @@
                                 }
                             ]
                         },
-                        "when": {}
+                        "when": {
+                            "$ref": "#/definitions/AnyObject"
+                        }
                     },
                     "required": [
                         "name",
@@ -893,7 +936,9 @@
                             "const": "boolean",
                             "type": "string"
                         },
-                        "when": {}
+                        "when": {
+                            "$ref": "#/definitions/AnyObject"
+                        }
                     },
                     "required": [
                         "name",
@@ -907,7 +952,7 @@
                     "properties": {
                         "initialValues": {
                             "items": {
-                                "$ref": "#/definitions/MultiselectOptionValue"
+                                "$ref": "#/definitions/OptionValue"
                             },
                             "type": "array"
                         },
@@ -925,7 +970,7 @@
                                         "type": "string"
                                     },
                                     "value": {
-                                        "$ref": "#/definitions/MultiselectOptionValue"
+                                        "$ref": "#/definitions/OptionValue"
                                     }
                                 },
                                 "required": [
@@ -945,7 +990,9 @@
                             "const": "multiselect",
                             "type": "string"
                         },
-                        "when": {}
+                        "when": {
+                            "$ref": "#/definitions/AnyObject"
+                        }
                     },
                     "required": [
                         "name",
@@ -982,7 +1029,9 @@
                     "const": "prompt",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -1015,7 +1064,9 @@
                     "const": "settings_gradle",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -1048,7 +1099,9 @@
                     "const": "strings_xml",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
@@ -1183,7 +1236,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1220,7 +1275,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1250,7 +1307,9 @@
                 "name": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addConfiguration"
@@ -1272,7 +1331,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addFile"
@@ -1298,7 +1359,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1334,7 +1397,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1362,7 +1427,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1390,7 +1457,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addCapability",
@@ -1425,7 +1494,9 @@
                 "name": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addPreBuildRunScriptAction"
@@ -1447,7 +1518,9 @@
                 "type": {
                     "$ref": "#/definitions/XcodeAddTargetType"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "addTarget",
@@ -1539,7 +1612,9 @@
                 "target": {
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "setDeploymentVersion",
@@ -1572,7 +1647,9 @@
                     "const": "xcode",
                     "type": "string"
                 },
-                "when": {}
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
             },
             "required": [
                 "actions",
