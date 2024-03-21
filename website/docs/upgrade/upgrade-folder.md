@@ -31,6 +31,6 @@ For instance, a file located at `.upgrade/backup/android/app/some.file` will be 
 
 This folder is managed by this tool, and you are not supposed to make any changes here.
 
-### 📁 upgrade.yml
+### 📄 upgrade.yml
 
 Additional native code changes can be defined here to be executed during upgrade. [Learn more](configuration)
