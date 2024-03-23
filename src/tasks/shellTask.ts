@@ -78,18 +78,18 @@ export async function shellTask(args: {
           continue;
         }
       }
-      let output = '';
+      let output: string = '';
       startSpinner(`running ${color.yellow(command + ' ' + args.join(' '))}`);
       let exitCode: number | undefined = undefined;
       try {
         exitCode = await new Promise<number>((resolve, reject) => {
           try {
             const child = spawn(command, args, { cwd });
-            child.stdout.on('data', chunk => {
-              output += chunk;
+            child.stdout.on('data', (chunk: Buffer) => {
+              output += chunk.toString('utf8');
             });
-            child.stderr.on('data', chunk => {
-              output += chunk;
+            child.stderr.on('data', (chunk: Buffer) => {
+              output += chunk.toString('utf8');
             });
             // child.stdout.pipe(process.stdout);
             // child.stderr.pipe(process.stderr);
