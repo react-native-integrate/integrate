@@ -572,6 +572,9 @@
                     "$ref": "#/definitions/FsTaskType"
                 },
                 {
+                    "$ref": "#/definitions/ShellTaskType"
+                },
+                {
                     "$ref": "#/definitions/PromptTaskType"
                 }
             ]
@@ -1062,6 +1065,65 @@
                 },
                 "type": {
                     "const": "settings_gradle",
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ShellActionType": {
+            "additionalProperties": false,
+            "properties": {
+                "args": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "command": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "command"
+            ],
+            "type": "object"
+        },
+        "ShellTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ShellActionType"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "shell",
                     "type": "string"
                 },
                 "when": {

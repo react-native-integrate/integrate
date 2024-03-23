@@ -13,6 +13,7 @@ import * as notification_service from '../tasks/notificationServiceTask';
 import * as notification_view_controller from '../tasks/notificationViewControllerTask';
 import * as main_application from '../tasks/mainApplicationTask';
 import * as settings_gradle from '../tasks/settingsGradleTask';
+import * as shell from '../tasks/shellTask';
 import { ModTask } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
@@ -31,6 +32,7 @@ const task: Record<string, TaskExports> = {
   main_application,
   settings_gradle,
   strings_xml,
+  shell,
 };
 
 const systemTaskTypes = Object.entries(task)

@@ -361,6 +361,18 @@ export type FsModifierType = ActionBase & {
   destination: string;
 };
 
+// shell task
+
+export type ShellTaskType = ModTaskBase &
+  ActionsType<ShellActionType> & {
+    type: 'shell';
+  };
+
+export type ShellActionType = ActionBase & {
+  command: string;
+  args?: string[];
+};
+
 // prompt task
 
 export type PromptTaskType = ModTaskBase &
@@ -393,7 +405,8 @@ export type ModTask =
   | GitignoreTaskType
   | FsTaskType
   | JsonTaskType
-  | PromptTaskType;
+  | PromptTaskType
+  | ShellTaskType;
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {
