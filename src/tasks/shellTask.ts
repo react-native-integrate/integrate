@@ -1,6 +1,7 @@
 // noinspection ExceptionCaughtLocallyJS
 
 import { spawn } from 'child_process';
+import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../constants';
 import {
@@ -11,6 +12,7 @@ import {
 } from '../prompter';
 import { ShellTaskType } from '../types/mod.types';
 import { getErrMessage } from '../utils/getErrMessage';
+import { getProjectPath } from '../utils/getProjectPath';
 import { parseArgs } from '../utils/parseArgs';
 import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
@@ -38,7 +40,7 @@ export async function shellTask(args: {
       error: false,
     });
     try {
-      let command: string, args: string[];
+      let command: string, args: string[], cwd: string;
       if (action.args) {
         command = action.command;
         args = action.args;
@@ -46,6 +48,14 @@ export async function shellTask(args: {
         const cmdWithArgs = parseArgs(action.command);
         command = cmdWithArgs[0];
         args = cmdWithArgs.slice(1);
+      }
+      if (action.cwd) {
+        const cwdPath = path.join(getProjectPath(), action.cwd);
+        // security check
+        if (!cwdPath.startsWith(getProjectPath())) {
+          throw new Error('invalid cwd path');
+        }
+        cwd = cwdPath;
       }
 
       if (packageName !== Constants.UPGRADE_CONFIG_FILE_NAME) {
@@ -74,7 +84,7 @@ export async function shellTask(args: {
       try {
         exitCode = await new Promise<number>((resolve, reject) => {
           try {
-            const child = spawn(command, args);
+            const child = spawn(command, args, { cwd });
             child.stdout.on('data', chunk => {
               output += chunk;
             });

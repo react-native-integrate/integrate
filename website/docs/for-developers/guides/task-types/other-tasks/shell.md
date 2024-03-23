@@ -25,7 +25,7 @@ The `shell` task type allows you to run shell commands.
 | when     | object           | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 | command  | string, required | The process name to spawn. Command can have simple args, parser supports quotes. For more complex args, use `args` property.                             |
 | args     | Array\<string\>  | Array of args to be past directly to process.                                                                                                            |
-
+| cwd      | string           | Working directory to run shell. Must be relative to the project root. Default is project root.                                                           |
 
 ## Example
 

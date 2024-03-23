@@ -30,6 +30,7 @@ describe('shellTask', () => {
         {
           name: 'test',
           command: 'test',
+          cwd: 'test',
         },
       ],
     };
@@ -79,7 +80,11 @@ describe('shellTask', () => {
       packageName: 'test-package',
     });
 
-    expect(mockSpawn).toHaveBeenCalledWith('test', ['arg1', 'arg2 arg3']);
+    expect(mockSpawn).toHaveBeenCalledWith(
+      'test',
+      ['arg1', 'arg2 arg3'],
+      expect.anything()
+    );
 
     mockSpawn.mockReset();
   });
@@ -105,6 +110,34 @@ describe('shellTask', () => {
         packageName: 'test-package',
       })
     ).rejects.toThrowError('unexpected error');
+
+    expect(variables.get('test')).toEqual('error');
+
+    mockSpawn.mockReset();
+  });
+  it('should handle invalid cwd', async () => {
+    mockSpawn.mockImplementationOnce(() => {
+      throw new Error('unexpected error');
+    });
+
+    const task: ShellTaskType = {
+      type: 'shell',
+      actions: [
+        {
+          name: 'test',
+          command: 'test',
+          cwd: '../../',
+        },
+      ],
+    };
+
+    await expect(
+      shellTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      })
+    ).rejects.toThrowError('invalid cwd path');
 
     expect(variables.get('test')).toEqual('error');
 

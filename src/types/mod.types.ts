@@ -371,6 +371,7 @@ export type ShellTaskType = ModTaskBase &
 export type ShellActionType = ActionBase & {
   command: string;
   args?: string[];
+  cwd?: string;
 };
 
 // prompt task

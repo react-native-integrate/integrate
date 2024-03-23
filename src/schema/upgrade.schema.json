@@ -1089,6 +1089,9 @@
                 "command": {
                     "type": "string"
                 },
+                "cwd": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
