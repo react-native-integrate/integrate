@@ -66,6 +66,7 @@ describe('xcodeTask', () => {
   it('should add notification service to project', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+    mockPrompter.text.mockReset().mockImplementation(() => 'test');
 
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
@@ -80,6 +81,7 @@ describe('xcodeTask', () => {
         },
       ],
     };
+
     await xcodeTask({
       configPath: 'path/to/config',
       task: task,
@@ -112,6 +114,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'noti',
           addTarget: 'test',
           type: 'notification-service',
         },
@@ -134,6 +137,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'noti',
           addTarget: 'test2',
           type: 'notification-service',
         },
@@ -167,6 +171,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'noti',
           addTarget: 'test',
           type: 'notification-content',
         },
@@ -206,6 +211,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'noti',
           addTarget: 'test',
           type: 'notification-content',
         },
@@ -231,6 +237,7 @@ describe('xcodeTask', () => {
       type: 'xcode',
       actions: [
         {
+          name: 'noti',
           addTarget: 'test',
           type: 'notification-content',
         },

@@ -68,7 +68,8 @@ async function applyXcodeModification(
   packageName: string
 ) {
   if ('addFile' in action) return applyAddFile(content, action, packageName);
-  if ('addTarget' in action) return applyAddTarget(content, action);
+  if ('addTarget' in action)
+    return applyAddTarget(content, action, packageName);
   if ('addCapability' in action) return applyAddCapability(content, action);
   if ('setDeploymentVersion' in action)
     return applySetDeploymentVersion(content, action);

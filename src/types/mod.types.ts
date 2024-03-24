@@ -219,7 +219,8 @@ export type XcodeAddFile = ActionBase & {
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   target?: 'root' | 'main' | string;
 };
-export type XcodeAddTarget = ActionBase & {
+export type XcodeAddTarget = Omit<ActionBase, 'name'> & {
+  name: string;
   addTarget: string;
   type: XcodeAddTargetType;
   message?: string;

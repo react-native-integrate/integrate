@@ -3,11 +3,12 @@ import path from 'path';
 import color from 'picocolors';
 import { XcodeProjectType } from 'xcode';
 import { Constants } from '../../constants';
-import { logMessage, logMessageGray, text } from '../../prompter';
+import { logMessage, logMessageGray } from '../../prompter';
 import { notificationContentFiles } from '../../scaffold/notification-content';
 import { notificationServiceFiles } from '../../scaffold/notification-service';
 import { XcodeAddTarget } from '../../types/mod.types';
 import { getProjectPath } from '../../utils/getProjectPath';
+import { runPrompt } from '../../utils/runPrompt';
 import { getText, variables } from '../../variables';
 import {
   normalizeBundleId,
@@ -18,17 +19,24 @@ import {
 
 export async function applyAddTarget(
   content: XcodeProjectType,
-  action: XcodeAddTarget
+  action: XcodeAddTarget,
+  packageName: string
 ): Promise<XcodeProjectType> {
   const { type } = action;
   action.addTarget = getText(action.addTarget);
 
-  let targetName = await text(action.message || 'Enter new target name:', {
-    defaultValue: action.addTarget,
-    placeholder: action.addTarget,
-  });
+  await runPrompt(
+    {
+      name: action.name + '.target',
+      text: action.message || 'Enter new target name:',
+      type: 'text',
+      defaultValue: action.addTarget,
+      placeholder: action.addTarget,
+    },
+    packageName
+  );
+  let targetName = variables.get<string>(action.name + '.target');
   if (!targetName) targetName = action.addTarget;
-  if (action.name) variables.set(action.name + '.target', targetName);
 
   const mainGroup = content.getFirstProject().firstProject.mainGroup;
 

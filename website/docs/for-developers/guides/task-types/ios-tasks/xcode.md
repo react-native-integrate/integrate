@@ -50,21 +50,24 @@ Specifies the target group within the iOS project where the resource should be a
 | type      | "notification-service" or "notification-content" | Specifies target type to be added. "notification-service" adds Notification Service Extension and "notification-content" adds Notification Content Extension. |
 | message   | string                                           | Specifies the message when requesting the target name from the user.                                                                                          |
 
-> **Note**: Specify `name` field for this action to expose the `name.target` variable which will hold the name of the target which was entered by the user.
->
-> For example:
-> ```yaml
->  # add a notification service extension 
->  # with the default name `MyNotificationService`.
->  # User can change this when running this action!
->  - addTarget: MyNotificationService
->    name: notificationsv # Give it a name
->    type: notification-service
-> 
->  # set extension version to same as main target
->  - setDeploymentVersion: $[IOS_DEPLOYMENT_VERSION]
->    target: $[notificationsv.target] # use the name here
-> ```
+:::info
+`name` must be specified for this action or you will get a validation error.
+This action will expose the `name.target` variable which will hold the name of the target which was entered by the user.
+
+ For example:
+```yaml
+# add a notification service extension 
+# with the default name `MyNotificationService`.
+# User can change this when running this action!
+- addTarget: MyNotificationService
+  name: notificationsv # Give it a name
+  type: notification-service
+
+ # set extension version to same as main target
+- setDeploymentVersion: $[IOS_DEPLOYMENT_VERSION]
+  target: $[notificationsv.target] # use the name here
+```
+:::
 
 ### Add new capability to a target
 

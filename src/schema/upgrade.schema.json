@@ -1630,6 +1630,7 @@
             },
             "required": [
                 "addTarget",
+                "name",
                 "type"
             ],
             "type": "object"
