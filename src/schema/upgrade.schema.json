@@ -489,6 +489,44 @@
             ],
             "type": "object"
         },
+        "MainActivityTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lang": {
+                    "$ref": "#/definitions/AndroidCodeType"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "type": {
+                    "const": "main_activity",
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "actions",
+                "type"
+            ],
+            "type": "object"
+        },
         "MainApplicationTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -552,6 +590,9 @@
                 },
                 {
                     "$ref": "#/definitions/MainApplicationTaskType"
+                },
+                {
+                    "$ref": "#/definitions/MainActivityTaskType"
                 },
                 {
                     "$ref": "#/definitions/AndroidManifestTaskType"

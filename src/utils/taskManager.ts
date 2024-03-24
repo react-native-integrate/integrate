@@ -12,6 +12,7 @@ import * as prompt from '../tasks/promptTask';
 import * as notification_service from '../tasks/notificationServiceTask';
 import * as notification_view_controller from '../tasks/notificationViewControllerTask';
 import * as main_application from '../tasks/mainApplicationTask';
+import * as main_activity from '../tasks/mainActivityTask';
 import * as settings_gradle from '../tasks/settingsGradleTask';
 import * as shell from '../tasks/shellTask';
 import { ModTask } from '../types/mod.types';
@@ -30,6 +31,7 @@ const task: Record<string, TaskExports> = {
   notification_service,
   notification_view_controller,
   main_application,
+  main_activity,
   settings_gradle,
   strings_xml,
   shell,

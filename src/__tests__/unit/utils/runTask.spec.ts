@@ -17,6 +17,9 @@ const mocks = {
   main_application: {
     runTask: jest.fn(),
   },
+  main_activity: {
+    runTask: jest.fn(),
+  },
   xcode: {
     runTask: jest.fn(),
   },
@@ -38,6 +41,7 @@ jest.mock('../../../tasks/plistTask', () => mocks.plist);
 jest.mock('../../../tasks/buildGradleTask', () => mocks.build_gradle);
 jest.mock('../../../tasks/settingsGradleTask', () => mocks.settings_gradle);
 jest.mock('../../../tasks/mainApplicationTask', () => mocks.main_application);
+jest.mock('../../../tasks/mainActivityTask', () => mocks.main_activity);
 jest.mock('../../../tasks/xcode/xcodeTask', () => mocks.xcode);
 jest.mock('../../../tasks/androidManifestTask', () => mocks.android_manifest);
 jest.mock('../../../tasks/podFileTask', () => mocks.podfile);

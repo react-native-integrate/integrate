@@ -177,6 +177,14 @@ export type MainApplicationTaskType = ModTaskBase &
 
 export type AndroidCodeType = 'java' | 'kotlin';
 
+// main activity
+
+export type MainActivityTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    type: 'main_activity';
+    lang?: AndroidCodeType;
+  };
+
 // android manifest task
 
 export type AndroidManifestTaskType = ModTaskBase &
@@ -397,6 +405,7 @@ export type ModTask =
   | BuildGradleTaskType
   | SettingsGradleTaskType
   | MainApplicationTaskType
+  | MainActivityTaskType
   | AndroidManifestTaskType
   | StringsXmlTaskType
   | NotificationServiceTaskType

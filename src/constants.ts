@@ -16,6 +16,8 @@ export const Constants = {
   SETTINGS_GRADLE_FILE_NAME: 'settings.gradle',
   MAIN_APPLICATION_JAVA_FILE_NAME: 'MainApplication.java',
   MAIN_APPLICATION_KT_FILE_NAME: 'MainApplication.kt',
+  MAIN_ACTIVITY_JAVA_FILE_NAME: 'MainActivity.java',
+  MAIN_ACTIVITY_KT_FILE_NAME: 'MainActivity.kt',
   POD_FILE_NAME: 'Podfile',
   GITIGNORE_FILE_NAME: '.gitignore',
   XCODEPROJ_EXT: '.xcodeproj',
