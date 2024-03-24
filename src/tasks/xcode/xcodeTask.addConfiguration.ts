@@ -82,7 +82,7 @@ export async function applyAddConfiguration(
 
         const groupObj = content.getPBXGroupByKey(group);
         const fileRefExists = groupObj.children.find(
-          x => x.comment == fileName
+          x => unquote(x.comment) == fileName
         );
         if (fileRefExists) {
           logMessageGray(

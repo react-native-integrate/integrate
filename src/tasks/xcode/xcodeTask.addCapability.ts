@@ -1,3 +1,4 @@
+import path from 'path';
 import color from 'picocolors';
 import { XcodeProjectType } from 'xcode';
 import { Constants } from '../../constants';
@@ -10,7 +11,7 @@ import { addGCCapability } from './xcodeTask.addCapability.gc';
 import { addGroupsCapability } from './xcodeTask.addCapability.groups';
 import { addKSCapability } from './xcodeTask.addCapability.ks';
 import { addMapsCapability } from './xcodeTask.addCapability.maps';
-import { patchXcodeProject } from './xcodeTask.helpers';
+import { patchXcodeProject, unquote } from './xcodeTask.helpers';
 
 export function applyAddCapability(
   content: XcodeProjectType,
@@ -36,15 +37,16 @@ export function applyAddCapability(
       break;
   }
   const groupObj = content.getPBXGroupByKey(group);
-  const filename = groupObj.name + '.entitlements';
+  const groupName = groupObj.name || path.basename(groupObj.path);
+  const filename = groupName + '.entitlements';
   destination += `/${filename}`;
-  const isAdded = groupObj.children.some(x => x.comment == filename);
+  const isAdded = groupObj.children.some(x => unquote(x.comment) == filename);
   if (!isAdded) {
     const releasePatch = patchXcodeProject({
       push: (array, item) => array.unshift(item),
     });
     try {
-      content.addFile(`${groupObj.name}/${filename}`, group, {
+      content.addFile(`${groupName}/${filename}`, group, {
         target: nativeTarget.uuid,
         lastKnownFileType: 'text.plist.entitlements',
       });
@@ -53,15 +55,15 @@ export function applyAddCapability(
     }
     content.updateBuildProperty(
       'CODE_SIGN_ENTITLEMENTS',
-      `${groupObj.name}/${filename}`,
+      `${groupName}/${filename}`,
       null,
-      groupObj.name
+      groupName
     );
     content.updateBuildProperty(
       'CODE_SIGN_ENTITLEMENTS',
-      `${groupObj.name}/${filename}`,
+      `${groupName}/${filename}`,
       null,
-      '"' + groupObj.name + '"'
+      '"' + groupName + '"'
     );
   }
   switch (addCapability) {
@@ -76,7 +78,7 @@ export function applyAddCapability(
       addCommonCapability({
         destination,
         filename,
-        targetName: groupObj.name,
+        targetName: groupName,
         capability: addCapability,
       });
       break;
@@ -84,25 +86,25 @@ export function applyAddCapability(
       addGroupsCapability({
         destination,
         filename,
-        targetName: groupObj.name,
+        targetName: groupName,
         groups: action.groups,
       });
       break;
     case 'background-mode':
       addBMCapability({
-        targetName: groupObj.name,
+        targetName: groupName,
         modes: action.modes,
       });
       break;
     case 'game-controllers':
       addGCCapability({
-        targetName: groupObj.name,
+        targetName: groupName,
         controllers: action.controllers,
       });
       break;
     case 'maps':
       addMapsCapability({
-        targetName: groupObj.name,
+        targetName: groupName,
         routing: action.routing,
       });
       break;
@@ -110,7 +112,7 @@ export function applyAddCapability(
       addKSCapability({
         destination,
         filename,
-        targetName: groupObj.name,
+        targetName: groupName,
         groups: action.groups,
       });
       break;
@@ -118,7 +120,7 @@ export function applyAddCapability(
 
   logMessage(
     `added ${color.yellow(addCapability)} capability to the ${color.yellow(
-      groupObj.name
+      groupName
     )} target`
   );
 

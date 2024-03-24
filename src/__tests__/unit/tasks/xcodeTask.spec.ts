@@ -329,6 +329,54 @@ describe('xcodeTask', () => {
     expect(infoContent).toContain('DirectionalGamepad');
     expect(infoContent).toContain('MKDirectionsModeBus');
   });
+  it('should add capabilities to project with path of target', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    proj.parseSync();
+
+    const targetName = 'ReactNativeCliTemplates';
+    const mock = jest.spyOn(xcode.project.prototype, 'getPBXGroupByKey');
+    mock.mockReturnValueOnce({
+      name: undefined,
+      path: 'path/' + targetName,
+      children: [],
+    });
+
+    const task: XcodeTaskType = {
+      type: 'xcode',
+      actions: [
+        {
+          addCapability: 'groups',
+          target: 'main',
+          groups: ['group.test'],
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    const content = proj.writeSync();
+    expect(content).toMatch(
+      /\{.*?\bReactNativeCliTemplates\.entitlements.*?}/s
+    );
+    const entitlementsContent = mockFs.readFileSync(
+      path.join(
+        getProjectPath(),
+        'ios',
+        targetName,
+        targetName + '.entitlements'
+      )
+    );
+    expect(entitlementsContent).toContain(
+      'com.apple.security.application-groups'
+    );
+    mock.mockRestore();
+  });
   it('should add resource to root', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);

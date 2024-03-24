@@ -13,6 +13,7 @@ import {
   normalizeBundleId,
   patchXcodeHasFile,
   patchXcodeProject,
+  unquote,
 } from './xcodeTask.helpers';
 
 export async function applyAddTarget(
@@ -32,7 +33,7 @@ export async function applyAddTarget(
   const mainGroup = content.getFirstProject().firstProject.mainGroup;
 
   const groupObj = content.getPBXGroupByKey(mainGroup);
-  if (groupObj.children.some(x => x.comment == targetName)) {
+  if (groupObj.children.some(x => unquote(x.comment) == targetName)) {
     logMessageGray(
       `skipped adding target, ${color.yellow(targetName)} is already exists`
     );

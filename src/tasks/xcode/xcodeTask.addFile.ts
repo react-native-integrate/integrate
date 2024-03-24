@@ -6,7 +6,7 @@ import { logMessage, logMessageGray } from '../../prompter';
 import { XcodeAddFile } from '../../types/mod.types';
 import { getText } from '../../variables';
 import { applyFsModification } from '../fsTask';
-import { patchXcodeProject } from './xcodeTask.helpers';
+import { patchXcodeProject, unquote } from './xcodeTask.helpers';
 
 export async function applyAddFile(
   content: XcodeProjectType,
@@ -44,7 +44,7 @@ export async function applyAddFile(
   }
   destination += `/${fileName}`;
   const groupObj = content.getPBXGroupByKey(group);
-  if (groupObj.children.some(x => x.comment == action.addFile)) {
+  if (groupObj.children.some(x => unquote(x.comment) == action.addFile)) {
     logMessageGray(
       `skipped adding resource, ${color.yellow(
         action.addFile
