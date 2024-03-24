@@ -1727,6 +1727,12 @@
         "env": {
             "$ref": "#/definitions/AnyObject"
         },
+        "imports": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
         "tasks": {
             "items": {
                 "$ref": "#/definitions/ModTask"
@@ -1734,9 +1740,6 @@
             "type": "array"
         }
     },
-    "required": [
-        "tasks"
-    ],
     "type": "object"
 }
 

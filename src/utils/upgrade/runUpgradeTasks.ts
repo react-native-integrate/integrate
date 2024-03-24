@@ -1,8 +1,17 @@
 import fs from 'fs';
+import { glob } from 'glob';
 import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../../constants';
-import { logError, logInfo, logMessageGray } from '../../prompter';
+import {
+  logError,
+  logInfo,
+  logMessageGray,
+  logWarning,
+  startSpinner,
+  stopSpinner,
+  updateSpinner,
+} from '../../prompter';
 import { RunUpgradeTaskResult, UpgradeConfig } from '../../types/upgrade.types';
 import { getText, transformTextInObject, variables } from '../../variables';
 import { getErrMessage } from '../getErrMessage';
@@ -13,7 +22,9 @@ import { satisfies } from '../satisfies';
 import { setState } from '../setState';
 import { taskManager } from '../taskManager';
 
-export async function runUpgradeTasks(): Promise<RunUpgradeTaskResult> {
+export async function runUpgradeTasks(
+  oldProjectPath: string | undefined
+): Promise<RunUpgradeTaskResult> {
   const configPath = path.join(
     getProjectPath(),
     Constants.UPGRADE_FOLDER_NAME,
@@ -50,57 +61,115 @@ export async function runUpgradeTasks(): Promise<RunUpgradeTaskResult> {
   let failedTaskCount = 0,
     completedTaskCount = 0;
 
-  for (const task of config.tasks) {
-    if (
-      task.when &&
-      !satisfies(variables.getStore(), transformTextInObject(task.when))
-    ) {
-      setState(task.name, {
-        state: 'skipped',
-        error: false,
-      });
-      continue;
-    }
+  if (config.imports) {
+    logInfo(
+      color.bold(color.inverse(color.cyan(' task '))) +
+        color.bold(color.cyan(' Import files from old project '))
+    );
+    if (oldProjectPath) {
+      startSpinner(`discovering files from ${color.yellow('old project')}`);
 
-    setState(task.name, {
-      state: 'progress',
-      error: false,
-    });
-
-    const isNonSystemTask = !taskManager.isSystemTask(task.type);
-    if (isNonSystemTask) {
-      if (task.label) task.label = getText(task.label);
-      else task.label = taskManager.task[task.type].summary;
-      logInfo(
-        color.bold(color.inverse(color.cyan(' task '))) +
-          color.bold(color.cyan(` ${task.label} `))
-      );
-    }
-
-    try {
-      await runTask({
-        configPath,
-        packageName,
-        task,
-      });
+      const filesToCopy: string[] = [];
+      for (let i = 0; i < config.imports.length; i++) {
+        updateSpinner(
+          `discovering files from ${color.yellow('old project')} (${i + 1}/${config.imports.length})`
+        );
+        const relativePath = getText(config.imports[i]);
+        const importPath = path.join(oldProjectPath, relativePath);
+        if (!fs.existsSync(importPath)) {
+          logWarning(
+            `skipped import of ${color.yellow(relativePath)}, path not found in old project`
+          );
+          continue;
+        }
+        const stat = fs.lstatSync(importPath);
+        if (stat.isDirectory()) {
+          filesToCopy.push(
+            ...(await glob(importPath + '/**/*', { nodir: true }))
+          );
+        } else {
+          filesToCopy.push(importPath);
+        }
+      }
+      for (let i = 0; i < filesToCopy.length; i++) {
+        updateSpinner(
+          `copying files from ${color.yellow('old project')} (${i + 1}/${filesToCopy.length})`
+        );
+        const file = filesToCopy[i];
+        const relativePath = path.relative(oldProjectPath, file);
+        const destination = path.join(getProjectPath(), relativePath);
+        // ensure dir exists
+        await new Promise(r =>
+          fs.mkdir(path.dirname(destination), { recursive: true }, r)
+        );
+        await new Promise((res, rej) => {
+          fs.copyFile(file, destination, err => {
+            if (err) rej(err);
+            else res(null);
+          });
+        });
+      }
+      stopSpinner(`copied ${color.yellow(filesToCopy.length)} files`);
       completedTaskCount++;
-
-      setState(task.name, {
-        state: 'done',
-        error: false,
-      });
-    } catch (e) {
-      failedTaskCount++;
-      const errMessage = getErrMessage(e);
-      logError(errMessage);
-
-      setState(task.name, {
-        state: 'error',
-        reason: errMessage,
-        error: true,
-      });
+    } else {
+      logMessageGray(
+        'skipped importing from old project, no old project path specified'
+      );
     }
   }
 
+  if (config.tasks) {
+    for (const task of config.tasks) {
+      if (
+        task.when &&
+        !satisfies(variables.getStore(), transformTextInObject(task.when))
+      ) {
+        setState(task.name, {
+          state: 'skipped',
+          error: false,
+        });
+        continue;
+      }
+
+      setState(task.name, {
+        state: 'progress',
+        error: false,
+      });
+
+      const isNonSystemTask = !taskManager.isSystemTask(task.type);
+      if (isNonSystemTask) {
+        if (task.label) task.label = getText(task.label);
+        else task.label = taskManager.task[task.type].summary;
+        logInfo(
+          color.bold(color.inverse(color.cyan(' task '))) +
+            color.bold(color.cyan(` ${task.label} `))
+        );
+      }
+
+      try {
+        await runTask({
+          configPath,
+          packageName,
+          task,
+        });
+        completedTaskCount++;
+
+        setState(task.name, {
+          state: 'done',
+          error: false,
+        });
+      } catch (e) {
+        failedTaskCount++;
+        const errMessage = getErrMessage(e);
+        logError(errMessage);
+
+        setState(task.name, {
+          state: 'error',
+          reason: errMessage,
+          error: true,
+        });
+      }
+    }
+  }
   return { didRun: true, failedTaskCount, completedTaskCount };
 }

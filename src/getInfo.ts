@@ -80,7 +80,10 @@ export async function getInfo(packageName: string): Promise<void> {
   if (localPathExists && localConfigPath) {
     config = parseConfig(localConfigPath) as IntegrationConfig;
   } else if (remoteFileContent)
-    config = parseConfigString(remoteFileContent) as IntegrationConfig;
+    config = parseConfigString(
+      remoteFileContent,
+      'integrate'
+    ) as IntegrationConfig;
   if (config) {
     const _config = config;
     logSuccess(

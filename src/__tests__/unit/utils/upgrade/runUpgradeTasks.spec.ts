@@ -24,7 +24,7 @@ tasks:
       - append: test`
     );
 
-    const result = await runUpgradeTasks();
+    const result = await runUpgradeTasks(undefined);
 
     expect(result.didRun).toBeTruthy();
     expect(mockRunTask).toHaveBeenCalledWith({
@@ -52,13 +52,13 @@ tasks:
       - append: test`
     );
 
-    const result = await runUpgradeTasks();
+    const result = await runUpgradeTasks(undefined);
 
     expect(result.didRun).toBeTruthy();
     expect(mockRunTask).not.toHaveBeenCalled();
   });
   it('should handle not finding upgrade.yml', async () => {
-    const result = await runUpgradeTasks();
+    const result = await runUpgradeTasks(undefined);
 
     expect(result.didRun).toBeFalsy();
   });
@@ -67,7 +67,7 @@ tasks:
       path.join(getProjectPath(), '.upgrade/upgrade.yml'),
       'random'
     );
-    const result = await runUpgradeTasks();
+    const result = await runUpgradeTasks(undefined);
 
     expect(result.didRun).toBeFalsy();
   });
@@ -82,11 +82,69 @@ tasks:
       - append: test`
     );
 
-    const result = await runUpgradeTasks();
+    const result = await runUpgradeTasks(undefined);
 
     expect(result.didRun).toBeTruthy();
     if (result.didRun) {
       expect(result.failedTaskCount).toBe(1);
     }
+  });
+  it('should execute upgrade.yml imports', async () => {
+    mockFs.writeFileSync('/oldProject/path/some.file', 'random');
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.upgrade/upgrade.yml'),
+      `
+imports:
+  - path
+  - path/some.file`
+    );
+
+    const result = await runUpgradeTasks('/oldProject');
+
+    expect(result.didRun).toBeTruthy();
+    expect(mockFs.readFileSync(getProjectPath() + '/path/some.file')).toBe(
+      'random'
+    );
+  });
+  it('should skip non existing upgrade.yml imports', async () => {
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.upgrade/upgrade.yml'),
+      `
+imports:
+  - path/some.file`
+    );
+    mockFs.lstatSync.mockClear();
+    const result = await runUpgradeTasks('/oldProject');
+
+    expect(result.didRun).toBeTruthy();
+    expect(mockFs.lstatSync).not.toHaveBeenCalled();
+  });
+  it('should skip when no old project path specified', async () => {
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.upgrade/upgrade.yml'),
+      `
+imports:
+  - path/some.file`
+    );
+    mockFs.lstatSync.mockClear();
+    const result = await runUpgradeTasks(undefined);
+
+    expect(result.didRun).toBeTruthy();
+    expect(mockFs.lstatSync).not.toHaveBeenCalled();
+  });
+  it('should handle copy error', async () => {
+    mockFs.writeFileSync('/oldProject/path/some.file', 'random');
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.upgrade/upgrade.yml'),
+      `
+imports:
+  - path/some.file`
+    );
+    mockFs.copyFile.mockImplementationOnce(
+      (from: string, to: string, cb: CallableFunction) => {
+        cb(new Error('random'));
+      }
+    );
+    await expect(runUpgradeTasks('/oldProject')).rejects.toThrow('random');
   });
 });

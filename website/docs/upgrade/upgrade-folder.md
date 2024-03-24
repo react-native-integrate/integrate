@@ -21,11 +21,11 @@ This folder and all of its sub-folders are optional.
 └── upgrade.yml
 ```
 
-### 📁 backup
+### 📁 imports
 
 Files in this folder will be copied directly to the root with their respective paths.
 
-For instance, a file located at `.upgrade/backup/android/app/some.file` will be copied to `android/app/some.file`.
+For instance, a file located at `.upgrade/imports/android/app/some.file` will be copied to `android/app/some.file`.
 
 ### 📁 packages
 

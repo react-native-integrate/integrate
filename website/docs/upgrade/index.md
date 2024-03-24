@@ -53,4 +53,5 @@ When upgrading;
 
    `upgrade` command will ask inputs from you on the process if it cannot find in `.upgrade` folder.
    :::
-6. If exists, files in `.upgrade/backup` will be copied to their respective paths.
+6. If exists, files in `.upgrade/imports` will be copied to their respective paths.
+7. If exists, [`.upgrade/upgrade.yml` configuration file](./upgrade/configuration) will be executed.

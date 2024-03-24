@@ -320,7 +320,7 @@ export async function upgrade(): Promise<void> {
 
   logInfo(
     color.bold(color.inverse(color.magenta(' stage 3 '))) +
-      color.bold(color.magenta(' Restore backup files '))
+      color.bold(color.magenta(' Import files from .upgrade/imports '))
   );
 
   const didRestore = await restoreBackupFiles().catch((e: Error) => {
@@ -328,8 +328,8 @@ export async function upgrade(): Promise<void> {
   });
   if (didRestore) {
     logSuccess(
-      color.inverse(color.bold(color.green(' restored '))) +
-        color.green(' backup files were restored successfully')
+      color.inverse(color.bold(color.green(' imported '))) +
+        color.green(' files were imported successfully')
     );
   }
 
@@ -338,9 +338,11 @@ export async function upgrade(): Promise<void> {
       color.bold(color.magenta(' Execute upgrade.yml tasks '))
   );
 
-  const upgradeResult = await runUpgradeTasks().catch((e: Error) => {
-    logWarning(e.message);
-  });
+  const upgradeResult = await runUpgradeTasks(oldProjectPath).catch(
+    (e: Error) => {
+      logWarning(e.message);
+    }
+  );
   if (upgradeResult && upgradeResult.didRun) {
     if (upgradeResult.failedTaskCount) {
       logWarning(

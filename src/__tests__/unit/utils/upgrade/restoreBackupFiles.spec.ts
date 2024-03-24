@@ -7,7 +7,7 @@ import { mockFs } from '../../../mocks/mockFs';
 describe('restoreBackupFiles', () => {
   it('should restore backup files in .upgrade', async () => {
     mockFs.writeFileSync(
-      path.join(getProjectPath(), '.upgrade/backup/test/some.file'),
+      path.join(getProjectPath(), '.upgrade/imports/test/some.file'),
       'random'
     );
 
@@ -25,7 +25,7 @@ describe('restoreBackupFiles', () => {
   });
   it('should handle copy error', async () => {
     mockFs.writeFileSync(
-      path.join(getProjectPath(), '.upgrade/backup/test/some.file'),
+      path.join(getProjectPath(), '.upgrade/imports/test/some.file'),
       'random'
     );
     mockFs.copyFile.mockImplementationOnce(

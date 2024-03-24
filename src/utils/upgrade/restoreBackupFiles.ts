@@ -13,25 +13,25 @@ import { getProjectPath } from '../getProjectPath';
 
 export async function restoreBackupFiles(): Promise<boolean> {
   const backupFiles = globSync(
-    [getProjectPath(), Constants.UPGRADE_FOLDER_NAME, 'backup', '**/*'].join(
+    [getProjectPath(), Constants.UPGRADE_FOLDER_NAME, 'imports', '**/*'].join(
       '/'
     ),
     { nodir: true }
   );
   if (backupFiles.length === 0) {
-    logMessageGray('skipped restore, no backup files found');
+    logMessageGray('skipped restore, found no files to import');
     return false;
   }
 
-  startSpinner(`copying files from ${color.yellow('.upgrade/backup')}`);
+  startSpinner(`copying files from ${color.yellow('.upgrade/imports')}`);
 
   for (let i = 0; i < backupFiles.length; i++) {
     updateSpinner(
-      `copying files from ${color.yellow('.upgrade/backup')} (${i + 1}/${backupFiles.length})`
+      `copying files from ${color.yellow('.upgrade/imports')} (${i + 1}/${backupFiles.length})`
     );
     const file = backupFiles[i];
     const relativePath = path.relative(
-      path.join(getProjectPath(), Constants.UPGRADE_FOLDER_NAME, 'backup'),
+      path.join(getProjectPath(), Constants.UPGRADE_FOLDER_NAME, 'imports'),
       file
     );
     const destination = path.join(getProjectPath(), relativePath);
