@@ -59,7 +59,9 @@ export async function applyContentModification(
     content = foundBlock.content;
   }
   const getCodeToInsert = (text: string) => {
-    const isBlockSameLine = !blockContent.match.includes('\n');
+    const isBlockSameLine =
+      !blockContent.match.includes('\n') ||
+      (!action.search && 'replace' in action);
     let comment = '',
       blockIndentation = '',
       openingNewLine = '\n',

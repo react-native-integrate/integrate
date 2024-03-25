@@ -64,7 +64,7 @@ export async function buildGradleTask(args: {
   return content;
 }
 
-function findOrCreateBlock(
+export function findOrCreateBlock(
   content: string,
   block: string
 ): {
