@@ -17,7 +17,7 @@ export function handlePackageUpgradeInput(
   const inputValue = packageUpgradeConfig.inputs[inputName];
 
   // check if input has value
-  if (!inputValue) return false;
+  if (inputValue == null) return false;
 
   // set input value to variables
   variables.set(inputName, inputValue);
