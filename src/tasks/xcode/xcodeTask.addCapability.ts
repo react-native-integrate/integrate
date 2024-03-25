@@ -46,7 +46,7 @@ export function applyAddCapability(
       push: (array, item) => array.unshift(item),
     });
     try {
-      content.addFile(`${groupName}/${filename}`, group, {
+      content.addFile(`${filename}`, group, {
         target: nativeTarget.uuid,
         lastKnownFileType: 'text.plist.entitlements',
       });
