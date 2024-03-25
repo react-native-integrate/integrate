@@ -111,7 +111,8 @@ async function setPackageJson(
 
   const exitCode = await new Promise<number>(resolve => {
     const parts = installCommand.split(' ');
-    const child = spawn(parts[0], parts.slice(1));
+    const command = parts[0] + (process.platform == 'win32' ? '.cmd' : '');
+    const child = spawn(command, parts.slice(1));
     // child.stdout.pipe(process.stdout);
     // child.stderr.pipe(process.stderr);
     child.on('close', code => {

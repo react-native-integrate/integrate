@@ -89,6 +89,41 @@ describe('importPackageJson', () => {
     await importGetter.apply();
     expect(mockPrompter.multiselect).toHaveBeenCalled();
   });
+  it('should get package.json on windows', async () => {
+    mockFs.writeFileSync(
+      '/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME,
+      JSON.stringify(
+        {
+          name: 'test',
+          dependencies: {
+            'react-native': '1.0.0',
+            'some-package': '1.0.0',
+          },
+        } as PackageJsonType,
+        null,
+        2
+      )
+    );
+    const originalPlatform = process.platform;
+    Object.defineProperty(process, 'platform', {
+      value: 'win32',
+    });
+
+    const importGetter = importPackageJson('/oldProject') as ImportGetter;
+
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: CallableFunction) => {
+        cb(0);
+      },
+    }));
+
+    await importGetter.apply();
+    expect(mockSpawn).toHaveBeenCalledWith('npm.cmd', ['install']);
+
+    Object.defineProperty(process, 'platform', {
+      value: originalPlatform,
+    });
+  });
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
     mockFs.writeFileSync('/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME, '');
