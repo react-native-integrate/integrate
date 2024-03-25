@@ -203,7 +203,7 @@ export async function applyContentModification(
           }
           break;
         case 'replace':
-          if (action.replace) {
+          if (action.replace != null) {
             const replaceText = await getModContent(
               configPath,
               packageName,
