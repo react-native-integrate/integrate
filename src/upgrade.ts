@@ -1,3 +1,4 @@
+import path from 'path';
 import color from 'picocolors';
 import semver from 'semver/preload';
 import {
@@ -37,7 +38,7 @@ export async function upgrade(): Promise<void> {
       color.bold(color.magenta(' Import old project data '))
   );
   // get old project path
-  const oldProjectPath = await text(
+  let oldProjectPath = await text(
     'Enter old project path to import some basic data (display name, icons, etc.)',
     {
       placeholder: 'leave empty to skip',
@@ -45,6 +46,7 @@ export async function upgrade(): Promise<void> {
     }
   );
   if (oldProjectPath) {
+    oldProjectPath = path.resolve(oldProjectPath);
     const didImport = await importFromOldProject(oldProjectPath);
     if (didImport) {
       logSuccess(

@@ -19,7 +19,7 @@ export async function restoreBackupFiles(): Promise<boolean> {
     { nodir: true }
   );
   if (backupFiles.length === 0) {
-    logMessageGray('skipped restore, found no files to import');
+    logMessageGray('skipped, found no files to import');
     return false;
   }
 
