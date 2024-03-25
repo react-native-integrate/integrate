@@ -164,7 +164,7 @@ export async function text(
 }
 
 export function summarize(code: string | null, maxLength = 128): string {
-  if (!code) return 'null';
+  if (code == null) return 'null';
   const flatText = code.replace(/\n/g, '⏎');
   return color.yellow(
     flatText.substring(0, maxLength) +

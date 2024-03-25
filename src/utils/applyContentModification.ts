@@ -226,7 +226,7 @@ export async function applyContentModification(
                 reason: 'replace.ifNotPresent',
                 error: false,
               });
-            } else if (!blockContent.match.includes(replaceText)) {
+            } else {
               const start = blockContent.start,
                 rem = blockContent.end - blockContent.start,
                 insert = codeToInsert;
@@ -239,17 +239,6 @@ export async function applyContentModification(
                   getBlockName(action)
                 )}${splittingMsg}: ${summarize(replaceText)}`
               );
-            } else {
-              logMessageGray(
-                `code already exists, skipped replacing: ${summarize(
-                  replaceText
-                )}`
-              );
-              setState(action.name, {
-                state: 'skipped',
-                reason: 'replace.exists',
-                error: false,
-              });
             }
           }
           break;
