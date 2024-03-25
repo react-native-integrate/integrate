@@ -26,14 +26,25 @@ export function importIosAssets(projectPath: string): ImportGetter | null {
       id: 'iosAssets',
       title: 'Ios Assets',
       value: 'Images.xcassets, LaunchScreen.storyboard',
-      apply: () => setIosAssets(imagesAssets, launchScreen[0]),
+      apply: () =>
+        setIosAssets(
+          projectPath,
+          iosProjectName,
+          imagesAssets,
+          launchScreen[0]
+        ),
     };
   } catch (e) {
     return null;
   }
 }
 
-async function setIosAssets(assets: string[], launchScreen: string) {
+async function setIosAssets(
+  oldProjectPath: string,
+  oldIosProjectName: string,
+  assets: string[],
+  launchScreen: string
+) {
   const iosProjectName = getIosProjectName();
   const existingAssets = globSync(
     [getProjectPath(), 'ios', iosProjectName, 'Images.xcassets/**/*'].join('/'),
@@ -48,21 +59,22 @@ async function setIosAssets(assets: string[], launchScreen: string) {
   // copy new assets
   for (const asset of assets) {
     // get path after ios
-    const imagesPath = asset.substring(asset.indexOf('Images.xcassets/'));
-    const newPath = path.join(
-      getProjectPath(),
-      'ios',
-      iosProjectName,
-      imagesPath
+    const relativePath = path.relative(
+      path.join(oldProjectPath, 'ios', oldIosProjectName),
+      asset
+    );
+    const destination = path.join(
+      path.join(getProjectPath(), 'ios', oldIosProjectName),
+      relativePath
     );
 
     // ensure dir exists
     await new Promise(r =>
-      fs.mkdir(path.dirname(newPath), { recursive: true }, r)
+      fs.mkdir(path.dirname(destination), { recursive: true }, r)
     );
 
     // copy file
-    await new Promise(r => fs.copyFile(asset, newPath, r));
+    await new Promise(r => fs.copyFile(asset, destination, r));
   }
   logMessage(`copied ${color.yellow('Images.xcassets')} from old project`);
 

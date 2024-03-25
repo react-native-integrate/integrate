@@ -30,7 +30,7 @@ export function importAndroidLaunchIcon(
       id: 'androidLaunchIcon',
       title: 'Android Launch Icon',
       value: icon,
-      apply: () => setAndroidLaunchIcon(mipmaps, icon, roundIcon),
+      apply: () => setAndroidLaunchIcon(projectPath, mipmaps, icon, roundIcon),
     };
   } catch (e) {
     return null;
@@ -38,6 +38,7 @@ export function importAndroidLaunchIcon(
 }
 
 async function setAndroidLaunchIcon(
+  oldProjectPath: string,
   mipmaps: string[],
   icon: string,
   roundIcon: string | undefined
@@ -54,16 +55,23 @@ async function setAndroidLaunchIcon(
   // copy new mipmaps
   for (const mipmap of mipmaps) {
     // get path after android
-    const androidPath = mipmap.substring(mipmap.indexOf('android/'));
-    const newPath = path.join(getProjectPath(), androidPath);
+
+    const relativePath = path.relative(
+      path.join(oldProjectPath, 'android'),
+      mipmap
+    );
+    const destination = path.join(
+      path.join(getProjectPath(), 'android'),
+      relativePath
+    );
 
     // ensure dir exists
     await new Promise(r =>
-      fs.mkdir(path.dirname(newPath), { recursive: true }, r)
+      fs.mkdir(path.dirname(destination), { recursive: true }, r)
     );
 
     // copy file
-    await new Promise(r => fs.copyFile(mipmap, newPath, r));
+    await new Promise(r => fs.copyFile(mipmap, destination, r));
   }
   logMessage('copied mipmaps from old project');
 
