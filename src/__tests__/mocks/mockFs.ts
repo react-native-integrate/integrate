@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
 import { Constants } from '../../constants';
+import { escapeRegExp } from '../../utils/escapeRegExp';
 
 let store: Record<string, string> = {};
 const permissions = {
@@ -8,12 +9,16 @@ const permissions = {
   write: true,
 };
 
+function isDirectoryMatch(path: string, directory: string): boolean {
+  return new RegExp(escapeRegExp(directory) + '(?:/|$)', 'i').test(path);
+}
+
 export const mockFs = {
   existsSync: (path: string): boolean =>
-    Object.keys(store).some(key => key.startsWith(path)),
+    Object.keys(store).some(key => isDirectoryMatch(key, path)),
   renameSync: (from: string, to: string) => {
-    Object.keys(store)
-      .filter(([key]) => key.startsWith(from))
+    Object.entries(store)
+      .filter(([key]) => isDirectoryMatch(key, from))
       .forEach(([key, value]) => {
         store[key.replace(from, to)] = value;
         delete store[key];
@@ -43,7 +48,7 @@ export const mockFs = {
   },
   rmdirSync: (_path: string) => {
     Object.keys(store)
-      .filter(key => key.startsWith(_path))
+      .filter(key => isDirectoryMatch(key, _path))
       .forEach(key => delete store[key]);
     return true;
   },
@@ -66,7 +71,7 @@ export const mockFs = {
         isFile: () => true,
         isDirectory: () => false,
       };
-    } else if (Object.keys(store).some(key => key.startsWith(p))) {
+    } else if (Object.keys(store).some(key => isDirectoryMatch(key, p))) {
       return {
         isFile: () => false,
         isDirectory: () => true,

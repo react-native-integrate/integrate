@@ -35,11 +35,16 @@ export function importGitFolder(projectPath: string): ImportGetter | null {
 }
 
 async function setGitFolder(oldProjectPath: string, files: string[]) {
-  fs.renameSync(
-    path.join(getProjectPath(), Constants.GIT_FOLDER_NAME),
-    path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup')
+  const shouldBackup = fs.existsSync(
+    path.join(getProjectPath(), Constants.GIT_FOLDER_NAME)
   );
-  logMessage(`backed up ${color.yellow(Constants.GIT_FOLDER_NAME)}`);
+  if (shouldBackup) {
+    fs.renameSync(
+      path.join(getProjectPath(), Constants.GIT_FOLDER_NAME),
+      path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup')
+    );
+    logMessage(`backed up ${color.yellow(Constants.GIT_FOLDER_NAME)}`);
+  }
 
   startSpinner(`copying ${color.yellow(Constants.GIT_FOLDER_NAME)} files`);
   let success = false;
@@ -67,17 +72,19 @@ async function setGitFolder(oldProjectPath: string, files: string[]) {
     if (success) {
       stopSpinner(`copied ${color.yellow(files.length)} files`);
 
-      startSpinner('cleaning up');
-      await new Promise(r =>
-        fs.rmdir(
-          path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup'),
-          {
-            recursive: true,
-          },
-          r
-        )
-      );
-      stopSpinner('cleaned up');
+      if (shouldBackup) {
+        startSpinner('cleaning up');
+        await new Promise(r =>
+          fs.rmdir(
+            path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup'),
+            {
+              recursive: true,
+            },
+            r
+          )
+        );
+        stopSpinner('cleaned up');
+      }
 
       logMessage(`imported ${color.yellow(Constants.GIT_FOLDER_NAME)}`);
     } else {
@@ -93,14 +100,16 @@ async function setGitFolder(oldProjectPath: string, files: string[]) {
         )
       );
 
-      fs.renameSync(
-        path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup'),
-        path.join(getProjectPath(), Constants.GIT_FOLDER_NAME)
-      );
+      if (shouldBackup) {
+        fs.renameSync(
+          path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup'),
+          path.join(getProjectPath(), Constants.GIT_FOLDER_NAME)
+        );
 
-      logWarning(
-        `restored ${color.yellow(Constants.GIT_FOLDER_NAME)}, please copy .git folder manually`
-      );
+        logWarning(`restored ${color.yellow(Constants.GIT_FOLDER_NAME)}`);
+      }
+
+      logWarning('please copy .git folder manually');
     }
   }
 }

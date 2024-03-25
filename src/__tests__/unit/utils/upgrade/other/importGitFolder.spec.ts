@@ -8,6 +8,10 @@ import { mockFs } from '../../../../mocks/mockFs';
 describe('importGitFolder', () => {
   it('should get .git', async () => {
     mockFs.writeFileSync('/oldProject/.git/some.file', 'random');
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.git/new-project.file'),
+      'random'
+    );
 
     const importGetter = importGitFolder('/oldProject') as ImportGetter;
     expect(importGetter).toBeTruthy();
@@ -18,6 +22,9 @@ describe('importGitFolder', () => {
     expect(
       mockFs.readFileSync(path.join(getProjectPath(), '.git/some.file'))
     ).toContain('random');
+    expect(
+      mockFs.existsSync(path.join(getProjectPath(), '.git/new-project.file'))
+    ).toBeFalsy();
   });
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
@@ -32,6 +39,10 @@ describe('importGitFolder', () => {
   });
   it('should handle copy error', async () => {
     mockFs.writeFileSync('/oldProject/.git/some.file', 'random');
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.git/new-project.file'),
+      'random'
+    );
 
     mockFs.copyFile.mockImplementationOnce(
       (from: string, to: string, cb: CallableFunction) => {
@@ -40,5 +51,8 @@ describe('importGitFolder', () => {
     );
     const importGetter = importGitFolder('/oldProject') as ImportGetter;
     await expect(importGetter.apply()).rejects.toThrow('random');
+    expect(
+      mockFs.existsSync(path.join(getProjectPath(), '.git/new-project.file'))
+    ).toBeTruthy();
   });
 });
