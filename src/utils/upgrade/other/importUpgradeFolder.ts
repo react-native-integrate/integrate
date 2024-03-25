@@ -15,7 +15,10 @@ export function importUpgradeFolder(projectPath: string): ImportGetter | null {
     );
 
     if (!fs.existsSync(upgradeFolderPath)) return null;
-    const files = globSync(upgradeFolderPath + '/**/*', { nodir: true });
+    const files = globSync(
+      [projectPath, Constants.UPGRADE_FOLDER_NAME, '**/*'].join('/'),
+      { nodir: true }
+    );
 
     return {
       id: 'upgradeFolder',

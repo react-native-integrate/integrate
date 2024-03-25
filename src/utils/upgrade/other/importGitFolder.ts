@@ -18,7 +18,10 @@ export function importGitFolder(projectPath: string): ImportGetter | null {
     const gitFolderPath = path.join(projectPath, Constants.GIT_FOLDER_NAME);
 
     if (!fs.existsSync(gitFolderPath)) return null;
-    const files = globSync(gitFolderPath + '/**/*', { nodir: true });
+    const files = globSync(
+      [projectPath, Constants.GIT_FOLDER_NAME, '**/*'].join('/'),
+      { nodir: true }
+    );
 
     return {
       id: 'gitFolder',
