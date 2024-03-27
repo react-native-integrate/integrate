@@ -15,7 +15,7 @@ import * as main_application from '../tasks/mainApplicationTask';
 import * as main_activity from '../tasks/mainActivityTask';
 import * as settings_gradle from '../tasks/settingsGradleTask';
 import * as shell from '../tasks/shellTask';
-import { ModTask } from '../types/mod.types';
+import { ModStep } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
   app_delegate,
@@ -41,16 +41,16 @@ const systemTaskTypes = Object.entries(task)
   .filter(x => x[1].isSystemTask)
   .map(x => x[0]);
 
-function isSystemTask(type: string): boolean {
-  return systemTaskTypes.includes(type);
+function isSystemTask(task: string): boolean {
+  return systemTaskTypes.includes(task);
 }
-function getNonSystemTasks(tasks: ModTask[]): ModTask[] {
-  return tasks.filter(x => !isSystemTask(x.type));
+function getNonSystemTasks(steps: ModStep[]): ModStep[] {
+  return steps.filter(x => !isSystemTask(x.task));
 }
 export const taskManager: {
   task: Record<string, TaskExports>;
-  isSystemTask: (type: string) => boolean;
-  getNonSystemTasks: (tasks: ModTask[]) => ModTask[];
+  isSystemTask: (task: string) => boolean;
+  getNonSystemTasks: (steps: ModStep[]) => ModStep[];
 } = {
   task,
   isSystemTask,

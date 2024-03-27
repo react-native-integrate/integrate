@@ -11,7 +11,7 @@ The `main_activity` task is designed to facilitate modifications to the `MainAct
 
 | Property | Type                                            | Description                                                                                                                                                                                                                                                             |
 |:---------|:------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "main_activity", required                    | Specifies the task type, which should be set to "main_activity" for this task.                                                                                                                                                                                       |
+| task     | "main_activity", required                    | Specifies the task type, which should be set to "main_activity" for this task.                                                                                                                                                                                       |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                                                                            |
 | label    | string                                          | An optional label or description for the task.                                                                                                                                                                                                                          |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                                                                                                                                  |
@@ -55,7 +55,7 @@ The `main_activity` task is designed to facilitate modifications to the `MainAct
 ## Example
 
 ```yaml
-type: main_activity
+task: main_activity
 label: "Adding import"
 lang: "kotlin",
 actions:

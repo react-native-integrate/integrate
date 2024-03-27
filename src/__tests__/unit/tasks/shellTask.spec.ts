@@ -25,7 +25,7 @@ describe('shellTask', () => {
     }));
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',
@@ -64,7 +64,7 @@ describe('shellTask', () => {
     }));
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',
@@ -94,7 +94,7 @@ describe('shellTask', () => {
     });
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',
@@ -121,7 +121,7 @@ describe('shellTask', () => {
     });
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',
@@ -161,7 +161,7 @@ describe('shellTask', () => {
     }));
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',
@@ -184,7 +184,7 @@ describe('shellTask', () => {
   });
   it('should skip when condition does not meet', async () => {
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           when: { random: false },
@@ -209,7 +209,7 @@ describe('shellTask', () => {
     mockPrompter.confirm.mockReturnValueOnce(false);
 
     const task: ShellTaskType = {
-      type: 'shell',
+      task: 'shell',
       actions: [
         {
           name: 'test',

@@ -12,7 +12,7 @@ describe('mainActivityTask', () => {
   it('should prepend text into empty body ', async () => {
     let content = '';
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'test',
@@ -42,7 +42,7 @@ test {
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           append: 'google();',
@@ -75,7 +75,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -105,7 +105,7 @@ buildscript {
 buildscript {}
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -137,7 +137,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -170,7 +170,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -203,7 +203,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -236,7 +236,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript',
@@ -274,7 +274,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -311,7 +311,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -348,7 +348,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -385,7 +385,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -412,7 +412,7 @@ buildscript {
 buildscript {}
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -446,7 +446,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -476,7 +476,7 @@ buildscript {
 }
 `;
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           when: { test: 'random' },
@@ -507,7 +507,7 @@ buildscript {
 }
 `;
     const taskInsertBefore: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -518,7 +518,7 @@ buildscript {
       ],
     };
     const taskInsertBeforeNonStrict: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -545,7 +545,7 @@ buildscript {
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -557,7 +557,7 @@ buildscript {
     };
 
     const taskInsertAfterNonStrict: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -588,7 +588,7 @@ buildscript {
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: MainActivityTaskType = {
-      type: 'main_activity',
+      task: 'main_activity',
       actions: [
         {
           block: 'buildscript.ext',
@@ -623,7 +623,7 @@ buildscript {
       );
       mockFs.writeFileSync(mainActivityPath, content);
       const task: MainActivityTaskType = {
-        type: 'main_activity',
+        task: 'main_activity',
         actions: [
           {
             block: 'buildscript.ext',
@@ -656,7 +656,7 @@ buildscript {
       );
       mockFs.writeFileSync(mainActivityPath, content);
       const task: MainActivityTaskType = {
-        type: 'main_activity',
+        task: 'main_activity',
         lang: 'kotlin',
         actions: [
           {
@@ -677,7 +677,7 @@ buildscript {
     });
     it('should throw when main application does not exist', async () => {
       let task: MainActivityTaskType = {
-        type: 'main_activity',
+        task: 'main_activity',
         actions: [
           {
             block: 'buildscript.ext',
@@ -694,7 +694,7 @@ buildscript {
         })
       ).rejects.toThrowError('MainActivity.java file not found');
       task = {
-        type: 'main_activity',
+        task: 'main_activity',
         lang: 'kotlin',
         actions: [
           {

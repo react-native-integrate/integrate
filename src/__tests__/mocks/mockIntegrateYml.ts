@@ -6,8 +6,8 @@ preInfo: Config pre info
 postInfo:
   title: test
   message: Config post info
-tasks:
-  - type: prompt
+steps:
+  - task: prompt
     actions:
       - name: test2
         type: text
@@ -31,13 +31,13 @@ tasks:
         options:
           - value: opt1
           - value: opt2
-  - type: app_delegate
+  - task: app_delegate
     name: app_delegate
     label: 'Will not run'
     when:
       test: false
     actions: []
-  - type: app_delegate
+  - task: app_delegate
     when:
       test: true
     label: 'App Delegate'
@@ -45,7 +45,7 @@ tasks:
       - prepend: "#import <Firebase.h>"
       - block: didFinishLaunchingWithOptions
         prepend: "[FIRApp configure];"
-  - type: app_delegate
+  - task: app_delegate
     preInfo: Task pre info
     postInfo: Task post info
     actions:

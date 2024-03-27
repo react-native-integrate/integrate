@@ -35,8 +35,8 @@ For each task or action, the following state variables are automatically set bas
 Here's an example of how to use task and action states:
 
 ```yaml
-tasks:
-  - type: fs
+steps:
+  - task: fs
     name: fs_google
     label: Importing google-services.json
     when:
@@ -45,7 +45,7 @@ tasks:
       - copyFile: google-services.json
         destination: android/app/google-services.json
 
-  - type: build_gradle
+  - task: build_gradle
     when:
       fs_google: done
 ```

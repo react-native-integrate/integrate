@@ -259,7 +259,7 @@ export async function integrate(packageName?: string): Promise<void> {
           completedTaskCount = 0;
         await logInfoNote(config.preInfo);
 
-        for (const task of config.tasks) {
+        for (const task of config.steps) {
           if (
             task.when &&
             !satisfies(variables.getStore(), transformTextInObject(task.when))
@@ -276,10 +276,10 @@ export async function integrate(packageName?: string): Promise<void> {
             error: false,
           });
 
-          const isNonSystemTask = !taskManager.isSystemTask(task.type);
+          const isNonSystemTask = !taskManager.isSystemTask(task.task);
           if (isNonSystemTask) {
             if (task.label) task.label = getText(task.label);
-            else task.label = taskManager.task[task.type].summary;
+            else task.label = taskManager.task[task.task].summary;
             logInfo(
               color.bold(color.inverse(color.cyan(' task '))) +
                 color.bold(color.cyan(` ${task.label} `))

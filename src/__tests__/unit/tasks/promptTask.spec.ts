@@ -11,7 +11,7 @@ describe('promptTask', () => {
     });
 
     const task: PromptTaskType = {
-      type: 'prompt',
+      task: 'prompt',
       actions: [
         {
           name: 'test',

@@ -10,7 +10,7 @@ describe('topologicalSort', () => {
         packageName: 'y',
         configPath: 'path/to/config',
         config: {
-          tasks: [],
+          steps: [],
           dependencies: ['x'],
         },
         version: '1.2.3',
@@ -19,7 +19,7 @@ describe('topologicalSort', () => {
         packageName: 'x',
         configPath: 'path/to/config',
         config: {
-          tasks: [],
+          steps: [],
         },
         version: '1.2.3',
       },

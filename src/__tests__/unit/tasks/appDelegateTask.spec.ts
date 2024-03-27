@@ -13,7 +13,7 @@ describe('appDelegateTask', () => {
     mockPrompter.log.message.mockReset();
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -40,7 +40,7 @@ describe('appDelegateTask', () => {
   it('should prepend text into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -63,7 +63,7 @@ describe('appDelegateTask', () => {
   it('should append text into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -86,7 +86,7 @@ describe('appDelegateTask', () => {
   it('should insert text after point into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -112,7 +112,7 @@ describe('appDelegateTask', () => {
   it('should insert text before point into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -138,7 +138,7 @@ describe('appDelegateTask', () => {
   it('should throw when didLaunchWithOptions does not exist', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -162,7 +162,7 @@ describe('appDelegateTask', () => {
   it('should skip if condition not met', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           when: { test: 'random' },
@@ -188,7 +188,7 @@ describe('appDelegateTask', () => {
   it('should throw when insertion point not found', async () => {
     const content = mockAppDelegateTemplate;
     const taskInsertBefore: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           search: 'random',
@@ -212,7 +212,7 @@ describe('appDelegateTask', () => {
       })
     ).rejects.toThrowError('insertion point');
     const taskInsertAfter: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -238,7 +238,7 @@ describe('appDelegateTask', () => {
   it('should throw when AppDelegate implementation not found', async () => {
     const content = '';
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -262,7 +262,7 @@ describe('appDelegateTask', () => {
   it('should throw for invalid method', async () => {
     const content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -286,7 +286,7 @@ describe('appDelegateTask', () => {
   it('should append text into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -312,7 +312,7 @@ describe('appDelegateTask', () => {
   it('should insert text before point into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -339,7 +339,7 @@ describe('appDelegateTask', () => {
   it('should insert text after point into non existing applicationDidBecomeActive', async () => {
     let content = mockAppDelegateTemplate;
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           prepend: '#import <Firebase.h>',
@@ -379,7 +379,7 @@ describe('appDelegateTask', () => {
     ]) {
       let content = mockAppDelegateTemplate;
       const task: AppDelegateTaskType = {
-        type: 'app_delegate',
+        task: 'app_delegate',
         actions: [
           {
             block,
@@ -405,7 +405,7 @@ describe('appDelegateTask', () => {
       // second append on existing block
       mockPrompter.log.message.mockReset();
       const task2: AppDelegateTaskType = {
-        type: 'app_delegate',
+        task: 'app_delegate',
         actions: [
           {
             block,
@@ -436,7 +436,7 @@ describe('appDelegateTask', () => {
     const content = mockAppDelegateTemplate;
     mock.mockImplementationOnce(content => content);
     const task: AppDelegateTaskType = {
-      type: 'app_delegate',
+      task: 'app_delegate',
       actions: [
         {
           block: 'applicationDidBecomeActive',
@@ -458,7 +458,7 @@ describe('appDelegateTask', () => {
     it('should read and write app delegate file', async () => {
       const appDelegatePath = writeMockAppDelegate();
       const task: AppDelegateTaskType = {
-        type: 'app_delegate',
+        task: 'app_delegate',
         actions: [
           {
             prepend: '#import <Firebase.h>',
@@ -481,7 +481,7 @@ describe('appDelegateTask', () => {
     });
     it('should throw when app delegate does not exist', async () => {
       const task: AppDelegateTaskType = {
-        type: 'app_delegate',
+        task: 'app_delegate',
         actions: [
           {
             prepend: '#import <Firebase.h>',
@@ -505,7 +505,7 @@ describe('appDelegateTask', () => {
         throw new Error('Directory not found');
       });
       const task: AppDelegateTaskType = {
-        type: 'app_delegate',
+        task: 'app_delegate',
         actions: [
           {
             prepend: '#import <Firebase.h>',

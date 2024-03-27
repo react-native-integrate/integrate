@@ -11,7 +11,7 @@ The "xcode" task is used to manage the iOS xcode project. This task allows you t
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "xcode", required                               | Specifies the task type, which should be set to "xcode" for this task.                                                                                       |
+| task     | "xcode", required                               | Specifies the task type, which should be set to "xcode" for this task.                                                                                       |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -162,7 +162,7 @@ Usage Example
 -------------
 
 ```yaml
-type: xcode
+task: xcode
 actions:
   - addFile: "GoogleService-Info.plist"
     target: root

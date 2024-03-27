@@ -12,7 +12,7 @@ describe('settingsGradleTask', () => {
   it('should prepend text into empty body ', async () => {
     let content = '';
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'test',
@@ -42,7 +42,7 @@ test {
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           append: 'google();',
@@ -75,7 +75,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -105,7 +105,7 @@ buildscript {
 buildscript {}
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -137,7 +137,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -170,7 +170,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -203,7 +203,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -236,7 +236,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript',
@@ -274,7 +274,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -311,7 +311,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -348,7 +348,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -385,7 +385,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -412,7 +412,7 @@ buildscript {
 buildscript {}
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -446,7 +446,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -476,7 +476,7 @@ buildscript {
 }
 `;
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           when: { test: 'random' },
@@ -507,7 +507,7 @@ buildscript {
 }
 `;
     const taskInsertBefore: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -518,7 +518,7 @@ buildscript {
       ],
     };
     const taskInsertBeforeNonStrict: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -545,7 +545,7 @@ buildscript {
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -557,7 +557,7 @@ buildscript {
     };
 
     const taskInsertAfterNonStrict: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -588,7 +588,7 @@ buildscript {
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: SettingsGradleTaskType = {
-      type: 'settings_gradle',
+      task: 'settings_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -623,7 +623,7 @@ buildscript {
       );
       mockFs.writeFileSync(settingsGradlePath, content);
       const task: SettingsGradleTaskType = {
-        type: 'settings_gradle',
+        task: 'settings_gradle',
         actions: [
           {
             block: 'buildscript.ext',
@@ -643,7 +643,7 @@ buildscript {
     });
     it('should throw when main application does not exist', async () => {
       const task: SettingsGradleTaskType = {
-        type: 'settings_gradle',
+        task: 'settings_gradle',
         actions: [
           {
             block: 'buildscript.ext',

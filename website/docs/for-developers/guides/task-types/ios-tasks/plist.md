@@ -11,7 +11,7 @@ The `plist` task allows you to modify property list (plist) files, typically use
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "plist", required                               | Specifies the task type, which should be set to "plist" for this task.                                                                                       |
+| task     | "plist", required                               | Specifies the task type, which should be set to "plist" for this task.                                                                                       |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -38,7 +38,7 @@ The `plist` task allows you to modify property list (plist) files, typically use
 ## Example
 
 ```yaml
-type: plist
+task: plist
 label: Add or Modify Plist Entries
 actions:
   - set:

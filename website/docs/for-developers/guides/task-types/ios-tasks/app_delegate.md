@@ -11,7 +11,7 @@ The `app_delegate` task is used to modify the AppDelegate.mm file in an iOS proj
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "app_delegate", required                        | Specifies the task type, which should be set to "app_delegate" for this task.                                                                                |
+| task     | "app_delegate", required                        | Specifies the task type, which should be set to "app_delegate" for this task.                                                                                |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -74,7 +74,7 @@ The `block` field within the action items must match one of the allowed method n
 Here's an example of how to use the `app_delegate` task:
 
 ```yaml
-type: app_delegate
+task: app_delegate
 label: "Integrate Firebase"
 actions:
   - prepend: "#import <Firebase.h>"

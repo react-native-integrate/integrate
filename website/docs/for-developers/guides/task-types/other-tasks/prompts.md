@@ -11,7 +11,7 @@ The `prompt` task type allows you to gather user input during the integration pr
 
 | Property | Type                                            | Description                                                                                                                                                |
 |:---------|:------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "prompt", required                              | Specifies the task type, which should be set to "prompt" for this task.                                                                                    |
+| task     | "prompt", required                              | Specifies the task type, which should be set to "prompt" for this task.                                                                                    |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.   |
 | label    | string                                          | An optional label or description for the task.                                                                                                             |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                         |
@@ -48,7 +48,7 @@ The `prompt` task type allows you to gather user input during the integration pr
 #### Example:
 
 ```yaml
-type: prompt
+task: prompt
 actions:
   - name: user_name
     text: "Enter your name:"
@@ -69,7 +69,7 @@ actions:
 #### Example:
 
 ```yaml
-type: prompt
+task: prompt
 actions:
   - name: run_task
     type: boolean
@@ -94,7 +94,7 @@ actions:
 
 #### Example:
 ```yaml
-type: prompt
+task: prompt
 actions:
   - name: platforms
     type: multiselect
@@ -114,13 +114,13 @@ actions:
 Here's an example of how to use prompts in a configuration file:
 
 ```yaml
-tasks:
-  - type: prompt
+steps:
+  - task: prompt
     actions:
       - name: run_app_delegate
         type: boolean
         text: "Do you want to run the app_delegate task?"
-  - type: app_delegate
+  - task: app_delegate
     when:
       run_app_delegate: true
 ```

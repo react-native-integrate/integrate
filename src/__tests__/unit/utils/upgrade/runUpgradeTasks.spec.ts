@@ -17,8 +17,8 @@ describe('runUpgradeTasks', () => {
       `
 env:
   value: true
-tasks:
-  - type: app_delegate
+steps:
+  - task: app_delegate
     label: AppDelegate.mm modification
     actions:
       - append: test`
@@ -31,7 +31,7 @@ tasks:
       configPath: path.join(getProjectPath(), '.upgrade/upgrade.yml'),
       packageName: 'upgrade.yml',
       task: {
-        type: 'app_delegate',
+        task: 'app_delegate',
         label: 'AppDelegate.mm modification',
         actions: [{ append: 'test' }],
       },
@@ -44,8 +44,8 @@ tasks:
       `
 env:
   value: true
-tasks:
-  - type: app_delegate
+steps:
+  - task: app_delegate
     when:
       value: false
     actions:
@@ -76,8 +76,8 @@ tasks:
     mockFs.writeFileSync(
       path.join(getProjectPath(), '.upgrade/upgrade.yml'),
       `
-tasks:
-  - type: app_delegate
+steps:
+  - task: app_delegate
     actions:
       - append: test`
     );

@@ -93,13 +93,13 @@ export async function getInfo(packageName: string): Promise<void> {
     );
 
     log(
-      'tasks: ' +
-        color.yellow(taskManager.getNonSystemTasks(_config.tasks).length) +
+      'steps: ' +
+        color.yellow(taskManager.getNonSystemTasks(_config.steps).length) +
         '\n' +
         Object.entries(taskManager.task)
           .map(([taskType, value]) => {
             if (taskManager.isSystemTask(taskType)) return null;
-            const configTasks = _config.tasks.filter(x => x.type == taskType);
+            const configTasks = _config.steps.filter(x => x.task == taskType);
             if (!configTasks.length) return null;
             let summary = value.summary;
             const actionCount = configTasks.reduce((n, o) => {

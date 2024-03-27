@@ -16,7 +16,7 @@ describe('notificationServiceTask', () => {
     mockPrompter.log.message.mockReset();
     const content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -44,7 +44,7 @@ describe('notificationServiceTask', () => {
   it('should prepend text into didLaunchWithOptions', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -68,7 +68,7 @@ describe('notificationServiceTask', () => {
   it('should append text into didLaunchWithOptions', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -92,7 +92,7 @@ describe('notificationServiceTask', () => {
   it('should insert text after point into didLaunchWithOptions', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -119,7 +119,7 @@ describe('notificationServiceTask', () => {
   it('should insert text before point into didLaunchWithOptions', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -146,7 +146,7 @@ describe('notificationServiceTask', () => {
   it('should skip if condition not met', async () => {
     const content = '';
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -173,7 +173,7 @@ describe('notificationServiceTask', () => {
   it('should throw when insertion point not found', async () => {
     const content = mockNotificationServiceTemplate;
     const taskInsertBefore: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -198,7 +198,7 @@ describe('notificationServiceTask', () => {
       })
     ).rejects.toThrowError('insertion point');
     const taskInsertAfter: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -225,7 +225,7 @@ describe('notificationServiceTask', () => {
   it('should throw when NotificationService implementation not found', async () => {
     const content = '';
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -250,7 +250,7 @@ describe('notificationServiceTask', () => {
   it('should throw for invalid method', async () => {
     const content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -275,7 +275,7 @@ describe('notificationServiceTask', () => {
   it('should append text into non existing serviceExtensionTimeWillExpire', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -302,7 +302,7 @@ describe('notificationServiceTask', () => {
   it('should insert text before point into non existing serviceExtensionTimeWillExpire', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -330,7 +330,7 @@ describe('notificationServiceTask', () => {
   it('should insert text after point into non existing serviceExtensionTimeWillExpire', async () => {
     let content = mockNotificationServiceTemplate;
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -365,7 +365,7 @@ describe('notificationServiceTask', () => {
         'foo'
       );
       const task: NotificationServiceTaskType = {
-        type: 'notification_service',
+        task: 'notification_service',
         target: 'test',
         actions: [
           {
@@ -392,7 +392,7 @@ describe('notificationServiceTask', () => {
       // second append on existing block
       mockPrompter.log.message.mockReset();
       const task2: NotificationServiceTaskType = {
-        type: 'notification_service',
+        task: 'notification_service',
         target: 'test',
         actions: [
           {
@@ -427,7 +427,7 @@ describe('notificationServiceTask', () => {
     );
     mock.mockImplementationOnce(content => content);
     const task: NotificationServiceTaskType = {
-      type: 'notification_service',
+      task: 'notification_service',
       target: 'test',
       actions: [
         {
@@ -450,7 +450,7 @@ describe('notificationServiceTask', () => {
     it('should read and write app delegate file', async () => {
       const notificationServicePath = writeMockNotificationService();
       const task: NotificationServiceTaskType = {
-        type: 'notification_service',
+        task: 'notification_service',
         target: 'test',
         actions: [
           {
@@ -474,7 +474,7 @@ describe('notificationServiceTask', () => {
     });
     it('should throw when app delegate does not exist', async () => {
       const task: NotificationServiceTaskType = {
-        type: 'notification_service',
+        task: 'notification_service',
         target: 'test',
         actions: [
           {

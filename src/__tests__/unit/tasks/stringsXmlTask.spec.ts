@@ -14,7 +14,7 @@ describe('stringsXmlTask', () => {
     const content = mockStringsXmlTemplate;
 
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           ifNotPresent: 'app_name',
@@ -49,7 +49,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           prepend: '<test />',
@@ -87,7 +87,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           when: { test: 'random' },
@@ -125,7 +125,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           append: '<test />',
@@ -163,7 +163,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           after: 'test3',
@@ -204,7 +204,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const task: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           before: { regex: 'test3' },
@@ -243,7 +243,7 @@ describe('stringsXmlTask', () => {
 </resources>
 `;
     const taskInsertBefore: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           before: 'random',
@@ -253,7 +253,7 @@ describe('stringsXmlTask', () => {
       ],
     };
     const taskInsertBeforeNonStrict: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           before: 'random',
@@ -279,7 +279,7 @@ describe('stringsXmlTask', () => {
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           after: 'random',
@@ -290,7 +290,7 @@ describe('stringsXmlTask', () => {
     };
 
     const taskInsertAfterNonStrict: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           after: 'random',
@@ -328,7 +328,7 @@ describe('stringsXmlTask', () => {
 </random>
 `;
     const taskInsertBefore: StringsXmlTaskType = {
-      type: 'strings_xml',
+      task: 'strings_xml',
       actions: [
         {
           append: '<test />',
@@ -364,7 +364,7 @@ describe('stringsXmlTask', () => {
       );
       mockFs.writeFileSync(manifestPath, content);
       const task: StringsXmlTaskType = {
-        type: 'strings_xml',
+        task: 'strings_xml',
         actions: [
           {
             prepend: '<test />',
@@ -383,7 +383,7 @@ describe('stringsXmlTask', () => {
     });
     it('should throw when android manifest does not exist', async () => {
       const task: StringsXmlTaskType = {
-        type: 'strings_xml',
+        task: 'strings_xml',
         actions: [
           {
             prepend: 'test2;',

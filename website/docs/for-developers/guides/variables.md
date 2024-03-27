@@ -44,8 +44,8 @@ Here's an example of how to use variables in a configuration file:
 ```yaml
 env:
   frb: Firebase
-tasks:
-  - type: app_delegate
+steps:
+  - task: app_delegate
     label: "Integrate $[frb]"
     actions:
       - prepend: "#import <$[frb].h>"

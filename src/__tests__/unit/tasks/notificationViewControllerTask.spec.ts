@@ -16,7 +16,7 @@ describe('notificationViewControllerTask', () => {
     mockPrompter.log.message.mockReset();
     const content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -44,7 +44,7 @@ describe('notificationViewControllerTask', () => {
   it('should prepend text into didLaunchWithOptions', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -68,7 +68,7 @@ describe('notificationViewControllerTask', () => {
   it('should append text into didLaunchWithOptions', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -92,7 +92,7 @@ describe('notificationViewControllerTask', () => {
   it('should insert text after point into didLaunchWithOptions', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -118,7 +118,7 @@ describe('notificationViewControllerTask', () => {
   it('should insert text before point into didLaunchWithOptions', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -145,7 +145,7 @@ describe('notificationViewControllerTask', () => {
   it('should skip if condition not met', async () => {
     const content = '';
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -172,7 +172,7 @@ describe('notificationViewControllerTask', () => {
   it('should throw when insertion point not found', async () => {
     const content = mockNotificationContentTemplate;
     const taskInsertBefore: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -197,7 +197,7 @@ describe('notificationViewControllerTask', () => {
       })
     ).rejects.toThrowError('insertion point');
     const taskInsertAfter: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -224,7 +224,7 @@ describe('notificationViewControllerTask', () => {
   it('should throw when NotificationContent implementation not found', async () => {
     const content = '';
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -246,7 +246,7 @@ describe('notificationViewControllerTask', () => {
       })
     ).rejects.toThrowError('@implementation NotificationViewController');
     const task2: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -268,7 +268,7 @@ describe('notificationViewControllerTask', () => {
   it('should throw for invalid method', async () => {
     const content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -293,7 +293,7 @@ describe('notificationViewControllerTask', () => {
   it('should append text into non existing viewDidLoad', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -320,7 +320,7 @@ describe('notificationViewControllerTask', () => {
   it('should insert text before point into non existing viewDidLoad', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -348,7 +348,7 @@ describe('notificationViewControllerTask', () => {
   it('should insert text after point into non existing viewDidLoad', async () => {
     let content = mockNotificationContentTemplate;
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -388,7 +388,7 @@ describe('notificationViewControllerTask', () => {
         'foo'
       );
       const task: NotificationViewControllerTaskType = {
-        type: 'notification_view_controller',
+        task: 'notification_view_controller',
         target: 'test',
         actions: [
           {
@@ -415,7 +415,7 @@ describe('notificationViewControllerTask', () => {
       // second append on existing block
       mockPrompter.log.message.mockReset();
       const task2: NotificationViewControllerTaskType = {
-        type: 'notification_view_controller',
+        task: 'notification_view_controller',
         target: 'test',
         actions: [
           {
@@ -450,7 +450,7 @@ describe('notificationViewControllerTask', () => {
     );
     mock.mockImplementationOnce(content => content);
     const task: NotificationViewControllerTaskType = {
-      type: 'notification_view_controller',
+      task: 'notification_view_controller',
       target: 'test',
       actions: [
         {
@@ -473,7 +473,7 @@ describe('notificationViewControllerTask', () => {
     it('should read and write app delegate file', async () => {
       const notificationContentPath = writeMockNotificationContent();
       const task: NotificationViewControllerTaskType = {
-        type: 'notification_view_controller',
+        task: 'notification_view_controller',
         target: 'test',
         actions: [
           {
@@ -497,7 +497,7 @@ describe('notificationViewControllerTask', () => {
     });
     it('should throw when app delegate does not exist', async () => {
       const task: NotificationViewControllerTaskType = {
-        type: 'notification_view_controller',
+        task: 'notification_view_controller',
         target: 'test',
         actions: [
           {

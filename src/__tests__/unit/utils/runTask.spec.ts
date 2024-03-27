@@ -49,7 +49,7 @@ jest.mock('../../../tasks/fsTask', () => mocks.fs);
 jest.mock('../../../tasks/jsonTask', () => mocks.json);
 
 import path from 'path';
-import { ModTask } from '../../../types/mod.types';
+import { ModStep } from '../../../types/mod.types';
 import { runTask } from '../../../utils/runTask';
 import { mockIntegrateYml } from '../../mocks/mockIntegrateYml';
 
@@ -74,8 +74,8 @@ describe('runTask', () => {
 
       mockFs.writeFileSync(integrateYmlPath, mockIntegrateYml);
 
-      const task: ModTask = {
-        type: taskType,
+      const task: ModStep = {
+        task: taskType,
       } as any;
 
       await runTask({

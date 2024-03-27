@@ -118,8 +118,8 @@ export async function runUpgradeTasks(
     }
   }
 
-  if (config.tasks) {
-    for (const task of config.tasks) {
+  if (config.steps) {
+    for (const task of config.steps) {
       if (
         task.when &&
         !satisfies(variables.getStore(), transformTextInObject(task.when))
@@ -136,10 +136,10 @@ export async function runUpgradeTasks(
         error: false,
       });
 
-      const isNonSystemTask = !taskManager.isSystemTask(task.type);
+      const isNonSystemTask = !taskManager.isSystemTask(task.task);
       if (isNonSystemTask) {
         if (task.label) task.label = getText(task.label);
-        else task.label = taskManager.task[task.type].summary;
+        else task.label = taskManager.task[task.task].summary;
         logInfo(
           color.bold(color.inverse(color.cyan(' task '))) +
             color.bold(color.cyan(` ${task.label} `))

@@ -1,9 +1,9 @@
-import { AnyObject, ModTask } from './mod.types';
+import { AnyObject, ModStep } from './mod.types';
 
 export type UpgradeConfig = {
   env?: AnyObject;
   imports?: string[];
-  tasks?: ModTask[];
+  steps?: ModStep[];
 };
 
 export type ImportGetter = {

@@ -82,7 +82,7 @@ export type ActionsType<T extends ActionBase> = {
 
 export type PlistTaskType = ModTaskBase &
   ActionsType<ObjectModifierType> & {
-    type: 'plist';
+    task: 'plist';
     target?: string;
   };
 
@@ -90,7 +90,7 @@ export type PlistTaskType = ModTaskBase &
 
 export type JsonTaskType = ModTaskBase &
   ActionsType<ObjectModifierType> & {
-    type: 'json';
+    task: 'json';
     path: string;
   };
 
@@ -98,7 +98,7 @@ export type JsonTaskType = ModTaskBase &
 
 export type AppDelegateTaskType = ModTaskBase &
   ActionsType<ContentModifierType<AppDelegateBlockType>> & {
-    type: 'app_delegate';
+    task: 'app_delegate';
   };
 export type AppDelegateBlockType =
   | 'didFinishLaunchingWithOptions'
@@ -118,7 +118,7 @@ export type AppDelegateBlockType =
 
 export type NotificationServiceTaskType = ModTaskBase &
   ActionsType<ContentModifierType<NotificationServiceBlockType>> & {
-    type: 'notification_service';
+    task: 'notification_service';
     target: string;
   };
 export type NotificationServiceBlockType =
@@ -129,7 +129,7 @@ export type NotificationServiceBlockType =
 
 export type NotificationViewControllerTaskType = ModTaskBase &
   ActionsType<ContentModifierType<NotificationContentBlockType>> & {
-    type: 'notification_view_controller';
+    task: 'notification_view_controller';
     target: string;
   };
 export type NotificationContentBlockType =
@@ -144,7 +144,7 @@ export type NotificationContentBlockType =
 // validation task
 
 // export type ValidationTaskType = ModTaskBase & {
-//   type: 'validate';
+//   task: 'validate';
 //   file: string | { regex: string; flags?: string };
 //   find?: string | { regex: string; flags?: string };
 //   errorMsg?: string;
@@ -154,7 +154,7 @@ export type NotificationContentBlockType =
 
 export type BuildGradleTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'build_gradle';
+    task: 'build_gradle';
     location?: BuildGradleLocationType;
   };
 
@@ -164,14 +164,14 @@ export type BuildGradleLocationType = 'root' | 'app';
 
 export type SettingsGradleTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'settings_gradle';
+    task: 'settings_gradle';
   };
 
 // main application task
 
 export type MainApplicationTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'main_application';
+    task: 'main_application';
     lang?: AndroidCodeType;
   };
 
@@ -181,7 +181,7 @@ export type AndroidCodeType = 'java' | 'kotlin';
 
 export type MainActivityTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'main_activity';
+    task: 'main_activity';
     lang?: AndroidCodeType;
   };
 
@@ -189,7 +189,7 @@ export type MainActivityTaskType = ModTaskBase &
 
 export type AndroidManifestTaskType = ModTaskBase &
   ActionsType<AndroidManifestModifierType> & {
-    type: 'android_manifest';
+    task: 'android_manifest';
   };
 
 export type AndroidManifestBlockType = 'manifest' | 'application' | 'activity';
@@ -203,14 +203,14 @@ export type AndroidManifestModifierType =
 
 export type StringsXmlTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'strings_xml';
+    task: 'strings_xml';
   };
 
 // add resource task
 
 export type XcodeTaskType = ModTaskBase &
   ActionsType<XcodeModifierType> & {
-    type: 'xcode';
+    task: 'xcode';
   };
 
 export type XcodeAddFile = ActionBase & {
@@ -341,7 +341,7 @@ export type XcodeModifierType =
 
 export type PodFileTaskType = ModTaskBase &
   ActionsType<PodFileModifierType> & {
-    type: 'podfile';
+    task: 'podfile';
   };
 
 export type PodFileModifierType = ContentModifierType & {
@@ -354,14 +354,14 @@ export type PodFileModifierType = ContentModifierType & {
 
 export type GitignoreTaskType = ModTaskBase &
   ActionsType<ContentModifierType> & {
-    type: 'gitignore';
+    task: 'gitignore';
   };
 
 // fs task
 
 export type FsTaskType = ModTaskBase &
   ActionsType<FsModifierType> & {
-    type: 'fs';
+    task: 'fs';
   };
 
 export type FsModifierType = ActionBase & {
@@ -374,7 +374,7 @@ export type FsModifierType = ActionBase & {
 
 export type ShellTaskType = ModTaskBase &
   ActionsType<ShellActionType> & {
-    type: 'shell';
+    task: 'shell';
   };
 
 export type ShellActionType = ActionBase & {
@@ -387,7 +387,7 @@ export type ShellActionType = ActionBase & {
 
 export type PromptTaskType = ModTaskBase &
   ActionsType<PromptActionType> & {
-    type: 'prompt';
+    task: 'prompt';
   };
 
 export type PromptActionType = ActionBase & Prompt;
@@ -400,7 +400,7 @@ export type ModTaskBase = {
   postInfo?: TextOrTitleMessage;
 };
 
-export type ModTask =
+export type ModStep =
   | PlistTaskType
   | AppDelegateTaskType
   | BuildGradleTaskType
@@ -443,7 +443,7 @@ export type AnyObject = Record<string, any>;
 
 export type IntegrationConfig = {
   env?: AnyObject;
-  tasks: ModTask[];
+  steps: ModStep[];
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
   dependencies?: string[];

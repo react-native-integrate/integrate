@@ -12,7 +12,7 @@ describe('podFileTask', () => {
   it('should prepend text into empty body ', async () => {
     let content = '';
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: "target 'TestApp'",
@@ -42,7 +42,7 @@ end
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           append: 'config = use_native_modules!',
@@ -73,7 +73,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target',
@@ -103,7 +103,7 @@ end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -135,7 +135,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -168,7 +168,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -200,7 +200,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -232,7 +232,7 @@ end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -266,7 +266,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -296,7 +296,7 @@ target 'TestApp' do
 end
 `;
     const taskInsertBefore: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -307,7 +307,7 @@ end
       ],
     };
     const taskInsertBeforeNonStrict: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -334,7 +334,7 @@ end
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -346,7 +346,7 @@ end
     };
 
     const taskInsertAfterNonStrict: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target.pre_install',
@@ -377,7 +377,7 @@ end
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: "target 'Test'.pre_install",
@@ -398,7 +398,7 @@ end
   it('should throw when block does not exist', async () => {
     const content = '';
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'target',
@@ -419,7 +419,7 @@ end
   it('should skip if condition not met', async () => {
     const content = '';
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           when: { test: 'random' },
@@ -441,7 +441,7 @@ end
   it('should throw invalid block', async () => {
     const content = '';
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           block: 'random',
@@ -464,7 +464,7 @@ end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           staticLibrary: 'TestPod',
@@ -491,7 +491,7 @@ end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           staticLibrary: ['TestPod', 'TestPod2', 'TestPod3'],
@@ -525,7 +525,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           staticLibrary: ['TestPod', 'TestPod3'],
@@ -555,7 +555,7 @@ linkage = 'something'
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'static',
@@ -579,7 +579,7 @@ target 'TestApp' do end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'static',
@@ -604,7 +604,7 @@ use_frameworks! :linkage => :dynamic
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'static',
@@ -629,7 +629,7 @@ linkage = 'dynamic'
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'static',
@@ -654,7 +654,7 @@ linkage = 'something'
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'dynamic',
@@ -691,7 +691,7 @@ end
 target 'TestApp' do end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           useFrameworks: 'dynamic',
@@ -730,7 +730,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           disableFlipper: true,
@@ -758,7 +758,7 @@ target 'TestApp' do
 end
 `;
     const task: PodFileTaskType = {
-      type: 'podfile',
+      task: 'podfile',
       actions: [
         {
           disableFlipper: true,
@@ -796,7 +796,7 @@ end
       );
       mockFs.writeFileSync(podFilePath, content);
       const task: PodFileTaskType = {
-        type: 'podfile',
+        task: 'podfile',
         actions: [
           {
             block: 'target.pre_install',
@@ -816,7 +816,7 @@ end
     });
     it('should throw when pod file does not exist', async () => {
       const task: PodFileTaskType = {
-        type: 'podfile',
+        task: 'podfile',
         actions: [
           {
             block: 'target.pre_install',

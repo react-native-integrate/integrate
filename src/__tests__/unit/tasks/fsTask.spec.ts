@@ -25,7 +25,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -71,7 +71,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -128,7 +128,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -155,7 +155,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -181,7 +181,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -204,7 +204,7 @@ describe('fsTask', () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           when: { test: 'random' },
@@ -236,7 +236,7 @@ describe('fsTask', () => {
     );
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -266,7 +266,7 @@ describe('fsTask', () => {
     mockPrompter.confirm.mockReset();
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -311,7 +311,7 @@ describe('fsTask', () => {
     );
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -354,7 +354,7 @@ describe('fsTask', () => {
     );
 
     const task: FsTaskType = {
-      type: 'fs',
+      task: 'fs',
       actions: [
         {
           copyFile: 'file.json',
@@ -390,7 +390,7 @@ describe('fsTask', () => {
   describe('runTask', () => {
     it('should run fs tasks', async () => {
       const task: FsTaskType = {
-        type: 'fs',
+        task: 'fs',
         actions: [
           {
             copyFile: 'file.json',

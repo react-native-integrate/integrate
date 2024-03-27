@@ -11,7 +11,7 @@ The `json` task allows you to create or modify json files.
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "json", required                                | Specifies the task type, which should be set to "json" for this task.                                                                                        |
+| task     | "json", required                                | Specifies the task type, which should be set to "json" for this task.                                                                                        |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -38,7 +38,7 @@ The `json` task allows you to create or modify json files.
 ## Example
 
 ```yaml
-type: json
+task: json
 label: Add or Modify Json Entries
 path: some_file.json
 actions:

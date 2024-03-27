@@ -78,7 +78,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "android_manifest",
                     "type": "string"
                 },
@@ -88,7 +88,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -117,7 +117,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "app_delegate",
                     "type": "string"
                 },
@@ -127,7 +127,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -162,7 +162,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "build_gradle",
                     "type": "string"
                 },
@@ -172,7 +172,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -401,7 +401,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "fs",
                     "type": "string"
                 },
@@ -411,7 +411,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -436,7 +436,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "gitignore",
                     "type": "string"
                 },
@@ -446,7 +446,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -474,7 +474,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "json",
                     "type": "string"
                 },
@@ -485,7 +485,7 @@
             "required": [
                 "actions",
                 "path",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -513,7 +513,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "main_activity",
                     "type": "string"
                 },
@@ -523,7 +523,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -551,7 +551,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "main_application",
                     "type": "string"
                 },
@@ -561,11 +561,11 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
-        "ModTask": {
+        "ModStep": {
             "anyOf": [
                 {
                     "$ref": "#/definitions/PlistTaskType"
@@ -644,7 +644,7 @@
                 "target": {
                     "type": "string"
                 },
-                "type": {
+                "task": {
                     "const": "notification_service",
                     "type": "string"
                 },
@@ -655,7 +655,7 @@
             "required": [
                 "actions",
                 "target",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -683,7 +683,7 @@
                 "target": {
                     "type": "string"
                 },
-                "type": {
+                "task": {
                     "const": "notification_view_controller",
                     "type": "string"
                 },
@@ -694,7 +694,7 @@
             "required": [
                 "actions",
                 "target",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -761,7 +761,7 @@
                 "target": {
                     "type": "string"
                 },
-                "type": {
+                "task": {
                     "const": "plist",
                     "type": "string"
                 },
@@ -771,7 +771,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -864,7 +864,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "podfile",
                     "type": "string"
                 },
@@ -874,7 +874,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -1069,7 +1069,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "prompt",
                     "type": "string"
                 },
@@ -1079,7 +1079,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -1104,7 +1104,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "settings_gradle",
                     "type": "string"
                 },
@@ -1114,7 +1114,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -1166,7 +1166,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "shell",
                     "type": "string"
                 },
@@ -1176,7 +1176,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -1201,7 +1201,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "strings_xml",
                     "type": "string"
                 },
@@ -1211,7 +1211,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         },
@@ -1750,7 +1750,7 @@
                 "preInfo": {
                     "$ref": "#/definitions/TextOrTitleMessage"
                 },
-                "type": {
+                "task": {
                     "const": "xcode",
                     "type": "string"
                 },
@@ -1760,7 +1760,7 @@
             },
             "required": [
                 "actions",
-                "type"
+                "task"
             ],
             "type": "object"
         }
@@ -1793,15 +1793,15 @@
         "preInfo": {
             "$ref": "#/definitions/TextOrTitleMessage"
         },
-        "tasks": {
+        "steps": {
             "items": {
-                "$ref": "#/definitions/ModTask"
+                "$ref": "#/definitions/ModStep"
             },
             "type": "array"
         }
     },
     "required": [
-        "tasks"
+        "steps"
     ],
     "type": "object"
 }

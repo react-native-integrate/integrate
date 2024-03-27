@@ -11,7 +11,7 @@ The `strings_xml` task allows you to modify the strings.xml file in an Android p
 
 | Property | Type                                            | Description                                                                                                                                                                                                                                                                                        |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "strings_xml", required                         | Specifies the task type, which should be set to "strings_xml" for this task.                                                                                                                                                                                                                       |
+| task     | "strings_xml", required                         | Specifies the task type, which should be set to "strings_xml" for this task.                                                                                                                                                                                                                       |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                                                                                                       |
 | label    | string                                          | An optional label or description for the task.                                                                                                                                                                                                                                                     |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                                                                                                                                                             |
@@ -55,7 +55,7 @@ The `strings_xml` task allows you to modify the strings.xml file in an Android p
 
 Here's an example of how to use the `strings_xml` task to modify the strings.xml file:
 ```yaml
-type: strings_xml
+task: strings_xml
 label: "Modify strings.xml"
 actions:
   - append: <string name="resource">value</string>

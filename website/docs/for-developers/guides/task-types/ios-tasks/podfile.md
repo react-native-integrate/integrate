@@ -11,7 +11,7 @@ The `podfile` task allows you to customize your iOS project's Podfile, which is 
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "podfile", required                             | Specifies the task type, which should be set to "podfile" for this task.                                                                                     |
+| task     | "podfile", required                             | Specifies the task type, which should be set to "podfile" for this task.                                                                                     |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -71,7 +71,7 @@ Specifies the part of the Podfile to target. You can set it to one of the follow
 Here's an example of a configuration file (`integrate.yml`) that utilizes the `podfile` task to modify the iOS project's Podfile:
 
 ```yaml
-type: podfile
+task: podfile
 label: "Modify Podfile"
 actions:
   - block: target

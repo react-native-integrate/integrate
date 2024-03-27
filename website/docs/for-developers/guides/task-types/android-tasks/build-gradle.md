@@ -11,7 +11,7 @@ The `build_gradle` task is designed to facilitate modifications to the `build.gr
 
 | Property | Type                                            | Description                                                                                                                                                                                                                                                                                        |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "build_gradle", required                        | Specifies the task type, which should be set to "build_gradle" for this task.                                                                                                                                                                                                                      |
+| task     | "build_gradle", required                        | Specifies the task type, which should be set to "build_gradle" for this task.                                                                                                                                                                                                                      |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                                                                                                       |
 | label    | string                                          | An optional label or description for the task.                                                                                                                                                                                                                                                     |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                                                                                                                                                             |
@@ -60,7 +60,7 @@ The `block` property in the `build_gradle` task serves as a block path within th
 ## Example
 
 ```yaml
-type: build_gradle
+task: build_gradle
 label: "Enabling multidex"
 location: "app",
 actions:

@@ -11,7 +11,7 @@ The `android_manifest` task allows you to modify the AndroidManifest.xml file in
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "android_manifest", required                    | Specifies the task type, which should be set to "android_manifest" for this task.                                                                            |
+| task     | "android_manifest", required                    | Specifies the task type, which should be set to "android_manifest" for this task.                                                                            |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -57,7 +57,7 @@ The `android_manifest` task allows you to modify the AndroidManifest.xml file in
 
 Here's an example of how to use the `android_manifest` task to modify the AndroidManifest.xml file:
 ```yaml
-type: android_manifest
+task: android_manifest
 label: "Modify Android Manifest"
 actions:
   - block: application

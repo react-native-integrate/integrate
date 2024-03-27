@@ -47,7 +47,7 @@ describe('xcodeTask', () => {
     const contentBefore = proj.writeSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           random: 'value',
@@ -72,7 +72,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'notification.service',
@@ -111,7 +111,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'noti',
@@ -134,7 +134,7 @@ describe('xcodeTask', () => {
     mockPrompter.text.mockReset().mockImplementationOnce(() => 'test2');
 
     const task2: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'noti',
@@ -168,7 +168,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'noti',
@@ -208,7 +208,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'noti',
@@ -234,7 +234,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'noti',
@@ -271,7 +271,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addCapability: 'push',
@@ -352,7 +352,7 @@ describe('xcodeTask', () => {
     });
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addCapability: 'groups',
@@ -392,7 +392,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
@@ -430,7 +430,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           setDeploymentVersion: '13.0',
@@ -456,7 +456,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           name: 'notification.service',
@@ -489,7 +489,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           setDeploymentVersion: '13.0',
@@ -515,7 +515,7 @@ describe('xcodeTask', () => {
     proj.parseSync();
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           setDeploymentVersion: { min: '8.0' },
@@ -539,7 +539,7 @@ describe('xcodeTask', () => {
     let proj = xcode.project(pbxFilePath);
     proj.parseSync();
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addConfiguration: 'TEST=true',
@@ -607,7 +607,7 @@ describe('xcodeTask', () => {
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addPreBuildRunScriptAction: 'TESTSCRIPT();',
@@ -651,7 +651,7 @@ describe('xcodeTask', () => {
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
@@ -678,7 +678,7 @@ describe('xcodeTask', () => {
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           when: { test: 'random' },
@@ -706,7 +706,7 @@ describe('xcodeTask', () => {
     const proj = xcode.project(pbxFilePath);
     proj.parseSync();
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
@@ -735,7 +735,7 @@ describe('xcodeTask', () => {
     proj.removePbxGroup('Resources');
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
@@ -766,7 +766,7 @@ describe('xcodeTask', () => {
     proj.removePbxGroup('Resources');
 
     const task: XcodeTaskType = {
-      type: 'xcode',
+      task: 'xcode',
       actions: [
         {
           addFile: 'GoogleService-Info.plist',
@@ -790,7 +790,7 @@ describe('xcodeTask', () => {
       mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
       const task: XcodeTaskType = {
-        type: 'xcode',
+        task: 'xcode',
         actions: [
           {
             addFile: 'GoogleService-Info.plist',
@@ -810,7 +810,7 @@ describe('xcodeTask', () => {
     });
     it('should throw when plist does not exist', async () => {
       const task: XcodeTaskType = {
-        type: 'xcode',
+        task: 'xcode',
         actions: [
           {
             addFile: 'GoogleService-Info.plist',
@@ -833,7 +833,7 @@ describe('xcodeTask', () => {
         throw new Error('Directory not found');
       });
       const task: XcodeTaskType = {
-        type: 'xcode',
+        task: 'xcode',
         actions: [
           {
             addFile: 'GoogleService-Info.plist',

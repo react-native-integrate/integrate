@@ -11,7 +11,7 @@ The `gitignore` task allows you to customize .gitignore file, which is used to i
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "gitignore", required                           | Specifies the task type, which should be set to "gitignore" for this task.                                                                                   |
+| task     | "gitignore", required                           | Specifies the task type, which should be set to "gitignore" for this task.                                                                                   |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -56,7 +56,7 @@ The `gitignore` task allows you to customize .gitignore file, which is used to i
 Here's an example of a configuration file (`integrate.yml`) that utilizes the `gitignore` task to modify the .gitignore file:
 
 ```yaml
-type: gitignore
+task: gitignore
 label: "Modify .gitignore"
 actions:
   - append: ios/tmp.xcconfig

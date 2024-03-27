@@ -16,7 +16,7 @@ describe('androidManifestTask', () => {
   it('should throw if setting attributes with empty block', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           attributes: {
@@ -37,7 +37,7 @@ describe('androidManifestTask', () => {
   it('should skip if condition not met', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           when: { test: 'random' },
@@ -59,7 +59,7 @@ describe('androidManifestTask', () => {
   it('should throw if block is invalid', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'random' as any,
@@ -78,7 +78,7 @@ describe('androidManifestTask', () => {
   it('should throw text into empty body ', async () => {
     const content = '';
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'activity',
@@ -98,7 +98,7 @@ describe('androidManifestTask', () => {
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           prepend: '<test />',
@@ -127,7 +127,7 @@ describe('androidManifestTask', () => {
     const content = mockAndroidManifestTemplate;
 
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'activity',
@@ -164,7 +164,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'application',
@@ -205,7 +205,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'application',
@@ -250,7 +250,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -289,7 +289,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -331,7 +331,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const task: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -371,7 +371,7 @@ describe('androidManifestTask', () => {
 </manifest>
 `;
     const taskInsertBefore: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -382,7 +382,7 @@ describe('androidManifestTask', () => {
       ],
     };
     const taskInsertBeforeNonStrict: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -409,7 +409,7 @@ describe('androidManifestTask', () => {
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -421,7 +421,7 @@ describe('androidManifestTask', () => {
     };
 
     const taskInsertAfterNonStrict: AndroidManifestTaskType = {
-      type: 'android_manifest',
+      task: 'android_manifest',
       actions: [
         {
           block: 'manifest',
@@ -467,7 +467,7 @@ describe('androidManifestTask', () => {
       );
       mockFs.writeFileSync(manifestPath, content);
       const task: AndroidManifestTaskType = {
-        type: 'android_manifest',
+        task: 'android_manifest',
         actions: [
           {
             block: 'manifest',
@@ -487,7 +487,7 @@ describe('androidManifestTask', () => {
     });
     it('should throw when android manifest does not exist', async () => {
       const task: AndroidManifestTaskType = {
-        type: 'android_manifest',
+        task: 'android_manifest',
         actions: [
           {
             block: 'manifest',

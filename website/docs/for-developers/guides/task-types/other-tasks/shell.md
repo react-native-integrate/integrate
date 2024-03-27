@@ -11,7 +11,7 @@ The `shell` task type allows you to run shell commands.
 
 | Property | Type                                            | Description                                                                                                                                              |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "shell", required                               | Specifies the task type, which should be set to "shell" for this task.                                                                                   |
+| task     | "shell", required                               | Specifies the task type, which should be set to "shell" for this task.                                                                                   |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -32,8 +32,8 @@ The `shell` task type allows you to run shell commands.
 Here's an example of how to use shell task in a configuration file:
 
 ```yaml
-tasks:
-  - type: shell
+steps:
+  - task: shell
     label: Embedding assets
     actions:
       - command: npx react-native-asset

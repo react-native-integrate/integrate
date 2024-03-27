@@ -15,7 +15,7 @@ describe('jsonTask', () => {
       test: 'value',
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -42,7 +42,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -74,7 +74,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -115,7 +115,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -153,7 +153,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -191,7 +191,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -228,7 +228,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -266,7 +266,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -300,7 +300,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -335,7 +335,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -375,7 +375,7 @@ describe('jsonTask', () => {
       },
     };
     const task: JsonTaskType = {
-      type: 'json',
+      task: 'json',
       path: 'test.json',
       actions: [
         {
@@ -407,7 +407,7 @@ describe('jsonTask', () => {
     it('should read and write json file', () => {
       const jsonPath = writeMockJson();
       const task: JsonTaskType = {
-        type: 'json',
+        task: 'json',
         path: 'test.json',
         actions: [
           {
@@ -429,7 +429,7 @@ describe('jsonTask', () => {
     it('should read and write json file of custom target', () => {
       const jsonPath = writeMockJson('custom.json');
       const task: JsonTaskType = {
-        type: 'json',
+        task: 'json',
         path: 'custom.json',
         actions: [
           {
@@ -450,7 +450,7 @@ describe('jsonTask', () => {
     });
     it('should not throw when json does not exist', () => {
       const task: JsonTaskType = {
-        type: 'json',
+        task: 'json',
         path: 'test.json',
         actions: [
           {
@@ -471,7 +471,7 @@ describe('jsonTask', () => {
     });
     it('should throw when path is out of project', () => {
       const task: JsonTaskType = {
-        type: 'json',
+        task: 'json',
         path: '../somewhere/test.json',
         actions: [
           {

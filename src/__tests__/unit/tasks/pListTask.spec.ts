@@ -19,7 +19,7 @@ describe('pListTask', () => {
       CFBundleVersion: '1.2.3',
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -45,7 +45,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -77,7 +77,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -114,7 +114,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -150,7 +150,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -185,7 +185,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -219,7 +219,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           when: { test: 'random' },
@@ -258,7 +258,7 @@ describe('pListTask', () => {
       },
     };
     const task: PlistTaskType = {
-      type: 'plist',
+      task: 'plist',
       actions: [
         {
           set: {
@@ -289,7 +289,7 @@ describe('pListTask', () => {
     it('should read and write plist file', () => {
       const pListPath = writeMockPList();
       const task: PlistTaskType = {
-        type: 'plist',
+        task: 'plist',
         actions: [
           {
             set: {
@@ -310,7 +310,7 @@ describe('pListTask', () => {
     it('should read and write plist file of custom target', () => {
       const pListPath = writeMockPList('custom');
       const task: PlistTaskType = {
-        type: 'plist',
+        task: 'plist',
         target: 'custom',
         actions: [
           {
@@ -331,7 +331,7 @@ describe('pListTask', () => {
     });
     it('should throw when plist does not exist', () => {
       const task: PlistTaskType = {
-        type: 'plist',
+        task: 'plist',
         actions: [
           {
             set: {
@@ -354,7 +354,7 @@ describe('pListTask', () => {
         throw new Error('Directory not found');
       });
       const task: PlistTaskType = {
-        type: 'plist',
+        task: 'plist',
         actions: [
           {
             set: {

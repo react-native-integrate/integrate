@@ -1,13 +1,13 @@
-import { ModTask } from '../types/mod.types';
+import { ModStep } from '../types/mod.types';
 import { taskManager } from './taskManager';
 
 export async function runTask(args: {
   configPath: string;
   packageName: string;
-  task: ModTask;
+  task: ModStep;
 }): Promise<void> {
   const { task, packageName, configPath } = args;
-  await taskManager.task[task.type].runTask({
+  await taskManager.task[task.task].runTask({
     configPath,
     packageName,
     task,

@@ -11,7 +11,7 @@ The "fs" task is used to perform filesystem operations within your configuration
 
 | Property | Type                                            | Description                                                                                                                                                  |
 |:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| type     | "fs", required                                  | Specifies the task type, which should be set to "fs" for this task.                                                                                          |
+| task     | "fs", required                                  | Specifies the task type, which should be set to "fs" for this task.                                                                                          |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                               |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -33,8 +33,8 @@ Usage Example
 Here's an example of how to use the "fs" task in a configuration file:
 
 ```yaml
-tasks:
-- type: fs
+steps:
+- task: fs
   actions:
     - copyFile: "example.txt"
       message: "Please enter the path of the file you want to copy:"

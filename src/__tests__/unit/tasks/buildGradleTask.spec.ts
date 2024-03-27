@@ -13,7 +13,7 @@ describe('buildGradleTask', () => {
   it('should prepend text into empty body ', async () => {
     let content = '';
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -45,7 +45,7 @@ buildscript {
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           append: 'google();',
@@ -78,7 +78,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -108,7 +108,7 @@ buildscript {
 buildscript {}
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -140,7 +140,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -173,7 +173,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -206,7 +206,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -239,7 +239,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript',
@@ -277,7 +277,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -314,7 +314,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -351,7 +351,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -388,7 +388,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -415,7 +415,7 @@ buildscript {
 buildscript {}
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -449,7 +449,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -487,7 +487,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext.release',
@@ -524,7 +524,7 @@ buildscript {
 }
 `;
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           when: { test: 'random' },
@@ -555,7 +555,7 @@ buildscript {
 }
 `;
     const taskInsertBefore: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -566,7 +566,7 @@ buildscript {
       ],
     };
     const taskInsertBeforeNonStrict: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -593,7 +593,7 @@ buildscript {
       })
     ).resolves.not.toThrowError('insertion point');
     const taskInsertAfter: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -605,7 +605,7 @@ buildscript {
     };
 
     const taskInsertAfterNonStrict: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -636,7 +636,7 @@ buildscript {
     const content = '';
     mock.mockImplementationOnce(content => content);
     const task: BuildGradleTaskType = {
-      type: 'build_gradle',
+      task: 'build_gradle',
       actions: [
         {
           block: 'buildscript.ext',
@@ -671,7 +671,7 @@ buildscript {
       );
       mockFs.writeFileSync(buildGradlePath, content);
       const task: BuildGradleTaskType = {
-        type: 'build_gradle',
+        task: 'build_gradle',
         actions: [
           {
             block: 'buildscript.ext',
@@ -704,7 +704,7 @@ buildscript {
       );
       mockFs.writeFileSync(buildGradlePath, content);
       const task: BuildGradleTaskType = {
-        type: 'build_gradle',
+        task: 'build_gradle',
         location: 'app',
         actions: [
           {
@@ -725,7 +725,7 @@ buildscript {
     });
     it('should throw when build gradle does not exist', async () => {
       const task: BuildGradleTaskType = {
-        type: 'build_gradle',
+        task: 'build_gradle',
         actions: [
           {
             block: 'buildscript.ext',

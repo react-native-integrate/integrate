@@ -11,7 +11,7 @@ describe('gitignoreTask', () => {
   it('should prepend text into empty body ', async () => {
     let content = '';
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           append: 'ignoredfile',
@@ -38,7 +38,7 @@ ignoredfile
   it('should prepend text into empty body without block', async () => {
     let content = '';
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           append: 'ignoredfile',
@@ -67,7 +67,7 @@ ignoredfile
 someignored
 `;
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           ifNotPresent: 'someignored',
@@ -95,7 +95,7 @@ someignored
 ignoredfile
 `;
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           prepend: 'ignoredfile',
@@ -118,7 +118,7 @@ ignoredfile
 ignoredfile
 `;
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           append: 'config2 = use_native_modules!',
@@ -141,7 +141,7 @@ config2 = use_native_modules!
 ignoredfile
 `;
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           after: 'config',
@@ -165,7 +165,7 @@ ignoredfile
   it('should skip if condition not met', async () => {
     const content = '';
     const task: GitignoreTaskType = {
-      type: 'gitignore',
+      task: 'gitignore',
       actions: [
         {
           when: { test: 'random' },
@@ -196,7 +196,7 @@ test3;
       );
       mockFs.writeFileSync(gitignorePath, content);
       const task: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             prepend: 'test2;',
@@ -219,7 +219,7 @@ test1;
 test3;
 `;
       const taskInsertBefore: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             before: 'random',
@@ -229,7 +229,7 @@ test3;
         ],
       };
       const taskInsertBeforeNonStrict: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             before: 'random',
@@ -255,7 +255,7 @@ test3;
         })
       ).resolves.not.toThrowError('insertion point');
       const taskInsertAfter: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             after: 'random',
@@ -266,7 +266,7 @@ test3;
       };
 
       const taskInsertAfterNonStrict: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             after: 'random',
@@ -298,7 +298,7 @@ test1;
 test3;
 `;
       const taskInsertBefore: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             block: 'test',
@@ -319,7 +319,7 @@ test3;
     });
     it('should work when gitignore does not exist', async () => {
       const task: GitignoreTaskType = {
-        type: 'gitignore',
+        task: 'gitignore',
         actions: [
           {
             prepend: 'test2;',

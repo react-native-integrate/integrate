@@ -235,7 +235,7 @@ export async function upgrade(): Promise<void> {
         let failedTaskCount = 0,
           completedTaskCount = 0;
 
-        for (const task of config.tasks) {
+        for (const task of config.steps) {
           if (
             task.when &&
             !satisfies(variables.getStore(), transformTextInObject(task.when))
@@ -252,10 +252,10 @@ export async function upgrade(): Promise<void> {
             error: false,
           });
 
-          const isNonSystemTask = !taskManager.isSystemTask(task.type);
+          const isNonSystemTask = !taskManager.isSystemTask(task.task);
           if (isNonSystemTask) {
             if (task.label) task.label = getText(task.label);
-            else task.label = taskManager.task[task.type].summary;
+            else task.label = taskManager.task[task.task].summary;
             logInfo(
               color.bold(color.inverse(color.cyan(' task '))) +
                 color.bold(color.cyan(` ${task.label} `))
@@ -337,7 +337,7 @@ export async function upgrade(): Promise<void> {
 
   logInfo(
     color.bold(color.inverse(color.magenta(' stage 4 '))) +
-      color.bold(color.magenta(' Execute upgrade.yml tasks '))
+      color.bold(color.magenta(' Execute upgrade.yml steps '))
   );
 
   const upgradeResult = await runUpgradeTasks(oldProjectPath).catch(
