@@ -11,7 +11,7 @@ This folder and all of its sub-folders are optional.
 
 ```
 .upgrade/
-├── backup/ 
+├── imports/ 
 │   └── files to be restored during upgrade
 ├── packages/
 │   └── some-package/
