@@ -131,6 +131,41 @@
             ],
             "type": "object"
         },
+        "BabelConfigTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<BabelConfigBlockType>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "task": {
+                    "const": "babel_config",
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "actions",
+                "task"
+            ],
+            "type": "object"
+        },
         "BuildGradleLocationType": {
             "enum": [
                 "app",
@@ -190,6 +225,51 @@
                 },
                 "block": {
                     "$ref": "#/definitions/TBlock"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "exact": {
+                    "type": "boolean"
+                },
+                "ifNotPresent": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prepend": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "replace": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "search": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "type": "object"
+        },
+        "ContentModifierType<BabelConfigBlockType>": {
+            "additionalProperties": false,
+            "properties": {
+                "after": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "append": {
+                    "$ref": "#/definitions/TextOrFileValue"
+                },
+                "before": {
+                    "$ref": "#/definitions/TextOrRegex"
+                },
+                "block": {
+                    "$ref": "#/definitions/TBlock_4"
                 },
                 "comment": {
                     "type": "string"
@@ -617,6 +697,9 @@
                 },
                 {
                     "$ref": "#/definitions/PromptTaskType"
+                },
+                {
+                    "$ref": "#/definitions/BabelConfigTaskType"
                 }
             ]
         },
@@ -1256,6 +1339,13 @@
                 "activity",
                 "application",
                 "manifest"
+            ],
+            "type": "string"
+        },
+        "TBlock_4": {
+            "enum": [
+                "plugins",
+                "presets"
             ],
             "type": "string"
         },

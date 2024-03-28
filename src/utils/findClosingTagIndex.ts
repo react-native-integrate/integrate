@@ -23,7 +23,7 @@ export function findClosingTagIndex(
   return currentIndex;
 }
 
-function stripNonCode(content: string, regex: string) {
+export function stripNonCode(content: string, regex: string) {
   const nonCodeMatcher = new RegExp(`(${regex}|${stringRegex})`, 'msg');
   return content.replace(nonCodeMatcher, m => ' '.repeat(m.length));
 }
@@ -41,5 +41,10 @@ export const TagDefinitions = {
     open: '\\b(do\\b(\\s\\|.*?\\|)?|(?<!end )if\\b)',
     close: '\\bend(\\sif)?\\b',
     comment: '(#.*?$|=begin.*?=end)',
+  },
+  BRACKETS: {
+    open: '\\[',
+    close: '\\]',
+    comment: '(\\/\\/.*?$|\\/\\*.*?\\*\\/)',
   },
 };

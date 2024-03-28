@@ -9,6 +9,7 @@ export const Constants = {
   NOTIFICATION_SERVICE_FILE_NAME: 'NotificationService.m',
   NOTIFICATION_VIEW_CONTROLLER_FILE_NAME: 'NotificationViewController.m',
   PLIST_FILE_NAME: 'Info.plist',
+  BABEL_CONFIG_FILE_NAME: 'babel.config.js',
   ANDROID_MAIN_FILE_PATH: 'android/app/src/main',
   ANDROID_MANIFEST_FILE_NAME: 'AndroidManifest.xml',
   STRINGS_XML_FILE_NAME: 'strings.xml',

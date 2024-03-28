@@ -9,30 +9,30 @@ The `podfile` task allows you to customize your iOS project's Podfile, which is 
 
 ## Task Properties
 
-| Property | Type                                            | Description                                                                                                                                                  |
-|:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "podfile", required                             | Specifies the task type, which should be set to "podfile" for this task.                                                                                     |
+| Property | Type                                            | Description                                                                                                                                              |
+|:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| task     | "podfile", required                             | Specifies the task type, which should be set to "podfile" for this task.                                                                                 |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
-| label    | string                                          | An optional label or description for the task.                                                                                                               |
+| label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
-| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                               |
+| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file.                                                                           |
 
 ## Action Properties
 
 ### Common properties
 
-| Property   | Type                                       | Description                                                                                                                                                                                             |
-|:-----------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                            |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                               |
+| Property | Type   | Description                                                                                                                                              |
+|:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 
 ### Special properties
 
-| Property        | Type                                  | Description                                                                                                                                                                                                                                                                                                  |
-|:----------------|:--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| useFrameworks   | "dynamic" or "static"                 | Sets `use_frameworks` value and handles compatibility accordingly. "dynamic" sets useFrameworks value with dynamic linkage. In this case static libs will be set in pre_install hook. "static" sets useFrameworks value with static linkage. This action is skipped or overridden by dynamic linkage action. |
-| staticLibrary   | string or Array\<string\>             | Defines name of pods that will be set as static library in case some module requires `use_frameworks` with dynamic linkage.                                                                                                                                                                                  |
-| disableFlipper  | boolean                               | Disables flipper usage.                                                                                                                                                                                                                                                                                      |
+| Property       | Type                      | Description                                                                                                                                                                                                                                                                                                  |
+|:---------------|:--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| useFrameworks  | "dynamic" or "static"     | Sets `use_frameworks` value and handles compatibility accordingly. "dynamic" sets useFrameworks value with dynamic linkage. In this case static libs will be set in pre_install hook. "static" sets useFrameworks value with static linkage. This action is skipped or overridden by dynamic linkage action. |
+| staticLibrary  | string or Array\<string\> | Defines name of pods that will be set as static library in case some module requires `use_frameworks` with dynamic linkage.                                                                                                                                                                                  |
+| disableFlipper | boolean                   | Disables flipper usage.                                                                                                                                                                                                                                                                                      |
 
 ### Context reduction properties
 
@@ -45,20 +45,20 @@ The `podfile` task allows you to customize your iOS project's Podfile, which is 
 
 ### Context modification properties
 
-| Property  | Type                       | Description                                                                                                                                                                  |
-|:----------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| prepend   | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
-| append    | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
-| replace   | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
+| Property | Type                       | Description                                                                                                                                                                  |
+|:---------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| prepend  | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
+| append   | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
+| replace  | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
 
 ### Other properties
 
-| Property       | Type    | Description                                                                                                                                                                                                                                   |
-|:---------------|:--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| exact          | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                                          |
-| strict         | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.                      |
-| ifNotPresent   | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                                                    |
-| comment        | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                                                |
+| Property     | Type    | Description                                                                                                                                                                                                              |
+|:-------------|:--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| exact        | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                     |
+| strict       | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field. |
+| ifNotPresent | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                               |
+| comment      | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                           |
 
 ### Block Property
 Specifies the part of the Podfile to target. You can set it to one of the following values:

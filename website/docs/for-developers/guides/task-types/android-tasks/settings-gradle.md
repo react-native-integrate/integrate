@@ -1,21 +1,20 @@
 ---
-sidebar_position: 1
-title: AndroidManifest.xml
+sidebar_position: 3
+title: settings.gradle
 ---
 
-# Android Manifest Task Configuration (`android_manifest`)
+# Settings Gradle Task Configuration (`settings_gradle`)
 
-_Modify AndroidManifest.xml file_
+_Modify settings.gradle file_
 
-The `android_manifest` task allows you to modify the AndroidManifest.xml file in an Android project. You can make changes to various elements within
-the AndroidManifest.xml file, such as the `<manifest>`, `<application>`, or `<activity>` tags. This task provides fine-grained control over
-AndroidManifest.xml modifications, including adding, updating, or deleting attributes and values.
+The `settings_gradle` task is designed to facilitate modifications to the `settings.gradle` files in Android projects. It is the main entry file of
+the android application. This task provides the flexibility to make changes to different sections of the `settings.gradle` file.
 
 ## Task Properties
 
 | Property | Type                                            | Description                                                                                                                                              |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "android_manifest", required                    | Specifies the task type, which should be set to "android_manifest" for this task.                                                                        |
+| task     | "settings_gradle", required                     | Specifies the task type, which should be set to "settings_gradle" for this task.                                                                         |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -34,7 +33,6 @@ AndroidManifest.xml modifications, including adding, updating, or deleting attri
 
 | Property | Type                                       | Description                                                                                                                                                                                             |
 |:---------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| block    | "manifest" or "application" or "activity"  | Specifies the context within the AndroidManifest.xml file where modifications should be applied. Omitting this field means the entire AndroidManifest.xml file will be the context.                     |
 | before   | string or `{regex: string, flags: string}` | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search. |
 | after    | string or `{regex: string, flags: string}` | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.  |
 | search   | string or `{regex: string, flags: string}` | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                        |
@@ -49,34 +47,22 @@ AndroidManifest.xml modifications, including adding, updating, or deleting attri
 
 ### Other properties
 
-| Property     | Type    | Description                                                                                                                                                                                                                                  |
-|:-------------|:--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| exact        | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                                         |
-| strict       | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.                     |
-| ifNotPresent | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                                                   |
-| comment      | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                                               |
-| attributes   | object  | An object that defines the attributes and their values to be added, updated, or deleted within the specified tag. When using this property, `block` field must be provided. An attribute can be deleted by setting `$delete: true` as value. |
+| Property     | Type    | Description                                                                                                                                                                                                              |
+|:-------------|:--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| exact        | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                     |
+| strict       | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field. |
+| ifNotPresent | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                               |
+| comment      | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                           |
 
 ## Example
 
-Here's an example of how to use the `android_manifest` task to modify the AndroidManifest.xml file:
-
 ```yaml
-task: android_manifest
-label: "Modify Android Manifest"
+task: settings_gradle
+label: "Including code push"
 actions:
-  - block: application
-    append: |
-      <meta-data
-          android:name="com.google.android.gms.ads.APPLICATION_ID"
-          android:value="your-admob-app-id" />
-  - block: activity
-    attributes:
-      android:name: "com.example.MainActivity"
-      android:theme: "@style/AppTheme.NoActionBar"
-      android:useless:
-        $delete: true
+  - append: |-
+      include ':app', ':react-native-code-push'
+      project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 ```
 
-In this example, we append a `<meta-data>` element within the `<application>` tag and action attributes of a specific `<activity>` tag. Additionally,
-we delete the `android:useless` attribute using `$delete: true`
+In this example, the `settings_gradle` task adds an import to the file.

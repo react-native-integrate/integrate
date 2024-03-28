@@ -9,32 +9,32 @@ The "xcode" task is used to manage the iOS xcode project. This task allows you t
 
 ## Task Properties
 
-| Property | Type                                            | Description                                                                                                                                                  |
-|:---------|:------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "xcode", required                               | Specifies the task type, which should be set to "xcode" for this task.                                                                                       |
+| Property | Type                                            | Description                                                                                                                                              |
+|:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| task     | "xcode", required                               | Specifies the task type, which should be set to "xcode" for this task.                                                                                   |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
-| label    | string                                          | An optional label or description for the task.                                                                                                               |
+| label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
-| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                               |
+| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                           |
 
 ## Action Properties
 
 ### Common properties
 
-| Property   | Type                                       | Description                                                                                                                                                                                             |
-|:-----------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                            |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                               |
+| Property | Type   | Description                                                                                                                                              |
+|:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 
 #### _The action item can take these properties based on which action you want to execute._
 
 ### Add a resource file
 
-| Property | Type                                       | Description                                                                                                                                         |
-|:---------|:-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| addFile  | string                                     | Specifies the resource file to be added. It can be a string representing the resource file name.                                                    |
-| message  | string                                     | A string that serves as the user prompt message when collecting input for file to copy. If provided, this message will replace the default message. |
-| target   | [Target](#target-property)                 | Specifies the target group within the iOS project where the resource should be added.                                                               |
+| Property | Type                       | Description                                                                                                                                         |
+|:---------|:---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| addFile  | string                     | Specifies the resource file to be added. It can be a string representing the resource file name.                                                    |
+| message  | string                     | A string that serves as the user prompt message when collecting input for file to copy. If provided, this message will replace the default message. |
+| target   | [Target](#target-property) | Specifies the target group within the iOS project where the resource should be added.                                                               |
 
 #### Target Property
 Specifies the target group within the iOS project where the resource should be added. It can take the listed values.
@@ -133,10 +133,10 @@ This action will expose the `name.target` variable which will hold the name of t
 
 ### Set deployment version
 
-| Property              | Type                                    | Description                                                                            |
-|:----------------------|:----------------------------------------|----------------------------------------------------------------------------------------|
-| setDeploymentVersion  | [DeploymentVersion](#deploymentversion) | Specifies the version to set.                                                          |
-| target                | [Target](#target-property)              | Specifies the target group within the iOS project where the resource should be added.  |
+| Property             | Type                                    | Description                                                                           |
+|:---------------------|:----------------------------------------|---------------------------------------------------------------------------------------|
+| setDeploymentVersion | [DeploymentVersion](#deploymentversion) | Specifies the version to set.                                                         |
+| target               | [Target](#target-property)              | Specifies the target group within the iOS project where the resource should be added. |
 
 #### DeploymentVersion
 
@@ -148,15 +148,15 @@ This action will expose the `name.target` variable which will hold the name of t
 
 ### Add configuration
 
-| Property          | Type                       | Description                                                                                                                                                |
-|:------------------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| addConfiguration  | string or `{file: string}` | Creates or updates xcconfig configuration file.  It can be a string or an object with a `file` field that points to a file containing the code to append.  |
+| Property         | Type                       | Description                                                                                                                                               |
+|:-----------------|:---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| addConfiguration | string or `{file: string}` | Creates or updates xcconfig configuration file.  It can be a string or an object with a `file` field that points to a file containing the code to append. |
 
 ### Add pre build run script action
 
-| Property                    | Type                       | Description                                                                                                                                                       |
-|:----------------------------|:---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| addPreBuildRunScriptAction  | string or `{file: string}` | Adds a pre build run script action into shared scheme.  It can be a string or an object with a `file` field that points to a file containing the code to append.  |
+| Property                   | Type                       | Description                                                                                                                                                      |
+|:---------------------------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| addPreBuildRunScriptAction | string or `{file: string}` | Adds a pre build run script action into shared scheme.  It can be a string or an object with a `file` field that points to a file containing the code to append. |
 
 Usage Example
 -------------

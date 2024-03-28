@@ -392,6 +392,15 @@ export type PromptTaskType = ModTaskBase &
 
 export type PromptActionType = ActionBase & Prompt;
 
+// babel config task
+
+export type BabelConfigTaskType = ModTaskBase &
+  ActionsType<ContentModifierType<BabelConfigBlockType>> & {
+    task: 'babel_config';
+  };
+
+export type BabelConfigBlockType = 'presets' | 'plugins';
+
 export type ModTaskBase = {
   name?: string;
   label?: string;
@@ -417,7 +426,8 @@ export type ModStep =
   | FsTaskType
   | JsonTaskType
   | PromptTaskType
-  | ShellTaskType;
+  | ShellTaskType
+  | BabelConfigTaskType;
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {

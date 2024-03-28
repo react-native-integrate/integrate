@@ -1,21 +1,21 @@
 ---
-sidebar_position: 1
-title: AppDelegate.mm
+sidebar_position: 6
+title: NotificationViewController.m
 ---
 
-# App Delegate Task Configuration (`app_delegate`)
+# Notification View Controller Task Configuration (`notification_view_controller`)
 
-_Modify AppDelegate.mm file_
+_Modify NotificationViewController.m file_
 
-The `app_delegate` task is used to modify the AppDelegate.mm file in an iOS project. This task allows you to insert code, import statements, or
-comments into specific methods within the AppDelegate.mm file. The modifications can be made before or after a specified point in the method. This
-task is particularly useful for integrating third-party libraries or SDKs that require changes to the AppDelegate file.
+The `notification_view_controller` task is used to modify the NotificationViewController.m file in an iOS project. This task allows you to insert
+code, import statements, or comments into specific methods within the NotificationViewController.m file. The modifications can be made before or after
+a specified point in the method.
 
 ## Task Properties
 
 | Property | Type                                            | Description                                                                                                                                              |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "app_delegate", required                        | Specifies the task type, which should be set to "app_delegate" for this task.                                                                            |
+| task     | "notification_view_controller", required        | Specifies the task type, which should be set to "notification_view_controller" for this task.                                                            |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -32,12 +32,12 @@ task is particularly useful for integrating third-party libraries or SDKs that r
 
 ### Context reduction properties
 
-| Property | Type                                                 | Description                                                                                                                                                                                                                                                                                |
-|:---------|:-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| block    | one of [Allowed Method Names](#allowed-method-names) | Specifies the name of the method within AppDelegate.mm where the modification should be applied. It must match one of the allowed method names. See [Allowed Method Names](#allowed-method-names) section for details. Omitting this field instructs the action item to modify whole file. |
-| before   | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                    |
-| after    | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                     |
-| search   | string or `{regex: string, flags: string}`           | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                                                                                                           |
+| Property | Type                                                 | Description                                                                                                                                                                                                                                                                                              |
+|:---------|:-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| block    | one of [Allowed Method Names](#allowed-method-names) | Specifies the name of the method within NotificationViewController.m where the modification should be applied. It must match one of the allowed method names. See [Allowed Method Names](#allowed-method-names) section for details. Omitting this field instructs the action item to modify whole file. |
+| before   | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                                  |
+| after    | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                                   |
+| search   | string or `{regex: string, flags: string}`           | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                                                                                                                         |
 
 ### Context modification properties
 
@@ -58,40 +58,28 @@ task is particularly useful for integrating third-party libraries or SDKs that r
 
 ### Allowed Method Names
 
-The `block` field within the action items must match one of the allowed method names within the AppDelegate.mm file. The method is created if it does
-not exist. The following method names are allowed:
+The `block` field within the action items must match one of the allowed method names within the NotificationViewController.m file. The method is
+created if it does not exist. The following method names are allowed:
 
-- `didFinishLaunchingWithOptions`
-- `applicationDidBecomeActive`
-- `applicationWillResignActive`
-- `applicationDidEnterBackground`
-- `applicationWillEnterForeground`
-- `applicationWillTerminate`
-- `openURL`
-- `restorationHandler`
-- `didRegisterForRemoteNotificationsWithDeviceToken`
-- `didFailToRegisterForRemoteNotificationsWithError`
-- `didReceiveRemoteNotification`
-- `fetchCompletionHandler`
+- `viewDidLoad`
+- `viewWillAppear`
+- `viewDidAppear`
+- `viewWillDisappear`
+- `dealloc`
+- `didReceiveNotification`
+- `didReceiveNotificationResponse`
 
 ## Example
 
-Here's an example of how to use the `app_delegate` task:
+Here's an example of how to use the `notification_view_controller` task:
 
 ```yaml
-task: app_delegate
-label: "Integrate Firebase"
+task: notification_view_controller
+label: Replacing NotificationViewController.m content
+target: SomeNotificationViewControllerExtension
 actions:
-  - prepend: "#import <Firebase.h>"
-  - block: "didFinishLaunchingWithOptions"
-    prepend: "[FIRApp configure];"
-  - block: "openURL"
-    before: "return YES;"
-    append: "// Handle custom URL schemes here."
+  - replace:
+      file: .integrate/MyNotificationViewController.m
 ```
 
-In this example, the task is labeled "Integrate Firebase." It defines three action items:
-
-1. It prepends the header import to the file `#import <Firebase.h>`.
-2. In the `didFinishLaunchingWithOptions` method, it prepends the code `[FIRApp configure];`.
-3. In the `openURL` method, it adds a comment before the `return YES;` statement, followed by code to handle custom URL schemes.
+In this example, we replace `NotificationViewController.m` file with the contents of `.integrate/MyNotificationViewController.m`.

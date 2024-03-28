@@ -1,11 +1,15 @@
 ---
-sidebar_position: 1
+sidebar_position: 5
 title: NotificationService.m
 ---
+
 # Notification Service Task Configuration (`notification_service`)
+
 _Modify NotificationService.m file_
 
-The `notification_service` task is used to modify the NotificationService.m file in an iOS project. This task allows you to insert code, import statements, or comments into specific methods within the NotificationService.m file. The modifications can be made before or after a specified point in the method.
+The `notification_service` task is used to modify the NotificationService.m file in an iOS project. This task allows you to insert code, import
+statements, or comments into specific methods within the NotificationService.m file. The modifications can be made before or after a specified point
+in the method.
 
 ## Task Properties
 
@@ -21,10 +25,10 @@ The `notification_service` task is used to modify the NotificationService.m file
 
 ### Common properties
 
-| Property   | Type                                       | Description                                                                                                                                              |
-|:-----------|:-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name       | string                                     | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
-| when       | object                                     | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
+| Property | Type   | Description                                                                                                                                              |
+|:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 
 ### Context reduction properties
 
@@ -37,27 +41,28 @@ The `notification_service` task is used to modify the NotificationService.m file
 
 ### Context modification properties
 
-| Property  | Type                       | Description                                                                                                                                                                  |
-|:----------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| prepend   | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
-| append    | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
-| replace   | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
+| Property | Type                       | Description                                                                                                                                                                  |
+|:---------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| prepend  | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
+| append   | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
+| replace  | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
 
 ### Other properties
 
-| Property       | Type    | Description                                                                                                                                                                                                                                   |
-|:---------------|:--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| exact          | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                                          |
-| strict         | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field.                      |
-| ifNotPresent   | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                                                    |
-| comment        | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                                                |
+| Property     | Type    | Description                                                                                                                                                                                                              |
+|:-------------|:--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| exact        | boolean | A boolean flag that modifies the whitespace and new line management.                                                                                                                                                     |
+| strict       | boolean | Specifies the behavior of the `before` and `after` fields. If set to `true`, the task will throw an error if the text in the `before` or `after` field is not found in the context, otherwise, it will ignore the field. |
+| ifNotPresent | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                               |
+| comment      | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                           |
 
 ### Allowed Method Names
 
-The `block` field within the action items must match one of the allowed method names within the NotificationService.m file. The method is created if it does not exist. The following method names are allowed:
+The `block` field within the action items must match one of the allowed method names within the NotificationService.m file. The method is created if
+it does not exist. The following method names are allowed:
 
--   `didReceiveNotificationRequest`
--   `serviceExtensionTimeWillExpire`
+- `didReceiveNotificationRequest`
+- `serviceExtensionTimeWillExpire`
 
 ## Example
 

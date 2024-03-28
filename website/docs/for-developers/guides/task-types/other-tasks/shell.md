@@ -1,8 +1,10 @@
 ---
-sidebar_position: 4
+sidebar_position: 3
 title: Shell Commands
 ---
+
 # Shell Task Configuration (`shell`)
+
 _Run shell commands_
 
 The `shell` task type allows you to run shell commands.
@@ -39,19 +41,21 @@ steps:
       - command: npx react-native-asset
       - command: some-command --some-flag "some literal args"
       - command: other-command
-        args: 
+        args:
           - --some-flag
           - "some \"complex\" args"
 ```
+
 :::tip
 Specify `name` field for this action to expose the `name.output` variable which will hold the output of the process.
 
 #### Example:
+
 ```yaml
   # run command 
   - command: npx react-native-asset
     name: cmd_asset # Give it a name
- 
+
   # you can run another command if previous was success and output contains some value
   - when:
       cmd_asset: done
@@ -59,10 +63,12 @@ Specify `name` field for this action to expose the `name.output` variable which 
         $regex: somevalue
     command: some-other-command
  ```
+
 :::
 
 :::warning
-`shell` commands that are used in package integrations will always ask permission from user before execution. User may choose to skip the execution, so don't rely on it too much.
+`shell` commands that are used in package integrations will always ask permission from user before execution. User may choose to skip the execution,
+so don't rely on it too much.
 
 It does not ask permission when used in [upgrade.yml](../../../../upgrade/configuration).
 :::
