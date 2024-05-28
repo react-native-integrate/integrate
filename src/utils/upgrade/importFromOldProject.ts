@@ -14,6 +14,7 @@ import { importAndroidVersionCode } from './android/importAndroidVersionCode';
 import { importAndroidVersionName } from './android/importAndroidVersionName';
 import { importIosAssets } from './ios/importIosAssets';
 import { importIosBundleId } from './ios/importIosBundleId';
+import { importIosDevelopmentTeam } from './ios/importIosDevelopmentTeam';
 import { importIosDisplayName } from './ios/importIosDisplayName';
 import { importIosMarketingVersion } from './ios/importIosMarketingVersion';
 import { importIosProjectVersion } from './ios/importIosProjectVersion';
@@ -38,6 +39,7 @@ export async function importFromOldProject(
     importIosDisplayName(oldProjectPath),
     importIosProjectVersion(oldProjectPath),
     importIosMarketingVersion(oldProjectPath),
+    importIosDevelopmentTeam(oldProjectPath),
     importIosAssets(oldProjectPath),
     importGitFolder(oldProjectPath),
   ].filter(d => d != null) as ImportGetter[];
