@@ -85,7 +85,7 @@ export async function runUpgradeTasks(
         const stat = fs.lstatSync(importPath);
         if (stat.isDirectory()) {
           filesToCopy.push(
-            ...(await glob(importPath + '/**/*', { nodir: true }))
+            ...(await glob(importPath + '/**/*', { nodir: true, dot: true }))
           );
         } else {
           filesToCopy.push(importPath);

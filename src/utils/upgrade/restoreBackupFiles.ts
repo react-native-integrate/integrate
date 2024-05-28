@@ -16,7 +16,7 @@ export async function restoreBackupFiles(): Promise<boolean> {
     [getProjectPath(), Constants.UPGRADE_FOLDER_NAME, 'imports', '**/*'].join(
       '/'
     ),
-    { nodir: true }
+    { nodir: true, dot: true }
   );
   if (backupFiles.length === 0) {
     logMessageGray('skipped, found no files to import');

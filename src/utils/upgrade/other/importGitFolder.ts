@@ -20,7 +20,7 @@ export function importGitFolder(projectPath: string): ImportGetter | null {
     if (!fs.existsSync(gitFolderPath)) return null;
     const files = globSync(
       [projectPath, Constants.GIT_FOLDER_NAME, '**/*'].join('/'),
-      { nodir: true }
+      { nodir: true, dot: true }
     );
 
     return {
