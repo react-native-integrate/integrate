@@ -12,6 +12,10 @@ describe('importAndroidLaunchIcon', () => {
       'old image data'
     );
     mockFs.writeFileSync(
+      '/oldProject/android/app/src/main/res/drawable-any/ic_notification.png',
+      'old image data'
+    );
+    mockFs.writeFileSync(
       path.join(
         getProjectPath(),
         'android/app/src/main/res/mipmap-any/ic_launcher.png'

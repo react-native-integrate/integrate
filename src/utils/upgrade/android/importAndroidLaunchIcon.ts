@@ -14,6 +14,10 @@ export function importAndroidLaunchIcon(
       [projectPath, 'android/app/src/main/res/mipmap-*/*'].join('/'),
       { nodir: true }
     );
+    const drawables = globSync(
+      [projectPath, 'android/app/src/main/res/drawable*/*'].join('/'),
+      { nodir: true }
+    );
     // get launcher icon and launcher round icon name from AndroidManifest.xml
     const manifestPath = path.join(
       projectPath,
@@ -28,9 +32,10 @@ export function importAndroidLaunchIcon(
     if (!icon) return null;
     return {
       id: 'androidLaunchIcon',
-      title: 'Android Launch Icon',
+      title: 'Android Icons',
       value: icon,
-      apply: () => setAndroidLaunchIcon(projectPath, mipmaps, icon, roundIcon),
+      apply: () =>
+        setAndroidLaunchIcon(projectPath, mipmaps, drawables, icon, roundIcon),
     };
   } catch (e) {
     return null;
@@ -40,6 +45,7 @@ export function importAndroidLaunchIcon(
 async function setAndroidLaunchIcon(
   oldProjectPath: string,
   mipmaps: string[],
+  drawables: string[],
   icon: string,
   roundIcon: string | undefined
 ) {
@@ -60,10 +66,7 @@ async function setAndroidLaunchIcon(
       path.join(oldProjectPath, 'android'),
       mipmap
     );
-    const destination = path.join(
-      path.join(getProjectPath(), 'android'),
-      relativePath
-    );
+    const destination = path.join(getProjectPath(), 'android', relativePath);
 
     // ensure dir exists
     await new Promise(r =>
@@ -74,6 +77,29 @@ async function setAndroidLaunchIcon(
     await new Promise(r => fs.copyFile(mipmap, destination, r));
   }
   logMessage('copied mipmaps from old project');
+
+  // copy new drawables
+  for (const drawable of drawables) {
+    // get path after android
+
+    const relativePath = path.relative(
+      path.join(oldProjectPath, 'android'),
+      drawable
+    );
+    const destination = path.join(getProjectPath(), 'android', relativePath);
+
+    // do not overwrite if exists
+    if (fs.existsSync(destination)) continue;
+
+    // ensure dir exists
+    await new Promise(r =>
+      fs.mkdir(path.dirname(destination), { recursive: true }, r)
+    );
+
+    // copy file
+    await new Promise(r => fs.copyFile(drawable, destination, r));
+  }
+  logMessage('copied drawables from old project');
 
   // replace icon and round icon attributes in AndroidManifest.xml
   const manifestPath = path.join(
