@@ -38,7 +38,7 @@ export const TagDefinitions = {
     comment: '<!--.*?-->',
   },
   POD: {
-    open: '\\b(do\\b(\\s\\|.*?\\|)?|(?<!end )if\\b)',
+    open: '\\b((def|do)\\b(\\s\\|.*?\\|)?|(?<!end )if\\b)',
     close: '\\bend(\\sif)?\\b',
     comment: '(#.*?$|=begin.*?=end)',
   },
