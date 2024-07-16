@@ -1166,6 +1166,58 @@
                         "type"
                     ],
                     "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "initialValue": {
+                            "$ref": "#/definitions/OptionValue"
+                        },
+                        "maxItems": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "options": {
+                            "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                    "hint": {
+                                        "type": "string"
+                                    },
+                                    "label": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "$ref": "#/definitions/OptionValue"
+                                    }
+                                },
+                                "required": [
+                                    "value"
+                                ],
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "text": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "const": "select",
+                            "type": "string"
+                        },
+                        "when": {
+                            "$ref": "#/definitions/AnyObject"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "options",
+                        "text",
+                        "type"
+                    ],
+                    "type": "object"
                 }
             ]
         },

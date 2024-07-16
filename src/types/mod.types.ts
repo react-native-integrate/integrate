@@ -1,6 +1,7 @@
 import {
   ConfirmPromptArgs,
   MultiselectPromptArgs,
+  SelectPromptArgs,
   TextPromptArgs,
 } from './prompt.types';
 
@@ -448,11 +449,14 @@ export type ConfirmPrompt = ConfirmPromptArgs & {
 export type MultiselectPrompt = MultiselectPromptArgs & {
   type: 'multiselect';
 };
+export type SelectPrompt = SelectPromptArgs & {
+  type: 'select';
+};
 
 export type Prompt = {
   name: string;
   text: string;
-} & (TextPrompt | ConfirmPrompt | MultiselectPrompt);
+} & (TextPrompt | ConfirmPrompt | MultiselectPrompt | SelectPrompt);
 
 /**
  * @TJS-additionalProperties true

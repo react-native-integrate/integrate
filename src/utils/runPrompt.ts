@@ -1,4 +1,4 @@
-import { confirm, multiselect, text } from '../prompter';
+import { confirm, multiselect, select, text } from '../prompter';
 import { Prompt, ValidationType } from '../types/mod.types';
 import { transformTextInObject, variables } from '../variables';
 import { handlePackageUpgradeInput } from './getPackageUpgradeInput';
@@ -18,6 +18,9 @@ export async function runPrompt(
       break;
     case 'multiselect':
       inputValue = await multiselect(prompt.text, prompt);
+      break;
+    case 'select':
+      inputValue = await select(prompt.text, prompt);
       break;
     default:
       inputValue = await text(prompt.text, {
