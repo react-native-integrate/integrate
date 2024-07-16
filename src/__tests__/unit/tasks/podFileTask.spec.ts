@@ -675,9 +675,9 @@ target 'TestApp' do
 
   pre_install do |installer| 
     Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
-      installer.pod_targets.each do |pod|
-        if $static_libs.include?(pod.name)
-          def pod.build_type;
+    installer.pod_targets.each do |pod|
+      if $static_libs.include?(pod.name)
+        def pod.build_type;
           Pod::BuildType.static_library
         end
       end
@@ -712,9 +712,9 @@ target 'TestApp' do
 
   pre_install do |installer| 
     Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
-      installer.pod_targets.each do |pod|
-        if $static_libs.include?(pod.name)
-          def pod.build_type;
+    installer.pod_targets.each do |pod|
+      if $static_libs.include?(pod.name)
+        def pod.build_type;
           Pod::BuildType.static_library
         end
       end
