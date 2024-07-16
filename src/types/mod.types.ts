@@ -357,6 +357,13 @@ export type GitignoreTaskType = ModTaskBase &
     task: 'gitignore';
   };
 
+// gradle properties task
+
+export type GradlePropertiesTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    task: 'gradle_properties';
+  };
+
 // fs task
 
 export type FsTaskType = ModTaskBase &
@@ -423,6 +430,7 @@ export type ModStep =
   | XcodeTaskType
   | PodFileTaskType
   | GitignoreTaskType
+  | GradlePropertiesTaskType
   | FsTaskType
   | JsonTaskType
   | PromptTaskType

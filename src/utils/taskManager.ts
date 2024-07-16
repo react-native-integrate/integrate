@@ -6,6 +6,7 @@ import * as android_manifest from '../tasks/androidManifestTask';
 import * as strings_xml from '../tasks/stringsXmlTask';
 import * as podfile from '../tasks/podFileTask';
 import * as gitignore from '../tasks/gitignoreTask';
+import * as gradleProperties from '../tasks/gradlePropertiesTask';
 import * as fs from '../tasks/fsTask';
 import * as json from '../tasks/jsonTask';
 import * as prompt from '../tasks/promptTask';
@@ -26,6 +27,7 @@ const task: Record<string, TaskExports> = {
   android_manifest,
   podfile,
   gitignore,
+  gradleProperties,
   fs,
   json,
   prompt,

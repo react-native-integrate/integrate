@@ -21,6 +21,7 @@ export const Constants = {
   MAIN_ACTIVITY_KT_FILE_NAME: 'MainActivity.kt',
   POD_FILE_NAME: 'Podfile',
   GITIGNORE_FILE_NAME: '.gitignore',
+  GRADLE_PROPERTIES_FILE_NAME: 'gradle.properties',
   XCODEPROJ_EXT: '.xcodeproj',
   CONFIG_FILE_NAME: 'integrate.yml',
   XCODE_APPLICATION_TYPE: 'com.apple.product-type.application',

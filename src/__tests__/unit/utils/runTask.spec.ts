@@ -26,6 +26,9 @@ const mocks = {
   android_manifest: {
     runTask: jest.fn(),
   },
+  gradle_properties: {
+    runTask: jest.fn(),
+  },
   podfile: {
     runTask: jest.fn(),
   },

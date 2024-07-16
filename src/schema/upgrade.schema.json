@@ -530,6 +530,41 @@
             ],
             "type": "object"
         },
+        "GradlePropertiesTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "task": {
+                    "const": "gradle_properties",
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "actions",
+                "task"
+            ],
+            "type": "object"
+        },
         "JsonTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -688,6 +723,9 @@
                 },
                 {
                     "$ref": "#/definitions/GitignoreTaskType"
+                },
+                {
+                    "$ref": "#/definitions/GradlePropertiesTaskType"
                 },
                 {
                     "$ref": "#/definitions/FsTaskType"
