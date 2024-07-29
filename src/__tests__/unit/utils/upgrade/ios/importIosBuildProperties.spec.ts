@@ -2,11 +2,11 @@ require('../../../../mocks/mockAll');
 import { ImportGetter } from '../../../../../types/upgrade.types';
 import { escapeRegExp } from '../../../../../utils/escapeRegExp';
 import { getPbxProjectPath } from '../../../../../utils/getIosProjectPath';
-import { importIosDevelopmentTeam } from '../../../../../utils/upgrade/ios/importIosDevelopmentTeam';
+import { importIosBuildProperties } from '../../../../../utils/upgrade/ios/importIosBuildProperties';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPbxProjTemplate } from '../../../../mocks/mockPbxProjTemplate';
 
-describe('importIosDevelopmentTeam', () => {
+describe('importIosBuildProperties', () => {
   it('should get project version', async () => {
     mockFs.writeFileSync(
       getPbxProjectPath('/oldProject'),
@@ -17,7 +17,7 @@ describe('importIosDevelopmentTeam', () => {
     );
     mockFs.writeFileSync(getPbxProjectPath(), mockPbxProjTemplate);
 
-    const importGetter = importIosDevelopmentTeam(
+    const importGetter = importIosBuildProperties(
       '/oldProject'
     ) as ImportGetter;
     expect(importGetter).toBeTruthy();
@@ -31,7 +31,7 @@ describe('importIosDevelopmentTeam', () => {
   it('should handle errors', () => {
     mockFs.setReadPermission(false);
 
-    const importGetter = importIosDevelopmentTeam(
+    const importGetter = importIosBuildProperties(
       '/oldProject'
     ) as ImportGetter;
     expect(importGetter).toBeNull();
@@ -44,7 +44,7 @@ describe('importIosDevelopmentTeam', () => {
         'random = "random"'
       )
     );
-    const importGetter = importIosDevelopmentTeam(
+    const importGetter = importIosBuildProperties(
       '/oldProject'
     ) as ImportGetter;
     expect(importGetter).toBeNull();
