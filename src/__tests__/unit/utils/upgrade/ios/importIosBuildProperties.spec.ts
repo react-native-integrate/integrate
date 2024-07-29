@@ -21,7 +21,7 @@ describe('importIosBuildProperties', () => {
       '/oldProject'
     ) as ImportGetter;
     expect(importGetter).toBeTruthy();
-    expect(importGetter.value).toEqual('ABCD');
+    expect(importGetter.value).toEqual('2 properties');
 
     await importGetter.apply();
     expect(mockFs.readFileSync(getPbxProjectPath())).toContain(
