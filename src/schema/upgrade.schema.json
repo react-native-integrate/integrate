@@ -1602,6 +1602,36 @@
             ],
             "type": "object"
         },
+        "XcodeAddDomainsCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "domains",
+                    "type": "string"
+                },
+                "domains": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "addCapability",
+                "domains",
+                "target"
+            ],
+            "type": "object"
+        },
         "XcodeAddFile": {
             "additionalProperties": false,
             "properties": {
@@ -1835,6 +1865,9 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeAddGroupCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddDomainsCapability"
                 },
                 {
                     "$ref": "#/definitions/XcodeAddBMCapability"

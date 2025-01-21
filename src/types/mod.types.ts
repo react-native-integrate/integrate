@@ -255,6 +255,11 @@ export type XcodeAddGroupCapability = XcodeAddCapabilityBase & {
   groups: string[];
 };
 
+export type XcodeAddDomainsCapability = XcodeAddCapabilityBase & {
+  addCapability: 'domains';
+  domains: string[];
+};
+
 export type XcodeAddBMCapability = XcodeAddCapabilityBase & {
   addCapability: 'background-mode';
   modes: XcodeAddBMCapabilityModes[];
@@ -308,6 +313,7 @@ export type XcodeAddKSCapability = XcodeAddCapabilityBase & {
 export type XcodeAddCapability =
   | XcodeAddCommonCapability
   | XcodeAddGroupCapability
+  | XcodeAddDomainsCapability
   | XcodeAddBMCapability
   | XcodeAddGCCapability
   | XcodeAddMapsCapability
