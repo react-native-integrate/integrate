@@ -45,7 +45,7 @@ function writeMockAppDelegate(
 ): string {
   const appDelegatePath = path.resolve(
     __dirname,
-    `../${name}/ios/test/${Constants.APP_DELEGATE_FILE_NAME}`
+    `../${name}/ios/test/${Constants.APP_DELEGATE_MM_FILE_NAME}`
   );
   mockFs.writeFileSync(appDelegatePath, appDelegateContent);
   return appDelegatePath;
@@ -56,7 +56,7 @@ function writeMockNotificationService(
 ): string {
   const notificationServicePath = path.resolve(
     __dirname,
-    `../${name}/ios/test/${Constants.NOTIFICATION_SERVICE_FILE_NAME}`
+    `../${name}/ios/test/${Constants.NOTIFICATION_SERVICE_M_FILE_NAME}`
   );
   mockFs.writeFileSync(notificationServicePath, notificationServiceContent);
   return notificationServicePath;
@@ -67,7 +67,7 @@ function writeMockNotificationContent(
 ): string {
   const notificationContentPath = path.resolve(
     __dirname,
-    `../${name}/ios/test/${Constants.NOTIFICATION_VIEW_CONTROLLER_FILE_NAME}`
+    `../${name}/ios/test/${Constants.NOTIFICATION_VIEW_CONTROLLER_M_FILE_NAME}`
   );
   mockFs.writeFileSync(notificationContentPath, notificationContentContent);
   return notificationContentPath;

@@ -108,6 +108,9 @@
                 "label": {
                     "type": "string"
                 },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -565,6 +568,13 @@
             ],
             "type": "object"
         },
+        "IosCodeType": {
+            "enum": [
+                "objc",
+                "swift"
+            ],
+            "type": "string"
+        },
         "JsonTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -753,6 +763,9 @@
                 "label": {
                     "type": "string"
                 },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -791,6 +804,9 @@
                 },
                 "label": {
                     "type": "string"
+                },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
                 },
                 "name": {
                     "type": "string"
