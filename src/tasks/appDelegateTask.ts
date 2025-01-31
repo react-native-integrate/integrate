@@ -113,7 +113,7 @@ const findOrCreateBlock = (lang?: IosCodeType) => {
       end: blockEndIndex,
       match: blockBody,
       justCreated,
-      space: ' '.repeat(2),
+      space: _lang === 'swift' ? ' '.repeat(2) : '',
     };
 
     return {
