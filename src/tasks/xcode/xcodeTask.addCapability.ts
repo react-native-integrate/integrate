@@ -5,6 +5,7 @@ import { Constants } from '../../constants';
 import { logMessage } from '../../prompter';
 import { XcodeAddCapability } from '../../types/mod.types';
 import { getText } from '../../variables';
+import { addDomainsCapability } from './xcodeTask.addCapability.ad';
 import { addBMCapability } from './xcodeTask.addCapability.bm';
 import { addCommonCapability } from './xcodeTask.addCapability.common';
 import { addGCCapability } from './xcodeTask.addCapability.gc';
@@ -88,6 +89,14 @@ export function applyAddCapability(
         filename,
         targetName: groupName,
         groups: action.groups,
+      });
+      break;
+    case 'domains':
+      addDomainsCapability({
+        destination,
+        filename,
+        targetName: groupName,
+        domains: action.domains,
       });
       break;
     case 'background-mode':

@@ -283,6 +283,11 @@ describe('xcodeTask', () => {
           groups: ['group.test'],
         },
         {
+          addCapability: 'domains',
+          target: 'main',
+          domains: ['applinks:domain.test'],
+        },
+        {
           addCapability: 'keychain-sharing',
           target: 'main',
           groups: ['group.test'],

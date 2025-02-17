@@ -3,6 +3,7 @@ import path from 'path';
 import { Constants } from '../constants';
 import {
   BlockContentType,
+  IosCodeType,
   NotificationServiceBlockType,
   NotificationServiceTaskType,
 } from '../types/mod.types';
@@ -42,7 +43,7 @@ export async function notificationServiceTask(args: {
     try {
       content = await applyContentModification({
         action,
-        findOrCreateBlock,
+        findOrCreateBlock: findOrCreateBlock(task.lang),
         configPath,
         packageName,
         content,
@@ -66,80 +67,111 @@ export async function notificationServiceTask(args: {
   return content;
 }
 
-function findOrCreateBlock(
-  content: string,
-  block: string
-): {
-  blockContent: BlockContentType;
-  content: string;
-} {
-  let blockContent = {
-    start: 0,
-    end: content.length,
-    match: content,
-    space: '',
-    justCreated: false,
+const findOrCreateBlock = (lang?: IosCodeType) => {
+  const _lang = lang || 'objc';
+  return (
+    content: string,
+    block: string
+  ): {
+    blockContent: BlockContentType;
+    content: string;
+  } => {
+    let blockContent = {
+      start: 0,
+      end: content.length,
+      match: content,
+      space: '',
+      justCreated: false,
+    };
+    const blockDefinition =
+      blockDefinitions[_lang][block as NotificationServiceBlockType];
+
+    if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
+    const { regex, makeNewMethod } = blockDefinition;
+    let blockStart = regex.exec(content);
+
+    const justCreated = !blockStart;
+    if (!blockStart) {
+      const newMethod = makeNewMethod();
+      content = appendNewMethod(content, newMethod, _lang);
+
+      blockStart = regex.exec(content);
+    }
+    if (!blockStart) {
+      throw new Error('block could not be inserted, something wrong?');
+    }
+    const blockEndIndex = findClosingTagIndex(
+      content,
+      blockStart.index + blockStart[0].length
+    );
+    const blockBody = content.substring(
+      blockStart.index + blockStart[0].length,
+      blockEndIndex
+    );
+    blockContent = {
+      start: blockStart.index + blockStart[0].length,
+      end: blockEndIndex,
+      match: blockBody,
+      justCreated,
+      space: _lang === 'swift' ? ' '.repeat(2) : '',
+    };
+
+    return {
+      blockContent,
+      content,
+    };
   };
-  const blockDefinition =
-    blockDefinitions[block as NotificationServiceBlockType];
-
-  if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
-  const { regex, makeNewMethod } = blockDefinition;
-  let blockStart = regex.exec(content);
-
-  const justCreated = !blockStart;
-  if (!blockStart) {
-    const newMethod = makeNewMethod();
-    content = appendNewMethod(content, newMethod);
-
-    blockStart = regex.exec(content);
-  }
-  if (!blockStart) {
-    throw new Error('block could not be inserted, something wrong?');
-  }
-  const blockEndIndex = findClosingTagIndex(
-    content,
-    blockStart.index + blockStart[0].length
-  );
-  const blockBody = content.substring(
-    blockStart.index + blockStart[0].length,
-    blockEndIndex
-  );
-  blockContent = {
-    start: blockStart.index + blockStart[0].length,
-    end: blockEndIndex,
-    match: blockBody,
-    justCreated,
-    space: '',
-  };
-
-  return {
-    blockContent,
-    content,
-  };
-}
+};
 
 const blockDefinitions: Record<
-  NotificationServiceBlockType,
-  { regex: RegExp; makeNewMethod: () => string }
+  IosCodeType,
+  Record<
+    NotificationServiceBlockType,
+    { regex: RegExp; makeNewMethod: () => string }
+  >
 > = {
-  didReceiveNotificationRequest: {
-    regex: /didReceiveNotificationRequest:.*?withContentHandler.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {}';
+  objc: {
+    didReceiveNotificationRequest: {
+      regex: /didReceiveNotificationRequest:.*?withContentHandler.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {}';
+      },
+    },
+    serviceExtensionTimeWillExpire: {
+      regex: /serviceExtensionTimeWillExpire.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)serviceExtensionTimeWillExpire {}';
+      },
     },
   },
-  serviceExtensionTimeWillExpire: {
-    regex: /serviceExtensionTimeWillExpire.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)serviceExtensionTimeWillExpire {}';
+  swift: {
+    didReceiveNotificationRequest: {
+      regex: /didReceive.*?\{/s,
+      makeNewMethod: () => {
+        return `override func didReceive(
+    _ request: UNNotificationRequest, 
+    withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
+) {}`;
+      },
+    },
+    serviceExtensionTimeWillExpire: {
+      regex: /serviceExtensionTimeWillExpire.*?\{/s,
+      makeNewMethod: () => {
+        return 'override func serviceExtensionTimeWillExpire() {}';
+      },
     },
   },
 };
 
-function appendNewMethod(content: string, newMethod: string): string {
+function appendNewMethod(
+  content: string,
+  newMethod: string,
+  lang: IosCodeType
+): string {
   const notificationServiceMatch =
-    /@implementation NotificationService.*?@end/s.exec(content);
+    lang === 'objc'
+      ? /@implementation NotificationService.*?@end/s.exec(content)
+      : /class NotificationService:.*\}/s.exec(content);
   if (!notificationServiceMatch)
     throw new Error('Could not find @implementation NotificationService');
   const codeToInsert = `${newMethod}
@@ -147,20 +179,24 @@ function appendNewMethod(content: string, newMethod: string): string {
 `;
   return stringSplice(
     content,
-    notificationServiceMatch.index + notificationServiceMatch[0].length - 4,
+    notificationServiceMatch.index +
+      notificationServiceMatch[0].length -
+      (lang === 'objc' ? 4 : 1),
     0,
     codeToInsert
   );
 }
 
-function getNotificationServicePath(target: string) {
+function getNotificationServicePath(target: string, lang?: IosCodeType) {
   const projectPath = getProjectPath();
 
   const notificationServicePath = path.join(
     projectPath,
     'ios',
     target,
-    Constants.NOTIFICATION_SERVICE_FILE_NAME
+    lang === 'swift'
+      ? Constants.NOTIFICATION_SERVICE_SWIFT_FILE_NAME
+      : Constants.NOTIFICATION_SERVICE_M_FILE_NAME
   );
   if (!fs.existsSync(notificationServicePath))
     throw new Error(
@@ -169,16 +205,17 @@ function getNotificationServicePath(target: string) {
   return notificationServicePath;
 }
 
-function readNotificationServiceContent(target: string) {
-  const notificationServicePath = getNotificationServicePath(target);
+function readNotificationServiceContent(target: string, lang?: IosCodeType) {
+  const notificationServicePath = getNotificationServicePath(target, lang);
   return fs.readFileSync(notificationServicePath, 'utf-8');
 }
 
 function writeNotificationServiceContent(
   content: string,
-  target: string
+  target: string,
+  lang?: IosCodeType
 ): void {
-  const notificationServicePath = getNotificationServicePath(target);
+  const notificationServicePath = getNotificationServicePath(target, lang);
   return fs.writeFileSync(notificationServicePath, content, 'utf-8');
 }
 
@@ -188,14 +225,17 @@ export async function runTask(args: {
   task: NotificationServiceTaskType;
 }): Promise<void> {
   args.task.target = getText(args.task.target);
-  let content = readNotificationServiceContent(args.task.target);
+  let content = readNotificationServiceContent(
+    args.task.target,
+    args.task.lang
+  );
 
   content = await notificationServiceTask({
     ...args,
     content,
   });
 
-  writeNotificationServiceContent(content, args.task.target);
+  writeNotificationServiceContent(content, args.task.target, args.task.lang);
 }
 
-export const summary = 'NotificationService.m modification';
+export const summary = 'NotificationService modification';

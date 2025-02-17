@@ -12,9 +12,9 @@ This is a command-line tool with two main points.
 
 ## Are you an Expo user?
 
-Then these functionalities are already provided to you by the managed workflow. Unless you have ejected from it, you do not need this tool.
+Then these functionalities are already provided to you by Expo Continuous Native Generation (CNG). You do not need this tool.
 
-## Why do I need it?
+## Why do you need it?
 
 If you work with bare React Native projects then you already know that upgrading is a pain in React Native. For a developer who has tens of projects, keeping them up to date is a very time-consuming matter. We often create a new project with the latest RN version and move JS/TS files from the old to the new one.
 
@@ -26,4 +26,4 @@ To be able keep up the existing projects with the latest RN version, but to also
 
 ## What's the goal?
 
-The ultimate objective of this project is to handle all native changes like Expo Managed, while retaining the complete power and freedom of a bare React Native workflow.
+The ultimate objective of this project is to handle all native changes like Expo CNG, while retaining the complete power and freedom of a bare React Native workflow.

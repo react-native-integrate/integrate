@@ -3,6 +3,7 @@ import path from 'path';
 import { Constants } from '../constants';
 import {
   BlockContentType,
+  IosCodeType,
   NotificationContentBlockType,
   NotificationViewControllerTaskType,
 } from '../types/mod.types';
@@ -42,7 +43,7 @@ export async function notificationViewControllerTask(args: {
     try {
       content = await applyContentModification({
         action,
-        findOrCreateBlock,
+        findOrCreateBlock: findOrCreateBlock(task.lang),
         configPath,
         packageName,
         content,
@@ -66,110 +67,179 @@ export async function notificationViewControllerTask(args: {
   return content;
 }
 
-function findOrCreateBlock(
-  content: string,
-  block: string
-): {
-  blockContent: BlockContentType;
-  content: string;
-} {
-  let blockContent = {
-    start: 0,
-    end: content.length,
-    match: content,
-    space: '',
-    justCreated: false,
+const findOrCreateBlock = (lang?: IosCodeType) => {
+  const _lang = lang || 'objc';
+  return (
+    content: string,
+    block: string
+  ): {
+    blockContent: BlockContentType;
+    content: string;
+  } => {
+    let blockContent = {
+      start: 0,
+      end: content.length,
+      match: content,
+      space: '',
+      justCreated: false,
+    };
+    const blockDefinition =
+      blockDefinitions[_lang][block as NotificationContentBlockType];
+
+    if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
+    const { regex, makeNewMethod } = blockDefinition;
+    let blockStart = regex.exec(content);
+
+    const justCreated = !blockStart;
+    if (!blockStart) {
+      const newMethod = makeNewMethod();
+      content = appendNewMethod(content, newMethod, _lang);
+
+      blockStart = regex.exec(content);
+    }
+    if (!blockStart) {
+      throw new Error('block could not be inserted, something wrong?');
+    }
+    const blockEndIndex = findClosingTagIndex(
+      content,
+      blockStart.index + blockStart[0].length
+    );
+    const blockBody = content.substring(
+      blockStart.index + blockStart[0].length,
+      blockEndIndex
+    );
+    blockContent = {
+      start: blockStart.index + blockStart[0].length,
+      end: blockEndIndex,
+      match: blockBody,
+      justCreated,
+      space: _lang === 'swift' ? ' '.repeat(2) : '',
+    };
+
+    return {
+      blockContent,
+      content,
+    };
   };
-  const blockDefinition =
-    blockDefinitions[block as NotificationContentBlockType];
-
-  if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
-  const { regex, makeNewMethod } = blockDefinition;
-  let blockStart = regex.exec(content);
-
-  const justCreated = !blockStart;
-  if (!blockStart) {
-    const newMethod = makeNewMethod();
-    content = appendNewMethod(content, newMethod);
-
-    blockStart = regex.exec(content);
-  }
-  if (!blockStart) {
-    throw new Error('block could not be inserted, something wrong?');
-  }
-  const blockEndIndex = findClosingTagIndex(
-    content,
-    blockStart.index + blockStart[0].length
-  );
-  const blockBody = content.substring(
-    blockStart.index + blockStart[0].length,
-    blockEndIndex
-  );
-  blockContent = {
-    start: blockStart.index + blockStart[0].length,
-    end: blockEndIndex,
-    match: blockBody,
-    justCreated,
-    space: '',
-  };
-
-  return {
-    blockContent,
-    content,
-  };
-}
+};
 
 const blockDefinitions: Record<
-  NotificationContentBlockType,
-  { regex: RegExp; makeNewMethod: () => string }
+  IosCodeType,
+  Record<
+    NotificationContentBlockType,
+    { regex: RegExp; makeNewMethod: () => string }
+  >
 > = {
-  viewDidLoad: {
-    regex: /viewDidLoad.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)viewDidLoad {}';
+  objc: {
+    viewDidLoad: {
+      regex: /viewDidLoad.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)viewDidLoad {}';
+      },
+    },
+    viewWillAppear: {
+      regex: /viewWillAppear.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)viewWillAppear:(BOOL)animated {}';
+      },
+    },
+    viewDidAppear: {
+      regex: /viewDidAppear.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)viewDidAppear:(BOOL)animated {}';
+      },
+    },
+    viewWillDisappear: {
+      regex: /viewWillDisappear.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)viewWillDisappear:(BOOL)animated {}';
+      },
+    },
+    dealloc: {
+      regex: /dealloc.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)dealloc {}';
+      },
+    },
+    didReceiveNotification: {
+      regex: /didReceiveNotification\b.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)didReceiveNotification:(UNNotification *)notification {}';
+      },
+    },
+    didReceiveNotificationResponse: {
+      regex: /didReceiveNotificationResponse.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption option))completion {}';
+      },
     },
   },
-  viewWillAppear: {
-    regex: /viewWillAppear.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)viewWillAppear:(BOOL)animated {}';
+  swift: {
+    viewDidLoad: {
+      regex: /viewDidLoad.*?\{/s,
+      makeNewMethod: () => {
+        return `override func viewDidLoad() {
+    super.viewDidLoad()
+}`;
+      },
     },
-  },
-  viewDidAppear: {
-    regex: /viewDidAppear.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)viewDidAppear:(BOOL)animated {}';
+    viewWillAppear: {
+      regex: /viewWillAppear.*?\{/s,
+      makeNewMethod: () => {
+        return `override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+}`;
+      },
     },
-  },
-  viewWillDisappear: {
-    regex: /viewWillDisappear.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)viewWillDisappear:(BOOL)animated {}';
+    viewDidAppear: {
+      regex: /viewDidAppear.*?\{/s,
+      makeNewMethod: () => {
+        return `override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+}`;
+      },
     },
-  },
-  dealloc: {
-    regex: /dealloc.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)dealloc {}';
+    viewWillDisappear: {
+      regex: /viewWillDisappear.*?\{/s,
+      makeNewMethod: () => {
+        return `override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+}`;
+      },
     },
-  },
-  didReceiveNotification: {
-    regex: /didReceiveNotification\b.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)didReceiveNotification:(UNNotification *)notification {}';
+    dealloc: {
+      regex: /deinit.*?\{/s,
+      makeNewMethod: () => {
+        return 'deinit {}';
+      },
     },
-  },
-  didReceiveNotificationResponse: {
-    regex: /didReceiveNotificationResponse.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption option))completion {}';
+    didReceiveNotification: {
+      regex: /didReceive\s*\(.*?UNNotification.*?\{/s,
+      makeNewMethod: () => {
+        return 'func didReceive(_ notification: UNNotification) {}';
+      },
+    },
+    didReceiveNotificationResponse: {
+      regex: /didReceive\s*\(.*?UNNotificationResponse.*?\{/s,
+      makeNewMethod: () => {
+        return `func didReceive(
+    _ response: UNNotificationResponse, 
+    completionHandler: @escaping (UNNotificationContentExtensionResponseOption) -> Void
+) {}`;
+      },
     },
   },
 };
 
-function appendNewMethod(content: string, newMethod: string): string {
+function appendNewMethod(
+  content: string,
+  newMethod: string,
+  lang: IosCodeType
+): string {
   const notificationContentMatch =
-    /@implementation NotificationViewController.*?@end/s.exec(content);
+    lang === 'objc'
+      ? /@implementation NotificationViewController.*?@end/s.exec(content)
+      : /class NotificationViewController:.*\}/s.exec(content);
   if (!notificationContentMatch)
     throw new Error(
       'Could not find @implementation NotificationViewController'
@@ -179,20 +249,24 @@ function appendNewMethod(content: string, newMethod: string): string {
 `;
   return stringSplice(
     content,
-    notificationContentMatch.index + notificationContentMatch[0].length - 4,
+    notificationContentMatch.index +
+      notificationContentMatch[0].length -
+      (lang === 'objc' ? 4 : 1),
     0,
     codeToInsert
   );
 }
 
-function getNotificationContentPath(target: string) {
+function getNotificationContentPath(target: string, lang?: IosCodeType) {
   const projectPath = getProjectPath();
 
   const notificationContentPath = path.join(
     projectPath,
     'ios',
     target,
-    Constants.NOTIFICATION_VIEW_CONTROLLER_FILE_NAME
+    lang === 'swift'
+      ? Constants.NOTIFICATION_VIEW_CONTROLLER_SWIFT_FILE_NAME
+      : Constants.NOTIFICATION_VIEW_CONTROLLER_M_FILE_NAME
   );
   if (!fs.existsSync(notificationContentPath))
     throw new Error(
@@ -201,16 +275,17 @@ function getNotificationContentPath(target: string) {
   return notificationContentPath;
 }
 
-function readNotificationContentContent(target: string) {
-  const notificationContentPath = getNotificationContentPath(target);
+function readNotificationContentContent(target: string, lang?: IosCodeType) {
+  const notificationContentPath = getNotificationContentPath(target, lang);
   return fs.readFileSync(notificationContentPath, 'utf-8');
 }
 
 function writeNotificationContentContent(
   content: string,
-  target: string
+  target: string,
+  lang?: IosCodeType
 ): void {
-  const notificationContentPath = getNotificationContentPath(target);
+  const notificationContentPath = getNotificationContentPath(target, lang);
   return fs.writeFileSync(notificationContentPath, content, 'utf-8');
 }
 
@@ -220,14 +295,17 @@ export async function runTask(args: {
   task: NotificationViewControllerTaskType;
 }): Promise<void> {
   args.task.target = getText(args.task.target);
-  let content = readNotificationContentContent(args.task.target);
+  let content = readNotificationContentContent(
+    args.task.target,
+    args.task.lang
+  );
 
   content = await notificationViewControllerTask({
     ...args,
     content,
   });
 
-  writeNotificationContentContent(content, args.task.target);
+  writeNotificationContentContent(content, args.task.target, args.task.lang);
 }
 
-export const summary = 'NotificationViewController.m modification';
+export const summary = 'NotificationViewController modification';

@@ -5,6 +5,7 @@ import {
   AppDelegateBlockType,
   AppDelegateTaskType,
   BlockContentType,
+  IosCodeType,
 } from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
@@ -42,7 +43,7 @@ export async function appDelegateTask(args: {
     try {
       content = await applyContentModification({
         action,
-        findOrCreateBlock,
+        findOrCreateBlock: findOrCreateBlock(task.lang),
         configPath,
         packageName,
         content,
@@ -66,141 +67,233 @@ export async function appDelegateTask(args: {
   return content;
 }
 
-function findOrCreateBlock(
-  content: string,
-  block: string
-): {
-  blockContent: BlockContentType;
-  content: string;
-} {
-  let blockContent = {
-    start: 0,
-    end: content.length,
-    match: content,
-    space: '',
-    justCreated: false,
+const findOrCreateBlock = (lang?: IosCodeType) => {
+  const _lang = lang || 'objc';
+  return (
+    content: string,
+    block: string
+  ): {
+    blockContent: BlockContentType;
+    content: string;
+  } => {
+    let blockContent = {
+      start: 0,
+      end: content.length,
+      match: content,
+      space: '',
+      justCreated: false,
+    };
+    const blockDefinition =
+      blockDefinitions[_lang][block as AppDelegateBlockType];
+
+    if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
+    const { regex, makeNewMethod } = blockDefinition;
+    let blockStart = regex.exec(content);
+
+    const justCreated = !blockStart;
+    if (!blockStart) {
+      const newMethod = makeNewMethod();
+      content = appendNewMethod(content, newMethod, _lang);
+
+      blockStart = regex.exec(content);
+    }
+    if (!blockStart) {
+      throw new Error('block could not be inserted, something wrong?');
+    }
+    const blockEndIndex = findClosingTagIndex(
+      content,
+      blockStart.index + blockStart[0].length
+    );
+    const blockBody = content.substring(
+      blockStart.index + blockStart[0].length,
+      blockEndIndex
+    );
+    blockContent = {
+      start: blockStart.index + blockStart[0].length,
+      end: blockEndIndex,
+      match: blockBody,
+      justCreated,
+      space: _lang === 'swift' ? ' '.repeat(2) : '',
+    };
+
+    return {
+      blockContent,
+      content,
+    };
   };
-  const blockDefinition = blockDefinitions[block as AppDelegateBlockType];
-
-  if (!blockDefinition) throw new Error(`Invalid block: ${block}`);
-  const { regex, makeNewMethod } = blockDefinition;
-  let blockStart = regex.exec(content);
-
-  const justCreated = !blockStart;
-  if (!blockStart) {
-    const newMethod = makeNewMethod();
-    content = appendNewMethod(content, newMethod);
-
-    blockStart = regex.exec(content);
-  }
-  if (!blockStart) {
-    throw new Error('block could not be inserted, something wrong?');
-  }
-  const blockEndIndex = findClosingTagIndex(
-    content,
-    blockStart.index + blockStart[0].length
-  );
-  const blockBody = content.substring(
-    blockStart.index + blockStart[0].length,
-    blockEndIndex
-  );
-  blockContent = {
-    start: blockStart.index + blockStart[0].length,
-    end: blockEndIndex,
-    match: blockBody,
-    justCreated,
-    space: '',
-  };
-
-  return {
-    blockContent,
-    content,
-  };
-}
+};
 
 const blockDefinitions: Record<
-  AppDelegateBlockType,
-  { regex: RegExp; makeNewMethod: () => string }
+  IosCodeType,
+  Record<AppDelegateBlockType, { regex: RegExp; makeNewMethod: () => string }>
 > = {
-  didFinishLaunchingWithOptions: {
-    regex: /didFinishLaunchingWithOptions.*?\{/s,
-    makeNewMethod: () => {
-      throw new Error(
-        'didFinishLaunchingWithOptions not implemented, something is wrong?'
-      );
+  objc: {
+    didFinishLaunchingWithOptions: {
+      regex: /didFinishLaunchingWithOptions.*?\{/s,
+      makeNewMethod: () => {
+        throw new Error(
+          'didFinishLaunchingWithOptions not implemented, something is wrong?'
+        );
+      },
+    },
+    applicationDidBecomeActive: {
+      regex: /applicationDidBecomeActive.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)applicationDidBecomeActive:(UIApplication *)application {}';
+      },
+    },
+    applicationWillResignActive: {
+      regex: /applicationWillResignActive.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)applicationWillResignActive:(UIApplication *)application {}';
+      },
+    },
+    applicationDidEnterBackground: {
+      regex: /applicationDidEnterBackground.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)applicationDidEnterBackground:(UIApplication *)application {}';
+      },
+    },
+    applicationWillEnterForeground: {
+      regex: /applicationWillEnterForeground.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)applicationWillEnterForeground:(UIApplication *)application {}';
+      },
+    },
+    applicationWillTerminate: {
+      regex: /applicationWillTerminate.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)applicationWillTerminate:(UIApplication *)application {}';
+      },
+    },
+    openURL: {
+      regex: /openURL:.*?options:.*?\{/s,
+      makeNewMethod: () => {
+        // noinspection SpellCheckingInspection
+        return '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {}';
+      },
+    },
+    restorationHandler: {
+      regex: /continueUserActivity:.*?restorationHandler:.*?\{/s,
+      makeNewMethod: () => {
+        return '- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {}';
+      },
+    },
+    didRegisterForRemoteNotificationsWithDeviceToken: {
+      regex: /didRegisterForRemoteNotificationsWithDeviceToken.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {}';
+      },
+    },
+    didFailToRegisterForRemoteNotificationsWithError: {
+      regex: /didFailToRegisterForRemoteNotificationsWithError.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {}';
+      },
+    },
+    didReceiveRemoteNotification: {
+      regex: /didReceiveRemoteNotification((?!fetchCompletionHandler).)*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {}';
+      },
+    },
+    fetchCompletionHandler: {
+      regex: /didReceiveRemoteNotification:.*?fetchCompletionHandler:.*?\{/s,
+      makeNewMethod: () => {
+        return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {}';
+      },
     },
   },
-  applicationDidBecomeActive: {
-    regex: /applicationDidBecomeActive.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)applicationDidBecomeActive:(UIApplication *)application {}';
+  swift: {
+    didFinishLaunchingWithOptions: {
+      regex: /func application\(.*?didFinishLaunchingWithOptions.*?\{/s,
+      makeNewMethod: () => {
+        throw new Error(
+          'didFinishLaunchingWithOptions not implemented, something is wrong?'
+        );
+      },
     },
-  },
-  applicationWillResignActive: {
-    regex: /applicationWillResignActive.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)applicationWillResignActive:(UIApplication *)application {}';
+    applicationDidBecomeActive: {
+      regex: /func application\(.*?didBecomeActive.*?\{/s,
+      makeNewMethod: () => {
+        return 'func applicationDidBecomeActive(_ application: UIApplication) {}';
+      },
     },
-  },
-  applicationDidEnterBackground: {
-    regex: /applicationDidEnterBackground.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)applicationDidEnterBackground:(UIApplication *)application {}';
+    applicationWillResignActive: {
+      regex: /func application\(.*?willResignActive.*?\{/s,
+      makeNewMethod: () => {
+        return 'func applicationWillResignActive(_ application: UIApplication) {}';
+      },
     },
-  },
-  applicationWillEnterForeground: {
-    regex: /applicationWillEnterForeground.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)applicationWillEnterForeground:(UIApplication *)application {}';
+    applicationDidEnterBackground: {
+      regex: /func application\(.*?didEnterBackground.*?\{/s,
+      makeNewMethod: () => {
+        return 'func applicationDidEnterBackground(_ application: UIApplication) {}';
+      },
     },
-  },
-  applicationWillTerminate: {
-    regex: /applicationWillTerminate.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)applicationWillTerminate:(UIApplication *)application {}';
+    applicationWillEnterForeground: {
+      regex: /func application\(.*?willEnterForeground.*?\{/s,
+      makeNewMethod: () => {
+        return 'func applicationWillEnterForeground(_ application: UIApplication) {}';
+      },
     },
-  },
-  openURL: {
-    regex: /openURL:.*?options:.*?\{/s,
-    makeNewMethod: () => {
-      // noinspection SpellCheckingInspection
-      return '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {}';
+    applicationWillTerminate: {
+      regex: /func application\(.*?willTerminate.*?\{/s,
+      makeNewMethod: () => {
+        return 'func applicationWillTerminate(_ application: UIApplication) {}';
+      },
     },
-  },
-  restorationHandler: {
-    regex: /continueUserActivity:.*?restorationHandler:.*?\{/s,
-    makeNewMethod: () => {
-      return '- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {}';
+    openURL: {
+      regex: /func application\(.*?open url:.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool { return true }';
+      },
     },
-  },
-  didRegisterForRemoteNotificationsWithDeviceToken: {
-    regex: /didRegisterForRemoteNotificationsWithDeviceToken.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {}';
+    restorationHandler: {
+      regex: /func application\(.*?continue userActivity:.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool { return true }';
+      },
     },
-  },
-  didFailToRegisterForRemoteNotificationsWithError: {
-    regex: /didFailToRegisterForRemoteNotificationsWithError.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {}';
+    didRegisterForRemoteNotificationsWithDeviceToken: {
+      regex:
+        /func application\(.*?didRegisterForRemoteNotificationsWithDeviceToken.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {}';
+      },
     },
-  },
-  didReceiveRemoteNotification: {
-    regex: /didReceiveRemoteNotification((?!fetchCompletionHandler).)*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {}';
+    didFailToRegisterForRemoteNotificationsWithError: {
+      regex:
+        /func application\(.*?didFailToRegisterForRemoteNotificationsWithError.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}';
+      },
     },
-  },
-  fetchCompletionHandler: {
-    regex: /didReceiveRemoteNotification:.*?fetchCompletionHandler:.*?\{/s,
-    makeNewMethod: () => {
-      return '- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {}';
+    didReceiveRemoteNotification: {
+      regex: /func application\(.*?didReceiveRemoteNotification.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {}';
+      },
+    },
+    fetchCompletionHandler: {
+      regex:
+        /func application\(.*?didReceiveRemoteNotification.*?completionHandler.*?\{/s,
+      makeNewMethod: () => {
+        return 'func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {}';
+      },
     },
   },
 };
 
-function appendNewMethod(content: string, newMethod: string): string {
-  const appDelegateMatch = /@implementation AppDelegate.*?@end/s.exec(content);
+function appendNewMethod(
+  content: string,
+  newMethod: string,
+  lang: IosCodeType
+): string {
+  const appDelegateMatch =
+    lang === 'objc'
+      ? /@implementation AppDelegate.*?@end/s.exec(content)
+      : /class AppDelegate:.*\}/s.exec(content);
   if (!appDelegateMatch)
     throw new Error('Could not find @implementation AppDelegate');
   const codeToInsert = `${newMethod}
@@ -208,31 +301,35 @@ function appendNewMethod(content: string, newMethod: string): string {
 `;
   return stringSplice(
     content,
-    appDelegateMatch.index + appDelegateMatch[0].length - 4,
+    appDelegateMatch.index +
+      appDelegateMatch[0].length -
+      (lang === 'objc' ? 4 : 1),
     0,
     codeToInsert
   );
 }
 
-function getAppDelegatePath() {
+function getAppDelegatePath(lang?: IosCodeType) {
   const iosProjectPath = getIosProjectPath();
 
   const appDelegatePath = path.join(
     iosProjectPath,
-    Constants.APP_DELEGATE_FILE_NAME
+    lang === 'swift'
+      ? Constants.APP_DELEGATE_SWIFT_FILE_NAME
+      : Constants.APP_DELEGATE_MM_FILE_NAME
   );
   if (!fs.existsSync(appDelegatePath))
     throw new Error(`AppDelegate file not found at ${appDelegatePath}`);
   return appDelegatePath;
 }
 
-function readAppDelegateContent() {
-  const appDelegatePath = getAppDelegatePath();
+function readAppDelegateContent(lang?: IosCodeType) {
+  const appDelegatePath = getAppDelegatePath(lang);
   return fs.readFileSync(appDelegatePath, 'utf-8');
 }
 
-function writeAppDelegateContent(content: string): void {
-  const appDelegatePath = getAppDelegatePath();
+function writeAppDelegateContent(content: string, lang?: IosCodeType): void {
+  const appDelegatePath = getAppDelegatePath(lang);
   return fs.writeFileSync(appDelegatePath, content, 'utf-8');
 }
 
@@ -241,14 +338,14 @@ export async function runTask(args: {
   packageName: string;
   task: AppDelegateTaskType;
 }): Promise<void> {
-  let content = readAppDelegateContent();
+  let content = readAppDelegateContent(args.task.lang);
 
   content = await appDelegateTask({
     ...args,
     content,
   });
 
-  writeAppDelegateContent(content);
+  writeAppDelegateContent(content, args.task.lang);
 }
 
-export const summary = 'AppDelegate.mm modification';
+export const summary = 'AppDelegate modification';

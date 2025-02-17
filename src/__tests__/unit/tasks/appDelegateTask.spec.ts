@@ -6,6 +6,7 @@ const mock = jest.spyOn(require('../../../utils/stringSplice'), 'stringSplice');
 import { appDelegateTask, runTask } from '../../../tasks/appDelegateTask';
 import { AppDelegateTaskType } from '../../../types/mod.types';
 import { writeMockAppDelegate } from '../../mocks/mockAll';
+import { mockAppDelegateSwiftTemplate } from '../../mocks/mockAppDelegateSwiftTemplate';
 import { mockAppDelegateTemplate } from '../../mocks/mockAppDelegateTemplate';
 
 describe('appDelegateTask', () => {
@@ -36,6 +37,31 @@ describe('appDelegateTask', () => {
     expect(mockPrompter.log.message).toHaveBeenCalledWith(
       expect.stringContaining('found existing ')
     );
+  });
+  it('should prepend text into didLaunchWithOptions in swift lang', async () => {
+    let content = mockAppDelegateSwiftTemplate;
+    const task: AppDelegateTaskType = {
+      task: 'app_delegate',
+      lang: 'swift',
+      actions: [
+        {
+          prepend: 'import Firebase',
+        },
+        {
+          block: 'didFinishLaunchingWithOptions',
+          prepend: 'FirebaseApp.configure()',
+        },
+      ],
+    };
+    content = await appDelegateTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    console.log('content', content);
+    // @ts-ignore
+    expect(content).toContain(task.actions[1].prepend);
   });
   it('should prepend text into didLaunchWithOptions', async () => {
     let content = mockAppDelegateTemplate;

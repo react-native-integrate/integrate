@@ -100,7 +100,10 @@ export type JsonTaskType = ModTaskBase &
 export type AppDelegateTaskType = ModTaskBase &
   ActionsType<ContentModifierType<AppDelegateBlockType>> & {
     task: 'app_delegate';
+    lang?: IosCodeType;
   };
+export type IosCodeType = 'objc' | 'swift';
+
 export type AppDelegateBlockType =
   | 'didFinishLaunchingWithOptions'
   | 'applicationDidBecomeActive'
@@ -121,6 +124,7 @@ export type NotificationServiceTaskType = ModTaskBase &
   ActionsType<ContentModifierType<NotificationServiceBlockType>> & {
     task: 'notification_service';
     target: string;
+    lang?: IosCodeType;
   };
 export type NotificationServiceBlockType =
   | 'didReceiveNotificationRequest'
@@ -132,6 +136,7 @@ export type NotificationViewControllerTaskType = ModTaskBase &
   ActionsType<ContentModifierType<NotificationContentBlockType>> & {
     task: 'notification_view_controller';
     target: string;
+    lang?: IosCodeType;
   };
 export type NotificationContentBlockType =
   | 'viewDidLoad'
@@ -255,6 +260,11 @@ export type XcodeAddGroupCapability = XcodeAddCapabilityBase & {
   groups: string[];
 };
 
+export type XcodeAddDomainsCapability = XcodeAddCapabilityBase & {
+  addCapability: 'domains';
+  domains: string[];
+};
+
 export type XcodeAddBMCapability = XcodeAddCapabilityBase & {
   addCapability: 'background-mode';
   modes: XcodeAddBMCapabilityModes[];
@@ -308,6 +318,7 @@ export type XcodeAddKSCapability = XcodeAddCapabilityBase & {
 export type XcodeAddCapability =
   | XcodeAddCommonCapability
   | XcodeAddGroupCapability
+  | XcodeAddDomainsCapability
   | XcodeAddBMCapability
   | XcodeAddGCCapability
   | XcodeAddMapsCapability

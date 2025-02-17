@@ -108,6 +108,9 @@
                 "label": {
                     "type": "string"
                 },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -565,6 +568,13 @@
             ],
             "type": "object"
         },
+        "IosCodeType": {
+            "enum": [
+                "objc",
+                "swift"
+            ],
+            "type": "string"
+        },
         "JsonTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -753,6 +763,9 @@
                 "label": {
                     "type": "string"
                 },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -791,6 +804,9 @@
                 },
                 "label": {
                     "type": "string"
+                },
+                "lang": {
+                    "$ref": "#/definitions/IosCodeType"
                 },
                 "name": {
                     "type": "string"
@@ -1602,6 +1618,36 @@
             ],
             "type": "object"
         },
+        "XcodeAddDomainsCapability": {
+            "additionalProperties": false,
+            "properties": {
+                "addCapability": {
+                    "const": "domains",
+                    "type": "string"
+                },
+                "domains": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "addCapability",
+                "domains",
+                "target"
+            ],
+            "type": "object"
+        },
         "XcodeAddFile": {
             "additionalProperties": false,
             "properties": {
@@ -1835,6 +1881,9 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeAddGroupCapability"
+                },
+                {
+                    "$ref": "#/definitions/XcodeAddDomainsCapability"
                 },
                 {
                     "$ref": "#/definitions/XcodeAddBMCapability"

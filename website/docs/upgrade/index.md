@@ -7,19 +7,77 @@ You can use this tool to assist you while upgrading your project to new React Na
 
 ## Steps to follow
 
-Before this tool steps in, developer is responsible to take some actions.
+Before this tool steps in, developer is responsible of taking some actions.
 
-### 1. Create a new React Native project
+### 1. Create `upgrade.yml` in `.upgrade` folder
+
+You can read more about `upgrade.yml` on the next page. In short, it guides the upgrade progress. Think it like a config plugin for your own project. You have to prepare this file only once and update it whenever you need to make native changes yourself. Third party integrations are handled automatically if they are supported.
+
+:::tip
+Run [`info` command](./info) to check if a package is available for integration.
+:::
+   
+Example upgrade file:
+```yml
+imports:
+  - .husky #third party generated folders
+  - assets #folders that are created by you for scripts or assets like fonts images etc.
+  - android/app/src/main/res/values/ic_launcher_background.xml #any files that do not come with default RN template
+  - src #main JS/TS folder
+  - patches #patch folder used by patch-package
+  - app.json #required
+  - index.js #required
+  - lint-staged.config.js #other config files
+  - react-native.config.js #if you have one
+  - App.tsx #required if it is not in src
+  - tsconfig.json #required
+steps:
+  - task: android_manifest #An example task that adds a permission to manifest that your app use
+    label: Adding permissions to AndroidManifest.xml
+    actions:
+      - before: <application
+        append: |-
+          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+          <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+  - task: plist #An example info.plist task that applies changes to the new info.plist
+    label: Setting keys in Info.plist
+    actions:
+      - set:
+          NSCameraUsageDescription: $(PRODUCT_NAME) would like to use your camera
+          NSMicrophoneUsageDescription: $(PRODUCT_NAME) would like to use your microphone (for videos)
+          NSPhotoLibraryAddUsageDescription: $(PRODUCT_NAME) would like to save photos to your photo gallery
+          UISupportedInterfaceOrientations:
+            - UIInterfaceOrientationPortrait
+            - UIInterfaceOrientationLandscapeLeft
+            - UIInterfaceOrientationLandscapeRight
+          UIUserInterfaceStyle: Light
+          UIViewControllerBasedStatusBarAppearance: false
+        strategy: assign
+
+  - task: xcode #Example xcode modifier that changes ios deployment version
+    label: Setting Deployment Target
+    actions:
+      - setDeploymentVersion:
+          min: 15.5
+        target: root
+
+  - task: podfile #Example Podfile modifier that changes ios deployment version
+    label: Modifying Podfile
+    actions:
+      - search:
+          regex: platform :ios,.*
+        replace: platform :ios, '$[IOS_DEPLOYMENT_VERSION]'
+
+  - task: shell  #Example shell command to remove detault App.tsx, in case you have it in src folder
+    label: Removing default App.tsx
+    actions:
+      - command: rm ./App.tsx
+```
+
+### 2. Create a new React Native project
 
 Follow instructions on [the official RN page](https://reactnative.dev/docs/environment-setup#creating-a-new-application) to create a new project with the latest RN version.
-
-### 2. Move JS/TS files and assets
-
-Your JS/TS files are usually in `src` folder. Copy this folder along with `index.js` and any other asset folder you have.
-
-:::info
-In a future version we may try to do this using this tool. For now bear with us.
-:::
 
 ### 3. Let the magic happen
 
@@ -28,8 +86,6 @@ Run the upgrade command.
 ```bash
 npx react-native-integrate upgrade
 # or, if you've installed it globally
-rni upgrade
-# or simpler...
 rnu
 ```
 
@@ -53,5 +109,5 @@ When upgrading;
 
    `upgrade` command will ask inputs from you on the process if it cannot find in `.upgrade` folder.
    :::
-6. If exists, files in `.upgrade/imports` will be copied to their respective paths.
+6. If exists, files in `.upgrade/imports` folder will be copied to their respective paths.
 7. If exists, [`.upgrade/upgrade.yml` configuration file](./upgrade/configuration) will be executed.
