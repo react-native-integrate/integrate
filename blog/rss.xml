@@ -13,9 +13,9 @@
             <link>https://react-native-integrate.github.io/integrate/blog/react-native-78-upgrade-support</link>
             <guid>https://react-native-integrate.github.io/integrate/blog/react-native-78-upgrade-support</guid>
             <pubDate>Thu, 20 Feb 2025 00:00:00 GMT</pubDate>
-            <description><![CDATA[RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow upgrade docs once to make your project upgradable. After that you can then upgrade to any React Native version easily.]]></description>
-            <content:encoded><![CDATA[<p>RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow <a href="https://react-native-integrate.github.io/integrate/docs/upgrade">upgrade docs</a> once to make your project upgradable. After that you can then upgrade to any React Native version easily.</p>
-<p>Please open an issue for unsupported modules that require additional changes. I will be happy to assist creating a config for it.</p>
+            <description><![CDATA[RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow upgrade docs once to make your project upgradable. You can then upgrade to any React Native version with a single command!]]></description>
+            <content:encoded><![CDATA[<p>RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow <a href="https://react-native-integrate.github.io/integrate/docs/upgrade">upgrade docs</a> once to make your project upgradable. You can then upgrade to any React Native version with a single command!</p>
+<p>Please open an issue for unsupported modules that require additional changes. I will happily assist with creating a config for it.</p>
 <p>Happy coding!</p>]]></content:encoded>
             <author>muratmehmetbt@gmail.com (Murat Mehmet)</author>
             <category>react native</category>
