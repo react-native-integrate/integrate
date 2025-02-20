@@ -67,7 +67,7 @@
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
-    "@types/jest": "^27.5.2",
+    "@types/jest": "^29.5.14",
     "@types/lodash.mergewith": "^4.6.9",
     "@types/node": "^22.13.4",
     "@types/prettier": "^3.0.0",
