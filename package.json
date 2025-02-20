@@ -89,7 +89,7 @@
     "ts-jest": "^27.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
-    "typescript-json-schema": "^0.63.0"
+    "typescript-json-schema": "^0.65.1"
   },
   "config": {
     "commitizen": {
