@@ -54,7 +54,7 @@ export async function applyFsModification(
   action: FsModifierType,
   packageName: string
 ): Promise<void> {
-  if (action.copyFile) {
+  if ('copyFile' in action) {
     if (
       handlePackageUpgradeCopyFile(packageName, getText(action.destination))
     ) {
@@ -117,6 +117,27 @@ export async function applyFsModification(
       }
     }
     addPackageUpgradeFile(packageName, action.destination);
+  }
+  if ('removeFile' in action) {
+    action.removeFile = getText(action.removeFile);
+
+    const projectPath = getProjectPath();
+    const destination = path.join(projectPath, action.removeFile);
+    // security check
+    if (!destination.startsWith(projectPath)) {
+      throw new Error('invalid path to remove');
+    }
+    if (!fs.existsSync(action.removeFile)) {
+      if (action.strict)
+        throw new Error(`${color.yellow(action.removeFile)} does not exist`);
+      else
+        logMessageGray(
+          `${color.yellow(action.removeFile)} does not exist, skipped remove operation`
+        );
+    } else {
+      fs.rmSync(action.removeFile);
+      logMessage(`removed ${color.yellow(action.removeFile)}`);
+    }
   }
 }
 

@@ -383,11 +383,16 @@ export type FsTaskType = ModTaskBase &
     task: 'fs';
   };
 
-export type FsModifierType = ActionBase & {
-  copyFile?: string;
+export type FsCopyModifierType = ActionBase & {
+  copyFile: string;
   message?: string;
   destination: string;
 };
+export type FsRemoveModifierType = ActionBase & {
+  removeFile: string;
+  strict?: boolean;
+};
+export type FsModifierType = FsCopyModifierType | FsRemoveModifierType;
 
 // shell task
 

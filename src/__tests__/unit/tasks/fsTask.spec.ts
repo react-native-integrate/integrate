@@ -177,7 +177,7 @@ describe('fsTask', () => {
       mockFs.readFileSync(path.join(projectFullPath, 'android', 'file.json'))
     ).toEqual('test-content');
   });
-  it('should throw when destination is out of project', async () => {
+  it('should throw when copy destination is out of project', async () => {
     mockPrompter.text.mockReset();
 
     const task: FsTaskType = {
@@ -385,6 +385,111 @@ describe('fsTask', () => {
     expect(
       mockFs.readFileSync(path.join(projectFullPath, 'android', 'file.json'))
     ).toEqual('test-content');
+  });
+  it('should remove entered file', async () => {
+    mockFs.writeFileSync(
+      path.join(projectFullPath, 'android', 'file-to-delete.json'),
+      'test-content'
+    );
+    mockPrompter.log.message.mockReset();
+
+    const task: FsTaskType = {
+      task: 'fs',
+      actions: [
+        {
+          removeFile: 'file-to-delete.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+
+    expect(
+      mockFs.existsSync(
+        path.join(projectFullPath, 'android', 'file-to-delete.json')
+      )
+    ).toEqual(false);
+  });
+  it('should skip remove entered file when not exists', async () => {
+    mockPrompter.log.message.mockReset();
+
+    expect(
+      mockFs.existsSync(
+        path.join(projectFullPath, 'android', 'file-to-delete.json')
+      )
+    ).toEqual(false);
+
+    const task: FsTaskType = {
+      task: 'fs',
+      actions: [
+        {
+          removeFile: 'file-to-delete.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    await fsTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+    });
+
+    expect(mockPrompter.log.message).toHaveBeenCalledWith(
+      expect.stringContaining('skipped remove operation')
+    );
+  });
+  it('should throw when strict remove file not exists', async () => {
+    mockPrompter.log.message.mockReset();
+
+    expect(
+      mockFs.existsSync(
+        path.join(projectFullPath, 'android', 'file-to-delete.json')
+      )
+    ).toEqual(false);
+
+    const task: FsTaskType = {
+      task: 'fs',
+      actions: [
+        {
+          removeFile: 'file-to-delete.json',
+          strict: true,
+        },
+      ],
+    };
+
+    // enter mock file path
+    await expect(
+      fsTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      })
+    ).rejects.toThrowError('does not exist');
+  });
+  it('should throw when remove destination is out of project', async () => {
+    const task: FsTaskType = {
+      task: 'fs',
+      actions: [
+        {
+          removeFile: '../somewhere/file-to-delete.json',
+        },
+      ],
+    };
+
+    // enter mock file path
+    await expect(
+      fsTask({
+        configPath: 'path/to/config',
+        task: task,
+        packageName: 'test-package',
+      })
+    ).rejects.toThrowError('invalid path to remove');
   });
 
   describe('runTask', () => {

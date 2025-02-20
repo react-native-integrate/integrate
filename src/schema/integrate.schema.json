@@ -439,7 +439,7 @@
             },
             "type": "object"
         },
-        "FsModifierType": {
+        "FsCopyModifierType": {
             "additionalProperties": false,
             "properties": {
                 "copyFile": {
@@ -459,7 +459,39 @@
                 }
             },
             "required": [
+                "copyFile",
                 "destination"
+            ],
+            "type": "object"
+        },
+        "FsModifierType": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/FsCopyModifierType"
+                },
+                {
+                    "$ref": "#/definitions/FsRemoveModifierType"
+                }
+            ]
+        },
+        "FsRemoveModifierType": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "removeFile": {
+                    "type": "string"
+                },
+                "strict": {
+                    "type": "boolean"
+                },
+                "when": {
+                    "$ref": "#/definitions/AnyObject"
+                }
+            },
+            "required": [
+                "removeFile"
             ],
             "type": "object"
         },

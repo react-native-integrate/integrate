@@ -22,13 +22,29 @@ project. This task is particularly useful when you need to manage project assets
 
 ## Action Properties
 
+### Common properties
+
+| Property | Type   | Description                                                                                                                                              |
+|:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
+
+#### _The action item can take these properties based on which action you want to execute._
+
+### Copy (import) a file to the project
+
 | Property    | Type             | Description                                                                                                                                                                                                       |
 |:------------|:-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name        | string           | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                          |
-| when        | object           | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                                                                             |
-| copyFile    | string           | A string that specifies the name of the file needed to be copied.                                                                                                                                                 |
+| copyFile    | string, required | A string that specifies the name of the file needed to be copied.                                                                                                                                                 |
 | destination | string, required | A relative path from the project's root directory specifying the destination where the file will be copied. This field determines where the copied file will be placed within your project's directory structure. |
 | message     | string           | A string that serves as the user prompt message when collecting input. If provided, this message will replace the default message.                                                                                |
+
+### Delete a file from the project
+
+| Property   | Type             | Description                                                   |
+|:-----------|:-----------------|---------------------------------------------------------------|
+| removeFile | string, required | A string that specifies the path of the file.                 |
+| strict     | boolean          | If true, task will throw an error if the file does not exist. |
 
 Usage Example
 -------------
