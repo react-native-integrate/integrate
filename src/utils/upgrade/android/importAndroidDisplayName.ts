@@ -25,7 +25,7 @@ export function importAndroidDisplayName(
       value: displayName,
       apply: () => setAndroidDisplayName(displayName),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

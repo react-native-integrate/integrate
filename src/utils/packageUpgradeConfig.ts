@@ -22,7 +22,7 @@ export function getPackageUpgradeConfig(
     return JSON.parse(
       fs.readFileSync(upgradePath, 'utf8')
     ) as PackageUpgradeConfig;
-  } catch (e) {
+  } catch (_e) {
     return {};
   }
 }

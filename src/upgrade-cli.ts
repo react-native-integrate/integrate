@@ -5,6 +5,7 @@ import { logIntro, logOutro } from './prompter';
 import { IntegratorOptions } from './types/integrator.types';
 import { upgrade } from './upgrade';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { version } = require('../package.json');
 
 const program = new Command();

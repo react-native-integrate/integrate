@@ -47,7 +47,7 @@ export async function waitForFile(filePath: string): Promise<boolean> {
         }
       );
     } catch (e) {
-      reject(e);
+      reject(e instanceof Error ? e : new Error(e?.toString() ?? ''));
     }
   });
 }

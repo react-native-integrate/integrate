@@ -37,7 +37,7 @@ export function importAndroidLaunchIcon(
       apply: () =>
         setAndroidLaunchIcon(projectPath, mipmaps, drawables, icon, roundIcon),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

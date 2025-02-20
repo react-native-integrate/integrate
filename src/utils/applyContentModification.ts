@@ -300,7 +300,7 @@ export async function applyContentModification(
         );
       }
 
-      await runModifiers((start, rem, insert) => {
+      await runModifiers((_start, rem, insert) => {
         searchMatcher.lastIndex += -rem + insert.length;
         updateBlockContent(searchBlockContent, rem, insert, content);
       });
@@ -332,7 +332,7 @@ export function updateBlockContent(
 
 function resolveInsertionPoint(
   blockContent: BlockContentType,
-  content: string,
+  _content: string,
   textOrRegex: TextOrRegex
 ) {
   if (blockContent.justCreated) {

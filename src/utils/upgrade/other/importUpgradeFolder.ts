@@ -26,7 +26,7 @@ export function importUpgradeFolder(projectPath: string): ImportGetter | null {
       value: `${files.length} files`,
       apply: () => setUpgradeFolder(projectPath, files),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

@@ -60,7 +60,7 @@ describe('waitForInputToContinue', () => {
     } = require('../../../utils/waitInputToContinue');
 
     expect(process.stdin.isTTY).toBe(true);
-    await expect(waitInputToContinue()).rejects.toBe('');
+    await expect(waitInputToContinue()).rejects.toThrowError('');
   });
   it('should resolve with keys', async () => {
     // @ts-ignore

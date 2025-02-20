@@ -97,7 +97,7 @@ export async function shellTask(args: {
               resolve(code ?? 0);
             });
           } catch (e) {
-            reject(e);
+            reject(e instanceof Error ? e : new Error(e?.toString() ?? ''));
           }
         });
       } finally {

@@ -18,7 +18,7 @@ export function getIosProjectName(
     xcodeProjFolder = fs
       .readdirSync(path.join(projectPath, 'ios'))
       .find(x => x.endsWith(Constants.XCODEPROJ_EXT));
-  } catch (e) {
+  } catch (_e) {
     xcodeProjFolder = undefined;
   }
   if (!xcodeProjFolder) throw new Error('iOS project not found.');

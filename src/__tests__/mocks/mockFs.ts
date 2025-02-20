@@ -39,7 +39,7 @@ export const mockFs = {
     mockFs.writeFileSync(to, content);
     return true;
   },
-  copyFile: jest.fn((from: string, to: string, cb: CallableFunction) => {
+  copyFile: jest.fn((from: string, to: string, cb: (e?: Error) => void) => {
     mockFs.copyFileSync(from, to);
     cb();
   }),
@@ -52,16 +52,16 @@ export const mockFs = {
       .forEach(key => delete store[key]);
     return true;
   },
-  rm: jest.fn((_path: string, _opts, cb: CallableFunction) => {
+  rm: jest.fn((_path: string, _opts, cb: (e?: Error) => void) => {
     mockFs.rmSync(_path);
     cb();
   }),
-  mkdir: jest.fn((_path, _opts, cb: CallableFunction) => cb() as void),
+  mkdir: jest.fn((_path, _opts, cb: (e?: Error) => void) => cb()),
   readdirSync: (): string[] => {
     return ['test' + Constants.XCODEPROJ_EXT];
   },
   readdir: jest.fn(),
-  unlink: jest.fn((filePath: string, cb: CallableFunction) => {
+  unlink: jest.fn((filePath: string, cb: (e?: Error) => void) => {
     delete store[filePath];
     cb();
   }),

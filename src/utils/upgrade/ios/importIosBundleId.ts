@@ -30,7 +30,7 @@ export function importIosBundleId(projectPath: string): ImportGetter | null {
       value: bundleId,
       apply: () => setIosBundleId(bundleId),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

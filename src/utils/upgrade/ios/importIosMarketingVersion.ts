@@ -53,7 +53,7 @@ export function importIosMarketingVersion(
           versionVariableValue
         ),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

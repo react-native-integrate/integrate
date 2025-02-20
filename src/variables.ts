@@ -8,21 +8,21 @@ const predefinedVariables: Record<string, any> = {
   get IOS_PROJECT_NAME() {
     try {
       return getIosProjectName();
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   },
   get IOS_BUNDLE_ID() {
     try {
       return getIosBundleId();
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   },
   get IOS_DEPLOYMENT_VERSION() {
     try {
       return getIosDeploymentVersion();
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   },

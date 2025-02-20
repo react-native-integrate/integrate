@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-call,@typescript-eslint/no-require-imports */
 
 require('./mockProjectPath');
 require('./mockFetch');

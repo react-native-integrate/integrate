@@ -29,7 +29,7 @@ export function importGitFolder(projectPath: string): ImportGetter | null {
       value: `${files.length} files`,
       apply: () => setGitFolder(projectPath, files),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

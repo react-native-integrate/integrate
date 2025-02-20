@@ -49,7 +49,7 @@ export function importIosBuildProperties(
       value: buildProperties.length + ' properties',
       apply: () => setIosBuildProperties(buildProperties),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

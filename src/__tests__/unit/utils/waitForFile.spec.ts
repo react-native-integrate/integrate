@@ -31,7 +31,7 @@ describe('waitForFile', () => {
   it('should handle cancel', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     mockStartSpinner.mockImplementationOnce(((
-      msg: string,
+      _msg: string,
       onCancel: () => void
     ) => {
       setImmediate(() => onCancel());

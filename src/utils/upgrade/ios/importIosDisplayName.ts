@@ -29,7 +29,7 @@ export function importIosDisplayName(projectPath: string): ImportGetter | null {
       value: displayName,
       apply: () => setIosDisplayName(displayName),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

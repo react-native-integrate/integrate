@@ -9,16 +9,16 @@ import { mockPrompter } from '../../mocks/mockPrompter';
 describe('shellTask', () => {
   it('should run command', async () => {
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (...args: any[]) => void) => {
         cb(0);
       },
       stdout: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stdout');
         },
       },
       stderr: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stderr');
         },
       },
@@ -48,16 +48,16 @@ describe('shellTask', () => {
   });
   it('should run command with args', async () => {
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (...args: any[]) => void) => {
         cb(0);
       },
       stdout: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stdout');
         },
       },
       stderr: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stderr');
         },
       },
@@ -145,16 +145,16 @@ describe('shellTask', () => {
   });
   it('should handle non zero exit code', async () => {
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (...args: any[]) => void) => {
         cb(1);
       },
       stdout: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stdout');
         },
       },
       stderr: {
-        on: (_event: string, cb: CallableFunction) => {
+        on: (_event: string, cb: (...args: any[]) => void) => {
           cb('stderr');
         },
       },

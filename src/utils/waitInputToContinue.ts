@@ -8,7 +8,7 @@ export function waitInputToContinue(
   if (!process.stdin.isTTY) return Promise.resolve('');
   const _message = message || `${color.gray('│')}  continue?`;
   const _keys = keys || '';
-  return new Promise(function (resolve, reject) {
+  return new Promise<string>(function (resolve, reject) {
     const caseSensitive =
       _keys.toLowerCase() !== _keys && _keys.toUpperCase() !== _keys;
     process.stdout.write(_message);
@@ -24,7 +24,7 @@ export function waitInputToContinue(
         //   process.stdin.pause();
         //   process.exit(0); // Exit process if you prefer.
         cancel('operation cancelled');
-        reject('');
+        reject(new Error(''));
       }
       const index = caseSensitive
         ? _keys.indexOf(key)

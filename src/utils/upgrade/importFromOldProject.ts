@@ -42,7 +42,7 @@ export async function importFromOldProject(
     importIosBuildProperties(oldProjectPath),
     importIosAssets(oldProjectPath),
     importGitFolder(oldProjectPath),
-  ].filter(d => d != null) as ImportGetter[];
+  ].filter(d => d != null);
 
   logMessage(
     'importing following project data:\n\n' +

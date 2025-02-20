@@ -231,7 +231,7 @@ end`,
 
 async function applyDisableFlipperModification(
   content: string,
-  disableFlipper: boolean,
+  _disableFlipper: boolean,
   configPath: string,
   packageName: string
 ) {

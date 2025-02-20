@@ -28,7 +28,7 @@ export function importAndroidAppId(projectPath: string): ImportGetter | null {
       value: appId,
       apply: () => setAndroidAppId(currentAppId, appId),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

@@ -31,7 +31,7 @@ export function importPackageJson(projectPath: string): ImportGetter | null {
       value: `${packageJson.name}@${packageJson.version}`,
       apply: () => setPackageJson(projectPath, packageJson),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

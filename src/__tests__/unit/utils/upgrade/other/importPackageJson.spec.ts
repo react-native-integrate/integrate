@@ -48,7 +48,7 @@ describe('importPackageJson', () => {
     expect(importGetter.value).toEqual('test@1.0.0');
 
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (exitCode: number) => void) => {
         cb(0);
       },
     }));
@@ -80,7 +80,7 @@ describe('importPackageJson', () => {
     const importGetter = importPackageJson('/oldProject') as ImportGetter;
 
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (exitCode: number) => void) => {
         cb(1);
       },
     }));
@@ -112,7 +112,7 @@ describe('importPackageJson', () => {
     const importGetter = importPackageJson('/oldProject') as ImportGetter;
 
     mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: CallableFunction) => {
+      on: (_event: string, cb: (exitCode: number) => void) => {
         cb(0);
       },
     }));

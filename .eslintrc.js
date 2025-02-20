@@ -15,6 +15,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'prettier/prettier': 'warn',
     'node/no-missing-import': 'off',
     'node/no-empty-function': 'off',
@@ -30,5 +31,35 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-misused-promises': [
+      2,
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ],
   },
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-require-imports': 'off'
+      },
+    },
+  ],
 };

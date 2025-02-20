@@ -21,7 +21,7 @@ export function importAndroidVersionName(
       value: versionName,
       apply: () => setAndroidVersionName(versionName),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

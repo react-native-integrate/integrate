@@ -34,7 +34,7 @@ export function importIosAssets(projectPath: string): ImportGetter | null {
           launchScreen[0]
         ),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

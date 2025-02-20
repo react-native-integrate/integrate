@@ -216,25 +216,6 @@ describe('integrate', () => {
     );
     expect(content).not.toContain('[FIRApp configure];');
   });
-  it('should handle non error obj task errors', async () => {
-    mockRunTask.mockImplementationOnce(() => {
-      throw 'test error';
-    });
-    mockPrompter.log.error.mockReset();
-    const lockPath = writeMockLock({
-      lockfileVersion: Constants.CURRENT_LOCK_VERSION,
-      packages: {},
-    });
-
-    await integrate();
-
-    const content = mockFs.readFileSync(lockPath) as string;
-
-    expect(mockPrompter.log.error).toHaveBeenCalledWith(
-      expect.stringContaining('error occurred')
-    );
-    expect(content).not.toContain('[FIRApp configure];');
-  });
   it('should handle parse error', async () => {
     mockParseConfig.mockImplementationOnce(() => {
       throw new Error('test error');

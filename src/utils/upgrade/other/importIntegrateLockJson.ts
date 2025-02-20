@@ -26,7 +26,7 @@ export function importIntegrateLockJson(
       value: `${Object.keys(lockData.packages).length} total, ${Object.values(lockData.packages).filter(x => x.integrated).length} integrated packages`,
       apply: () => setIntegrateLockJson(lockData),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

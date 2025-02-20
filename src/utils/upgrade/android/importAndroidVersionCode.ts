@@ -21,7 +21,7 @@ export function importAndroidVersionCode(
       value: versionCode,
       apply: () => setAndroidVersionCode(versionCode),
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

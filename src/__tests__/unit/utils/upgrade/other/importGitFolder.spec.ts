@@ -45,7 +45,7 @@ describe('importGitFolder', () => {
     );
 
     mockFs.copyFile.mockImplementationOnce(
-      (from: string, to: string, cb: CallableFunction) => {
+      (_from: string, _to: string, cb: (e?: Error) => void) => {
         cb(new Error('random'));
       }
     );
