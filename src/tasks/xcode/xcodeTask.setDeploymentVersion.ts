@@ -57,7 +57,7 @@ export function applySetDeploymentVersion(
 
   const maxVersion = isNumberOrText(action.setDeploymentVersion)
     ? getVersionFromText(action.setDeploymentVersion)
-    : getVersionFromText(action.setDeploymentVersion.max || currentVersion);
+    : getVersionFromText(action.setDeploymentVersion.max || Infinity);
 
   const newVersion = Math.min(
     Math.max(currentVersion, minVersion),
