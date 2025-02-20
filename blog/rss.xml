@@ -4,10 +4,25 @@
         <title>React Native Integrate Blog</title>
         <link>https://react-native-integrate.github.io/integrate/blog</link>
         <description>React Native Integrate Blog</description>
-        <lastBuildDate>Sun, 17 Mar 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 20 Feb 2025 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[React Native 0.78 Upgrade Support]]></title>
+            <link>https://react-native-integrate.github.io/integrate/blog/react-native-78-upgrade-support</link>
+            <guid>https://react-native-integrate.github.io/integrate/blog/react-native-78-upgrade-support</guid>
+            <pubDate>Thu, 20 Feb 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow upgrade docs once to make your project upgradable. After that you can then upgrade to any React Native version easily.]]></description>
+            <content:encoded><![CDATA[<p>RN-Integrate supports react-native 0.78 out-of-the-box. Simply follow <a href="https://react-native-integrate.github.io/integrate/docs/upgrade">upgrade docs</a> once to make your project upgradable. After that you can then upgrade to any React Native version easily.</p>
+<p>Please open an issue for unsupported modules that require additional changes. I will be happy to assist creating a config for it.</p>
+<p>Happy coding!</p>]]></content:encoded>
+            <author>muratmehmetbt@gmail.com (Murat Mehmet)</author>
+            <category>react native</category>
+            <category>0.78</category>
+            <category>integrate</category>
+            <category>upgrade</category>
+        </item>
         <item>
             <title><![CDATA[Introducing React Native Integrate!]]></title>
             <link>https://react-native-integrate.github.io/integrate/blog/introducing-react-native-integrate</link>
