@@ -1,4 +1,4 @@
-const prettier = require('prettier');
+import prettier from 'prettier';
 const mockPrettierResolve = jest.spyOn(prettier, 'resolveConfig');
 const mockPrettierFormat = jest.spyOn(prettier, 'format');
 require('../../mocks/mockAll');
@@ -111,7 +111,7 @@ describe('babelConfigTask', () => {
         before: 'item2',
       });
       expect(result).toMatchInlineSnapshot(`
-        Array [
+        [
           0,
           1,
         ]
@@ -122,7 +122,7 @@ describe('babelConfigTask', () => {
         after: 'item2',
       });
       expect(result).toMatchInlineSnapshot(`
-        Array [
+        [
           2,
           3,
         ]
@@ -133,7 +133,7 @@ describe('babelConfigTask', () => {
         search: 'item2',
       });
       expect(result).toMatchInlineSnapshot(`
-        Array [
+        [
           1,
           2,
         ]
@@ -146,7 +146,7 @@ describe('babelConfigTask', () => {
         search: 'random',
       });
       expect(result).toMatchInlineSnapshot(`
-        Array [
+        [
           0,
           3,
         ]
@@ -269,7 +269,7 @@ describe('babelConfigTask', () => {
   presets: ['item1', 'item2', 'item3'],
 };
 `;
-      mockPrettierResolve.mockReturnValueOnce(null);
+      mockPrettierResolve.mockResolvedValueOnce(null);
       const babelConfigPath = path.resolve(
         __dirname,
         `../../mock-project/${Constants.BABEL_CONFIG_FILE_NAME}`
