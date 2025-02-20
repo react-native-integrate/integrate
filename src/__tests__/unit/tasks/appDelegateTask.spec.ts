@@ -59,7 +59,6 @@ describe('appDelegateTask', () => {
       content,
       packageName: 'test-package',
     });
-    console.log('content', content);
     // @ts-ignore
     expect(content).toContain(task.actions[1].prepend);
   });

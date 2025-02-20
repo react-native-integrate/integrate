@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
-export function validateOldProjectPath(oldProjectPath: string): string | void {
+export function validateOldProjectPath(
+  oldProjectPath: string
+): string | Error | undefined {
   const fullPath = path.resolve(oldProjectPath);
   if (!oldProjectPath) return;
   if (!fs.existsSync(fullPath)) return 'such path does not exist';

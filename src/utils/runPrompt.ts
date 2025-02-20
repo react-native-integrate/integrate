@@ -37,7 +37,7 @@ export async function runPrompt(
 
 export function getValidate(
   validate: ValidationType | ValidationType[] | undefined
-): ((value: string) => string | void) | undefined {
+): ((value: string) => string | Error | undefined) | undefined {
   if (!validate) return undefined;
   if (!Array.isArray(validate)) validate = [validate];
   const _validate = validate;

@@ -2,7 +2,7 @@ export type TextPromptArgs = {
   defaultValue?: string;
   initialValue?: string;
   placeholder?: string;
-  validate?: (value: string) => string | void;
+  validate?: (value: string) => string | Error | undefined;
 };
 
 export type ConfirmPromptArgs = {
