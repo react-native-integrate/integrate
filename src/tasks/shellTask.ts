@@ -94,7 +94,7 @@ export async function shellTask(args: {
             // child.stdout.pipe(process.stdout);
             // child.stderr.pipe(process.stderr);
             child.on('close', code => {
-              resolve(code);
+              resolve(code ?? 0);
             });
           } catch (e) {
             reject(e);

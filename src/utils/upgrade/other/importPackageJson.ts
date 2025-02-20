@@ -116,7 +116,7 @@ async function setPackageJson(
     // child.stdout.pipe(process.stdout);
     // child.stderr.pipe(process.stderr);
     child.on('close', code => {
-      resolve(code);
+      resolve(code ?? 0);
     });
   });
 

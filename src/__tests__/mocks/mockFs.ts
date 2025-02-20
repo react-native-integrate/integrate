@@ -46,14 +46,14 @@ export const mockFs = {
   mkdirSync: (): boolean => {
     return true;
   },
-  rmdirSync: (_path: string) => {
+  rmSync: (_path: string) => {
     Object.keys(store)
       .filter(key => isDirectoryMatch(key, _path))
       .forEach(key => delete store[key]);
     return true;
   },
-  rmdir: jest.fn((_path: string, _opts, cb: CallableFunction) => {
-    mockFs.rmdirSync(_path);
+  rm: jest.fn((_path: string, _opts, cb: CallableFunction) => {
+    mockFs.rmSync(_path);
     cb();
   }),
   mkdir: jest.fn((_path, _opts, cb: CallableFunction) => cb() as void),

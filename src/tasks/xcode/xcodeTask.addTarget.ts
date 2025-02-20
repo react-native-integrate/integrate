@@ -218,7 +218,7 @@ export async function applyAddTarget(
         const releaseHasFilesPatch = patchXcodeHasFile();
         try {
           Object.entries(files).forEach(([name, fileContent]) => {
-            if (name.endsWith('.m')) {
+            if (name.endsWith('.m') && typeof fileContent === 'string') {
               fs.writeFileSync(
                 path.join(targetDir, name),
                 fileContent,
@@ -231,7 +231,7 @@ export async function applyAddTarget(
                 },
                 extGroup.uuid
               );
-            } else if (name.endsWith('.h')) {
+            } else if (name.endsWith('.h') && typeof fileContent === 'string') {
               fs.writeFileSync(
                 path.join(targetDir, name),
                 fileContent,
@@ -273,14 +273,16 @@ export async function applyAddTarget(
                 }
               );
             } else {
-              fs.writeFileSync(
-                path.join(targetDir, name),
-                fileContent,
-                'utf-8'
-              );
-              content.addFile(name, extGroup.uuid, {
-                target: target.uuid,
-              });
+              if (typeof fileContent === 'string') {
+                fs.writeFileSync(
+                  path.join(targetDir, name),
+                  fileContent,
+                  'utf-8'
+                );
+                content.addFile(name, extGroup.uuid, {
+                  target: target.uuid,
+                });
+              }
             }
           });
         } finally {

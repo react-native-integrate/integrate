@@ -29,9 +29,6 @@ import { restoreBackupFiles } from './utils/upgrade/restoreBackupFiles';
 import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
-// TODO: remove when we update min supported node and start using fs.rm instead of fs.rmdir
-process.removeAllListeners('warning');
-
 export async function upgrade(): Promise<void> {
   logInfo(
     color.bold(color.inverse(color.magenta(' stage 1 '))) +

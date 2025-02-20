@@ -75,10 +75,11 @@ async function setGitFolder(oldProjectPath: string, files: string[]) {
       if (shouldBackup) {
         startSpinner('cleaning up');
         await new Promise(r =>
-          fs.rmdir(
+          fs.rm(
             path.join(getProjectPath(), Constants.GIT_FOLDER_NAME + '.backup'),
             {
               recursive: true,
+              force: true,
             },
             r
           )
@@ -91,10 +92,11 @@ async function setGitFolder(oldProjectPath: string, files: string[]) {
       stopSpinner(color.red('failed to copy files'));
 
       await new Promise(r =>
-        fs.rmdir(
+        fs.rm(
           path.join(getProjectPath(), Constants.GIT_FOLDER_NAME),
           {
             recursive: true,
+            force: true,
           },
           r
         )
