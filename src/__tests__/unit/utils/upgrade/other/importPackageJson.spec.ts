@@ -51,6 +51,16 @@ describe('importPackageJson', () => {
       on: (_event: string, cb: (exitCode: number) => void) => {
         cb(0);
       },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
     }));
 
     await importGetter.apply();
@@ -82,6 +92,16 @@ describe('importPackageJson', () => {
     mockSpawn.mockImplementationOnce(() => ({
       on: (_event: string, cb: (exitCode: number) => void) => {
         cb(1);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
       },
     }));
     mockPrompter.multiselect.mockClear();
@@ -115,10 +135,20 @@ describe('importPackageJson', () => {
       on: (_event: string, cb: (exitCode: number) => void) => {
         cb(0);
       },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
     }));
 
     await importGetter.apply();
-    expect(mockSpawn).toHaveBeenCalledWith('npm.cmd', ['install']);
+    expect(mockSpawn).toHaveBeenCalledWith('npm', ['install'], { shell: true });
 
     Object.defineProperty(process, 'platform', {
       value: originalPlatform,

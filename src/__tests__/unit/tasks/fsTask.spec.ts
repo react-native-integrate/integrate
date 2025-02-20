@@ -397,7 +397,7 @@ describe('fsTask', () => {
       task: 'fs',
       actions: [
         {
-          removeFile: 'file-to-delete.json',
+          removeFile: 'android/file-to-delete.json',
         },
       ],
     };

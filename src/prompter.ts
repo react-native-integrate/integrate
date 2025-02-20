@@ -171,3 +171,17 @@ export function summarize(code: string | null, maxLength = 128): string {
       (flatText.length > maxLength ? '...' : '')
   );
 }
+
+export function getLastLine(code: string | null, maxLength = 128): string {
+  if (code == null) return 'null';
+  const lines = code
+    .replace(/\r/g, '')
+    .split('\n')
+    .filter(x => x.trim().length);
+  if (!lines.length) return '';
+  const flatText = lines[lines.length - 1];
+  return (
+    flatText.substring(0, maxLength) +
+    (flatText.length > maxLength ? '...' : '')
+  );
+}

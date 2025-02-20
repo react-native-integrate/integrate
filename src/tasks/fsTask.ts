@@ -127,7 +127,7 @@ export async function applyFsModification(
     if (!destination.startsWith(projectPath)) {
       throw new Error('invalid path to remove');
     }
-    if (!fs.existsSync(action.removeFile)) {
+    if (!fs.existsSync(destination)) {
       if (action.strict)
         throw new Error(`${color.yellow(action.removeFile)} does not exist`);
       else
@@ -135,7 +135,7 @@ export async function applyFsModification(
           `${color.yellow(action.removeFile)} does not exist, skipped remove operation`
         );
     } else {
-      fs.rmSync(action.removeFile);
+      fs.rmSync(destination);
       logMessage(`removed ${color.yellow(action.removeFile)}`);
     }
   }

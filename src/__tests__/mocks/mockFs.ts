@@ -2,6 +2,7 @@
 
 import { Constants } from '../../constants';
 import { escapeRegExp } from '../../utils/escapeRegExp';
+import nodePath from 'path';
 
 let store: Record<string, string> = {};
 const permissions = {
@@ -10,13 +11,20 @@ const permissions = {
 };
 
 function isDirectoryMatch(path: string, directory: string): boolean {
-  return new RegExp(escapeRegExp(directory) + '(?:/|$)', 'i').test(path);
+  return new RegExp(
+    escapeRegExp(directory) + `(?:${escapeRegExp(nodePath.sep)}|$)`,
+    'i'
+  ).test(path);
 }
 
 export const mockFs = {
-  existsSync: (path: string): boolean =>
-    Object.keys(store).some(key => isDirectoryMatch(key, path)),
+  existsSync: (path: string): boolean => {
+    path = nodePath.resolve(path);
+    return Object.keys(store).some(key => isDirectoryMatch(key, path));
+  },
   renameSync: (from: string, to: string) => {
+    from = nodePath.resolve(from);
+    to = nodePath.resolve(to);
     Object.entries(store)
       .filter(([key]) => isDirectoryMatch(key, from))
       .forEach(([key, value]) => {
@@ -25,35 +33,42 @@ export const mockFs = {
       });
   },
   readFileSync: (path: string): string => {
+    path = nodePath.resolve(path);
     if (!permissions.read) throw new Error('[mock] permission denied');
     if (!(path in store)) throw new Error('[mock] file not found');
     return store[path];
   },
   writeFileSync: (path: string, data: string): boolean => {
+    path = nodePath.resolve(path);
     if (!permissions.write) throw new Error('[mock] permission denied');
     store[path] = data;
     return true;
   },
   copyFileSync: (from: string, to: string): boolean => {
+    from = nodePath.resolve(from);
+    to = nodePath.resolve(to);
     const content = mockFs.readFileSync(from);
     mockFs.writeFileSync(to, content);
     return true;
   },
   copyFile: jest.fn((from: string, to: string, cb: (e?: Error) => void) => {
+    from = nodePath.resolve(from);
+    to = nodePath.resolve(to);
     mockFs.copyFileSync(from, to);
     cb();
   }),
   mkdirSync: (): boolean => {
     return true;
   },
-  rmSync: (_path: string) => {
+  rmSync: (path: string) => {
+    path = nodePath.resolve(path);
     Object.keys(store)
-      .filter(key => isDirectoryMatch(key, _path))
+      .filter(key => isDirectoryMatch(key, path))
       .forEach(key => delete store[key]);
     return true;
   },
-  rm: jest.fn((_path: string, _opts, cb: (e?: Error) => void) => {
-    mockFs.rmSync(_path);
+  rm: jest.fn((path: string, _opts, cb: (e?: Error) => void) => {
+    mockFs.rmSync(path);
     cb();
   }),
   mkdir: jest.fn((_path, _opts, cb: (e?: Error) => void) => cb()),
@@ -62,10 +77,12 @@ export const mockFs = {
   },
   readdir: jest.fn(),
   unlink: jest.fn((filePath: string, cb: (e?: Error) => void) => {
+    filePath = nodePath.resolve(filePath);
     delete store[filePath];
     cb();
   }),
   lstatSync: jest.fn((p: string) => {
+    p = nodePath.resolve(p);
     if (Object.keys(store).includes(p)) {
       return {
         isFile: () => true,

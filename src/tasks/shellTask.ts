@@ -6,9 +6,11 @@ import color from 'picocolors';
 import { Constants } from '../constants';
 import {
   confirm,
+  getLastLine,
   logMessageGray,
   startSpinner,
   stopSpinner,
+  updateSpinner,
 } from '../prompter';
 import { ShellTaskType } from '../types/mod.types';
 import { getErrMessage } from '../utils/getErrMessage';
@@ -81,15 +83,29 @@ export async function shellTask(args: {
       let output: string = '';
       startSpinner(`running ${color.yellow(command + ' ' + args.join(' '))}`);
       let exitCode: number | undefined = undefined;
+      let isDone = false;
       try {
         exitCode = await new Promise<number>((resolve, reject) => {
           try {
-            const child = spawn(command, args, { cwd });
+            const child = spawn(command, args, {
+              cwd,
+              shell: process.platform == 'win32',
+            });
             child.stdout.on('data', (chunk: Buffer) => {
-              output += chunk.toString('utf8');
+              if (isDone) return;
+              const partialOutput = chunk.toString('utf8');
+              updateSpinner(
+                `running ${color.yellow(command + ' ' + args.join(' '))} ${color.gray(getLastLine(partialOutput))}`
+              );
+              output += partialOutput;
             });
             child.stderr.on('data', (chunk: Buffer) => {
-              output += chunk.toString('utf8');
+              if (isDone) return;
+              const partialOutput = chunk.toString('utf8');
+              updateSpinner(
+                `running ${color.yellow(command + ' ' + args.join(' '))} ${color.gray(getLastLine(partialOutput))}`
+              );
+              output += partialOutput;
             });
             // child.stdout.pipe(process.stdout);
             // child.stderr.pipe(process.stderr);
@@ -101,6 +117,8 @@ export async function shellTask(args: {
           }
         });
       } finally {
+        isDone = true;
+
         if (action.name) variables.set(`${action.name}.output`, output);
         if (exitCode == null) {
           // throwing error

@@ -28,6 +28,7 @@ export async function waitForFile(filePath: string): Promise<boolean> {
         )} (press [s] to skip)`,
         onCancel
       );
+      const normalizedPath = path.normalize(filePath);
       const watcher = fs.watch(
         // Extract the directory path from the file path
         filePath.split(path.sep).slice(0, -1).join(path.sep),
@@ -36,7 +37,7 @@ export async function waitForFile(filePath: string): Promise<boolean> {
           // Check if the file has been created
           if (
             event === 'rename' &&
-            filename === filePath.split(path.sep).pop()
+            filename === normalizedPath.split(path.sep).pop()
           ) {
             // Stop watching
 

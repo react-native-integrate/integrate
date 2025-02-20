@@ -14,7 +14,10 @@ describe('waitForFile', () => {
     await expect(waitForFile('/test/file.json')).resolves.toBe(false);
   });
   it('should resolve true when file not exists', async () => {
-    await expect(waitForFile('/test/file.json')).resolves.toBe(true);
+    jest.useFakeTimers();
+    const promise = waitForFile('/test/file.json');
+    jest.advanceTimersToNextTimer();
+    await expect(promise).resolves.toBe(true);
   });
   it('should throw when has no permission', async () => {
     mockFs.setReadPermission(false);
@@ -30,13 +33,16 @@ describe('waitForFile', () => {
   });
   it('should handle cancel', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    jest.useFakeTimers();
     mockStartSpinner.mockImplementationOnce(((
       _msg: string,
       onCancel: () => void
     ) => {
       setImmediate(() => onCancel());
     }) as any);
-    await expect(waitForFile('/test/file.json')).rejects.toThrowError('skip');
+    const promise = waitForFile('/test/file.json');
+    jest.advanceTimersToNextTimer();
+    await expect(promise).rejects.toThrowError('skip');
 
     mockStartSpinner.mockReset();
   });

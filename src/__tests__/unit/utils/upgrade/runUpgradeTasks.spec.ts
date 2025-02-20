@@ -102,9 +102,9 @@ imports:
     const result = await runUpgradeTasks('/oldProject');
 
     expect(result.didRun).toBeTruthy();
-    expect(mockFs.readFileSync(getProjectPath() + '/path/some.file')).toBe(
-      'random'
-    );
+    expect(
+      mockFs.readFileSync(path.join(getProjectPath() + '/path/some.file'))
+    ).toBe('random');
   });
   it('should skip non existing upgrade.yml imports', async () => {
     mockFs.writeFileSync(
