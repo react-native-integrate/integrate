@@ -452,7 +452,7 @@ describe('xcodeTask', () => {
     expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('13.0');
     xcodeContext.clear();
   });
-  it('should set higher deployment version of new added exntension', async () => {
+  it('should set higher deployment version of new added extension', async () => {
     const pbxFilePath = getPbxProjectPath();
     mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
 
@@ -535,6 +535,32 @@ describe('xcodeTask', () => {
       packageName: 'test-package',
     });
     expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('10.0');
+    xcodeContext.clear();
+  });
+  it('should change deployment version to minimum', async () => {
+    const pbxFilePath = getPbxProjectPath();
+    mockFs.writeFileSync(pbxFilePath, mockPbxProjTemplate);
+
+    const proj = xcode.project(pbxFilePath);
+    xcodeContext.set(proj);
+    proj.parseSync();
+
+    const task: XcodeTaskType = {
+      task: 'xcode',
+      actions: [
+        {
+          setDeploymentVersion: { min: '13.0' },
+          target: 'main',
+        },
+      ],
+    };
+    await xcodeTask({
+      configPath: 'path/to/config',
+      task: task,
+      content: proj,
+      packageName: 'test-package',
+    });
+    expect(variables.get('IOS_DEPLOYMENT_VERSION')).toEqual('13.0');
     xcodeContext.clear();
   });
   it('should add configuration', async () => {
