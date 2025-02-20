@@ -212,6 +212,39 @@ describe('pListTask', () => {
       { forth: 'test2' },
     ]);
   });
+  it('should delete value', () => {
+    let content: Record<string, any> = {
+      first: {
+        second: {
+          third: 'test',
+        },
+      },
+    };
+    const task: PlistTaskType = {
+      task: 'plist',
+      actions: [
+        {
+          set: {
+            first: {
+              second: {
+                $delete: true,
+              },
+            },
+          },
+          strategy: 'merge',
+        },
+      ],
+    };
+
+    content = plistTask({
+      configPath: 'path/to/config',
+      task: task,
+      content,
+      packageName: 'test-package',
+    });
+    expect(content.first).toEqual({});
+  });
+
   it('should skip if condition not met', () => {
     let content: Record<string, any> = {
       first: {

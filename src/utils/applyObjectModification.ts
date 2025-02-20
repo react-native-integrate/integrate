@@ -39,7 +39,13 @@ export function modifyObject(
     }
   } else {
     /* eslint-disable @typescript-eslint/no-unsafe-return */
-    const customizer = function (objValue: any, srcValue: any) {
+    const fieldsToDelete: [Record<string, any>, string][] = [];
+    const customizer = function (
+      objValue: any,
+      srcValue: any,
+      field: string,
+      objParent: Record<string, any>
+    ) {
       if (strategy == 'merge_concat') {
         if (Array.isArray(objValue) && Array.isArray(srcValue)) {
           return objValue.concat(srcValue);
@@ -61,6 +67,10 @@ export function modifyObject(
         delete srcValue.$append;
         return objValue;
       }
+      if (typeof srcValue === 'object' && srcValue.$delete) {
+        fieldsToDelete.push([objParent, field]);
+        return true;
+      }
       if (
         Array.isArray(objValue) &&
         typeof srcValue === 'object' &&
@@ -75,6 +85,7 @@ export function modifyObject(
     };
 
     content = mergeWith(content, modifier, customizer);
+    fieldsToDelete.forEach(([obj, field]) => delete obj[field]);
     /* eslint-enable @typescript-eslint/no-unsafe-return */
   }
   return content;
