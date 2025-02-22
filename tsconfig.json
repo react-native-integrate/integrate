@@ -9,7 +9,8 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true
   },
   "include": ["src/**/*.ts"],
   "ts-node": {
