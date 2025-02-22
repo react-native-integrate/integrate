@@ -2,10 +2,13 @@
 sidebar_position: 4
 title: Xcode Project
 ---
+
 # Xcode Task Configuration (`xcode`)
+
 _Modify Xcode project_
 
-The "xcode" task is used to manage the iOS xcode project. This task allows you to specify which resources to add and where to add them, either to the root level of the iOS project or to specific target groups within the project.
+The "xcode" task is used to manage the iOS xcode project. This task allows you to specify which resources to add and where to add them, either to the
+root level of the iOS project or to specific target groups within the project.
 
 ## Task Properties
 
@@ -37,7 +40,9 @@ The "xcode" task is used to manage the iOS xcode project. This task allows you t
 | target   | [Target](#target-property) | Specifies the target group within the iOS project where the resource should be added.                                                               |
 
 #### Target Property
+
 Specifies the target group within the iOS project where the resource should be added. It can take the listed values.
+
 - `root`: (default) Adds the resource to the project root
 - `main`: Adds the resource to the main application group
 - Or target name or path to add the resource
@@ -54,7 +59,8 @@ Specifies the target group within the iOS project where the resource should be a
 `name` must be specified for this action or you will get a validation error.
 This action will expose the `name.target` variable which will hold the name of the target which was entered by the user.
 
- For example:
+For example:
+
 ```yaml
 # add a notification service extension 
 # with the default name `MyNotificationService`.
@@ -63,10 +69,11 @@ This action will expose the `name.target` variable which will hold the name of t
   name: notificationsv # Give it a name
   type: notification-service
 
- # set extension version to same as main target
+# set extension version to same as main target
 - setDeploymentVersion: $[IOS_DEPLOYMENT_VERSION]
   target: $[notificationsv.target] # use the name here
 ```
+
 :::
 
 ### Add new capability to a target
@@ -75,6 +82,7 @@ This action will expose the `name.target` variable which will hold the name of t
 |:--------------|:-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | addCapability | one of [Capability](#capability)           | Specifies the capability to be added                                                                                                                                                                              |
 | groups        | Array\<string\>                            | Required when `addCapability` is set to `groups` or `keychain-sharing`                                                                                                                                            |
+| domains       | Array\<string\>                            | Required when `addCapability` is set to `domains`                                                                                                                                                                 |
 | modes         | Array\<[BackgroundMode](#backgroundmode)\> | Required when `addCapability` is set to `background-mode`.                                                                                                                                                        |
 | controllers   | Array\<[Controller](#controller)\>         | Required when `addCapability` is set to `game-controllers`                                                                                                                                                        |
 | routing       | Array\<[Routing](#routing)\>               | Required when `addCapability` is set to `maps`.                                                                                                                                                                   |
@@ -90,11 +98,12 @@ This action will expose the `name.target` variable which will hold the name of t
 - `healthkit`
 - `inter-app-audio`
 - `increased-memory`
-- `groups`: App Groups. Additional `groups` field is required, check below.
-- `keychain-sharing`: Additional `groups` field is required, check below.
-- `background-mode`: Additional `modes` field is required, check below.
-- `game-controllers`: Additional `controllers` field is required, check below.
-- `maps`: Additional `routing` field is required, check below.
+- `groups`: App Groups. Additional `groups` field is required.
+- `domains`: App Domains. Additional `domains` field is required.
+- `keychain-sharing`: Additional `groups` field is required.
+- `background-mode`: Additional `modes` field is required.
+- `game-controllers`: Additional `controllers` field is required.
+- `maps`: Additional `routing` field is required.
 
 #### BackgroundMode
 
@@ -170,4 +179,5 @@ actions:
     type: notification-extension
 ```
 
-In this example, a resource and a new target, `GoogleService-Info.plist` and `OneSignalNotificationService` are specified for addition. The `target` field distinguishes the target groups within the iOS project where each resource should be placed.
+In this example, a resource and a new target, `GoogleService-Info.plist` and `OneSignalNotificationService` are specified for addition. The `target`
+field distinguishes the target groups within the iOS project where each resource should be placed.

@@ -45,7 +45,7 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: 'v2.x'
+              label: 'v3.x'
             },
           },
           remarkPlugins: [

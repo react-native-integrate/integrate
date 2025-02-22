@@ -69,10 +69,10 @@ steps:
           regex: platform :ios,.*
         replace: platform :ios, '$[IOS_DEPLOYMENT_VERSION]'
 
-  - task: shell  #Example shell command to remove detault App.tsx, in case you have it in src folder
+  - task: fs  #Example shell command to remove detault App.tsx, in case you have it in src folder
     label: Removing default App.tsx
     actions:
-      - command: rm ./App.tsx
+      - removeFile: App.tsx
 ```
 
 ### 2. Create a new React Native project
@@ -81,10 +81,11 @@ Follow instructions on [the official RN page](https://reactnative.dev/docs/envir
 
 ### 3. Let the magic happen
 
-Run the upgrade command.
+While in new project folder, run the upgrade command.
 
 ```bash
 npx react-native-integrate upgrade
+
 # or, if you've installed it globally
 rnu
 ```

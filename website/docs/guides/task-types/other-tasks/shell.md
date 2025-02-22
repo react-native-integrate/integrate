@@ -70,5 +70,5 @@ Specify `name` field for this action to expose the `name.output` variable which 
 `shell` commands that are used in package integrations will always ask permission from user before execution. User may choose to skip the execution,
 so don't rely on it too much.
 
-It does not ask permission when used in [upgrade.yml](../../../../upgrade/configuration).
+It does not ask permission when used in [upgrade.yml](../../../upgrade/configuration).
 :::

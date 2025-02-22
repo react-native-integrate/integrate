@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 ---
-# Conditional Tasks and Actions
+# Conditional Tasks
 
 The `when` field of tasks and actions in your configuration allows you to specify conditions under which a particular task or action should be executed. It provides flexibility in controlling the flow of the integration based on variables and their values.
 

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 ---
-# Task and Action States
+# Task States
 
 The state management feature in your configuration allows you to track the execution status of tasks and actions by defining a `name` for each task and action. This feature provides a way to check and control the flow of your operations based on the execution results.
 

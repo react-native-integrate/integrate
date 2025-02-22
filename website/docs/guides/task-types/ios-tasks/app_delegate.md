@@ -1,14 +1,15 @@
 ---
 sidebar_position: 1
-title: AppDelegate.mm
+title: AppDelegate
 ---
 
 # App Delegate Task Configuration (`app_delegate`)
 
-_Modify AppDelegate.mm file_
+_Modify AppDelegate file_
 
-The `app_delegate` task is used to modify the AppDelegate.mm file in an iOS project. This task allows you to insert code, import statements, or
-comments into specific methods within the AppDelegate.mm file. The modifications can be made before or after a specified point in the method. This
+The `app_delegate` task is used to modify the AppDelegate.mm or AppDelegate.swift file in an iOS project. This task allows you to insert code, import
+statements, or
+comments into specific methods within the AppDelegate file. The modifications can be made before or after a specified point in the method. This
 task is particularly useful for integrating third-party libraries or SDKs that require changes to the AppDelegate file.
 
 ## Task Properties
@@ -16,6 +17,7 @@ task is particularly useful for integrating third-party libraries or SDKs that r
 | Property | Type                                            | Description                                                                                                                                              |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | task     | "app_delegate", required                        | Specifies the task type, which should be set to "app_delegate" for this task.                                                                            |
+| lang     | "objc" or "swift", required                     | Specifies the file language.                                                                                                                             |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -32,12 +34,12 @@ task is particularly useful for integrating third-party libraries or SDKs that r
 
 ### Context reduction properties
 
-| Property | Type                                                 | Description                                                                                                                                                                                                                                                                                |
-|:---------|:-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| block    | one of [Allowed Method Names](#allowed-method-names) | Specifies the name of the method within AppDelegate.mm where the modification should be applied. It must match one of the allowed method names. See [Allowed Method Names](#allowed-method-names) section for details. Omitting this field instructs the action item to modify whole file. |
-| before   | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                    |
-| after    | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                     |
-| search   | string or `{regex: string, flags: string}`           | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                                                                                                           |
+| Property | Type                                                 | Description                                                                                                                                                                                                                                                                             |
+|:---------|:-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| block    | one of [Allowed Method Names](#allowed-method-names) | Specifies the name of the method within AppDelegate where the modification should be applied. It must match one of the allowed method names. See [Allowed Method Names](#allowed-method-names) section for details. Omitting this field instructs the action item to modify whole file. |
+| before   | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                 |
+| after    | string or `{regex: string, flags: string}`           | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.                                                                                  |
+| search   | string or `{regex: string, flags: string}`           | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                                                                                                        |
 
 ### Context modification properties
 
@@ -58,7 +60,7 @@ task is particularly useful for integrating third-party libraries or SDKs that r
 
 ### Allowed Method Names
 
-The `block` field within the action items must match one of the allowed method names within the AppDelegate.mm file. The method is created if it does
+The `block` field within the action items must match one of the allowed method names within the AppDelegate file. The method is created if it does
 not exist. The following method names are allowed:
 
 - `didFinishLaunchingWithOptions`

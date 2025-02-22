@@ -1,30 +1,43 @@
 ---
-sidebar_position: 5
+sidebar_position: 7
 ---
 # Community Configurations
 
-If this tool gets adopted by package developers, configurations will be shipped along with their packages.
 
-Until then, we will be creating and maintaining all of the configurations in the [Integrate Configurations Repo](https://github.com/react-native-integrate/configs)
+## Submitting Configurations
 
-## Submission
+If your package requires native code changes, you can contribute a configuration to the community repository. This allows other developers to quickly integrate your package using this tool.
 
-This repo contains packages with a prefix that's generated from md5 hash of the package name. `info` command can be used to easily obtain this prefix before submission.
+## How to Submit
 
-### Example
-
-Lets submit configuration for some-package. We run the command.
+1. Run the following command to get the required path for your package:
 
 ```bash
-npx react-native-integrate info some-package
+npx react-native-integrate info <package-name>
 ```
-which prints
+
+2. The command will display the path based on the md5 hash of the package name. For example:
 
 ```
 ...
 remote configuration: not found
-at https://github.com/react-native-integrate/configs/tree/main/packages/6/1/a/some-package/integrate.yml
+at https://github.com/react-native-integrate/configs/tree/main/packages/<hash-path>/<package-name>/integrate.yml
 ...
 ```
 
-From here we understand that this package should be submitted to the repo with path `packages/6/1/a/some-package/integrate.yml`.
+3. Submit your configuration to the repository at the generated path.
+
+## Example
+
+Let's submit a configuration for `some-package`:
+
+```bash
+npx react-native-integrate info some-package
+```
+
+This will generate a path like:
+
+```
+https://github.com/react-native-integrate/configs/tree/main/packages/6/1/a/some-package/integrate.yml
+```
+Submit your configuration to this path.
