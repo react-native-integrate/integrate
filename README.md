@@ -3,23 +3,29 @@
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
 [![Downloads][downloads-img]][downloads-url]
-[![Issues][issues-img]][issues-url]
 [![Code Coverage][codecov-img]][codecov-url]
-[![Commitizen Friendly][commitizen-img]][commitizen-url]
-[![Semantic Release][semantic-release-img]][semantic-release-url]
 
-**Single-command integration of React Native packages**
+**Single-command integration and upgrade for React Native**
 
-## Features
+## Key Features
 
-- Automatic package integration which require native code changes.
-- Real upgrade helper by automatic import of old project data and re-integration.
-- Supports android and ios
-- Fully tested
+- **Package Integration**: Automates native code modifications required by third-party packages.
+- **Upgrade Assistance**: Helps upgrade React Native projects with minimal manual effort.
+- **Custom Configuration**: Allows developers to define custom integration steps.
 
-## Getting Started
+## Try now!
 
-Check the [documentation](https://react-native-integrate.github.io/integrate) to get started.
+```bash
+# Install a package with your favorite pm
+npm install react-native-vision-camera
+
+# Integrate the package
+npx react-native-integrate react-native-vision-camera
+```
+
+## Documentation
+
+Check [https://react-native-integrate.github.io/integrate](https://react-native-integrate.github.io/integrate) to get started.
 
 ## Contribution
 
@@ -35,11 +41,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [downloads-url]:https://www.npmtrends.com/react-native-integrate
 [npm-img]:https://img.shields.io/npm/v/react-native-integrate
 [npm-url]:https://www.npmjs.com/package/react-native-integrate
-[issues-img]:https://img.shields.io/github/issues/react-native-integrate/integrate
-[issues-url]:https://github.com/react-native-integrate/integrate/issues
 [codecov-img]:https://codecov.io/gh/react-native-integrate/integrate/branch/main/graph/badge.svg
 [codecov-url]:https://codecov.io/gh/react-native-integrate/integrate
-[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]:https://github.com/semantic-release/semantic-release
-[commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
-[commitizen-url]:http://commitizen.github.io/cz-cli/
