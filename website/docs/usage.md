@@ -16,7 +16,8 @@ npx react-native-integrate <package-name>
 ```bash npm2yarn
 # First install the package
 npm install @react-native-firebase/app
-
+```
+```bash npm2yarn
 # Integrate the package
 npx react-native-integrate@latest @react-native-firebase/app
 ```
