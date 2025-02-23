@@ -180,7 +180,9 @@ export async function getInstallCommand(projectPath: string) {
   const isPnpmLockPresent = fs.existsSync(
     path.join(projectPath, 'pnpm-lock.yaml')
   );
-  const isBunLockPresent = fs.existsSync(path.join(projectPath, 'bun.lockb'));
+  const isBunLockPresent =
+    fs.existsSync(path.join(projectPath, 'bun.lockb')) ||
+    fs.existsSync(path.join(projectPath, 'bun.lock'));
 
   const options: SelectOption[] = [];
   if (isNpmLockPresent) options.push({ label: 'npm', value: 'npm install' });

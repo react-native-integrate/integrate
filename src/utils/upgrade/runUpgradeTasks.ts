@@ -70,11 +70,34 @@ export async function runUpgradeTasks(
       startSpinner(`discovering files from ${color.yellow('old project')}`);
 
       const filesToCopy: string[] = [];
+      const blackListedPaths = [
+        'android',
+        'ios',
+        '.upgrade/',
+        'node_modules/',
+        'package.json',
+        'integrate-lock.json',
+      ];
       for (let i = 0; i < config.imports.length; i++) {
         updateSpinner(
           `discovering files from ${color.yellow('old project')} (${i + 1}/${config.imports.length})`
         );
         const relativePath = getText(config.imports[i]);
+        if (
+          blackListedPaths.some(p => {
+            if (p.endsWith('/'))
+              return (
+                relativePath.startsWith(p) ||
+                relativePath === p.substring(0, p.length - 1)
+              );
+            return relativePath === p;
+          })
+        ) {
+          logWarning(
+            `skipped import of ${color.yellow(relativePath)}, this path is handled internally so you can remove it from imports list.`
+          );
+          continue;
+        }
         const importPath = path.join(oldProjectPath, relativePath);
         if (!fs.existsSync(importPath)) {
           logWarning(

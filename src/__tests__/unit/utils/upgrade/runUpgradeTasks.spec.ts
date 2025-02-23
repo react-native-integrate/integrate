@@ -119,6 +119,22 @@ imports:
     expect(result.didRun).toBeTruthy();
     expect(mockFs.lstatSync).not.toHaveBeenCalled();
   });
+  it('should skip blacklisted upgrade.yml imports', async () => {
+    mockFs.writeFileSync('/oldProject/android/some.file', 'random');
+    mockFs.writeFileSync('/oldProject/node_modules/some.file', 'random');
+    mockFs.writeFileSync(
+      path.join(getProjectPath(), '.upgrade/upgrade.yml'),
+      `
+imports:
+  - android
+  - node_modules/some.file`
+    );
+    mockFs.lstatSync.mockClear();
+    const result = await runUpgradeTasks('/oldProject');
+
+    expect(result.didRun).toBeTruthy();
+    expect(mockFs.lstatSync).not.toHaveBeenCalled();
+  });
   it('should skip when no old project path specified', async () => {
     mockFs.writeFileSync(
       path.join(getProjectPath(), '.upgrade/upgrade.yml'),
