@@ -2,9 +2,11 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import color from 'picocolors';
+import { Constants } from '../../../constants';
 import {
   getLastLine,
   logMessage,
+  logWarning,
   multiselect,
   select,
   startSpinner,
@@ -16,6 +18,7 @@ import { SelectOption } from '../../../types/prompt.types';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { modifyObject } from '../../applyObjectModification';
 import { getPackageJson, getPackageJsonPath } from '../../getInstalledPackages';
+import { getRemoteFile } from '../../getPackageConfig';
 
 export function importPackageJson(projectPath: string): ImportGetter | null {
   try {
@@ -44,6 +47,9 @@ async function setPackageJson(
 ) {
   const packageJson = getPackageJson();
 
+  const { deprecatedPackages, deprecatedDevPackages } =
+    await findDeprecatedPackages(oldPackageJson, packageJson);
+
   // process rest
   Object.entries(oldPackageJson).forEach(([key, value]) => {
     switch (key) {
@@ -54,6 +60,12 @@ async function setPackageJson(
           value as Record<string, any>,
           'append'
         );
+
+        // delete deprecated package
+        for (const dependency of deprecatedPackages) {
+          delete packageJson.dependencies[dependency];
+        }
+
         // sort dependencies
         packageJson.dependencies = Object.fromEntries(
           Object.entries(packageJson.dependencies).sort()
@@ -66,6 +78,12 @@ async function setPackageJson(
           value as Record<string, any>,
           'append'
         );
+
+        // delete deprecated package
+        for (const dependency of deprecatedDevPackages) {
+          delete packageJson.devDependencies[dependency];
+        }
+
         // sort devDependencies
         packageJson.devDependencies = Object.fromEntries(
           Object.entries(packageJson.devDependencies).sort()
@@ -183,4 +201,48 @@ export async function getInstallCommand(projectPath: string) {
     installer = 'npm install';
   }
   return installer;
+}
+
+async function findDeprecatedPackages(
+  oldPackageJson: PackageJsonType,
+  packageJson: PackageJsonType
+) {
+  const deprecatedPackages: string[] = [];
+  const deprecatedDevPackages: string[] = [];
+  const oldRNVersion = oldPackageJson.dependencies?.['react-native'];
+  const newRNVersion = packageJson.dependencies?.['react-native'];
+  if (oldRNVersion && newRNVersion) {
+    try {
+      const oldDiffPackageJsonContent = await getRemoteFile(
+        Constants.REMOTE_DIFF_PACKAGE_JSON.replace('[version]', oldRNVersion)
+      );
+      const newDiffPackageJsonContent = await getRemoteFile(
+        Constants.REMOTE_DIFF_PACKAGE_JSON.replace('[version]', newRNVersion)
+      );
+      if (oldDiffPackageJsonContent && newDiffPackageJsonContent) {
+        const oldDiffPackageJson: PackageJsonType = JSON.parse(
+          oldDiffPackageJsonContent
+        );
+        const newDiffPackageJson: PackageJsonType = JSON.parse(
+          newDiffPackageJsonContent
+        );
+        for (const dependency in oldDiffPackageJson.dependencies) {
+          if (!(dependency in newDiffPackageJson.dependencies)) {
+            deprecatedPackages.push(dependency);
+          }
+        }
+        for (const dependency in oldDiffPackageJson.devDependencies) {
+          if (!(dependency in (newDiffPackageJson.devDependencies || {}))) {
+            deprecatedDevPackages.push(dependency);
+          }
+        }
+      }
+    } catch (e: any) {
+      logWarning(
+        'warning: could not get package.json diff, skipping deprecated package check: ' +
+          e?.message
+      );
+    }
+  }
+  return { deprecatedPackages, deprecatedDevPackages };
 }

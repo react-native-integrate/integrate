@@ -181,6 +181,56 @@ describe('importPackageJson', () => {
     const importGetter = importPackageJson('/oldProject') as ImportGetter;
     expect(importGetter).toBeNull();
   });
+  it('should remove deprecated packages', async () => {
+    mockFs.writeFileSync(
+      '/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME,
+      JSON.stringify(
+        {
+          name: 'test',
+          dependencies: {
+            'react-native': '1.0.0',
+            'some-package': '1.0.0',
+          },
+          devDependencies: {
+            'dev-package': '1.0.0',
+          },
+        } as PackageJsonType,
+        null,
+        2
+      )
+    );
+
+    const importGetter = importPackageJson('/oldProject') as ImportGetter;
+
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: (exitCode: number) => void) => {
+        cb(0);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
+    }));
+
+    await importGetter.apply();
+
+    expect(
+      mockFs.readFileSync(
+        path.join(getProjectPath(), Constants.PACKAGE_JSON_FILE_NAME)
+      )
+    ).not.toContain('some-package');
+    expect(
+      mockFs.readFileSync(
+        path.join(getProjectPath(), Constants.PACKAGE_JSON_FILE_NAME)
+      )
+    ).not.toContain('dev-package');
+  });
 
   describe('getInstallCommand', () => {
     it('should ask user when multiple lock exists', async () => {

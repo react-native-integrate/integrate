@@ -121,7 +121,7 @@ if (!didSetup) {
       description: 'Mock project',
       dependencies: {
         'mock-package': '^1.2.3',
-        'react-native': '^1.2.3',
+        'react-native': '1.2.3',
       },
       engines: {
         node: '>=16',

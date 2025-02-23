@@ -36,4 +36,6 @@ export const Constants = {
     'https://raw.githubusercontent.com/react-native-integrate/configs/main/packages/[package]/',
   REMOTE_CONFIG_REPO_HOME:
     'https://github.com/react-native-integrate/configs/tree/main/packages/[package]/integrate.yml',
+  REMOTE_DIFF_PACKAGE_JSON:
+    'https://raw.githubusercontent.com/react-native-community/rn-diff-purge/release/[version]/RnDiffApp/package.json',
 };
