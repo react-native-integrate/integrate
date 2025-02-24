@@ -1,7 +1,10 @@
 import { confirm, multiselect, select, text } from '../prompter';
 import { Prompt, ValidationType } from '../types/mod.types';
 import { transformTextInObject, variables } from '../variables';
-import { handlePackageUpgradeInput } from './getPackageUpgradeInput';
+import {
+  getLastInputValue,
+  handlePackageUpgradeInput,
+} from './getPackageUpgradeInput';
 import { addPackageUpgradeInput } from './packageUpgradeConfig';
 
 export async function runPrompt(
@@ -10,19 +13,25 @@ export async function runPrompt(
 ): Promise<void> {
   if (handlePackageUpgradeInput(packageName, prompt.name)) return;
 
+  const lastInputValue = getLastInputValue(packageName, prompt.name);
+
   prompt = transformTextInObject(prompt);
   let inputValue: any;
   switch (prompt.type) {
     case 'boolean':
+      if (lastInputValue != null) prompt.initialValue = lastInputValue;
       inputValue = await confirm(prompt.text, prompt);
       break;
     case 'multiselect':
+      if (lastInputValue != null) prompt.initialValues = lastInputValue;
       inputValue = await multiselect(prompt.text, prompt);
       break;
     case 'select':
+      if (lastInputValue != null) prompt.initialValue = lastInputValue;
       inputValue = await select(prompt.text, prompt);
       break;
     default:
+      if (lastInputValue != null) prompt.initialValue = lastInputValue;
       inputValue = await text(prompt.text, {
         placeholder: prompt.placeholder,
         defaultValue: prompt.defaultValue,
