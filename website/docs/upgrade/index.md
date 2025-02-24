@@ -75,19 +75,27 @@ steps:
       - removeFile: App.tsx
 ```
 
-### 2. Create a new React Native project
+### 2. Let the magic happen
 
-Follow instructions on [the official RN page](https://reactnative.dev/docs/environment-setup#creating-a-new-application) to create a new project with the latest RN version.
-
-### 3. Let the magic happen
-
-While in new project folder, run the upgrade command.
+Run the upgrade command.
 
 ```bash
 npx react-native-integrate upgrade
 
 # or, if you've installed it globally
 rnu
+```
+
+#### Optional manual mode
+
+Normally `upgrade` command creates a new project, applies changes and uses git commands to commit and push changes to a new branch. If you have permission issues, you can try the manual mode.
+
+Follow step 1 above, then create a new project manually and run upgrade command in the new project folder:
+```bash
+npx react-native-integrate upgrade --manual
+
+# or, if you've installed it globally
+rnu -m
 ```
 
 ## How it works?

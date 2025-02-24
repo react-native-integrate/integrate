@@ -8,14 +8,13 @@ import {
 } from '../types/integrator.types';
 import { getProjectPath } from './getProjectPath';
 
-const projectPath = getProjectPath();
-const lockFilePath = path.join(projectPath, Constants.LOCK_FILE_NAME);
-
 function createLockObject(): LockData {
   return { lockfileVersion: Constants.CURRENT_LOCK_VERSION, packages: {} };
 }
 
 export function readLockFile(): LockDataWithMeta {
+  const projectPath = getProjectPath();
+  const lockFilePath = path.join(projectPath, Constants.LOCK_FILE_NAME);
   try {
     if (!fs.existsSync(lockFilePath))
       return {
@@ -49,6 +48,8 @@ export function readLockFile(): LockDataWithMeta {
 }
 
 function writeLockFile(data: LockData): void {
+  const projectPath = getProjectPath();
+  const lockFilePath = path.join(projectPath, Constants.LOCK_FILE_NAME);
   try {
     fs.writeFileSync(lockFilePath, JSON.stringify(data, null, 2));
   } catch (error) {

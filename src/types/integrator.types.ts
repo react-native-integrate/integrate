@@ -1,5 +1,6 @@
 export interface IntegratorOptions {
   debug: boolean;
+  manual: boolean;
 }
 
 export type PackageTuples = [string, string][];

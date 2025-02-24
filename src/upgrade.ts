@@ -1,6 +1,8 @@
+import fs from 'fs';
 import path from 'path';
 import color from 'picocolors';
 import semver from 'semver/preload';
+import { options } from './options';
 import {
   logError,
   logInfo,
@@ -16,13 +18,16 @@ import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
+import { getProjectPath } from './utils/getProjectPath';
 import { parseConfig } from './utils/parseConfig';
+import { runCommand } from './utils/runCommand';
 import { runTask } from './utils/runTask';
 import { satisfies } from './utils/satisfies';
 import { setState } from './utils/setState';
 import { taskManager } from './utils/taskManager';
 import { topologicalSort } from './utils/topologicalSort';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
+import { createNewProject } from './utils/upgrade/createNewProject';
 import { importFromOldProject } from './utils/upgrade/importFromOldProject';
 import { runUpgradeTasks } from './utils/upgrade/runUpgradeTasks';
 import { restoreBackupFiles } from './utils/upgrade/restoreBackupFiles';
@@ -30,18 +35,43 @@ import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function upgrade(): Promise<void> {
+  const isManual = options.get().manual;
+  if (!isManual) {
+    const { output: gitStatus } = await runCommand('git status -s -uno', {
+      silent: true,
+    });
+    if (gitStatus) {
+      throw new Error(
+        'your git status is dirty, please stash or commit changes before upgrading'
+      );
+    }
+    logInfo(
+      color.bold(color.inverse(color.magenta(' stage 1 '))) +
+        color.bold(color.magenta(' Create new project '))
+    );
+
+    const didCreate = await createNewProject();
+    if (didCreate) {
+      logSuccess(
+        color.inverse(color.bold(color.green(' created '))) +
+          color.green(' new project created successfully')
+      );
+    }
+  }
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 1 '))) +
+    color.bold(color.inverse(color.magenta(' stage 2 '))) +
       color.bold(color.magenta(' Import old project data '))
   );
   // get old project path
-  let oldProjectPath = await text(
-    'Enter old project path to import some basic data (display name, icons, etc.)',
-    {
-      placeholder: 'leave empty to skip',
-      validate: validateOldProjectPath,
-    }
-  );
+  let oldProjectPath =
+    variables.get<string>('__OLD_PROJECT_DIR__') ||
+    (await text(
+      'Enter old project path to import some basic data (display name, icons, etc.)',
+      {
+        placeholder: 'leave empty to skip',
+        validate: validateOldProjectPath,
+      }
+    ));
   if (oldProjectPath) {
     oldProjectPath = path.resolve(oldProjectPath);
     const didImport = await importFromOldProject(oldProjectPath);
@@ -56,11 +86,11 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 2 '))) +
+    color.bold(color.inverse(color.magenta(' stage 3 '))) +
       color.bold(color.magenta(' Re-integrate packages '))
   );
 
-  let skipStage2 = false;
+  let skipStage3 = false;
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages();
   const { installedPackages, integratedPackages } = analyzedPackages;
@@ -72,10 +102,10 @@ export async function upgrade(): Promise<void> {
         color.italic('integrate-lock.json not found. Nothing to re-integrate.')
       )
     );
-    skipStage2 = true;
+    skipStage3 = true;
   }
 
-  if (!skipStage2) {
+  if (!skipStage3) {
     stopSpinner(`analyzed ${installedPackages.length} packages`);
 
     const packageLockUpdates: {
@@ -318,7 +348,7 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 3 '))) +
+    color.bold(color.inverse(color.magenta(' stage 4 '))) +
       color.bold(color.magenta(' Import files from .upgrade/imports '))
   );
 
@@ -333,7 +363,7 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 4 '))) +
+    color.bold(color.inverse(color.magenta(' stage 5 '))) +
       color.bold(color.magenta(' Execute upgrade.yml steps '))
   );
 
@@ -361,5 +391,87 @@ export async function upgrade(): Promise<void> {
           )
       );
     }
+  }
+
+  if (!isManual) {
+    logInfo(
+      color.bold(color.inverse(color.magenta(' stage 6 '))) +
+        color.bold(color.magenta(' Commit changes to branch '))
+    );
+
+    const rnVersionVar = variables.get('RN_VERSION');
+    const rnVersion = `${rnVersionVar.major}.${rnVersionVar.minor}.${rnVersionVar.patch}`;
+    const branchName = `upgrade/react-native-${rnVersion}`;
+    // checkout into new branch
+    const { exitCode: didCheckoutFail } = await runCommand(
+      `git checkout -B ${branchName}`,
+      {
+        silent: false,
+        progressText: 'switching branch',
+        completeText: `switched branch to ${color.yellow(branchName)}`,
+      }
+    );
+    if (didCheckoutFail) {
+      logWarning('please commit changes manually in ' + getProjectPath());
+      return;
+    }
+
+    // add changes
+    const { exitCode: didAddFail } = await runCommand('git add .', {
+      silent: false,
+      progressText: 'staging changes',
+      completeText: 'staged all changes',
+    });
+    if (didAddFail) {
+      logWarning('please commit changes manually in ' + getProjectPath());
+      return;
+    }
+
+    // commit changes
+    const { exitCode: didCommitFail } = await runCommand(
+      'git',
+      ['commit', '-m', `build(deps): bump react-native to ${rnVersion}`],
+      {
+        silent: false,
+        progressText: 'committing changes',
+        completeText: 'committed changes',
+      }
+    );
+    if (didCommitFail) {
+      logWarning('please commit changes manually in ' + getProjectPath());
+      return;
+    }
+
+    // push changes
+    const { exitCode: didPushFail } = await runCommand(
+      `git push -u origin ${branchName}`,
+      {
+        silent: false,
+        progressText: 'pushing changes to origin',
+        completeText: 'pushed changes to origin',
+      }
+    );
+    if (didPushFail) {
+      logWarning('please push changes manually in ' + getProjectPath());
+      return;
+    }
+
+    logSuccess(
+      color.inverse(color.bold(color.green(' committed '))) +
+        color.green(` saved changes to ${color.bold(branchName)}`)
+    );
+
+    startSpinner('cleaning up');
+    await new Promise(r =>
+      fs.rm(
+        getProjectPath(),
+        {
+          recursive: true,
+          force: true,
+        },
+        r
+      )
+    );
+    stopSpinner('cleaned up');
   }
 }

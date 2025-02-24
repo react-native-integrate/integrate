@@ -20,10 +20,14 @@ const mockRunUpgradeTasks = jest.spyOn(
 );
 
 import { Constants } from '../../constants';
+import { options } from '../../options';
 import { upgrade } from '../../upgrade';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('upgrade', () => {
+  beforeEach(() => {
+    options.get().manual = true;
+  });
   it('should skip import when import path is empty', async () => {
     mockPrompter.text.mockImplementationOnce(() => '');
     mockPrompter.log.message.mockClear();

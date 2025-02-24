@@ -38,4 +38,5 @@ export const Constants = {
     'https://github.com/react-native-integrate/configs/tree/main/packages/[package]/integrate.yml',
   REMOTE_DIFF_PACKAGE_JSON:
     'https://raw.githubusercontent.com/react-native-community/rn-diff-purge/release/[version]/RnDiffApp/package.json',
+  TMP_WORKSPACE_DIR: 'react-native-integrate',
 };

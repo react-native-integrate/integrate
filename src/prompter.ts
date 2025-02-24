@@ -57,8 +57,8 @@ export function logIntro(msg?: string): void {
   intro(color.inverse(` ${msg || 'react-native-integrate'} `));
 }
 
-export function logOutro(msg?: string): void {
-  outro(color.cyan(msg || 'completed integration check'));
+export function logOutro(msg?: string, error?: boolean): void {
+  outro(color[error ? 'red' : 'cyan'](msg || 'completed integration check'));
 }
 
 const s = spinner();
@@ -163,7 +163,7 @@ export async function text(
   return response;
 }
 
-export function summarize(code: string | null, maxLength = 128): string {
+export function summarize(code: string | null, maxLength = 80): string {
   if (code == null) return 'null';
   const flatText = code.replace(/\n/g, '⏎');
   return color.yellow(
@@ -172,7 +172,7 @@ export function summarize(code: string | null, maxLength = 128): string {
   );
 }
 
-export function getLastLine(code: string | null, maxLength = 128): string {
+export function getLastLine(code: string | null, maxLength = 80): string {
   if (code == null) return 'null';
   const lines = code
     .replace(/\r/g, '')

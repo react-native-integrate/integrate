@@ -3,9 +3,10 @@ import 'isomorphic-fetch';
 import { getInfo } from './getInfo';
 import { integrate } from './integrate';
 import { options } from './options';
-import { logIntro, logOutro } from './prompter';
+import { logError, logIntro, logOutro } from './prompter';
 import { IntegratorOptions } from './types/integrator.types';
 import { upgrade } from './upgrade';
+import { getErrMessage } from './utils/getErrMessage';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { version } = require('../package.json');
@@ -41,10 +42,22 @@ program
   .description(
     'Upgrade React Native project. Re-integrate previously integrated modules and apply own changes.'
   )
-  .action(async () => {
+  .option(
+    '-m, --manual',
+    'enables manual upgrade, you must run this command in the folder of the new created project',
+    false
+  )
+  .action(async (args: IntegratorOptions) => {
+    options.set(args);
     logIntro('react-native-integrate - upgrade project');
-    await upgrade();
-    logOutro('completed project upgrade');
+    try {
+      await upgrade();
+      logOutro('completed project upgrade');
+    } catch (e) {
+      const errMessage = getErrMessage(e);
+      logError(errMessage);
+      logOutro('project upgrade failed', true);
+    }
   });
 
 program.parseAsync().catch(console.warn);

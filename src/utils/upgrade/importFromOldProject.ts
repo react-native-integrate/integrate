@@ -1,4 +1,5 @@
 import color from 'picocolors';
+import { options } from '../../options';
 import {
   confirm,
   logInfo,
@@ -48,16 +49,19 @@ export async function importFromOldProject(
     'importing following project data:\n\n' +
       importedData.map(d => `➤ ${d.title}: ${color.green(d.value)}`).join('\n')
   );
+  const isManual = options.get().manual;
 
-  const confirmed = await confirm('Would you like to proceed?', {
-    initialValue: true,
-    positive: 'yes',
-    negative: 'no, just re-integrate',
-  });
+  if (isManual) {
+    const confirmed = await confirm('Would you like to proceed?', {
+      initialValue: true,
+      positive: 'yes',
+      negative: 'no, just re-integrate',
+    });
 
-  if (!confirmed) {
-    logMessageGray('skipping import from old project');
-    return false;
+    if (!confirmed) {
+      logMessageGray('skipping import from old project');
+      return false;
+    }
   }
 
   for (const d of importedData) {

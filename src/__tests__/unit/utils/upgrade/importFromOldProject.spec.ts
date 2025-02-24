@@ -40,6 +40,7 @@ const getIosProjectVersion = jest.spyOn(
   require('../../../../utils/upgrade/ios/importIosProjectVersion'),
   'importIosProjectVersion'
 );
+import { options } from '../../../../options';
 import { ImportGetter } from '../../../../types/upgrade.types';
 import { importFromOldProject } from '../../../../utils/upgrade/importFromOldProject';
 import { mockPrompter } from '../../../mocks/mockPrompter';
@@ -139,6 +140,7 @@ describe('importFromOldProject', () => {
     getIosProjectVersion.mockRestore();
   });
   it('should skip when not confirmed', async () => {
+    options.get().manual = true;
     mockPrompter.confirm.mockImplementationOnce(() => false);
     mockPrompter.log.message.mockReset();
     expect(await importFromOldProject('/oldProject')).toBeFalsy();
