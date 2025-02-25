@@ -43,11 +43,15 @@ export async function runCommand(
 
   let isDone = false;
   let output = '';
+  const isShell = process.platform == 'win32';
+  const parts = commandStr.split(' ');
+  let spawnArgs = args.length === 3 ? args[1] : parts.slice(1);
+  if (isShell)
+    spawnArgs = spawnArgs.map(arg => (arg.includes(' ') ? `"${arg}"` : arg));
   const exitCode = await new Promise<number>(resolve => {
-    const parts = commandStr.split(' ');
     const command = args.length === 3 ? args[0] : parts[0];
-    const child = spawn(command, args.length === 3 ? args[1] : parts.slice(1), {
-      shell: process.platform == 'win32',
+    const child = spawn(command, spawnArgs, {
+      shell: isShell,
       cwd: options.cwd,
     });
     child.stdout.on('data', (chunk: Buffer) => {

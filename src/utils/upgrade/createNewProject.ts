@@ -44,7 +44,7 @@ export async function createNewProject(): Promise<boolean> {
 
   logMessage(`creating new project at ${color.yellow(tmpProjectDir)}`);
 
-  startSpinner('running command');
+  startSpinner('running cli');
   // execute command
   let isDone = false;
   const exitCode = await new Promise<number>(resolve => {
@@ -57,7 +57,7 @@ export async function createNewProject(): Promise<boolean> {
     child.stdout.on('data', (chunk: Buffer) => {
       if (isDone) return;
       updateSpinner(
-        `running command ${color.gray(getLastLine(chunk.toString('utf8')))}`
+        `running cli ${color.gray(getLastLine(chunk.toString('utf8')))}`
       );
     });
     child.stderr.on('data', (chunk: Buffer) => {
