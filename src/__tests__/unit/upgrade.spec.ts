@@ -4,6 +4,7 @@ const {
   writeMockAppDelegate,
   writeMockLock,
 } = require('../mocks/mockAll');
+const mockSpawn = jest.spyOn(require('child_process'), 'spawn');
 
 const mockRunTask = jest.spyOn(require('../../utils/runTask'), 'runTask');
 const mockParseConfig = jest.spyOn(
@@ -27,6 +28,21 @@ import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 describe('upgrade', () => {
   beforeEach(() => {
     options.get().manual = true;
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: (exitCode: number) => void) => {
+        cb(0);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
+    }));
   });
   it('should skip import when import path is empty', async () => {
     mockPrompter.text.mockImplementationOnce(() => '');

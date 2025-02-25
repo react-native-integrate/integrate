@@ -29,12 +29,14 @@ import { topologicalSort } from './utils/topologicalSort';
 import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { createNewProject } from './utils/upgrade/createNewProject';
 import { importFromOldProject } from './utils/upgrade/importFromOldProject';
+import { installModules } from './utils/upgrade/other/importPackageJson';
 import { runUpgradeTasks } from './utils/upgrade/runUpgradeTasks';
 import { restoreBackupFiles } from './utils/upgrade/restoreBackupFiles';
 import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function upgrade(): Promise<void> {
+  let stage = 1;
   const isManual = options.get().manual;
   if (!isManual) {
     const { output: gitStatus } = await runCommand('git status -s -uno', {
@@ -46,7 +48,7 @@ export async function upgrade(): Promise<void> {
       );
     }
     logInfo(
-      color.bold(color.inverse(color.magenta(' stage 1 '))) +
+      color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
         color.bold(color.magenta(' Create new project '))
     );
 
@@ -58,8 +60,9 @@ export async function upgrade(): Promise<void> {
       );
     }
   }
+
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 2 '))) +
+    color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Import old project data '))
   );
   // get old project path
@@ -86,7 +89,42 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 3 '))) +
+    color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
+      color.bold(color.magenta(' Execute upgrade.yml pre install steps '))
+  );
+  variables.setPredefined('__UPGRADE__', true);
+
+  const upgradePreInstallResult = await runUpgradeTasks(
+    oldProjectPath,
+    'pre_install'
+  ).catch((e: Error) => {
+    logWarning(e.message);
+  });
+  if (upgradePreInstallResult && upgradePreInstallResult.didRun) {
+    if (upgradePreInstallResult.failedTaskCount) {
+      logWarning(
+        color.inverse(color.bold(color.yellow(' executed with errors '))) +
+          color.bold(color.blue(' upgrade.yml pre_install ')) +
+          color.yellow(
+            `failed to complete ${upgradePreInstallResult.failedTaskCount} task(s) - please complete upgrade manually`
+          ),
+        true
+      );
+    } else {
+      logSuccess(
+        color.inverse(color.bold(color.green(' executed '))) +
+          color.black(color.bold(color.blue(' upgrade.yml pre_install '))) +
+          color.green(
+            `completed ${upgradePreInstallResult.completedTaskCount} task(s) successfully`
+          )
+      );
+    }
+  }
+
+  await installModules(oldProjectPath);
+
+  logInfo(
+    color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Re-integrate packages '))
   );
 
@@ -94,7 +132,6 @@ export async function upgrade(): Promise<void> {
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages();
   const { installedPackages, integratedPackages } = analyzedPackages;
-  variables.setPredefined('__UPGRADE__', true);
 
   if (analyzedPackages.justCreatedLockFile) {
     stopSpinner(
@@ -348,7 +385,7 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 4 '))) +
+    color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Import files from .upgrade/imports '))
   );
 
@@ -363,7 +400,7 @@ export async function upgrade(): Promise<void> {
   }
 
   logInfo(
-    color.bold(color.inverse(color.magenta(' stage 5 '))) +
+    color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Execute upgrade.yml steps '))
   );
 
@@ -395,7 +432,7 @@ export async function upgrade(): Promise<void> {
 
   if (!isManual) {
     logInfo(
-      color.bold(color.inverse(color.magenta(' stage 6 '))) +
+      color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
         color.bold(color.magenta(' Commit changes to branch '))
     );
 

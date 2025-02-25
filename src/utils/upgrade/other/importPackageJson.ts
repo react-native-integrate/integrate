@@ -1,24 +1,15 @@
-import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../../../constants';
-import {
-  getLastLine,
-  logMessage,
-  logWarning,
-  multiselect,
-  select,
-  startSpinner,
-  stopSpinner,
-  updateSpinner,
-} from '../../../prompter';
+import { logMessage, logWarning, multiselect, select } from '../../../prompter';
 import { PackageJsonType } from '../../../types/mod.types';
 import { SelectOption } from '../../../types/prompt.types';
 import { ImportGetter } from '../../../types/upgrade.types';
 import { modifyObject } from '../../applyObjectModification';
 import { getPackageJson, getPackageJsonPath } from '../../getInstalledPackages';
 import { getRemoteFile } from '../../getPackageConfig';
+import { runCommand } from '../../runCommand';
 
 export function importPackageJson(projectPath: string): ImportGetter | null {
   try {
@@ -34,17 +25,14 @@ export function importPackageJson(projectPath: string): ImportGetter | null {
       id: 'packageJson',
       title: 'Package.json',
       value: `${packageJson.name}@${packageJson.version}`,
-      apply: () => setPackageJson(projectPath, packageJson),
+      apply: () => setPackageJson(packageJson),
     };
   } catch (_e) {
     return null;
   }
 }
 
-async function setPackageJson(
-  oldProjectPath: string,
-  oldPackageJson: PackageJsonType
-) {
+async function setPackageJson(oldPackageJson: PackageJsonType) {
   const packageJson = getPackageJson();
 
   const { deprecatedPackages, deprecatedDevPackages } =
@@ -123,41 +111,18 @@ async function setPackageJson(
     'utf-8'
   );
   logMessage(`merged ${color.yellow('package.json')}`);
+}
 
+export async function installModules(oldProjectPath: string) {
   const installCommand = await getInstallCommand(oldProjectPath);
-  startSpinner(`running ${color.yellow(installCommand)}`);
-
-  let isDone = false;
-  const exitCode = await new Promise<number>(resolve => {
-    const parts = installCommand.split(' ');
-    const command = parts[0];
-    const child = spawn(command, parts.slice(1), {
-      shell: process.platform == 'win32',
-    });
-    child.stdout.on('data', (chunk: Buffer) => {
-      if (isDone) return;
-      updateSpinner(
-        `running ${color.yellow(installCommand)} ${color.gray(getLastLine(chunk.toString('utf8')))}`
-      );
-    });
-    child.stderr.on('data', (chunk: Buffer) => {
-      if (isDone) return;
-      updateSpinner(
-        `running ${color.yellow(installCommand)} ${color.gray(getLastLine(chunk.toString('utf8')))}`
-      );
-    });
-    // child.stdout.pipe(process.stdout);
-    // child.stderr.pipe(process.stderr);
-    child.on('close', code => {
-      resolve(code ?? 0);
-    });
+  const { exitCode } = await runCommand(installCommand, {
+    silent: false,
+    progressText: `running ${color.yellow(installCommand)}`,
+    errorText: `installation using ${color.yellow(installCommand)} failed`,
+    completeText: 'installed modules',
   });
-  isDone = true;
 
   if (exitCode !== 0) {
-    stopSpinner(
-      `${color.red(`installation using ${color.yellow(installCommand)} ended with exit code `)}${color.yellow(exitCode?.toString())}`
-    );
     await multiselect(
       'Please complete installation manually and return here to proceed.',
       {
@@ -167,8 +132,6 @@ async function setPackageJson(
         required: true,
       }
     );
-  } else {
-    stopSpinner('installed modules');
   }
 }
 

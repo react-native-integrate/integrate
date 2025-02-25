@@ -2036,6 +2036,24 @@
             },
             "type": "array"
         },
+        "pre_install": {
+            "additionalProperties": false,
+            "properties": {
+                "imports": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "steps": {
+                    "items": {
+                        "$ref": "#/definitions/ModStep"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
         "steps": {
             "items": {
                 "$ref": "#/definitions/ModStep"

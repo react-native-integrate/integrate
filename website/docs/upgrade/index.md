@@ -19,12 +19,16 @@ Run [`info` command](./info) to check if a package is available for integration.
    
 Example upgrade file:
 ```yml
+pre_install: #these files/folders are needed to be imported before npm/yarn install
+  imports:
+    - .husky #third party generated folders
+    - patches #patch folder used by patch-package
+    - .npmrc #npm configuration
+
 imports:
-  - .husky #third party generated folders
   - assets #folders that are created by you for scripts or assets like fonts images etc.
   - android/app/src/main/res/values/ic_launcher_background.xml #any files that do not come with default RN template
   - src #main JS/TS folder
-  - patches #patch folder used by patch-package
   - app.json #required
   - index.js #required
   - lint-staged.config.js #other config files

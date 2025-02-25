@@ -2,6 +2,10 @@ import { AnyObject, ModStep } from './mod.types';
 
 export type UpgradeConfig = {
   env?: AnyObject;
+  pre_install?: {
+    imports?: string[];
+    steps?: ModStep[];
+  };
   imports?: string[];
   steps?: ModStep[];
 };

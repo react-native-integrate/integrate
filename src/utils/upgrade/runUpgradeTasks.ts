@@ -23,7 +23,8 @@ import { setState } from '../setState';
 import { taskManager } from '../taskManager';
 
 export async function runUpgradeTasks(
-  oldProjectPath: string | undefined
+  oldProjectPath: string | undefined,
+  stage?: 'pre_install'
 ): Promise<RunUpgradeTaskResult> {
   const configPath = path.join(
     getProjectPath(),
@@ -51,6 +52,8 @@ export async function runUpgradeTasks(
     return { didRun: false };
   }
 
+  if (stage && !config[stage]) return { didRun: false };
+
   variables.clear(); // reset variables
   if (config.env) {
     Object.entries(config.env).forEach(([name, value]) =>
@@ -61,7 +64,8 @@ export async function runUpgradeTasks(
   let failedTaskCount = 0,
     completedTaskCount = 0;
 
-  if (config.imports) {
+  const imports = stage ? config[stage]!.imports : config.imports;
+  if (imports) {
     logInfo(
       color.bold(color.inverse(color.cyan(' task '))) +
         color.bold(color.cyan(' Import files from old project '))
@@ -78,11 +82,11 @@ export async function runUpgradeTasks(
         'package.json',
         'integrate-lock.json',
       ];
-      for (let i = 0; i < config.imports.length; i++) {
+      for (let i = 0; i < imports.length; i++) {
         updateSpinner(
-          `discovering files from ${color.yellow('old project')} (${i + 1}/${config.imports.length})`
+          `discovering files from ${color.yellow('old project')} (${i + 1}/${imports.length})`
         );
-        const relativePath = getText(config.imports[i]);
+        const relativePath = getText(imports[i]);
         if (
           blackListedPaths.some(p => {
             if (p.endsWith('/'))
@@ -141,8 +145,9 @@ export async function runUpgradeTasks(
     }
   }
 
-  if (config.steps) {
-    for (const task of config.steps) {
+  const steps = stage ? config[stage]!.steps : config.steps;
+  if (steps) {
+    for (const task of steps) {
       if (
         task.when &&
         !satisfies(variables.getStore(), transformTextInObject(task.when))

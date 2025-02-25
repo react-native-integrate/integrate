@@ -9,6 +9,7 @@ import { getProjectPath } from '../../../../../utils/getProjectPath';
 import {
   getInstallCommand,
   importPackageJson,
+  installModules,
 } from '../../../../../utils/upgrade/other/importPackageJson';
 import { mockFs } from '../../../../mocks/mockFs';
 import { mockPrompter } from '../../../../mocks/mockPrompter';
@@ -47,22 +48,6 @@ describe('importPackageJson', () => {
     expect(importGetter).toBeTruthy();
     expect(importGetter.value).toEqual('test@1.0.0');
 
-    mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: (exitCode: number) => void) => {
-        cb(0);
-      },
-      stdout: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stdout');
-        },
-      },
-      stderr: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stderr');
-        },
-      },
-    }));
-
     await importGetter.apply();
 
     expect(
@@ -70,44 +55,6 @@ describe('importPackageJson', () => {
         path.join(getProjectPath(), Constants.PACKAGE_JSON_FILE_NAME)
       )
     ).toContain('non-integrated-mock-package');
-  });
-  it('should get package.json and handle failed module installation', async () => {
-    mockFs.writeFileSync(
-      '/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME,
-      JSON.stringify(
-        {
-          name: 'test',
-          dependencies: {
-            'react-native': '1.0.0',
-            'some-package': '1.0.0',
-          },
-        } as PackageJsonType,
-        null,
-        2
-      )
-    );
-
-    const importGetter = importPackageJson('/oldProject') as ImportGetter;
-
-    mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: (exitCode: number) => void) => {
-        cb(1);
-      },
-      stdout: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stdout');
-        },
-      },
-      stderr: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stderr');
-        },
-      },
-    }));
-    mockPrompter.multiselect.mockClear();
-
-    await importGetter.apply();
-    expect(mockPrompter.multiselect).toHaveBeenCalled();
   });
   it('should get package.json on windows', async () => {
     mockFs.writeFileSync(
@@ -131,24 +78,7 @@ describe('importPackageJson', () => {
 
     const importGetter = importPackageJson('/oldProject') as ImportGetter;
 
-    mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: (exitCode: number) => void) => {
-        cb(0);
-      },
-      stdout: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stdout');
-        },
-      },
-      stderr: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stderr');
-        },
-      },
-    }));
-
     await importGetter.apply();
-    expect(mockSpawn).toHaveBeenCalledWith('npm', ['install'], { shell: true });
 
     Object.defineProperty(process, 'platform', {
       value: originalPlatform,
@@ -202,22 +132,6 @@ describe('importPackageJson', () => {
 
     const importGetter = importPackageJson('/oldProject') as ImportGetter;
 
-    mockSpawn.mockImplementationOnce(() => ({
-      on: (_event: string, cb: (exitCode: number) => void) => {
-        cb(0);
-      },
-      stdout: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stdout');
-        },
-      },
-      stderr: {
-        on: (_event: string, cb: (...args: any[]) => void) => {
-          cb('stderr');
-        },
-      },
-    }));
-
     await importGetter.apply();
 
     expect(
@@ -230,6 +144,90 @@ describe('importPackageJson', () => {
         path.join(getProjectPath(), Constants.PACKAGE_JSON_FILE_NAME)
       )
     ).not.toContain('dev-package');
+  });
+
+  describe('installModules', () => {
+    it('should install modules', async () => {
+      mockFs.writeFileSync(
+        '/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME,
+        JSON.stringify(
+          {
+            name: 'test',
+            dependencies: {
+              'react-native': '1.0.0',
+              'some-package': '1.0.0',
+            },
+          } as PackageJsonType,
+          null,
+          2
+        )
+      );
+
+      mockSpawn.mockImplementationOnce(() => ({
+        on: (_event: string, cb: (exitCode: number) => void) => {
+          cb(0);
+        },
+        stdout: {
+          on: (_event: string, cb: (...args: any[]) => void) => {
+            cb('stdout');
+          },
+        },
+        stderr: {
+          on: (_event: string, cb: (...args: any[]) => void) => {
+            cb('stderr');
+          },
+        },
+      }));
+      const originalPlatform = process.platform;
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+      });
+
+      await installModules('/oldProject');
+      expect(mockSpawn).toHaveBeenCalledWith('npm', ['install'], {
+        shell: true,
+        cwd: getProjectPath(),
+      });
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+      });
+    });
+    it('should handle failed module installation', async () => {
+      mockFs.writeFileSync(
+        '/oldProject/' + Constants.PACKAGE_JSON_FILE_NAME,
+        JSON.stringify(
+          {
+            name: 'test',
+            dependencies: {
+              'react-native': '1.0.0',
+              'some-package': '1.0.0',
+            },
+          } as PackageJsonType,
+          null,
+          2
+        )
+      );
+
+      mockSpawn.mockImplementationOnce(() => ({
+        on: (_event: string, cb: (exitCode: number) => void) => {
+          cb(1);
+        },
+        stdout: {
+          on: (_event: string, cb: (...args: any[]) => void) => {
+            cb('stdout');
+          },
+        },
+        stderr: {
+          on: (_event: string, cb: (...args: any[]) => void) => {
+            cb('stderr');
+          },
+        },
+      }));
+      mockPrompter.multiselect.mockClear();
+
+      await installModules('/oldProject');
+      expect(mockPrompter.multiselect).toHaveBeenCalled();
+    });
   });
 
   describe('getInstallCommand', () => {

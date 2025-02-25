@@ -6,17 +6,21 @@ title: Configuration
 
 The configuration file is where you define the overall structure of your upgrade process.
 
-| Property | Type              | Description                                                                                                                                                                                                                                             |
-|:---------|:------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| env      | object            | Allows you to define variables that can be used throughout the configuration. These variables can hold values that you want to reuse in different parts of your tasks. Variables defined in `env` can be referenced using the `$[var_name]` convention. |
-| imports  | array of strings  | Relative paths of files and folders which will be imported during upgrade.                                                                                                                                                                              |
-| steps    | array of objects  | This is where you define individual integration tasks and their properties. Each task should have a `task` field that specifies the type of task to perform.                                                                                            |
+| Property    | Type             | Description                                                                                                                                                                                                                                             |
+|:------------|:-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| env         | object           | Allows you to define variables that can be used throughout the configuration. These variables can hold values that you want to reuse in different parts of your tasks. Variables defined in `env` can be referenced using the `$[var_name]` convention. |
+| pre_install | {imports, steps} | This optional stage can be used to import or run steps before module installation.                                                                                                                                                                      |
+| imports     | array of strings | Relative paths of files and folders which will be imported during upgrade.                                                                                                                                                                              |
+| steps       | array of objects | This is where you define individual integration tasks and their properties. Each task should have a `task` field that specifies the type of task to perform.                                                                                            |
 
 #### Example:
 
 ```yaml
 env:
   some-variable: value
+pre_install:
+  imports:
+    - patches
 steps:
   - task: app_delegate
     label: "Appending some code"
