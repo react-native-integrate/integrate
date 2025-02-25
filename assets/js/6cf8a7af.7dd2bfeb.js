@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[5721],{8350:e=>{e.exports=JSON.parse('{"authors":[{"name":"Murat Mehmet","title":"Full Stack Developer","email":"muratmehmetbt@gmail.com","url":"https://github.com/murat-mehmet","imageURL":"https://github.com/murat-mehmet.png","key":"murat","page":null,"count":2}]}')}}]);
