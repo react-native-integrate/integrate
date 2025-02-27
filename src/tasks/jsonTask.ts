@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { JsonTaskType } from '../types/mod.types';
 import { applyObjectModification } from '../utils/applyObjectModification';
+import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { variables } from '../variables';
 
@@ -19,7 +19,7 @@ export function jsonTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

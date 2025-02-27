@@ -46,6 +46,7 @@ a specified point in the method.
 | prepend  | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
 | append   | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
 | replace  | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
+| script   | string or `{file: string}` | JS code script to evaluate. It can be a string or an object with a `file` field that points to a file containing the script. In script these functions are available to be called: `await prepend(content), await append(content), await replace(content) |
 
 ### Other properties
 

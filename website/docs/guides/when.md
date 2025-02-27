@@ -7,7 +7,9 @@ The `when` field of tasks and actions in your configuration allows you to specif
 
 ## Syntax
 
-The `when` field is an object that uses MongoDB-like query notation. It can contain simple key-value pairs or more complex queries.
+The `when` field can be defined as an object that uses MongoDB-like query notation. It can contain simple key-value pairs or more complex queries.
+
+Or it can be a script string which will be evaluated in runtime
 
 ## Examples
 
@@ -68,3 +70,11 @@ when:
 ```
 
 In this example, the task will execute if either 'platform' is 'android' or 'ios', and 'environment' is 'development'.
+
+**6.  Script String:**
+
+```yaml
+when: "get('environment') == 'development' && (platform == 'android' || platform == 'ios')"
+```
+
+This checks the same condition as previous example as JS expression.

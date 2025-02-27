@@ -14,11 +14,11 @@ import {
 } from '../../prompter';
 import { RunUpgradeTaskResult, UpgradeConfig } from '../../types/upgrade.types';
 import { getText, transformTextInObject, variables } from '../../variables';
+import { checkCondition } from '../checkCondition';
 import { getErrMessage } from '../getErrMessage';
 import { getProjectPath } from '../getProjectPath';
 import { parseConfig } from '../parseConfig';
 import { runTask } from '../runTask';
-import { satisfies } from '../satisfies';
 import { setState } from '../setState';
 import { taskManager } from '../taskManager';
 
@@ -148,10 +148,7 @@ export async function runUpgradeTasks(
   const steps = stage ? config[stage]!.steps : config.steps;
   if (steps) {
     for (const task of steps) {
-      if (
-        task.when &&
-        !satisfies(variables.getStore(), transformTextInObject(task.when))
-      ) {
+      if (task.when && !checkCondition(task.when)) {
         setState(task.name, {
           state: 'skipped',
           error: false,

@@ -46,8 +46,7 @@ env:
   value: true
 steps:
   - task: app_delegate
-    when:
-      value: false
+    when: '!value'
     actions:
       - append: test`
     );

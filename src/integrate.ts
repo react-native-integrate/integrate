@@ -13,12 +13,12 @@ import {
 import { AnalyzedPackages, LockProjectData } from './types/integrator.types';
 import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
+import { checkCondition } from './utils/checkCondition';
 import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { logInfoNote } from './utils/logInfoNote';
 import { parseConfig } from './utils/parseConfig';
 import { runTask } from './utils/runTask';
-import { satisfies } from './utils/satisfies';
 import { setState } from './utils/setState';
 import { taskManager } from './utils/taskManager';
 import { topologicalSort } from './utils/topologicalSort';
@@ -260,10 +260,7 @@ export async function integrate(packageName?: string): Promise<void> {
         await logInfoNote(config.preInfo);
 
         for (const task of config.steps) {
-          if (
-            task.when &&
-            !satisfies(variables.getStore(), transformTextInObject(task.when))
-          ) {
+          if (task.when && !checkCondition(task.when)) {
             setState(task.name, {
               state: 'skipped',
               error: false,

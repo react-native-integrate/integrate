@@ -13,6 +13,7 @@ import {
   getBlockName,
   updateBlockContent,
 } from '../utils/applyContentModification';
+import { checkCondition } from '../utils/checkCondition';
 import { escapeRegExp } from '../utils/escapeRegExp';
 import {
   findClosingTagIndex,
@@ -20,7 +21,6 @@ import {
 } from '../utils/findClosingTagIndex';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { transformTextInObject, variables } from '../variables';
@@ -36,7 +36,7 @@ export async function androidManifestTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

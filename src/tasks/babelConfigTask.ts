@@ -3,13 +3,19 @@ import path from 'path';
 import color from 'picocolors';
 import prettier from 'prettier';
 import { Constants } from '../constants';
-import { logMessageGray, summarize } from '../prompter';
+import { processScript } from '../processScript';
+import { logMessage, logMessageGray, summarize } from '../prompter';
 import {
   BabelConfigBlockType,
   BabelConfigTaskType,
   ContentModifierType,
+  TextOrFileValue,
 } from '../types/mod.types';
-import { applyContentModification } from '../utils/applyContentModification';
+import {
+  applyContentModification,
+  getBlockName,
+} from '../utils/applyContentModification';
+import { checkCondition } from '../utils/checkCondition';
 import {
   findClosingTagIndex,
   stripNonCode,
@@ -19,7 +25,6 @@ import { findInsertionPoint } from '../utils/findInsertionPoint';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getModContent } from '../utils/getModContent';
 import { getProjectPath } from '../utils/getProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { getText, variables } from '../variables';
@@ -34,7 +39,7 @@ export async function babelConfigTask(args: {
   const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
@@ -185,26 +190,58 @@ async function applyArrayFieldModification(args: {
     babelContent[block],
     action
   );
+  const prependAction = async (prependRaw: TextOrFileValue) => {
+    const value = await getModContent(configPath, packageName, prependRaw);
+    if (shouldApplyInsertion(babelContent[block], action, value)) {
+      babelContent[block].splice(contextStart, 0, value);
+      logMessage(
+        `prepended code in ${summarize(
+          getBlockName(action)
+        )}: ${summarize(value)}`
+      );
+    }
+  };
+  const appendAction = async (appendRaw: TextOrFileValue) => {
+    const value = await getModContent(configPath, packageName, appendRaw);
+    if (shouldApplyInsertion(babelContent[block], action, value)) {
+      babelContent[block].splice(contextEnd, 0, value);
+      logMessage(
+        `appended code in ${summarize(
+          getBlockName(action)
+        )}: ${summarize(value)}`
+      );
+    }
+  };
+  const replaceAction = async (replaceRaw: TextOrFileValue) => {
+    const value = await getModContent(configPath, packageName, replaceRaw);
+    if (shouldApplyInsertion(babelContent[block], action, value)) {
+      babelContent[block].splice(contextStart, 1, value);
+      logMessage(
+        `replaced code in ${summarize(
+          getBlockName(action)
+        )}: ${summarize(value)}`
+      );
+    }
+  };
   for (const key of Object.keys(action)) {
     let value: string;
     switch (key) {
       case 'prepend':
-        value = await getModContent(configPath, packageName, action.prepend!);
-        if (shouldApplyInsertion(babelContent[block], action, value)) {
-          babelContent[block].splice(contextStart, 0, value);
-        }
+        await prependAction(action.prepend!);
         break;
       case 'append':
-        value = await getModContent(configPath, packageName, action.append!);
-        if (shouldApplyInsertion(babelContent[block], action, value)) {
-          babelContent[block].splice(contextEnd, 0, value);
-        }
+        await appendAction(action.append!);
         break;
       case 'replace':
-        value = await getModContent(configPath, packageName, action.replace!);
-        if (shouldApplyInsertion(babelContent[block], action, value)) {
-          babelContent[block].splice(contextStart, 1, value);
-        }
+        await replaceAction(action.replace!);
+        break;
+      case 'script':
+        value = await getModContent(configPath, packageName, action.script!);
+        await processScript(value, variables, false, true, {
+          prepend: prependAction,
+          append: appendAction,
+          replace: replaceAction,
+        });
         break;
     }
   }

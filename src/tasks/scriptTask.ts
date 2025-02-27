@@ -1,15 +1,16 @@
-import { PromptTaskType } from '../types/mod.types';
+import { processScript } from '../processScript';
+import { ScriptTaskType } from '../types/mod.types';
 import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';
-import { runPrompt } from '../utils/runPrompt';
 import { setState } from '../utils/setState';
+import { variables } from '../variables';
 
-export async function promptTask(args: {
+export async function scriptTask(args: {
   configPath: string;
   packageName: string;
-  task: PromptTaskType;
+  task: ScriptTaskType;
 }): Promise<void> {
-  const { task, packageName } = args;
+  const { task } = args;
 
   for (const action of task.actions) {
     if (action.when && !checkCondition(action.when)) {
@@ -26,7 +27,13 @@ export async function promptTask(args: {
       error: false,
     });
     try {
-      await runPrompt(action, packageName);
+      const resultValue = await processScript(
+        action.script,
+        variables,
+        false,
+        true
+      );
+      if (action.name) variables.set(action.name, resultValue);
     } catch (e) {
       setState(action.name, {
         state: 'error',
@@ -38,7 +45,7 @@ export async function promptTask(args: {
   }
 }
 
-export const runTask = promptTask;
+export const runTask = scriptTask;
 
 export const summary = '';
 

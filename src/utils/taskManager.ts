@@ -17,6 +17,7 @@ import * as main_activity from '../tasks/mainActivityTask';
 import * as settings_gradle from '../tasks/settingsGradleTask';
 import * as shell from '../tasks/shellTask';
 import * as babel_config from '../tasks/babelConfigTask';
+import * as script from '../tasks/scriptTask';
 import { ModStep } from '../types/mod.types';
 
 const task: Record<string, TaskExports> = {
@@ -39,6 +40,7 @@ const task: Record<string, TaskExports> = {
   strings_xml,
   shell,
   babel_config,
+  script,
 };
 
 const systemTaskTypes = Object.entries(task)

@@ -194,7 +194,7 @@ describe('appDelegateTask', () => {
           prepend: '#import <Firebase.h>',
         },
         {
-          when: { test: 'random' },
+          when: 'test === "random"',
           block: 'didFinishLaunchingWithOptions',
           prepend: '[FIRApp configure];',
         },

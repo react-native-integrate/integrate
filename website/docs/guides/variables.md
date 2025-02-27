@@ -59,3 +59,19 @@ In this example:
 -   We define a static variable `frb` within the `env` section of our configuration.
 -   Within the `app_delegate` task, we use this variable to customize the label, prepend a specific import statement, and add comments.
 -   The resulting configuration is more dynamic and can be easily adjusted for different use cases.
+
+### JS Expressions
+
+```yaml
+env:
+  frb: Firebase
+  module: Crashlytics
+steps:
+  - task: app_delegate
+    label: "Integrate $[frb + ' ' + module]"
+    actions:
+      - prepend: "#import <$[frb].h>"
+        comment: added by $[frb]
+```
+
+You can evaluate JS expressions in `$[...]` tags to produce dynamic results.

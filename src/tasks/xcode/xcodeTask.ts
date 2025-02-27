@@ -1,12 +1,11 @@
 import fs from 'fs';
 import xcode, { XcodeProjectType } from 'xcode';
 import { XcodeModifierType, XcodeTaskType } from '../../types/mod.types';
+import { checkCondition } from '../../utils/checkCondition';
 import { getErrMessage } from '../../utils/getErrMessage';
 import { getPbxProjectPath } from '../../utils/getIosProjectPath';
-import { satisfies } from '../../utils/satisfies';
 import { setState } from '../../utils/setState';
 import { xcodeContext } from '../../utils/xcode.context';
-import { variables } from '../../variables';
 import { applyAddCapability } from './xcodeTask.addCapability';
 import { applyAddConfiguration } from './xcodeTask.addConfiguration';
 import { applyAddFile } from './xcodeTask.addFile';
@@ -24,7 +23,7 @@ export async function xcodeTask(args: {
   const { task, configPath, packageName } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

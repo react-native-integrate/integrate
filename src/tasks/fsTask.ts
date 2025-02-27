@@ -3,11 +3,11 @@ import path from 'path';
 import color from 'picocolors';
 import { confirm, logMessage, logMessageGray, text } from '../prompter';
 import { FsModifierType, FsTaskType } from '../types/mod.types';
+import { checkCondition } from '../utils/checkCondition';
 import { handlePackageUpgradeCopyFile } from '../utils/copyPackageUpgradeFile';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
 import { addPackageUpgradeFile } from '../utils/packageUpgradeConfig';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { waitForFile } from '../utils/waitForFile';
 import { getText, variables } from '../variables';
@@ -20,7 +20,7 @@ export async function fsTask(args: {
   const { task, packageName } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

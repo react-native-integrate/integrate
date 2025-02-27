@@ -4,10 +4,10 @@ import plist from 'simple-plist';
 import { Constants } from '../constants';
 import { PlistTaskType } from '../types/mod.types';
 import { applyObjectModification } from '../utils/applyObjectModification';
+import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getIosProjectName } from '../utils/getIosProjectPath';
 import { getProjectPath } from '../utils/getProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { getText, variables } from '../variables';
 
@@ -22,7 +22,7 @@ export function plistTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

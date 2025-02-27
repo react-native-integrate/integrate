@@ -13,10 +13,10 @@ import {
   updateSpinner,
 } from '../prompter';
 import { ShellTaskType } from '../types/mod.types';
+import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
 import { parseArgs } from '../utils/parseArgs';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { variables } from '../variables';
 
@@ -28,7 +28,7 @@ export async function shellTask(args: {
   const { task, packageName } = args;
 
   for (const action of task.actions) {
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

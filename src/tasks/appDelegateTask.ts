@@ -11,10 +11,10 @@ import { applyContentModification } from '../utils/applyContentModification';
 import { findClosingTagIndex } from '../utils/findClosingTagIndex';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getIosProjectPath } from '../utils/getIosProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { stringSplice } from '../utils/stringSplice';
 import { variables } from '../variables';
+import { checkCondition } from '../utils/checkCondition';
 
 export async function appDelegateTask(args: {
   configPath: string;
@@ -27,7 +27,7 @@ export async function appDelegateTask(args: {
 
   for (const action of task.actions) {
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

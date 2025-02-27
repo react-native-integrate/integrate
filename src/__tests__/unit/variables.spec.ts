@@ -84,8 +84,18 @@ describe('variables', () => {
       expect(replaced).toEqual('this is test');
     });
     it('should replace with description for non existing variables', () => {
-      const replaced = getText('this is $[test:description]');
+      const replaced = getText(
+        'this is $[get("nonExisting") ?? "description"]'
+      );
       expect(replaced).toEqual('this is description');
+    });
+    it('should process script', () => {
+      const replaced = getText(`this is $[
+        set("test", false);
+        test = true;
+      ]`);
+      expect(replaced).toEqual('this is true');
+      expect(variables.get('test')).toEqual(true);
     });
   });
   describe('transformTextInObject', () => {

@@ -1,3 +1,4 @@
+import { processScript } from './processScript';
 import { getIosBundleId } from './utils/getBundleId';
 import { getIosDeploymentVersion } from './utils/getDeploymentVersion';
 import { getIosProjectName } from './utils/getIosProjectPath';
@@ -61,6 +62,9 @@ export const variables = {
       _store
     ) as Record<string, any>;
   },
+  has(name: string): boolean {
+    return name in predefinedVariables || name in _store;
+  },
 };
 
 export function getText(text: string): string {
@@ -76,7 +80,7 @@ export function getText(text: string): string {
       const isEscaped = slashCount % 2 == 1;
 
       if (isEscaped) return slashes + `$[${match}]`;
-      const value = variables.get<string>(match);
+      const value = processScript(match, variables, true, false);
       if (value == null) {
         const descIndex = match.indexOf(':');
         if (descIndex == -1) return slashes + match;
@@ -98,7 +102,7 @@ export function transformTextInObject<T>(obj: T): T {
     return <T>obj.map((item: T) => transformTextInObject<T>(item));
   }
 
-  // If obj is a string, add a "+" sign to it.
+  // If obj is a string, process it.
   if (typeof obj == 'string') {
     return <T>getText(obj);
   }

@@ -3,13 +3,13 @@ import path from 'path';
 import { Constants } from '../constants';
 import { BlockContentType, StringsXmlTaskType } from '../types/mod.types';
 import { applyContentModification } from '../utils/applyContentModification';
+import { checkCondition } from '../utils/checkCondition';
 import {
   findClosingTagIndex,
   TagDefinitions,
 } from '../utils/findClosingTagIndex';
 import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
-import { satisfies } from '../utils/satisfies';
 import { setState } from '../utils/setState';
 import { variables } from '../variables';
 
@@ -25,7 +25,7 @@ export async function stringsXmlTask(args: {
   for (const action of task.actions) {
     action.block = 'resources';
     variables.set('CONTENT', content);
-    if (action.when && !satisfies(variables.getStore(), action.when)) {
+    if (action.when && !checkCondition(action.when)) {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',

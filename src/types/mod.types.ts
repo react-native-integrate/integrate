@@ -54,6 +54,9 @@ export type ContentModifierType<TBlock = string> = ActionBase & {
 
   // replaces the file context with text
   replace?: TextOrFileValue;
+
+  // run script in the context
+  script?: TextOrFileValue;
 };
 
 export type ObjectModifierType = ActionBase & {
@@ -72,7 +75,7 @@ export type ObjectModifierStrategy =
 
 export type ActionBase = {
   name?: string;
-  when?: AnyObject;
+  when?: string | AnyObject;
 };
 
 export type ActionsType<T extends ActionBase> = {
@@ -425,10 +428,21 @@ export type BabelConfigTaskType = ModTaskBase &
 
 export type BabelConfigBlockType = 'presets' | 'plugins';
 
+// script task
+
+export type ScriptTaskType = ModTaskBase &
+  ActionsType<ScriptActionType> & {
+    task: 'script';
+  };
+
+export type ScriptActionType = ActionBase & {
+  script: string;
+};
+
 export type ModTaskBase = {
   name?: string;
   label?: string;
-  when?: AnyObject;
+  when?: string | AnyObject;
   preInfo?: TextOrTitleMessage;
   postInfo?: TextOrTitleMessage;
 };
@@ -452,7 +466,8 @@ export type ModStep =
   | JsonTaskType
   | PromptTaskType
   | ShellTaskType
-  | BabelConfigTaskType;
+  | BabelConfigTaskType
+  | ScriptTaskType;
 
 export type ValidationType = { regex: string; flags?: string; message: string };
 export type TextPrompt = Omit<TextPromptArgs, 'validate'> & {

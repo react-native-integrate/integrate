@@ -1,11 +1,13 @@
 import color from 'picocolors';
+import { processScript } from '../processScript';
 import { logMessage, logMessageGray, summarize } from '../prompter';
 import {
   BlockContentType,
   ContentModifierType,
+  TextOrFileValue,
   TextOrRegex,
 } from '../types/mod.types';
-import { getText } from '../variables';
+import { getText, variables } from '../variables';
 import { escapeRegExp } from './escapeRegExp';
 import { findInsertionPoint } from './findInsertionPoint';
 import { findLineEnd, findLineStart } from './findLineTools';
@@ -58,10 +60,13 @@ export async function applyContentModification(
     blockContent = foundBlock.blockContent;
     content = foundBlock.content;
   }
-  const getCodeToInsert = (text: string) => {
+  const getCodeToInsert = (
+    text: string,
+    kind: 'append' | 'prepend' | 'replace'
+  ) => {
     const isBlockSameLine =
       !blockContent.match.includes('\n') ||
-      (!action.search && 'replace' in action);
+      (!action.search && kind === 'replace');
     let comment = '',
       blockIndentation = '',
       openingNewLine = '\n',
@@ -94,126 +99,168 @@ export async function applyContentModification(
   const runModifiers = async (
     spliceCallback?: (start: number, rem: number, insert: string) => void
   ) => {
+    const prependAction = async (prependRaw: TextOrFileValue) => {
+      const prependText = await getModContent(
+        configPath,
+        packageName,
+        prependRaw
+      );
+      const codeToInsert = action.exact
+        ? prependText
+        : getCodeToInsert(prependText, 'prepend');
+
+      if (
+        action.ifNotPresent &&
+        blockContent.match.includes(getText(action.ifNotPresent))
+      ) {
+        logMessageGray(
+          `found existing ${summarize(
+            getText(action.ifNotPresent)
+          )}, skipped inserting: ${summarize(prependText)}`
+        );
+        setState(action.name, {
+          state: 'skipped',
+          reason: 'prepend.ifNotPresent',
+          error: false,
+        });
+      } else if (!blockContent.match.includes(prependText)) {
+        const start = blockContent.start,
+          rem = 0,
+          insert = codeToInsert;
+        content = stringSplice(content, start, rem, insert);
+
+        if (spliceCallback) spliceCallback(start, rem, insert);
+        updateBlockContent(blockContent, rem, insert, content);
+        logMessage(
+          `prepended code in ${summarize(
+            getBlockName(action)
+          )}${splittingMsg}: ${summarize(prependText)}`
+        );
+      } else {
+        logMessageGray(
+          `code already exists, skipped prepending: ${summarize(prependText)}`
+        );
+        setState(action.name, {
+          state: 'skipped',
+          reason: 'prepend.exists',
+          error: false,
+        });
+      }
+    };
+    const appendAction = async (appendRaw: TextOrFileValue) => {
+      const appendText = await getModContent(
+        configPath,
+        packageName,
+        appendRaw
+      );
+      const codeToInsert = action.exact
+        ? appendText
+        : getCodeToInsert(appendText, 'append');
+      if (
+        action.ifNotPresent &&
+        blockContent.match.includes(getText(action.ifNotPresent))
+      ) {
+        logMessageGray(
+          `found existing ${summarize(
+            getText(action.ifNotPresent)
+          )}, skipped inserting: ${summarize(appendText)}`
+        );
+        setState(action.name, {
+          state: 'skipped',
+          reason: 'append.ifNotPresent',
+          error: false,
+        });
+      } else if (!blockContent.match.includes(appendText)) {
+        const lineStart = action.exact
+          ? blockContent.end
+          : findLineStart(content, blockContent.end, blockContent.start);
+
+        const start = lineStart,
+          rem = 0,
+          insert = codeToInsert;
+        content = stringSplice(content, start, rem, insert);
+
+        if (spliceCallback) spliceCallback(start, rem, insert);
+        updateBlockContent(blockContent, rem, insert, content);
+
+        logMessage(
+          `appended code in ${summarize(
+            getBlockName(action)
+          )}${splittingMsg}: ${summarize(appendText)}`
+        );
+      } else {
+        logMessageGray(
+          `code already exists, skipped appending: ${summarize(appendText)}`
+        );
+        setState(action.name, {
+          state: 'skipped',
+          reason: 'append.exists',
+          error: false,
+        });
+      }
+    };
+    const replaceAction = async (replaceRaw: TextOrFileValue) => {
+      const replaceText = await getModContent(
+        configPath,
+        packageName,
+        replaceRaw
+      );
+      const codeToInsert = action.exact
+        ? replaceText
+        : getCodeToInsert(replaceText, 'replace');
+      if (
+        action.ifNotPresent &&
+        blockContent.match.includes(getText(action.ifNotPresent))
+      ) {
+        logMessageGray(
+          `found existing ${summarize(
+            getText(action.ifNotPresent)
+          )}, skipped inserting: ${summarize(replaceText)}`
+        );
+        setState(action.name, {
+          state: 'skipped',
+          reason: 'replace.ifNotPresent',
+          error: false,
+        });
+      } else {
+        const start = blockContent.start,
+          rem = blockContent.end - blockContent.start,
+          insert = codeToInsert;
+        content = stringSplice(content, start, rem, insert);
+
+        if (spliceCallback) spliceCallback(start, rem, insert);
+        updateBlockContent(blockContent, rem, insert, content);
+        logMessage(
+          `replaced code in ${summarize(
+            getBlockName(action)
+          )}${splittingMsg}: ${summarize(replaceText)}`
+        );
+      }
+    };
     for (const key of Object.keys(action)) {
       switch (key) {
         case 'prepend':
           if (action.prepend) {
-            const prependText = await getModContent(
-              configPath,
-              packageName,
-              action.prepend
-            );
-            const codeToInsert = action.exact
-              ? prependText
-              : getCodeToInsert(prependText);
-
-            if (
-              action.ifNotPresent &&
-              blockContent.match.includes(getText(action.ifNotPresent))
-            ) {
-              logMessageGray(
-                `found existing ${summarize(
-                  getText(action.ifNotPresent)
-                )}, skipped inserting: ${summarize(prependText)}`
-              );
-              setState(action.name, {
-                state: 'skipped',
-                reason: 'prepend.ifNotPresent',
-                error: false,
-              });
-            } else if (!blockContent.match.includes(prependText)) {
-              const start = blockContent.start,
-                rem = 0,
-                insert = codeToInsert;
-              content = stringSplice(content, start, rem, insert);
-
-              if (spliceCallback) spliceCallback(start, rem, insert);
-              updateBlockContent(blockContent, rem, insert, content);
-              logMessage(
-                `prepended code in ${summarize(
-                  getBlockName(action)
-                )}${splittingMsg}: ${summarize(prependText)}`
-              );
-            } else {
-              logMessageGray(
-                `code already exists, skipped prepending: ${summarize(
-                  prependText
-                )}`
-              );
-              setState(action.name, {
-                state: 'skipped',
-                reason: 'prepend.exists',
-                error: false,
-              });
-            }
+            await prependAction(action.prepend);
           }
           break;
         case 'append':
           if (action.append) {
-            const appendText = await getModContent(
-              configPath,
-              packageName,
-              action.append
-            );
-            const codeToInsert = action.exact
-              ? appendText
-              : getCodeToInsert(appendText);
-            if (
-              action.ifNotPresent &&
-              blockContent.match.includes(getText(action.ifNotPresent))
-            ) {
-              logMessageGray(
-                `found existing ${summarize(
-                  getText(action.ifNotPresent)
-                )}, skipped inserting: ${summarize(appendText)}`
-              );
-              setState(action.name, {
-                state: 'skipped',
-                reason: 'append.ifNotPresent',
-                error: false,
-              });
-            } else if (!blockContent.match.includes(appendText)) {
-              const lineStart = action.exact
-                ? blockContent.end
-                : findLineStart(content, blockContent.end, blockContent.start);
-
-              const start = lineStart,
-                rem = 0,
-                insert = codeToInsert;
-              content = stringSplice(content, start, rem, insert);
-
-              if (spliceCallback) spliceCallback(start, rem, insert);
-              updateBlockContent(blockContent, rem, insert, content);
-
-              logMessage(
-                `appended code in ${summarize(
-                  getBlockName(action)
-                )}${splittingMsg}: ${summarize(appendText)}`
-              );
-            } else {
-              logMessageGray(
-                `code already exists, skipped appending: ${summarize(
-                  appendText
-                )}`
-              );
-              setState(action.name, {
-                state: 'skipped',
-                reason: 'append.exists',
-                error: false,
-              });
-            }
+            await appendAction(action.append);
           }
           break;
         case 'replace':
           if (action.replace != null) {
-            const replaceText = await getModContent(
+            await replaceAction(action.replace);
+          }
+          break;
+        case 'script':
+          if (action.script != null) {
+            const scriptText = await getModContent(
               configPath,
               packageName,
-              action.replace
+              action.script
             );
-            const codeToInsert = action.exact
-              ? replaceText
-              : getCodeToInsert(replaceText);
             if (
               action.ifNotPresent &&
               blockContent.match.includes(getText(action.ifNotPresent))
@@ -221,26 +268,19 @@ export async function applyContentModification(
               logMessageGray(
                 `found existing ${summarize(
                   getText(action.ifNotPresent)
-                )}, skipped inserting: ${summarize(replaceText)}`
+                )}, skipped running script: ${summarize(scriptText)}`
               );
               setState(action.name, {
                 state: 'skipped',
-                reason: 'replace.ifNotPresent',
+                reason: 'script.ifNotPresent',
                 error: false,
               });
             } else {
-              const start = blockContent.start,
-                rem = blockContent.end - blockContent.start,
-                insert = codeToInsert;
-              content = stringSplice(content, start, rem, insert);
-
-              if (spliceCallback) spliceCallback(start, rem, insert);
-              updateBlockContent(blockContent, rem, insert, content);
-              logMessage(
-                `replaced code in ${summarize(
-                  getBlockName(action)
-                )}${splittingMsg}: ${summarize(replaceText)}`
-              );
+              await processScript(scriptText, variables, false, true, {
+                prepend: prependAction,
+                append: appendAction,
+                replace: replaceAction,
+              });
             }
           }
           break;
