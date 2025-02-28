@@ -13,7 +13,7 @@ The `gradle_properties` task allows you to customize gradle.properties file, whi
 
 | Property | Type                                            | Description                                                                                                                                              |
 |:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "gradle_properties", required                           | Specifies the task type, which should be set to "gradle_properties" for this task.                                                                               |
+| task     | "gradle_properties", required                   | Specifies the task type, which should be set to "gradle_properties" for this task.                                                                       |
 | name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | label    | string                                          | An optional label or description for the task.                                                                                                           |
 | when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
@@ -43,7 +43,7 @@ The `gradle_properties` task allows you to customize gradle.properties file, whi
 | prepend  | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
 | append   | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
 | replace  | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
-| script   | string or `{file: string}` | JS code script to evaluate. It can be a string or an object with a `file` field that points to a file containing the script. In script these functions are available to be called: `await prepend(content), await append(content), await replace(content) |
+| script   | string                     | JS code script to evaluate. In script these functions are available to be called: `await prepend(content), await append(content), await replace(content)                     |
 
 ### Other properties
 

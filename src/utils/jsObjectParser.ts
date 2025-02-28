@@ -498,7 +498,16 @@ export class JsObjectParser {
             opts.strategy === 'merge_distinct')
         ) {
           this._merge(value, exprObject.tree, opts);
-        } else {
+        } else if (!forceAssign && opts.strategy === 'append') {
+          const existingExpr = tree.find(expr => {
+            return (
+              (expr.type === 'variable' || expr.type === 'property') &&
+              expr.name.replace(/['"[\]]/g, '') === key
+            );
+          }) as VariableExpression | PropertyExpression | undefined;
+
+          if (!existingExpr) this._merge(value, exprObject.tree, opts);
+        } else if (opts.strategy === 'assign') {
           const newExpr = this._objectToExpr(value);
           exprObject.valueType = newExpr.valueType;
           exprObject.tree = newExpr.tree;

@@ -21,32 +21,65 @@ The `babel_config` task allows you to modify plugins and presets in babel.config
 
 ## Action Properties
 
-### Common properties
+### Default Mode
+
+In default mode you can modify the exported object in js file like it's an json object
+
+| Property | Type                                  | Description                                                                                                                                              |
+|:---------|:--------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string                                | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object                                | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
+| set      | object                                | An object containing key-value pairs that you want to add or modify in the json.                                                                         |
+| strategy | one of [Strategy](#strategy-property) | Specifies how to handle merging new and existing values.                                                                                                 |
+
+#### Strategy Property
+
+- `assign`: (default) Overwrites the entire key with the new value.
+- `append`: Appends values only if the key does not already exist.
+- `merge`: Merges new values into existing dictionaries.
+- `merge_concat`: Merges dictionaries while concatenating arrays.
+- `merge_distinct`: Merges dictionaries while ensuring that objects with deep equality are distinct.
+
+#### Example
+
+```yaml
+task: babel_config
+label: Modifying babel.config.js
+actions:
+  - set:
+      plugins:
+        - some-module/plugin
+```
+
+---
+### Text Mode
+
+#### Common properties
 
 | Property | Type   | Description                                                                                                                                              |
 |:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mode     | "text" | Tells action to operate in "text" mode.                                                                                                                  |
 | name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
 | when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
 
-### Context reduction properties
+#### Context reduction properties
 
 | Property | Type                                       | Description                                                                                                                                                                                             |
 |:---------|:-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| block    | "presets" or "plugins"                     | Specifies the array within the `babel.config.js` file where modifications should occur. Omit to modify whole file.                                                                                      |
 | before   | string or `{regex: string, flags: string}` | Text or code that is used to specify a point within the context where text should be inserted before. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search. |
 | after    | string or `{regex: string, flags: string}` | Text or code that is used to specify a point within the context where text should be inserted after. It can be a string or an object with a `regex` and `flags` field to perform a regex-based search.  |
 | search   | string or `{regex: string, flags: string}` | A string or object (with regex and flags) that narrows the context to a specific text within the method or file.                                                                                        |
 
-### Context modification properties
+#### Context modification properties
 
 | Property | Type                       | Description                                                                                                                                                                  |
 |:---------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | prepend  | string or `{file: string}` | Text or code to prepend at the beginning of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to prepend. |
 | append   | string or `{file: string}` | Text or code to append at the end of the specified context. It can be a string or an object with a `file` field that points to a file containing the code to append.         |
 | replace  | string or `{file: string}` | Text or code to replace the entire specified context. It can be a string or an object with a `file` field that points to a file containing the code to replace.              |
-| script   | string or `{file: string}` | JS code script to evaluate. It can be a string or an object with a `file` field that points to a file containing the script. In script these functions are available to be called: `await prepend(content), await append(content), await replace(content) |
+| script   | string                     | JS code script to evaluate. In script these functions are available to be called: `await prepend(content), await append(content), await replace(content)                     |
 
-### Other properties
+#### Other properties
 
 | Property     | Type    | Description                                                                                                                                                                                                              |
 |:-------------|:--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -55,14 +88,14 @@ The `babel_config` task allows you to modify plugins and presets in babel.config
 | ifNotPresent | string  | Indicates that the task should only be executed if the specified text or code is not present within the specified context.                                                                                               |
 | comment      | string  | An optional comment to add before the inserted code or text. The comment is purely informational and does not affect the code's functionality.                                                                           |
 
-## Example
+### Example
 
 ```yaml
 task: babel_config
 label: Modifying babel.config.js
 actions:
-  - block: plugins
-    append: your-plugin
+  - mode: text
+    prepend: require('some-module')
 ```
 
 In this example, the `babel_config` task is used to modify `plugins` array in the `babel.config.js` file.

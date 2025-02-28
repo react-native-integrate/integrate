@@ -103,6 +103,25 @@ describe('jsObjectParser', () => {
       "
     `);
   });
+  it('should merge append', async () => {
+    const content = 'module.exports = { ok: 1 };';
+    const parser = new JsObjectParser();
+    parser.parse(content);
+    parser.merge(
+      {
+        'module.exports': {
+          ok: 2,
+          newObj: 2,
+        },
+      },
+      { strategy: 'append' }
+    );
+    expect(await prettier.format(parser.stringify(), prettierConfig))
+      .toMatchInlineSnapshot(`
+      "module.exports = { ok: 1, newObj: 2 };
+      "
+    `);
+  });
   it('should support partial', async () => {
     const content = "module.exports = { obj2: {t1: {t2: ''}, t3: 1 }};";
     const parser = new JsObjectParser();
