@@ -56,15 +56,21 @@ export type ContentModifierType<TBlock = string> = ActionBase & {
   replace?: TextOrFileValue;
 
   // run script in the context
-  script?: TextOrFileValue;
+  script?: string;
 };
 
-export type ObjectModifierType = ActionBase & {
-  set: {
-    [key: string]: any;
-  };
-  strategy?: ObjectModifierStrategy;
-};
+export type ObjectModifierType = ActionBase &
+  (
+    | {
+        set: {
+          [key: string]: any;
+        };
+        strategy?: ObjectModifierStrategy;
+      }
+    | {
+        script: string;
+      }
+  );
 
 export type ObjectModifierStrategy =
   | 'merge_concat'
@@ -422,11 +428,17 @@ export type PromptActionType = ActionBase & Prompt;
 // babel config task
 
 export type BabelConfigTaskType = ModTaskBase &
-  ActionsType<ContentModifierType<BabelConfigBlockType>> & {
+  ActionsType<BabelConfigModifierType> & {
     task: 'babel_config';
   };
 
-export type BabelConfigBlockType = 'presets' | 'plugins';
+export type BabelConfigModifierType =
+  | (ObjectModifierType & {
+      root?: string;
+    })
+  | (ContentModifierType & {
+      mode: 'text';
+    });
 
 // script task
 

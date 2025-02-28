@@ -256,11 +256,6 @@ export async function applyContentModification(
           break;
         case 'script':
           if (action.script != null) {
-            const scriptText = await getModContent(
-              configPath,
-              packageName,
-              action.script
-            );
             if (
               action.ifNotPresent &&
               blockContent.match.includes(getText(action.ifNotPresent))
@@ -268,7 +263,7 @@ export async function applyContentModification(
               logMessageGray(
                 `found existing ${summarize(
                   getText(action.ifNotPresent)
-                )}, skipped running script: ${summarize(scriptText)}`
+                )}, skipped running script: ${summarize(action.script)}`
               );
               setState(action.name, {
                 state: 'skipped',
@@ -276,7 +271,7 @@ export async function applyContentModification(
                 error: false,
               });
             } else {
-              await processScript(scriptText, variables, false, true, {
+              await processScript(action.script, variables, false, true, {
                 prepend: prependAction,
                 append: appendAction,
                 replace: replaceAction,

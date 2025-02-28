@@ -46,7 +46,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
+                    "type": "string"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -158,12 +158,138 @@
             ],
             "type": "object"
         },
+        "BabelConfigModifierType": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "root": {
+                            "type": "string"
+                        },
+                        "set": {
+                            "additionalProperties": {},
+                            "type": "object"
+                        },
+                        "strategy": {
+                            "$ref": "#/definitions/ObjectModifierStrategy"
+                        },
+                        "when": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/AnyObject"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "set"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "root": {
+                            "type": "string"
+                        },
+                        "script": {
+                            "type": "string"
+                        },
+                        "when": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/AnyObject"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "script"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "after": {
+                            "$ref": "#/definitions/TextOrRegex"
+                        },
+                        "append": {
+                            "$ref": "#/definitions/TextOrFileValue"
+                        },
+                        "before": {
+                            "$ref": "#/definitions/TextOrRegex"
+                        },
+                        "block": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "exact": {
+                            "type": "boolean"
+                        },
+                        "ifNotPresent": {
+                            "type": "string"
+                        },
+                        "mode": {
+                            "const": "text",
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "prepend": {
+                            "$ref": "#/definitions/TextOrFileValue"
+                        },
+                        "replace": {
+                            "$ref": "#/definitions/TextOrFileValue"
+                        },
+                        "script": {
+                            "type": "string"
+                        },
+                        "search": {
+                            "$ref": "#/definitions/TextOrRegex"
+                        },
+                        "strict": {
+                            "type": "boolean"
+                        },
+                        "when": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/AnyObject"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "mode"
+                    ],
+                    "type": "object"
+                }
+            ]
+        },
         "BabelConfigTaskType": {
             "additionalProperties": false,
             "properties": {
                 "actions": {
                     "items": {
-                        "$ref": "#/definitions/ContentModifierType<BabelConfigBlockType>"
+                        "$ref": "#/definitions/BabelConfigModifierType"
                     },
                     "type": "array"
                 },
@@ -286,62 +412,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
-                },
-                "search": {
-                    "$ref": "#/definitions/TextOrRegex"
-                },
-                "strict": {
-                    "type": "boolean"
-                },
-                "when": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/AnyObject"
-                        },
-                        {
-                            "type": "string"
-                        }
-                    ]
-                }
-            },
-            "type": "object"
-        },
-        "ContentModifierType<BabelConfigBlockType>": {
-            "additionalProperties": false,
-            "properties": {
-                "after": {
-                    "$ref": "#/definitions/TextOrRegex"
-                },
-                "append": {
-                    "$ref": "#/definitions/TextOrFileValue"
-                },
-                "before": {
-                    "$ref": "#/definitions/TextOrRegex"
-                },
-                "block": {
-                    "$ref": "#/definitions/TBlock_4"
-                },
-                "comment": {
                     "type": "string"
-                },
-                "exact": {
-                    "type": "boolean"
-                },
-                "ifNotPresent": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "prepend": {
-                    "$ref": "#/definitions/TextOrFileValue"
-                },
-                "replace": {
-                    "$ref": "#/definitions/TextOrFileValue"
-                },
-                "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -396,7 +467,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
+                    "type": "string"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -451,7 +522,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
+                    "type": "string"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -506,7 +577,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
+                    "type": "string"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -1039,33 +1110,62 @@
             "type": "string"
         },
         "ObjectModifierType": {
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "set": {
-                    "additionalProperties": {},
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "set": {
+                            "additionalProperties": {},
+                            "type": "object"
+                        },
+                        "strategy": {
+                            "$ref": "#/definitions/ObjectModifierStrategy"
+                        },
+                        "when": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/AnyObject"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "set"
+                    ],
                     "type": "object"
                 },
-                "strategy": {
-                    "$ref": "#/definitions/ObjectModifierStrategy"
-                },
-                "when": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/AnyObject"
-                        },
-                        {
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
                             "type": "string"
+                        },
+                        "script": {
+                            "type": "string"
+                        },
+                        "when": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/AnyObject"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
                         }
-                    ]
+                    },
+                    "required": [
+                        "script"
+                    ],
+                    "type": "object"
                 }
-            },
-            "required": [
-                "set"
-            ],
-            "type": "object"
+            ]
         },
         "OptionValue": {
             "type": [
@@ -1156,7 +1256,7 @@
                     "$ref": "#/definitions/TextOrFileValue"
                 },
                 "script": {
-                    "$ref": "#/definitions/TextOrFileValue"
+                    "type": "string"
                 },
                 "search": {
                     "$ref": "#/definitions/TextOrRegex"
@@ -1799,13 +1899,6 @@
                 "activity",
                 "application",
                 "manifest"
-            ],
-            "type": "string"
-        },
-        "TBlock_4": {
-            "enum": [
-                "plugins",
-                "presets"
             ],
             "type": "string"
         },

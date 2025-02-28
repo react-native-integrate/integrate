@@ -1,27 +1,40 @@
 import mergeWith from 'lodash.mergewith';
 import color from 'picocolors';
+import { processScript } from '../processScript';
 import { logMessage, summarize } from '../prompter';
 import { ObjectModifierStrategy, ObjectModifierType } from '../types/mod.types';
-import { transformTextInObject } from '../variables';
+import { transformTextInObject, variables } from '../variables';
 import { deepEquals } from './satisfies';
 
 export function applyObjectModification(
   content: Record<string, any>,
   action: ObjectModifierType
 ): Record<string, any> {
-  const strategy = action.strategy || 'assign';
-  action.set = transformTextInObject(action.set);
+  const setAction = (
+    obj: Record<string, any>,
+    strategy: ObjectModifierStrategy = 'assign'
+  ) => {
+    content = modifyObject(content, obj, strategy);
+    Object.entries(obj).forEach(([key, value]) => {
+      const strValue =
+        typeof value === 'string' ? value : JSON.stringify(value);
+      logMessage(
+        `set ${color.yellow(key)} with ${color.yellow(
+          strategy
+        )} strategy: ${summarize(strValue)}`
+      );
+    });
+  };
+  if ('set' in action) {
+    const strategy = action.strategy || 'assign';
+    action.set = transformTextInObject(action.set);
 
-  content = modifyObject(content, action.set, strategy);
-
-  Object.entries(action.set).forEach(([key, value]) => {
-    const strValue = typeof value === 'string' ? value : JSON.stringify(value);
-    logMessage(
-      `set ${color.yellow(key)} with ${color.yellow(
-        strategy
-      )} strategy: ${summarize(strValue)}`
-    );
-  });
+    setAction(action.set, strategy);
+  } else {
+    processScript(action.script, variables, false, false, {
+      merge: setAction,
+    });
+  }
 
   return content;
 }
