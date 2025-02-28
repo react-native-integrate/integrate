@@ -47,3 +47,15 @@ In this example:
 
 - We evaluate a script to check if `some-task` was run with success and define `run_app_delegate` variable.
 - `app_delegate` task will run if `run_app_delegate` is true.
+
+You can also call any task in a script:
+
+```yaml
+steps:
+  - task: script
+    actions:
+      - script: |-
+          await app_delegate({
+            prepend: 'some import'
+          });
+```

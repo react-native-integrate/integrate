@@ -11,5 +11,6 @@ export async function runTask(args: {
     configPath,
     packageName,
     task,
+    taskManager,
   });
 }

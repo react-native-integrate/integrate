@@ -67,6 +67,7 @@ export interface RunTaskArgs {
   configPath: string;
   packageName: string;
   task: any;
+  taskManager: any;
 }
 
 export interface TaskExports {
