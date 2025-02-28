@@ -321,7 +321,7 @@ export class JsObjectParser {
         if (index != -1) {
           contextStart = index;
           contextEnd = index + 1;
-        }
+        } else return undefined;
       }
       if (forceAfter) {
         const index = items.findIndex(expr =>
