@@ -197,6 +197,21 @@ describe('jsObjectParser', () => {
       "
     `);
   });
+  it('should not search replace array when array not exist', async () => {
+    const content = 'module.exports = {};';
+    const parser = new JsObjectParser();
+    parser.parse(content);
+    parser.merge({
+      'module.exports': {
+        arr: [{ $search: 'two', $replace: 'gone' }],
+      },
+    });
+    expect(await prettier.format(parser.stringify(), prettierConfig))
+      .toMatchInlineSnapshot(`
+      "module.exports = { arr: [] };
+      "
+    `);
+  });
   it('should search delete in array', async () => {
     const content = `module.exports = { 
     arr: ['one', ['_two_'], 'three'],
@@ -333,6 +348,32 @@ describe('jsObjectParser', () => {
       .toMatchInlineSnapshot(`
       "module.exports = {
         env: { plugins: ['test', 'test2'] },
+      };
+      "
+    `);
+  });
+  it('should multiple object merge work', async () => {
+    const content = `
+    module.exports = {
+    };
+`;
+
+    const parser = new JsObjectParser();
+    parser.parse(content);
+    parser.merge({
+      'module.exports': {
+        env: { test: 1 },
+      },
+    });
+    parser.merge({
+      'module.exports': {
+        env: { test: 2 },
+      },
+    });
+    expect(await prettier.format(parser.stringify(), prettierConfig))
+      .toMatchInlineSnapshot(`
+      "module.exports = {
+        env: { test: 2 },
       };
       "
     `);

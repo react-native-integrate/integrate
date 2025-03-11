@@ -451,14 +451,40 @@ export class JsObjectParser {
         }
         const valueType = getValueType(value);
 
+        // if (!exprObject) {
+        //   const newExpr = this._objectToExpr({ [key]: value });
+        //   if (newExpr) {
+        //     const property: PropertyExpression = {
+        //       type: 'property',
+        //       name: key,
+        //       valueType,
+        //       tree: [],
+        //     };
+        //     if (items.length) {
+        //       const lastItem = tree[tree.length - 1];
+        //       if (
+        //         lastItem.type != 'partial' ||
+        //         !lastItem.content?.includes(',')
+        //       )
+        //         tree.push({ type: 'partial', content: ', ' });
+        //     }
+        //     tree.push(property);
+        //     property.valueType = newExpr.valueType;
+        //     property.tree.push(...newExpr.tree);
+        //   } else
+        //     logWarning(
+        //       'could not convert value to js tree: ' + summarize(value)
+        //     );
+        //
+        // }
         if (!exprObject) {
           //object doesnt exist, add it
-          const newExpr = this._objectToExpr(value);
+          const newExpr = this._objectToEmptyExpr(value);
           if (newExpr) {
             const property: PropertyExpression = {
               type: 'property',
               name: key,
-              valueType,
+              valueType: newExpr.valueType,
               tree: [],
             };
             if (items.length) {
@@ -471,7 +497,8 @@ export class JsObjectParser {
             }
             tree.push(property);
             property.valueType = newExpr.valueType;
-            property.tree.push(...newExpr.tree);
+            if (newExpr.valueType === 'primitive') property.tree = newExpr.tree;
+            else this._merge(value, property.tree, opts);
           } else
             logWarning(
               'could not convert value to js tree: ' + summarize(value)
@@ -497,7 +524,9 @@ export class JsObjectParser {
             opts.strategy === 'merge_concat' ||
             opts.strategy === 'merge_distinct')
         ) {
-          this._merge(value, exprObject.tree, opts);
+          const newExpr = this._objectToEmptyExpr(value);
+          if (newExpr.valueType === 'primitive') exprObject.tree = newExpr.tree;
+          else this._merge(value, exprObject.tree, opts);
         } else if (!forceAssign && opts.strategy === 'append') {
           const existingExpr = tree.find(expr => {
             return (
@@ -506,7 +535,12 @@ export class JsObjectParser {
             );
           }) as VariableExpression | PropertyExpression | undefined;
 
-          if (!existingExpr) this._merge(value, exprObject.tree, opts);
+          if (!existingExpr) {
+            const newExpr = this._objectToEmptyExpr(value);
+            if (newExpr.valueType === 'primitive')
+              exprObject.tree = newExpr.tree;
+            else this._merge(value, exprObject.tree, opts);
+          }
         } else if (forceAssign || opts.strategy === 'assign') {
           const newExpr = this._objectToExpr(value);
           exprObject.valueType = newExpr.valueType;
@@ -527,6 +561,15 @@ export class JsObjectParser {
     };
     this._parse(`${json}`, parent);
     return parent;
+  }
+  private _objectToEmptyExpr(object: any) {
+    return this._objectToExpr(
+      Array.isArray(object)
+        ? []
+        : object && typeof object === 'object'
+          ? {}
+          : object
+    );
   }
 }
 
