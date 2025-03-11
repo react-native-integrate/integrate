@@ -63,7 +63,7 @@ export async function createNewProject(): Promise<boolean> {
     child.stderr.on('data', (chunk: Buffer) => {
       if (isDone) return;
       updateSpinner(
-        `running command ${color.gray(getLastLine(chunk.toString('utf8')))}`
+        `running cli ${color.gray(getLastLine(chunk.toString('utf8')))}`
       );
     });
     child.stdin.write('n'); // do not install cocoapods
