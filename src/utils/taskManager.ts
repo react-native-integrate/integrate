@@ -4,6 +4,7 @@ import * as build_gradle from '../tasks/buildGradleTask';
 import * as xcode from '../tasks/xcode/xcodeTask';
 import * as android_manifest from '../tasks/androidManifestTask';
 import * as strings_xml from '../tasks/stringsXmlTask';
+import * as styles_xml from '../tasks/stylesXmlTask';
 import * as podfile from '../tasks/podFileTask';
 import * as gitignore from '../tasks/gitignoreTask';
 import * as gradle_properties from '../tasks/gradlePropertiesTask';
@@ -38,6 +39,7 @@ const task: Record<string, TaskExports> = {
   main_activity,
   settings_gradle,
   strings_xml,
+  styles_xml,
   shell,
   babel_config,
   script,

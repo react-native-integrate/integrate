@@ -1,25 +1,23 @@
 ---
-sidebar_position: 6
-title: MainActivity.java/kt
+sidebar_position: 5
+title: styles.xml
 ---
 
-# MainActivity Task Configuration (`main_activity`)
+# Styles Xml Task Configuration (`styles_xml`)
 
-_Modify MainActivity java or kt file_
+_Modify styles.xml file_
 
-The `main_activity` task is designed to facilitate modifications to the `MainActivity` java or kotlin files in Android projects. It is the main entry
-file of the android application. This task provides the flexibility to make changes to different sections of the `MainActivity` java or kotlin file.
+The `styles_xml` task allows you to modify the styles.xml file in an Android project. You can add any resource within the styles.xml file.
 
 ## Task Properties
 
-| Property | Type                                            | Description                                                                                                                                                                                                                                                    |
-|:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| task     | "main_activity", required                       | Specifies the task type, which should be set to "main_activity" for this task.                                                                                                                                                                                 |
-| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more.                                                                                                       |
-| label    | string                                          | An optional label or description for the task.                                                                                                                                                                                                                 |
-| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                                                                                                                             |
-| lang     | "java" (default) or "kotlin"                    | Specifies the language of the file, distinguishing between the java and kt file. It helps determine which MainActivity file to modify during the configuration process. "java" modifies `MainActivity.java` file and "kotlin" modifies `MainActivity.kt` file. |
-| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                                                                                                                                 |
+| Property | Type                                            | Description                                                                                                                                              |
+|:---------|:------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| task     | "styles_xml", required                         | Specifies the task type, which should be set to "styles_xml" for this task.                                                                             |
+| name     | string                                          | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| label    | string                                          | An optional label or description for the task.                                                                                                           |
+| when     | object                                          | Visit [Conditional Tasks and Actions](../../when) page to learn how to execute task conditionally.                                                       |
+| actions  | Array\<[Action](#action-properties)\>, required | An array of action items that define the modifications to be made in the file. Each action item contains the following fields:                           |
 
 ## Action Properties
 
@@ -58,12 +56,13 @@ file of the android application. This task provides the flexibility to make chan
 
 ## Example
 
+Here's an example of how to use the `styles_xml` task to modify the styles.xml file:
+
 ```yaml
-task: main_activity
-label: "Adding import"
-lang: "kotlin",
+task: styles_xml
+label: "Modify styles.xml"
 actions:
-  - prepend: import com.some.lib
+  - append: <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
 ```
 
-In this example, the `main_activity` task adds an import to the file.
+In this example, we add a string resource in styles.xml.

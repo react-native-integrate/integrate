@@ -973,6 +973,9 @@
                     "$ref": "#/definitions/StringsXmlTaskType"
                 },
                 {
+                    "$ref": "#/definitions/StylesXmlTaskType"
+                },
+                {
                     "$ref": "#/definitions/XcodeTaskType"
                 },
                 {
@@ -1839,6 +1842,48 @@
                 },
                 "task": {
                     "const": "strings_xml",
+                    "type": "string"
+                },
+                "when": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/AnyObject"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "actions",
+                "task"
+            ],
+            "type": "object"
+        },
+        "StylesXmlTaskType": {
+            "additionalProperties": false,
+            "properties": {
+                "actions": {
+                    "items": {
+                        "$ref": "#/definitions/ContentModifierType<string>"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "preInfo": {
+                    "$ref": "#/definitions/TextOrTitleMessage"
+                },
+                "task": {
+                    "const": "styles_xml",
                     "type": "string"
                 },
                 "when": {

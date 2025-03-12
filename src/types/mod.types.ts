@@ -221,6 +221,13 @@ export type StringsXmlTaskType = ModTaskBase &
     task: 'strings_xml';
   };
 
+// styles xml task
+
+export type StylesXmlTaskType = ModTaskBase &
+  ActionsType<ContentModifierType> & {
+    task: 'styles_xml';
+  };
+
 // add resource task
 
 export type XcodeTaskType = ModTaskBase &
@@ -468,6 +475,7 @@ export type ModStep =
   | MainActivityTaskType
   | AndroidManifestTaskType
   | StringsXmlTaskType
+  | StylesXmlTaskType
   | NotificationServiceTaskType
   | NotificationViewControllerTaskType
   | XcodeTaskType
