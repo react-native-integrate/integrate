@@ -1,4 +1,4 @@
-import { processScript } from './processScript';
+import { processScript } from './utils/processScript';
 import { getIosBundleId } from './utils/getBundleId';
 import { getIosDeploymentVersion } from './utils/getDeploymentVersion';
 import { getIosProjectName } from './utils/getIosProjectPath';

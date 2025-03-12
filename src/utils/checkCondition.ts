@@ -1,4 +1,4 @@
-import { processScript } from '../processScript';
+import { processScript } from './processScript';
 import { AnyObject } from '../types/mod.types';
 import { transformTextInObject, variables } from '../variables';
 import { satisfies } from './satisfies';

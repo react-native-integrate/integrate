@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-implied-eval,no-shadow-restricted-names,@typescript-eslint/no-unsafe-call */
-import type { variables } from './variables';
+import type { variables } from '../variables';
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 

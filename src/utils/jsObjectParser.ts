@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { processScript } from '../processScript';
+import { processScript } from './processScript';
 import { logWarning, summarize } from '../prompter';
 import { ObjectModifierStrategy } from '../types/mod.types';
 import { variables } from '../variables';

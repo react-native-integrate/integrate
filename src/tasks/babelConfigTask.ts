@@ -3,7 +3,7 @@ import path from 'path';
 import color from 'picocolors';
 import prettier from 'prettier';
 import { Constants } from '../constants';
-import { processScript } from '../processScript';
+import { processScript } from '../utils/processScript';
 import { logMessage, logMessageGray, summarize } from '../prompter';
 import {
   BabelConfigModifierType,

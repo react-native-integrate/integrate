@@ -1,6 +1,6 @@
 import mergeWith from 'lodash.mergewith';
 import color from 'picocolors';
-import { processScript } from '../processScript';
+import { processScript } from './processScript';
 import { logMessage, summarize } from '../prompter';
 import { ObjectModifierStrategy, ObjectModifierType } from '../types/mod.types';
 import { transformTextInObject, variables } from '../variables';

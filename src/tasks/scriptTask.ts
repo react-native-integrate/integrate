@@ -1,4 +1,4 @@
-import { processScript } from '../processScript';
+import { processScript } from '../utils/processScript';
 import { ModStep, ScriptTaskType } from '../types/mod.types';
 import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';

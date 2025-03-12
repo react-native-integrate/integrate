@@ -1,5 +1,5 @@
 import color from 'picocolors';
-import { processScript } from '../processScript';
+import { processScript } from './processScript';
 import { logMessage, logMessageGray, summarize } from '../prompter';
 import {
   BlockContentType,
