@@ -13,9 +13,8 @@
     "rni": "bin/index.js",
     "rnu": "bin/upgrade-cli.js"
   },
-
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cpy src/global.d.ts lib --flat",
     "clean": "rm -rf ./lib/",
     "cm": "cz",
     "lint": "eslint ./src/ --fix",
@@ -79,6 +78,7 @@
     "@typescript-eslint/parser": "^8.24.1",
     "chalk": "^5.4.1",
     "conventional-changelog-conventionalcommits": "^8.0.0",
+    "cpy-cli": "^5.0.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-node": "^11.1.0",
