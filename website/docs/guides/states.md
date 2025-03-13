@@ -46,7 +46,7 @@ steps:
 
   - task: build_gradle
     when:
-      fs_google.state: done
+      fs_google: done
 ```
 
 In this example, we have two tasks. The first task, `fs_google`, has a name assigned to it. The second task, `build_gradle`, uses the `when` condition to check the state of the `fs_google` task. It will only execute when the `fs_google` task is in the `done` state (completed successfully).
