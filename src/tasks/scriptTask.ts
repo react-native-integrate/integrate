@@ -3,7 +3,7 @@ import { processScript } from '../utils/processScript';
 import {
   ModStep,
   ScriptTaskType,
-  TaskContext,
+  ModuleContext,
   TaskName,
 } from '../types/mod.types';
 import { checkCondition } from '../utils/checkCondition';
@@ -61,7 +61,7 @@ export async function scriptTask(args: {
           set: function (variable: string, value: any): void {
             variables.set(variable, value);
           },
-        } as TaskContext
+        } as ModuleContext
       );
       let resultValue: any;
       if ('script' in action) {
@@ -79,8 +79,10 @@ export async function scriptTask(args: {
             __dirname,
             path.join(path.dirname(args.configPath), action.module)
           )
-        ) as (ctx: any) => any;
-        resultValue = await plugin(ctx);
+        ) as ((ctx: any) => any) | { default: (ctx: any) => any };
+        if ('default' in plugin) {
+          resultValue = await plugin.default(ctx);
+        } else resultValue = await plugin(ctx);
       }
       if (action.name && resultValue != null)
         variables.set(action.name, resultValue);

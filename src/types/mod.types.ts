@@ -565,7 +565,7 @@ export type PackageJsonType = {
 } & Record<string, any>;
 
 export type TaskName = keyof typeof taskList;
-export type TaskContext = {
+export type ModuleContext = {
   [K in TaskName]: (
     action:
       | Extract<ModStep, { task: K }>['actions'][number]

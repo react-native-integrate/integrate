@@ -82,15 +82,15 @@ module.exports = async function integrate(ctx) {
 
 ### Typescript
 
-You can add `react-native-integrate` as dev dependency and use `TaskContext` type for TS.
+You can add `react-native-integrate` as dev dependency and use `ModuleContext` type for TS.
 Note that you need to transpile your plugin to CommonJS before shipping.
 
 _plugin/integrate.ts_
 
 ```js
-import { TaskContext } from "react-native-integrate";
+import { ModuleContext } from "react-native-integrate";
 
-module.exports = async function integrate(ctx: TaskContext) {
+export default async function integrate(ctx: ModuleContext) {
   await ctx.app_delegate({
     prepend: 'some import'
   });
