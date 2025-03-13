@@ -1,3 +1,5 @@
+import { XcodeProjectType } from 'xcode';
+import type { taskList } from '../utils/taskManager';
 import {
   ConfirmPromptArgs,
   MultiselectPromptArgs,
@@ -357,13 +359,18 @@ export type XcodeAddPreBuildRunScriptAction = ActionBase & {
   addPreBuildRunScriptAction: TextOrFileValue;
 };
 
+export type XcodeScriptAction = ActionBase & {
+  script: string | ((project: XcodeProjectType) => Promise<any>);
+};
+
 export type XcodeModifierType =
   | XcodeAddFile
   | XcodeAddTarget
   | XcodeAddCapability
   | XcodeSetDeploymentVersion
   | XcodeAddConfiguration
-  | XcodeAddPreBuildRunScriptAction;
+  | XcodeAddPreBuildRunScriptAction
+  | XcodeScriptAction;
 
 // pod file task
 
@@ -454,9 +461,13 @@ export type ScriptTaskType = ModTaskBase &
     task: 'script';
   };
 
-export type ScriptActionType = ActionBase & {
+export type TextScriptActionType = ActionBase & {
   script: string;
 };
+export type ModuleScriptActionType = ActionBase & {
+  module: string;
+};
+export type ScriptActionType = TextScriptActionType | ModuleScriptActionType;
 
 export type ModTaskBase = {
   name?: string;
@@ -552,3 +563,26 @@ export type PackageJsonType = {
   dependencies: Record<string, string>;
   devDependencies?: Record<string, string>;
 } & Record<string, any>;
+
+export type TaskName = keyof typeof taskList;
+export type TaskContext = {
+  [K in TaskName]: (
+    action:
+      | Extract<ModStep, { task: K }>['actions'][number]
+      | Extract<ModStep, { task: K }>['actions'][number][],
+    opts?: Omit<Extract<ModStep, { task: K }>, 'task' | 'actions'>
+  ) => Promise<void>;
+} & {
+  /**
+   * Gets a variable value
+   * @param variableName Name of the variable
+   */
+  get: <T>(variableName: string) => T;
+
+  /**
+   * Sets a variable value
+   * @param variableName Name of the variable
+   * @param value Value of the variable
+   */
+  set: (variableName: string, value: any) => void;
+};

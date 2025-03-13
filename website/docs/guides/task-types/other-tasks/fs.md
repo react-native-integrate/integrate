@@ -5,7 +5,7 @@ title: File System Operations
 
 # File System Task Configuration (`fs`)
 
-_Copy other files into project_
+_Copy or delete files_
 
 The "fs" task is used to perform filesystem operations within your configuration. It allows you to copy files from one location to another within your
 project. This task is particularly useful when you need to manage project assets, configuration files, or other resources.

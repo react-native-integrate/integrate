@@ -21,32 +21,95 @@ import * as babel_config from '../tasks/babelConfigTask';
 import * as script from '../tasks/scriptTask';
 import { ModStep } from '../types/mod.types';
 
-const task: Record<string, TaskExports> = {
+export const taskList = {
+  /*
+  Modify AppDelegate file
+   */
   app_delegate,
+  /*
+  Modify Info.plist file
+   */
   plist,
+  /*
+  Modify build.gradle files
+   */
   build_gradle,
+  /*
+  Modify Xcode project
+   */
   xcode,
+  /*
+  Modify AndroidManifest.xml file
+   */
   android_manifest,
+  /*
+  Modify Podfile in ios folder
+   */
   podfile,
+  /*
+  Modify .gitignore file
+   */
   gitignore,
+  /*
+  Modify gradle.properties file
+   */
   gradle_properties,
+  /*
+  Copy or delete files
+   */
   fs,
+  /*
+  Create or modify any json file
+   */
   json,
+  /*
+  Ask for user input
+   */
   prompt,
+  /*
+  Modify NotificationService.m file
+   */
   notification_service,
+  /*
+  Modify NotificationViewController.m file
+   */
   notification_view_controller,
+  /*
+  Modify MainApplication java or kt file
+   */
   main_application,
+  /*
+  Modify MainActivity java or kt file
+   */
   main_activity,
+  /*
+  Modify settings.gradle file
+   */
   settings_gradle,
+  /*
+  Modify strings.xml file
+   */
   strings_xml,
+  /*
+  Modify styles.xm file
+   */
   styles_xml,
+  /*
+  Run shell commands
+   */
   shell,
+  /*
+  Modify babel.config.js file
+   */
   babel_config,
+  /*
+  Execute custom JS script
+   */
   script,
 };
 
-const systemTaskTypes = Object.entries(task)
-  .filter(x => x[1].isSystemTask)
+const systemTaskTypes = Object.entries(taskList)
+  .filter(x => 'isSystemTask' in x[1] && x[1].isSystemTask)
   .map(x => x[0]);
 
 function isSystemTask(task: string): boolean {
@@ -56,24 +119,11 @@ function getNonSystemTasks(steps: ModStep[]): ModStep[] {
   return steps.filter(x => !isSystemTask(x.task));
 }
 export const taskManager: {
-  task: Record<string, TaskExports>;
+  task: typeof taskList;
   isSystemTask: (task: string) => boolean;
   getNonSystemTasks: (steps: ModStep[]) => ModStep[];
 } = {
-  task,
+  task: taskList,
   isSystemTask,
   getNonSystemTasks,
 };
-
-export interface RunTaskArgs {
-  configPath: string;
-  packageName: string;
-  task: any;
-  taskManager: any;
-}
-
-export interface TaskExports {
-  runTask: (args: RunTaskArgs) => void | Promise<void>;
-  summary: string;
-  isSystemTask?: boolean;
-}

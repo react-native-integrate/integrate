@@ -10,7 +10,7 @@ export async function runTask(args: {
   await taskManager.task[task.task].runTask({
     configPath,
     packageName,
-    task,
+    task: task as never,
     taskManager,
   });
 }

@@ -1,5 +1,11 @@
+import path from 'path';
 import { processScript } from '../utils/processScript';
-import { ModStep, ScriptTaskType } from '../types/mod.types';
+import {
+  ModStep,
+  ScriptTaskType,
+  TaskContext,
+  TaskName,
+} from '../types/mod.types';
 import { checkCondition } from '../utils/checkCondition';
 import { getErrMessage } from '../utils/getErrMessage';
 import { setState } from '../utils/setState';
@@ -31,33 +37,53 @@ export async function scriptTask(args: {
     try {
       const ctx = Object.entries(args.taskManager.task).reduce(
         (ctx, [taskName, task]) => {
-          ctx[taskName] = async (actionOneOrList, opts) => {
-            const dynamicTask: ModStep = {
-              task: taskName,
+          ctx[taskName as TaskName] = async (actionOneOrList, opts) => {
+            const dynamicTask = {
+              task: taskName as TaskName,
               ...opts,
               actions: Array.isArray(actionOneOrList)
                 ? actionOneOrList
                 : [actionOneOrList],
-            };
+            } as Extract<ModStep, { task: TaskName }>;
             await task.runTask({
               configPath: args.configPath,
               packageName: args.packageName,
-              task: dynamicTask,
+              task: dynamicTask as never,
               taskManager: args.taskManager,
             });
           };
           return ctx;
         },
-        {} as Record<string, (...args: any[]) => any>
+        {
+          get: function <T>(variable: string): T {
+            return variables.get<T>(variable);
+          },
+          set: function (variable: string, value: any): void {
+            variables.set(variable, value);
+          },
+        } as TaskContext
       );
-      const resultValue = await processScript(
-        action.script,
-        variables,
-        false,
-        true,
-        ctx
-      );
-      if (action.name) variables.set(action.name, resultValue);
+      let resultValue: any;
+      if ('script' in action) {
+        resultValue = await processScript(
+          action.script,
+          variables,
+          false,
+          true,
+          ctx
+        );
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const plugin = require(
+          path.relative(
+            __dirname,
+            path.join(path.dirname(args.configPath), action.module)
+          )
+        ) as (ctx: any) => any;
+        resultValue = await plugin(ctx);
+      }
+      if (action.name && resultValue != null)
+        variables.set(action.name, resultValue);
     } catch (e) {
       setState(action.name, {
         state: 'error',

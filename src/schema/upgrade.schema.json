@@ -1004,6 +1004,31 @@
                 }
             ]
         },
+        "ModuleScriptActionType": {
+            "additionalProperties": false,
+            "properties": {
+                "module": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/AnyObject"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "module"
+            ],
+            "type": "object"
+        },
         "NotificationServiceTaskType": {
             "additionalProperties": false,
             "properties": {
@@ -1635,29 +1660,14 @@
             "type": "object"
         },
         "ScriptActionType": {
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/TextScriptActionType"
                 },
-                "script": {
-                    "type": "string"
-                },
-                "when": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/AnyObject"
-                        },
-                        {
-                            "type": "string"
-                        }
-                    ]
+                {
+                    "$ref": "#/definitions/ModuleScriptActionType"
                 }
-            },
-            "required": [
-                "script"
-            ],
-            "type": "object"
+            ]
         },
         "ScriptTaskType": {
             "additionalProperties": false,
@@ -2010,6 +2020,31 @@
                     "type": "string"
                 }
             ]
+        },
+        "TextScriptActionType": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "script": {
+                    "type": "string"
+                },
+                "when": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/AnyObject"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "script"
+            ],
+            "type": "object"
         },
         "XcodeAddBMCapability": {
             "additionalProperties": false,
@@ -2474,8 +2509,44 @@
                 },
                 {
                     "$ref": "#/definitions/XcodeAddPreBuildRunScriptAction"
+                },
+                {
+                    "$ref": "#/definitions/XcodeScriptAction"
                 }
             ]
+        },
+        "XcodeScriptAction": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "script": {
+                    "anyOf": [
+                        {
+                            "additionalProperties": false,
+                            "type": "object"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "when": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/AnyObject"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "script"
+            ],
+            "type": "object"
         },
         "XcodeSetDeploymentVersion": {
             "additionalProperties": false,

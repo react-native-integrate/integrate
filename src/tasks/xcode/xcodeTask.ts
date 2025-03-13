@@ -4,8 +4,10 @@ import { XcodeModifierType, XcodeTaskType } from '../../types/mod.types';
 import { checkCondition } from '../../utils/checkCondition';
 import { getErrMessage } from '../../utils/getErrMessage';
 import { getPbxProjectPath } from '../../utils/getIosProjectPath';
+import { processScript } from '../../utils/processScript';
 import { setState } from '../../utils/setState';
 import { xcodeContext } from '../../utils/xcode.context';
+import { variables } from '../../variables';
 import { applyAddCapability } from './xcodeTask.addCapability';
 import { applyAddConfiguration } from './xcodeTask.addConfiguration';
 import { applyAddFile } from './xcodeTask.addFile';
@@ -81,6 +83,26 @@ async function applyXcodeModification(
       configPath,
       packageName
     );
+  if ('script' in action) {
+    if (typeof action.script === 'string') {
+      const resultValue = await processScript(
+        action.script,
+        variables,
+        false,
+        true,
+        {
+          project: content,
+        }
+      );
+      if (action.name && resultValue != null)
+        variables.set(action.name, resultValue);
+    } else {
+      const resultValue = await action.script(content);
+      if (action.name && resultValue != null)
+        variables.set(action.name, resultValue);
+    }
+    return content;
+  }
   return content;
 }
 

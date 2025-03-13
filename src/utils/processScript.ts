@@ -24,25 +24,12 @@ export function processScript(
   async: boolean,
   ctx?: any
 ): any {
-  const randomEvalName = 'eval_' + Math.random().toString().substring(2);
   const functionSet = {
     get: function (variable: string): any {
       return _variables.get(variable);
     },
     set: function (variable: string, value: any): any {
-      if (!_variables.has(variable))
-        Object.defineProperty(scope, variable, {
-          get(): any {
-            return _variables.get(variable);
-          },
-          set(value): any {
-            return _variables.set(variable, value);
-          },
-        });
-
       _variables.set(variable, value);
-
-      return '';
     },
     json: function (object: any): string {
       return JSON.stringify(object, null, 2);
@@ -50,17 +37,7 @@ export function processScript(
     parse: function (str: string): any {
       return JSON.parse(str);
     },
-    require: function () {
-      throw new Error('require is not allowed');
-    },
-    Function: function () {
-      throw new Error('Function is not allowed');
-    },
-    __import_not_allowed: function () {
-      throw new Error('import is not allowed');
-    },
-    globalThis: undefined,
-    global: undefined,
+    require,
   };
   const scope = Object.assign(
     Object.keys(globalThis).reduce(
@@ -75,9 +52,6 @@ export function processScript(
   );
 
   for (const storeKey in _variables.getStore()) {
-    Object.defineProperty(scope, randomEvalName, {
-      value: eval,
-    });
     Object.defineProperty(scope, storeKey, {
       get(): any {
         return _variables.get(storeKey);
@@ -87,8 +61,6 @@ export function processScript(
       },
     });
   }
-  script = script.replace(/\bimport\(/g, '__import_not_allowed(');
-  script = 'var eval=undefined;' + script;
 
   if (async) {
     if (inline) {

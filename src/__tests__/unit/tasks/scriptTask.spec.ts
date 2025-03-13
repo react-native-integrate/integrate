@@ -10,8 +10,28 @@ describe('scriptTask', () => {
       actions: [
         {
           script: `
+          const fs = require('fs');
             set('script', 'working')
           `,
+        },
+      ],
+    };
+
+    await scriptTask({
+      configPath: 'path/to/config',
+      task: task,
+      packageName: 'test-package',
+      taskManager,
+    });
+
+    expect(variables.get('script')).toEqual('working');
+  });
+  it('should require plugin', async () => {
+    const task: ScriptTaskType = {
+      task: 'script',
+      actions: [
+        {
+          module: '../../src/__tests__/mocks/mockTestPlugin.js',
         },
       ],
     };

@@ -167,6 +167,12 @@ For example:
 |:---------------------------|:---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | addPreBuildRunScriptAction | string or `{file: string}` | Adds a pre build run script action into shared scheme.  It can be a string or an object with a `file` field that points to a file containing the code to append. |
 
+### Custom script action
+
+| Property | Type                                       | Description                                                                                                                                         |
+|:---------|:-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| script   | string or `(project: XcodeProject) => any` | Run custom js using xcode project from `xcode` module. You can define as string in yml to evaluate or as function in your modules or other scripts. |
+
 Usage Example
 -------------
 

@@ -91,11 +91,12 @@ describe('variables', () => {
     });
     it('should process script', () => {
       const replaced = getText(`this is $[
-        set("test", false);
-        test = true;
+        var result = true; 
+        set("test2", result);
+        result;
       ]`);
       expect(replaced).toEqual('this is true');
-      expect(variables.get('test')).toEqual(true);
+      expect(variables.get('test2')).toEqual(true);
     });
   });
   describe('transformTextInObject', () => {

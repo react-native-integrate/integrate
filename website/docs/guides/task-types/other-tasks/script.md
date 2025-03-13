@@ -21,11 +21,12 @@ The `script` task type allows you to evaluate JS scripts to have full control ov
 
 ## Action Properties
 
-| Property | Type                                           | Description                                                                                                                                              |
-|:---------|:-----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name     | string                                         | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
-| when     | object                                         | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
-| script   | string, required                               | The script to be executed.                                                                                                                               |
+| Property | Type   | Description                                                                                                                                              |
+|:---------|:-------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | An optional name for the task. If provided, the task state will be saved as a variable. Visit [Task and Action States](../../states) page to learn more. |
+| when     | object | Visit [Conditional Tasks and Actions](../../when)  page to learn how to execute action conditionally.                                                    |
+| script   | string | The script to be executed.                                                                                                                               |
+| module   | string | The module file to run. Your module should export a function with a single context parameter. Context parameter contains all supported task actions.     |
 
 ## Example
 
@@ -48,7 +49,7 @@ In this example:
 - We evaluate a script to check if `some-task` was run with success and define `run_app_delegate` variable.
 - `app_delegate` task will run if `run_app_delegate` is true.
 
-You can also call any task in a script:
+#### You can also call any task in a script:
 
 ```yaml
 steps:
@@ -58,4 +59,40 @@ steps:
           await app_delegate({
             prepend: 'some import'
           });
+```
+
+#### Or run your custom plugin module:
+
+```yaml
+steps:
+  - task: script
+    actions:
+      - module: 'plugin/integrate.js';
+```
+
+_plugin/integrate.js_
+
+```js
+module.exports = async function integrate(ctx) {
+  await ctx.app_delegate({
+    prepend: 'some import'
+  });
+}
+```
+
+### Typescript
+
+You can add `react-native-integrate` as dev dependency and use `TaskContext` type for TS.
+Note that you need to transpile your plugin to CommonJS before shipping.
+
+_plugin/integrate.ts_
+
+```js
+import { TaskContext } from "react-native-integrate";
+
+module.exports = async function integrate(ctx: TaskContext) {
+  await ctx.app_delegate({
+    prepend: 'some import'
+  });
+}
 ```
