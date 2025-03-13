@@ -12,7 +12,6 @@ describe('setState', () => {
     } as TaskState);
     setState('test', {
       state: 'done',
-      error: false,
     });
     expect(variables.get<TaskState>('test')).toEqual({
       state: 'skipped',

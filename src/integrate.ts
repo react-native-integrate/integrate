@@ -263,14 +263,12 @@ export async function integrate(packageName?: string): Promise<void> {
           if (task.when && !checkCondition(task.when)) {
             setState(task.name, {
               state: 'skipped',
-              error: false,
             });
             continue;
           }
 
           setState(task.name, {
             state: 'progress',
-            error: false,
           });
 
           const isNonSystemTask = !taskManager.isSystemTask(task.task);
@@ -294,7 +292,6 @@ export async function integrate(packageName?: string): Promise<void> {
 
             setState(task.name, {
               state: 'done',
-              error: false,
             });
             await logInfoNote(task.postInfo);
           } catch (e) {
@@ -305,7 +302,6 @@ export async function integrate(packageName?: string): Promise<void> {
             setState(task.name, {
               state: 'error',
               reason: errMessage,
-              error: true,
             });
           }
         }

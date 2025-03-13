@@ -16,14 +16,12 @@ export async function promptTask(args: {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
-        error: false,
       });
       continue;
     }
 
     setState(action.name, {
       state: 'progress',
-      error: false,
     });
     try {
       await runPrompt(action, packageName);
@@ -31,7 +29,6 @@ export async function promptTask(args: {
       setState(action.name, {
         state: 'error',
         reason: getErrMessage(e),
-        error: true,
       });
       throw e;
     }

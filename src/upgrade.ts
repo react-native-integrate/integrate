@@ -303,14 +303,12 @@ export async function upgrade(): Promise<void> {
           if (task.when && !checkCondition(task.when)) {
             setState(task.name, {
               state: 'skipped',
-              error: false,
             });
             continue;
           }
 
           setState(task.name, {
             state: 'progress',
-            error: false,
           });
 
           const isNonSystemTask = !taskManager.isSystemTask(task.task);
@@ -333,7 +331,6 @@ export async function upgrade(): Promise<void> {
 
             setState(task.name, {
               state: 'done',
-              error: false,
             });
           } catch (e) {
             failedTaskCount++;
@@ -343,7 +340,6 @@ export async function upgrade(): Promise<void> {
             setState(task.name, {
               state: 'error',
               reason: errMessage,
-              error: true,
             });
           }
         }

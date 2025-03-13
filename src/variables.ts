@@ -2,7 +2,8 @@ import { processScript } from './utils/processScript';
 import { getIosBundleId } from './utils/getBundleId';
 import { getIosDeploymentVersion } from './utils/getDeploymentVersion';
 import { getIosProjectName } from './utils/getIosProjectPath';
-
+import _set from 'lodash.set';
+import _get from 'lodash.get';
 // Predefined variables
 const predefinedVariables: Record<string, any> = {
   PLATFORM: process.platform,
@@ -42,10 +43,10 @@ let _store: Record<string, any> = {};
 export const variables = {
   get<T = any>(name: string): T {
     if (name in predefinedVariables) return predefinedVariables[name] as T;
-    return _store[name] as T;
+    return _get(_store, name) as T;
   },
   set<T>(name: string, value: T): void {
-    _store[name] = value;
+    _set(_store, name, value);
   },
   setPredefined<T>(name: string, value: T): void {
     predefinedVariables[name] = value;
@@ -63,7 +64,7 @@ export const variables = {
     ) as Record<string, any>;
   },
   has(name: string): boolean {
-    return name in predefinedVariables || name in _store;
+    return name in predefinedVariables || _get(_store, name) !== undefined;
   },
 };
 

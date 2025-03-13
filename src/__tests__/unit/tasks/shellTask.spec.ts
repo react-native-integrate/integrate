@@ -144,6 +144,7 @@ describe('shellTask', () => {
     mockSpawn.mockReset();
   });
   it('should handle non zero exit code', async () => {
+    mockSpawn.mockReset();
     mockSpawn.mockImplementationOnce(() => ({
       on: (_event: string, cb: (...args: any[]) => void) => {
         cb(1);
@@ -183,6 +184,7 @@ describe('shellTask', () => {
     mockSpawn.mockReset();
   });
   it('should skip when condition does not meet', async () => {
+    mockSpawn.mockReset();
     const task: ShellTaskType = {
       task: 'shell',
       actions: [
@@ -205,6 +207,7 @@ describe('shellTask', () => {
     mockSpawn.mockReset();
   });
   it('should skip when execution not allowed', async () => {
+    mockSpawn.mockReset();
     mockPrompter.confirm.mockClear();
     mockPrompter.confirm.mockReturnValueOnce(false);
 

@@ -151,14 +151,12 @@ export async function runUpgradeTasks(
       if (task.when && !checkCondition(task.when)) {
         setState(task.name, {
           state: 'skipped',
-          error: false,
         });
         continue;
       }
 
       setState(task.name, {
         state: 'progress',
-        error: false,
       });
 
       const isNonSystemTask = !taskManager.isSystemTask(task.task);
@@ -181,7 +179,6 @@ export async function runUpgradeTasks(
 
         setState(task.name, {
           state: 'done',
-          error: false,
         });
       } catch (e) {
         failedTaskCount++;
@@ -191,7 +188,6 @@ export async function runUpgradeTasks(
         setState(task.name, {
           state: 'error',
           reason: errMessage,
-          error: true,
         });
       }
     }

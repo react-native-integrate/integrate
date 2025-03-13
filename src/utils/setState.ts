@@ -8,7 +8,6 @@ export function setState(name: string | undefined, state: TaskState): void {
       if (currentState && currentState.state != 'progress') return;
     }
     variables.set(name, state.state);
-    variables.set(name + '.error', state.error);
-    variables.set(name + '.reason', state.reason);
+    variables.set('reason.' + name, state.reason);
   }
 }

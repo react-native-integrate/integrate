@@ -33,14 +33,12 @@ export async function babelConfigTask(args: {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
-        error: false,
       });
       continue;
     }
 
     setState(action.name, {
       state: 'progress',
-      error: false,
     });
     try {
       if ('mode' in action && action.mode === 'text') {
@@ -58,13 +56,11 @@ export async function babelConfigTask(args: {
       }
       setState(action.name, {
         state: 'done',
-        error: false,
       });
     } catch (e) {
       setState(action.name, {
         state: 'error',
         reason: getErrMessage(e),
-        error: true,
       });
       throw e;
     }
@@ -123,7 +119,6 @@ export function shouldApplyInsertion(
       setState(action.name, {
         state: 'skipped',
         reason: 'insert.ifNotPresent',
-        error: false,
       });
       return false;
     }
@@ -134,7 +129,6 @@ export function shouldApplyInsertion(
     setState(action.name, {
       state: 'skipped',
       reason: 'insert.exists',
-      error: false,
     });
     return false;
   }

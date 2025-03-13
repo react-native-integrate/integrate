@@ -25,14 +25,12 @@ export async function scriptTask(args: {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
-        error: false,
       });
       continue;
     }
 
     setState(action.name, {
       state: 'progress',
-      error: false,
     });
     try {
       const ctx = Object.entries(args.taskManager.task).reduce(
@@ -90,7 +88,6 @@ export async function scriptTask(args: {
       setState(action.name, {
         state: 'error',
         reason: getErrMessage(e),
-        error: true,
       });
       throw e;
     }

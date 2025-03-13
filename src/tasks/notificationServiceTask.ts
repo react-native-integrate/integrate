@@ -31,14 +31,12 @@ export async function notificationServiceTask(args: {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
-        error: false,
       });
       continue;
     }
 
     setState(action.name, {
       state: 'progress',
-      error: false,
     });
     try {
       content = await applyContentModification({
@@ -52,13 +50,11 @@ export async function notificationServiceTask(args: {
 
       setState(action.name, {
         state: 'done',
-        error: false,
       });
     } catch (e) {
       setState(action.name, {
         state: 'error',
         reason: getErrMessage(e),
-        error: true,
       });
       throw e;
     }

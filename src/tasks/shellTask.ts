@@ -32,14 +32,12 @@ export async function shellTask(args: {
       setState(action.name, {
         state: 'skipped',
         reason: 'when',
-        error: false,
       });
       continue;
     }
 
     setState(action.name, {
       state: 'progress',
-      error: false,
     });
     try {
       let command: string, args: string[], cwd: string;
@@ -72,7 +70,6 @@ export async function shellTask(args: {
           setState(action.name, {
             state: 'skipped',
             reason: 'user denied',
-            error: false,
           });
           logMessageGray(
             `skipped running ${color.yellow(command + ' ' + args.join(' '))}`
@@ -139,7 +136,6 @@ export async function shellTask(args: {
       setState(action.name, {
         state: 'error',
         reason: getErrMessage(e),
-        error: true,
       });
       throw e;
     }

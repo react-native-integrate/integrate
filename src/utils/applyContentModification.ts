@@ -121,7 +121,6 @@ export async function applyContentModification(
         setState(action.name, {
           state: 'skipped',
           reason: 'prepend.ifNotPresent',
-          error: false,
         });
       } else if (!blockContent.match.includes(prependText)) {
         const start = blockContent.start,
@@ -143,7 +142,6 @@ export async function applyContentModification(
         setState(action.name, {
           state: 'skipped',
           reason: 'prepend.exists',
-          error: false,
         });
       }
     };
@@ -168,7 +166,6 @@ export async function applyContentModification(
         setState(action.name, {
           state: 'skipped',
           reason: 'append.ifNotPresent',
-          error: false,
         });
       } else if (!blockContent.match.includes(appendText)) {
         const lineStart = action.exact
@@ -195,7 +192,6 @@ export async function applyContentModification(
         setState(action.name, {
           state: 'skipped',
           reason: 'append.exists',
-          error: false,
         });
       }
     };
@@ -220,7 +216,6 @@ export async function applyContentModification(
         setState(action.name, {
           state: 'skipped',
           reason: 'replace.ifNotPresent',
-          error: false,
         });
       } else {
         const start = blockContent.start,
@@ -268,7 +263,6 @@ export async function applyContentModification(
               setState(action.name, {
                 state: 'skipped',
                 reason: 'script.ifNotPresent',
-                error: false,
               });
             } else {
               await processScript(action.script, variables, false, true, {
@@ -303,7 +297,6 @@ export async function applyContentModification(
           setState(action.name, {
             state: 'skipped',
             reason: 'search',
-            error: false,
           });
         break;
       }

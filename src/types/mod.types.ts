@@ -552,7 +552,6 @@ export type BlockContentType = {
 
 export type TaskState = {
   state: 'progress' | 'error' | 'skipped' | 'done';
-  error: boolean;
   reason?: string;
 };
 

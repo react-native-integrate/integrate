@@ -15,9 +15,8 @@ For each task or action, the following state variables are automatically set bas
     -   `skipped`: The task or action did not meet the `when` condition and was skipped.
     -   `done`: The task or action completed successfully.
     -   `error`: The task or action resulted in an error.
--   `<name>.error`: This variable is a boolean and is set to `true` if the task or action resulted in an error. It is set to `false` if the task was skipped or completed successfully.
 
--   `<name>.reason`: This variable contains the reason of error or skip.
+-   `reason.<name>`: This variable contains the reason of error or skip.
 
     Error reason contains the thrown error message.
 
@@ -47,7 +46,7 @@ steps:
 
   - task: build_gradle
     when:
-      fs_google: done
+      fs_google.state: done
 ```
 
 In this example, we have two tasks. The first task, `fs_google`, has a name assigned to it. The second task, `build_gradle`, uses the `when` condition to check the state of the `fs_google` task. It will only execute when the `fs_google` task is in the `done` state (completed successfully).
