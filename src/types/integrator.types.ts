@@ -34,3 +34,7 @@ export interface PackageUpgradeConfig {
   inputs?: Record<string, any>;
   files?: Record<string, string>;
 }
+
+export interface IntegrateConfig {
+  plugins?: (string | [string, Record<string, any>])[];
+}

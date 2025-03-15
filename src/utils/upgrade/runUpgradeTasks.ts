@@ -81,6 +81,7 @@ export async function runUpgradeTasks(
         'node_modules/',
         'package.json',
         'integrate-lock.json',
+        'integrate.config.js',
       ];
       for (let i = 0; i < imports.length; i++) {
         updateSpinner(

@@ -15,6 +15,10 @@ import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { checkCondition } from './utils/checkCondition';
 import { getErrMessage } from './utils/getErrMessage';
+import {
+  getIntegrateConfig,
+  getIntegratePackageConfig,
+} from './utils/getIntegrateConfig';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { logInfoNote } from './utils/logInfoNote';
 import { parseConfig } from './utils/parseConfig';
@@ -239,6 +243,7 @@ export async function integrate(packageName?: string): Promise<void> {
   }
   if (packagesToIntegrate.length) {
     packagesToIntegrate = topologicalSort(packagesToIntegrate);
+    const integrateConfig = getIntegrateConfig();
     for (let i = 0; i < packagesToIntegrate.length; i++) {
       const { packageName, version, configPath, config } =
         packagesToIntegrate[i];
@@ -253,6 +258,14 @@ export async function integrate(packageName?: string): Promise<void> {
           Object.entries(config.env).forEach(([name, value]) =>
             variables.set(name, transformTextInObject(value))
           );
+        }
+        if (integrateConfig) {
+          const integratePackageconfig = getIntegratePackageConfig(
+            integrateConfig,
+            packageName
+          );
+          if (integratePackageconfig)
+            variables.set('config', integratePackageconfig);
         }
 
         let failedTaskCount = 0,

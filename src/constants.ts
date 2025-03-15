@@ -1,6 +1,7 @@
 export const Constants = {
   CURRENT_LOCK_VERSION: 1,
   LOCK_FILE_NAME: 'integrate-lock.json',
+  INTEGRATE_CONFIG_FILE_NAME: 'integrate.config.js',
   UPGRADE_FOLDER_NAME: '.upgrade',
   UPGRADE_CONFIG_FILE_NAME: 'upgrade.yml',
   GIT_FOLDER_NAME: '.git',

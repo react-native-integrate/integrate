@@ -20,6 +20,7 @@ import { importIosDisplayName } from './ios/importIosDisplayName';
 import { importIosMarketingVersion } from './ios/importIosMarketingVersion';
 import { importIosProjectVersion } from './ios/importIosProjectVersion';
 import { importGitFolder } from './other/importGitFolder';
+import { importIntegrateConfig } from './other/importIntegrateConfig';
 import { importIntegrateLockJson } from './other/importIntegrateLockJson';
 import { importPackageJson } from './other/importPackageJson';
 import { importUpgradeFolder } from './other/importUpgradeFolder';
@@ -30,6 +31,7 @@ export async function importFromOldProject(
   const importedData: ImportGetter[] = [
     importPackageJson(oldProjectPath),
     importIntegrateLockJson(oldProjectPath),
+    importIntegrateConfig(oldProjectPath),
     importUpgradeFolder(oldProjectPath),
     importAndroidDisplayName(oldProjectPath),
     importAndroidAppId(oldProjectPath),
