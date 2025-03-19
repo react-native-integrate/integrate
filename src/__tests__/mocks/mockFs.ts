@@ -18,10 +18,10 @@ function isDirectoryMatch(path: string, directory: string): boolean {
 }
 
 export const mockFs = {
-  existsSync: (path: string): boolean => {
+  existsSync: jest.fn((path: string): boolean => {
     path = nodePath.resolve(path);
     return Object.keys(store).some(key => isDirectoryMatch(key, path));
-  },
+  }),
   renameSync: (from: string, to: string) => {
     from = nodePath.resolve(from);
     to = nodePath.resolve(to);

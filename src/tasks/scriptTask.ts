@@ -1,4 +1,7 @@
+import fs from 'fs';
 import path from 'path';
+import { Constants } from '../constants';
+import { downloadFile, getRemotePath } from '../utils/getPackageConfig';
 import { processScript } from '../utils/processScript';
 import {
   ModStep,
@@ -71,6 +74,25 @@ export async function scriptTask(args: {
           ctx
         );
       } else {
+        const pluginPath = path.join(
+          path.dirname(args.configPath),
+          action.module
+        );
+        if (
+          !fs.existsSync(pluginPath) &&
+          args.packageName !== Constants.UPGRADE_CONFIG_FILE_NAME
+        ) {
+          const remotePath =
+            getRemotePath(args.packageName, Constants.REMOTE_REPO) +
+            pluginPath.replace(path.join(args.configPath, '../'), '');
+
+          const localDir = path.join(pluginPath, '..');
+          if (!fs.existsSync(localDir))
+            fs.mkdirSync(localDir, { recursive: true });
+          const success = await downloadFile(remotePath, pluginPath);
+          if (!success) throw new Error(`File not found at ${pluginPath}`);
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const plugin = require(
           path.relative(

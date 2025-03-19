@@ -6,6 +6,7 @@ import {
   mockIntegrateWithMinVersionYml,
 } from './mockIntegrateWithMinRNVersion';
 import { mockIntegrateYml } from './mockIntegrateYml';
+import { mockTestPluginTemplate } from './mockTestPluginTemplate';
 
 // @ts-ignore
 global.fetch = jest.fn((url: string) =>
@@ -24,6 +25,8 @@ global.fetch = jest.fn((url: string) =>
         return Promise.resolve(mockIntegrateWithInvalidMinVersionYml);
       else if (url.endsWith('integrate.yml'))
         return Promise.resolve(mockIntegrateYml);
+      else if (url.endsWith('mockTestPlugin.js'))
+        return Promise.resolve(mockTestPluginTemplate);
       else if (
         url.endsWith('/rn-diff-purge/release/1.0.0/RnDiffApp/package.json')
       )
