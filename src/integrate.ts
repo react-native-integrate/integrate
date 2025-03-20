@@ -14,6 +14,7 @@ import { AnalyzedPackages, LockProjectData } from './types/integrator.types';
 import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { checkCondition } from './utils/checkCondition';
+import { checkForUpdate } from './utils/checkForUpdate';
 import { getErrMessage } from './utils/getErrMessage';
 import {
   getIntegrateConfig,
@@ -30,6 +31,7 @@ import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
+  await checkForUpdate();
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages(packageName);
   const { deletedPackages, installedPackages, integratedPackages } =

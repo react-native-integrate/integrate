@@ -17,6 +17,7 @@ import { LockProjectData } from './types/integrator.types';
 import { IntegrationConfig, PackageWithConfig } from './types/mod.types';
 import { analyzePackages } from './utils/analyzePackages';
 import { checkCondition } from './utils/checkCondition';
+import { checkForUpdate } from './utils/checkForUpdate';
 import { getErrMessage } from './utils/getErrMessage';
 import { getPackageConfig } from './utils/getPackageConfig';
 import { getProjectPath } from './utils/getProjectPath';
@@ -36,6 +37,7 @@ import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function upgrade(): Promise<void> {
+  await checkForUpdate();
   let stage = 1;
   const isManual = options.get().manual;
   if (!isManual) {
