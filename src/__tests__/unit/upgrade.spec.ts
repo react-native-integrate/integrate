@@ -43,6 +43,21 @@ describe('upgrade', () => {
         },
       },
     }));
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: (exitCode: number) => void) => {
+        cb(0);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
+    }));
   });
   it('should skip import when import path is empty', async () => {
     mockPrompter.text.mockImplementationOnce(() => '');

@@ -4,6 +4,7 @@ const {
   writeMockAppDelegate,
   writeMockLock,
 } = require('../mocks/mockAll');
+const mockSpawn = jest.spyOn(require('child_process'), 'spawn');
 
 const mockRunTask = jest.spyOn(require('../../utils/runTask'), 'runTask');
 const mockParseConfig = jest.spyOn(
@@ -17,6 +18,23 @@ import { integrate } from '../../integrate';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {
+  beforeEach(() => {
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: (exitCode: number) => void) => {
+        cb(0);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
+    }));
+  });
   it('should not run tasks when lock does not exist (first run)', async () => {
     const spinner = mockPrompter.spinner();
     spinner.stop.mockReset();

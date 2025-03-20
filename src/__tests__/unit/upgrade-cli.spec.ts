@@ -28,6 +28,21 @@ describe('upgrade-cli', () => {
         },
       },
     }));
+    mockSpawn.mockImplementationOnce(() => ({
+      on: (_event: string, cb: (exitCode: number) => void) => {
+        cb(0);
+      },
+      stdout: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stdout');
+        },
+      },
+      stderr: {
+        on: (_event: string, cb: (...args: any[]) => void) => {
+          cb('stderr');
+        },
+      },
+    }));
     const mock = jest.spyOn(require('../../upgrade'), 'upgrade');
     const cli = require(resolve(__dirname, '../../upgrade-cli'));
 
