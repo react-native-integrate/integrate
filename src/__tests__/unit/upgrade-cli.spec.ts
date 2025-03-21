@@ -10,7 +10,8 @@ process.argv.splice(0, process.argv.length);
 describe('upgrade-cli', () => {
   it('should exist', () => {
     options.get = jest.fn(() => ({
-      debug: false,
+      verbose: false,
+      interactive: false,
       manual: true,
     }));
     mockSpawn.mockImplementationOnce(() => ({
