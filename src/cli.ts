@@ -27,7 +27,7 @@ program
     try {
       progress.setOptions({
         title: 'integrating',
-        total: 8,
+        total: 4,
         step: 0,
       });
       if (!args.verbose) progress.display();

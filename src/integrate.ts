@@ -267,11 +267,12 @@ export async function integrate(packageName?: string): Promise<void> {
         packagesToIntegrate[i];
 
       progress.setOptions({
-        step: stage++,
+        step: i + 1,
+        total: packagesToIntegrate.length,
         stage: `integrating ${color.blue(packageName)}`,
       });
-      logInfo(
-        color.bold(color.bgBlue(' new package ')) +
+      logSuccess(
+        color.bold(color.bgBlue(' integration ')) +
           color.bold(color.blue(` ${packageName} `))
       );
       if (
@@ -347,9 +348,7 @@ export async function integrate(packageName?: string): Promise<void> {
 
         if (failedTaskCount) {
           logWarning(
-            color.inverse(
-              color.bold(color.yellow(' integrated with errors '))
-            ) +
+            color.inverse(color.bold(color.yellow(' done with errors '))) +
               color.bold(color.blue(` ${packageName} `)) +
               color.yellow(
                 `failed to complete ${failedTaskCount} task(s) - please complete this integration manually`
@@ -357,8 +356,8 @@ export async function integrate(packageName?: string): Promise<void> {
             true
           );
         } else {
-          logSuccess(
-            color.inverse(color.bold(color.green(' integrated '))) +
+          logInfo(
+            color.inverse(color.bold(color.green(' done '))) +
               color.black(color.bold(color.blue(` ${packageName} `))) +
               color.green(
                 `completed ${completedTaskCount} task(s) successfully`
@@ -393,10 +392,6 @@ export async function integrate(packageName?: string): Promise<void> {
     });
   }
   updateIntegrationStatus(packageLockUpdates);
-
-  if (!options.get().verbose) {
-    progress.hide();
-  }
 }
 
 function checkIfJustCreatedLockFile(analyzedPackages: AnalyzedPackages) {

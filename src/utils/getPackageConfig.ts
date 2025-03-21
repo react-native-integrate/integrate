@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import color from 'picocolors';
 import { Constants } from '../constants';
+import { progress } from '../progress';
 import { updateSpinner } from '../prompter';
 import { getMd5 } from './getMd5';
 import { getProjectPath } from './getProjectPath';
@@ -9,6 +11,13 @@ export async function getPackageConfig(
   packageName: string,
   pagination: { index: number; count: number } = { index: 0, count: 1 }
 ): Promise<string | null> {
+  progress.setOptions({
+    step: pagination.index + 1,
+    total: pagination.count,
+    stage: `[${pagination.index + 1}/${
+      pagination.count
+    }] checking ${color.blue(packageName)}`,
+  });
   updateSpinner(
     `[${pagination.index + 1}/${
       pagination.count

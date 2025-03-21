@@ -21,7 +21,9 @@ class Progress {
   }
 
   drawMessage() {
-    const stepRate = this.options.step / this.options.total;
+    const stepRate = !this.options.total
+      ? 0
+      : Math.min(1, Math.max(0, this.options.step / this.options.total));
     const barSize = 20;
     const scaledStep = Math.floor(stepRate * barSize);
     const completeBars = new Array(scaledStep).fill('\u2588').join('');
@@ -45,7 +47,6 @@ class Progress {
     if (this.isActive) {
       this.isActive = false;
       this.spinner?.stop();
-      process.stdout.cursorTo(0); // up one line
       process.stdout.moveCursor(0, -2); // up one line
       process.stdout.clearLine(1); // from cursor to end
     }

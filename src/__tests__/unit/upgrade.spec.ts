@@ -95,11 +95,11 @@ describe('upgrade', () => {
       didRun: true,
       completedTaskCount: 1,
     });
-    mockPrompter.log.success.mockClear();
+    mockPrompter.log.info.mockClear();
 
     await upgrade();
 
-    expect(mockPrompter.log.success).toHaveBeenCalledWith(
+    expect(mockPrompter.log.info).toHaveBeenCalledWith(
       expect.stringContaining('task(s) successfully')
     );
   });

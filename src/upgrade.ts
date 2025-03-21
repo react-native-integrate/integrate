@@ -66,7 +66,7 @@ export async function upgrade(): Promise<void> {
 
     const didCreate = await createNewProject();
     if (didCreate) {
-      logSuccess(
+      logInfo(
         color.inverse(color.bold(color.green(' created '))) +
           color.green(' new project created successfully')
       );
@@ -95,7 +95,7 @@ export async function upgrade(): Promise<void> {
     oldProjectPath = path.resolve(oldProjectPath);
     const didImport = await importFromOldProject(oldProjectPath);
     if (didImport) {
-      logSuccess(
+      logInfo(
         color.inverse(color.bold(color.green(' imported '))) +
           color.green(' imported project data successfully')
       );
@@ -131,7 +131,7 @@ export async function upgrade(): Promise<void> {
         true
       );
     } else {
-      logSuccess(
+      logInfo(
         color.inverse(color.bold(color.green(' executed '))) +
           color.black(color.bold(color.blue(' upgrade.yml pre_install '))) +
           color.green(
@@ -179,6 +179,9 @@ export async function upgrade(): Promise<void> {
     }[] = [];
     let packagesToIntegrate: PackageWithConfig[] = [];
 
+    progress.setOptions({
+      stage: 'checking package configuration',
+    });
     startSpinner('checking package configuration');
     for (let i = 0; i < integratedPackages.length; i++) {
       const [packageName] = integratedPackages[i];
@@ -312,8 +315,13 @@ export async function upgrade(): Promise<void> {
         const { packageName, version, configPath, config } =
           packagesToIntegrate[i];
 
-        logInfo(
-          color.bold(color.bgBlue(' package ')) +
+        progress.setOptions({
+          step: i + 1,
+          total: packagesToIntegrate.length,
+          stage: `integrating ${color.blue(packageName)}`,
+        });
+        logSuccess(
+          color.bold(color.bgBlue(' integration ')) +
             color.bold(color.blue(` ${packageName} `))
         );
 
@@ -374,9 +382,7 @@ export async function upgrade(): Promise<void> {
 
         if (failedTaskCount) {
           logWarning(
-            color.inverse(
-              color.bold(color.yellow(' re-integrated with errors '))
-            ) +
+            color.inverse(color.bold(color.yellow(' done with errors '))) +
               color.bold(color.blue(` ${packageName} `)) +
               color.yellow(
                 `failed to complete ${failedTaskCount} task(s) - please complete this integration manually`
@@ -384,8 +390,8 @@ export async function upgrade(): Promise<void> {
             true
           );
         } else {
-          logSuccess(
-            color.inverse(color.bold(color.green(' re-integrated '))) +
+          logInfo(
+            color.inverse(color.bold(color.green(' done '))) +
               color.black(color.bold(color.blue(` ${packageName} `))) +
               color.green(
                 `completed ${completedTaskCount} task(s) successfully`
@@ -418,7 +424,7 @@ export async function upgrade(): Promise<void> {
     logWarning(e.message);
   });
   if (didRestore) {
-    logSuccess(
+    logInfo(
       color.inverse(color.bold(color.green(' imported '))) +
         color.green(' files were imported successfully')
     );
@@ -449,7 +455,7 @@ export async function upgrade(): Promise<void> {
         true
       );
     } else {
-      logSuccess(
+      logInfo(
         color.inverse(color.bold(color.green(' executed '))) +
           color.black(color.bold(color.blue(' upgrade.yml '))) +
           color.green(
@@ -526,6 +532,21 @@ export async function upgrade(): Promise<void> {
       return;
     }
 
+    // push changes
+    const { exitCode: didFetchFail } = await runCommand('git fetch', {
+      silent: false,
+      progressText: 'fetching changes to current project',
+      completeText: 'fetched changes to current project',
+      cwd: variables.get('__OLD_PROJECT_DIR__'),
+    });
+    if (didFetchFail) {
+      logWarning(
+        'please fetch changes manually in ' +
+          variables.get('__OLD_PROJECT_DIR__')
+      );
+      return;
+    }
+
     logSuccess(
       color.inverse(color.bold(color.green(' committed '))) +
         color.green(` saved changes to ${color.bold(branchName)}`)
@@ -543,9 +564,5 @@ export async function upgrade(): Promise<void> {
       )
     );
     stopSpinner('cleaned up');
-
-    if (!options.get().verbose) {
-      progress.hide();
-    }
   }
 }
