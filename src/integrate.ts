@@ -356,11 +356,10 @@ export async function integrate(packageName?: string): Promise<void> {
             true
           );
         } else {
-          logInfo(
+          logSuccess(
             color.inverse(color.bold(color.green(' done '))) +
-              color.black(color.bold(color.blue(` ${packageName} `))) +
               color.green(
-                `completed ${completedTaskCount} task(s) successfully`
+                ` completed ${completedTaskCount} task(s) successfully`
               )
           );
         }

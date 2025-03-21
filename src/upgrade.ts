@@ -390,11 +390,10 @@ export async function upgrade(): Promise<void> {
             true
           );
         } else {
-          logInfo(
+          logSuccess(
             color.inverse(color.bold(color.green(' done '))) +
-              color.black(color.bold(color.blue(` ${packageName} `))) +
               color.green(
-                `completed ${completedTaskCount} task(s) successfully`
+                ` completed ${completedTaskCount} task(s) successfully`
               )
           );
         }
@@ -532,7 +531,12 @@ export async function upgrade(): Promise<void> {
       return;
     }
 
-    // push changes
+    logSuccess(
+      color.inverse(color.bold(color.green(' committed '))) +
+        color.green(` saved changes to branch ${color.bold(branchName)}`)
+    );
+
+    // fetch changes
     const { exitCode: didFetchFail } = await runCommand('git fetch', {
       silent: false,
       progressText: 'fetching changes to current project',
@@ -546,11 +550,6 @@ export async function upgrade(): Promise<void> {
       );
       return;
     }
-
-    logSuccess(
-      color.inverse(color.bold(color.green(' committed '))) +
-        color.green(` saved changes to ${color.bold(branchName)}`)
-    );
 
     startSpinner('cleaning up');
     await new Promise(r =>

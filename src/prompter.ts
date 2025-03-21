@@ -72,7 +72,7 @@ export function logIntro(msg?: string): void {
 }
 
 export function logOutro(msg?: string, error?: boolean): void {
-  outro(color[error ? 'red' : 'cyan'](msg || 'completed integration check'));
+  outro(color[error ? 'red' : 'cyan'](msg || 'completed integration'));
 }
 
 const s = spinner();
