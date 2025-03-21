@@ -1,6 +1,6 @@
 import color from 'picocolors';
 import semver from 'semver/preload';
-import { logWarning } from '../prompter';
+import { confirm, logWarning } from '../prompter';
 import { PackageJsonType } from '../types/mod.types';
 import { runCommand } from './runCommand';
 
@@ -26,6 +26,11 @@ export async function checkForUpdate(): Promise<void> {
           `Current: ${color.gray(currentVersion)} | Latest: ${color.green(latestVersion)}\n` +
           `${color.yellow('Run')} ${color.blue(`npm install -g ${name}@latest`)} to update.`
       );
+      if (
+        !(await confirm('would you like to continue with outdated version?'))
+      ) {
+        process.exit(0);
+      }
     }
   } catch (_error) {
     /* empty */

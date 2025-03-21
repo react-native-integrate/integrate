@@ -119,7 +119,7 @@ export async function multiselect(
   });
   if (isCancel(response)) {
     cancel('operation cancelled');
-    process.abort();
+    process.exit(0);
   }
   if (isProgressActive) progress.display();
   // @ts-ignore
@@ -144,7 +144,7 @@ export async function select(
   });
   if (isCancel(response)) {
     cancel('operation cancelled');
-    process.abort();
+    process.exit(0);
   }
   if (isProgressActive) progress.display();
   // @ts-ignore
@@ -165,7 +165,7 @@ export async function confirm(
   });
   if (isCancel(response)) {
     cancel('operation cancelled');
-    process.abort();
+    process.exit(0);
   }
   if (isProgressActive) progress.display();
   return response;
@@ -186,7 +186,7 @@ export async function text(
   });
   if (isCancel(response)) {
     cancel('operation cancelled');
-    process.abort();
+    process.exit(0);
   }
   if (isProgressActive) progress.display();
   return response;

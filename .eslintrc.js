@@ -16,6 +16,7 @@ module.exports = {
   ],
   rules: {
     'no-console': ['error', { allow: ['warn', 'error'] }],
+    'no-process-exit': 'off',
     'prettier/prettier': 'warn',
     'node/no-missing-import': 'off',
     'node/no-empty-function': 'off',

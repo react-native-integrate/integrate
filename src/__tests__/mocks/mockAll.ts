@@ -15,8 +15,8 @@ import { mockPList } from './mockPList';
 import { notificationServiceM as mockNotificationServiceTemplate } from '../../scaffold/notification-service/notificationServiceM';
 import { notificationViewControllerM as mockNotificationContentTemplate } from '../../scaffold/notification-content/notificationViewControllerM';
 
-jest.spyOn(process, 'abort').mockImplementation(() => {
-  throw new Error('program aborted');
+jest.spyOn(process, 'exit').mockImplementation(() => {
+  throw new Error('program exited');
 });
 
 function writeMockProject(

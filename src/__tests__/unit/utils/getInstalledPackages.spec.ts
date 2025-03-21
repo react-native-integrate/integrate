@@ -27,6 +27,6 @@ describe('getInstalledPackages', () => {
 
     expect(() => {
       getInstalledPackages();
-    }).toThrowError('program aborted');
+    }).toThrowError('program exited');
   });
 });

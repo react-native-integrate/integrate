@@ -18,7 +18,7 @@ export function getIntegrateConfig(projectPath?: string) {
     return 'default' in config ? config.default : config;
   } catch (error) {
     console.error('Error reading integrate.config.js:', error);
-    process.abort();
+    process.exit(0);
   }
 }
 

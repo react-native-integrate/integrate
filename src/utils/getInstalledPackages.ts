@@ -14,7 +14,7 @@ export function getInstalledPackages(): PackageTuples {
     } as Record<string, any>) as PackageTuples;
   } catch (error) {
     console.error('Error fetching installed packages:', error);
-    process.abort();
+    process.exit(0);
   }
 }
 

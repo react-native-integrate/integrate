@@ -546,11 +546,6 @@ export async function upgrade(): Promise<void> {
 
     if (!options.get().verbose) {
       progress.hide();
-      if (!didPushFail) {
-        logSuccess(
-          color.green(`changes committed to ${color.bold(branchName)}`)
-        );
-      }
     }
   }
 }

@@ -35,7 +35,7 @@ export function readLockFile(): LockDataWithMeta {
       console.error(
         `Error reading integrate-lock.json: lockfileVersion is not equal to ${Constants.CURRENT_LOCK_VERSION}`
       );
-      process.abort();
+      process.exit(0);
     }
     return {
       lockData,
@@ -43,7 +43,7 @@ export function readLockFile(): LockDataWithMeta {
     };
   } catch (error) {
     console.error('Error reading integrate-lock.json:', error);
-    process.abort();
+    process.exit(0);
   }
 }
 
@@ -54,7 +54,7 @@ function writeLockFile(data: LockData): void {
     fs.writeFileSync(lockFilePath, JSON.stringify(data, null, 2));
   } catch (error) {
     console.error('Error writing integrate-lock.json:', error);
-    process.abort();
+    process.exit(0);
   }
 }
 

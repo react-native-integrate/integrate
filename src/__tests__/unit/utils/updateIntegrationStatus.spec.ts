@@ -133,7 +133,7 @@ describe('updateIntegrationStatus', () => {
       },
     });
   });
-  it('should abort for unsupported lock file version', () => {
+  it('should exit for unsupported lock file version', () => {
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
 
@@ -152,9 +152,9 @@ describe('updateIntegrationStatus', () => {
           },
         },
       ]);
-    }).toThrowError('program aborted');
+    }).toThrowError('program exited');
   });
-  it('should abort when has no read permission', () => {
+  it('should exit when has no read permission', () => {
     mockFs.setReadPermission(false);
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -174,9 +174,9 @@ describe('updateIntegrationStatus', () => {
           },
         },
       ]);
-    }).toThrowError('program aborted');
+    }).toThrowError('program exited');
   });
-  it('should abort when has no write permission', () => {
+  it('should exit when has no write permission', () => {
     mockFs.setWritePermission(false);
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -190,6 +190,6 @@ describe('updateIntegrationStatus', () => {
           },
         },
       ]);
-    }).toThrowError('program aborted');
+    }).toThrowError('program exited');
   });
 });

@@ -173,7 +173,7 @@ describe('prompter', () => {
 
     await expect(async () => {
       await confirm('test');
-    }).rejects.toThrowError('program aborted');
+    }).rejects.toThrowError('program exited');
 
     expect(mockPrompter.confirm).toHaveBeenCalled();
   });
@@ -186,7 +186,7 @@ describe('prompter', () => {
 
     await expect(async () => {
       await text('test');
-    }).rejects.toThrowError('program aborted');
+    }).rejects.toThrowError('program exited');
 
     expect(mockPrompter.text).toHaveBeenCalled();
   });
@@ -202,7 +202,7 @@ it('should cancel multiselect', async () => {
     multiselect('test', {
       options: [{ value: 'opt1' }, { value: 'opt2' }],
     })
-  ).rejects.toThrowError('program aborted');
+  ).rejects.toThrowError('program exited');
 
   expect(mockPrompter.multiselect).toHaveBeenCalled();
 });
@@ -217,7 +217,7 @@ it('should cancel select', async () => {
     select('test', {
       options: [{ value: 'opt1' }, { value: 'opt2' }],
     })
-  ).rejects.toThrowError('program aborted');
+  ).rejects.toThrowError('program exited');
 
   expect(mockPrompter.select).toHaveBeenCalled();
 });

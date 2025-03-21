@@ -9,6 +9,9 @@ jest.mock('../../../../package.json', () => ({
   version: '1.0.0',
   name: 'react-native-integrate',
 }));
+jest.spyOn(process, 'exit').mockImplementation(() => {
+  throw new Error('program exited');
+});
 
 describe('checkForUpdate', () => {
   beforeEach(() => {
