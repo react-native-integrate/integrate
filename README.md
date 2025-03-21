@@ -23,9 +23,20 @@ npm install react-native-vision-camera
 npx react-native-integrate react-native-vision-camera
 ```
 
+![integrate.gif](website/static/img/integrate.gif)
+
+## Upgrade React Native
+
+```bash
+# Upgrade project to the latest RN version
+npx react-native-integrate upgrade
+```
+
+![upgrade.gif](website/static/img/upgrade.gif)
+
 ## Documentation
 
-Check [https://react-native-integrate.github.io/integrate](https://react-native-integrate.github.io/integrate) to get started.
+Visit [https://react-native-integrate.github.io/integrate](https://react-native-integrate.github.io/integrate) to get started.
 
 ## Contribution
 

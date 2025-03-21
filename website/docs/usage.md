@@ -3,6 +3,8 @@ sidebar_position: 2
 ---
 # Usage
 
+![integrate.gif](../static/img/integrate.gif)
+
 ## Without Installation
 
 Run the tool directly using `npx`:

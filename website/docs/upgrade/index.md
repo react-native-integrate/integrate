@@ -3,6 +3,8 @@ sidebar_position: 3
 ---
 # Upgrade React Native
 
+![upgrade.gif](../../static/img/upgrade.gif)
+
 You can use this tool to assist you while upgrading your project to new React Native versions.
 
 ## Steps to follow
