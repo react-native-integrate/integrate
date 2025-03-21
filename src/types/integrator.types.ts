@@ -1,5 +1,6 @@
 export interface IntegratorOptions {
-  debug: boolean;
+  verbose: boolean;
+  interactive: boolean;
   manual: boolean;
 }
 

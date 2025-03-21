@@ -15,6 +15,7 @@ const mockParseConfig = jest.spyOn(
 import path from 'path';
 import { Constants } from '../../constants';
 import { integrate } from '../../integrate';
+import { options } from '../../options';
 import { mockPrompter, writeMockProject } from '../mocks/mockAll';
 
 describe('integrate', () => {
@@ -199,6 +200,7 @@ describe('integrate', () => {
     expect(lockData.packages['mock-package']).toEqual(undefined);
   });
   it('should handle user rejecting to integrate', async () => {
+    options.get().interactive = true;
     mockPrompter.confirm.mockImplementationOnce(() => false);
     mockPrompter.log.step.mockReset();
     const lockPath = writeMockLock({

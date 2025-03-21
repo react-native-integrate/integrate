@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import color from 'picocolors';
 import { Constants } from '../../constants';
+import { options } from '../../options';
 import {
   getLastLine,
   logMessage,
@@ -25,11 +26,13 @@ export async function createNewProject(): Promise<boolean> {
 
   // confirm command to create project
   let createCommand = `npx @react-native-community/cli@latest init ${getIosProjectName()}`;
-  createCommand = await text('Enter command to create the new project', {
-    initialValue: createCommand,
-    defaultValue: createCommand,
-    placeholder: createCommand,
-  });
+  if (options.get().interactive) {
+    createCommand = await text('Enter command to create the new project', {
+      initialValue: createCommand,
+      defaultValue: createCommand,
+      placeholder: createCommand,
+    });
+  }
 
   // parse new project name from command
   const projectName = createCommand.match(/ init (\w+)/)?.[1];
@@ -39,7 +42,16 @@ export async function createNewProject(): Promise<boolean> {
 
   // make sure the tmp project folder does not exist
   if (fs.existsSync(tmpProjectDir)) {
-    fs.rmSync(tmpProjectDir, { recursive: true, force: true });
+    await new Promise(r =>
+      fs.rm(
+        tmpProjectDir,
+        {
+          recursive: true,
+          force: true,
+        },
+        r
+      )
+    );
   }
 
   logMessage(`creating new project at ${color.yellow(tmpProjectDir)}`);

@@ -1,7 +1,8 @@
 import { IntegratorOptions } from './types/integrator.types';
 
 let _opts: IntegratorOptions = {
-  debug: false,
+  interactive: false,
+  verbose: false,
   manual: false,
 };
 export const options = {

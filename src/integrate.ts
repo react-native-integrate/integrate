@@ -1,5 +1,7 @@
 import color from 'picocolors';
 import semver from 'semver/preload';
+import { options } from './options';
+import { progress } from './progress';
 import {
   confirm,
   log,
@@ -31,7 +33,16 @@ import { updateIntegrationStatus } from './utils/updateIntegrationStatus';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function integrate(packageName?: string): Promise<void> {
+  progress.setOptions({
+    stage: 'checking for updates',
+  });
   await checkForUpdate();
+  let stage = 1;
+
+  progress.setOptions({
+    step: stage++,
+    stage: 'analyzing packages',
+  });
   startSpinner('analyzing packages');
   const analyzedPackages = analyzePackages(packageName);
   const { deletedPackages, installedPackages, integratedPackages } =
@@ -82,6 +93,11 @@ export async function integrate(packageName?: string): Promise<void> {
   let packagesToIntegrate: PackageWithConfig[] = [];
   if (newPackages.length) {
     const globalInfo = [];
+
+    progress.setOptions({
+      step: stage++,
+      stage: 'checking package configuration',
+    });
     startSpinner('checking package configuration');
     for (let i = 0; i < newPackages.length; i++) {
       const [packageName, version] = newPackages[i];
@@ -250,11 +266,18 @@ export async function integrate(packageName?: string): Promise<void> {
       const { packageName, version, configPath, config } =
         packagesToIntegrate[i];
 
+      progress.setOptions({
+        step: stage++,
+        stage: `integrating ${color.blue(packageName)}`,
+      });
       logInfo(
         color.bold(color.bgBlue(' new package ')) +
           color.bold(color.blue(` ${packageName} `))
       );
-      if (await confirm('would you like to integrate this package?')) {
+      if (
+        !options.get().interactive ||
+        (await confirm('would you like to integrate this package?'))
+      ) {
         variables.clear(); // reset variables
         if (config.env) {
           Object.entries(config.env).forEach(([name, value]) =>
@@ -370,6 +393,10 @@ export async function integrate(packageName?: string): Promise<void> {
     });
   }
   updateIntegrationStatus(packageLockUpdates);
+
+  if (!options.get().verbose) {
+    progress.hide();
+  }
 }
 
 function checkIfJustCreatedLockFile(analyzedPackages: AnalyzedPackages) {

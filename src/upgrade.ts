@@ -3,6 +3,7 @@ import path from 'path';
 import color from 'picocolors';
 import semver from 'semver/preload';
 import { options } from './options';
+import { progress } from './progress';
 import {
   logError,
   logInfo,
@@ -37,8 +38,17 @@ import { validateOldProjectPath } from './utils/upgrade/validateOldProjectPath';
 import { getText, transformTextInObject, variables } from './variables';
 
 export async function upgrade(): Promise<void> {
+  progress.setOptions({
+    stage: 'checking for updates',
+  });
   await checkForUpdate();
   let stage = 1;
+
+  progress.setOptions({
+    step: stage,
+    stage: 'creating new project',
+  });
+
   const isManual = options.get().manual;
   if (!isManual) {
     const { output: gitStatus } = await runCommand('git status -s -uno', {
@@ -63,6 +73,10 @@ export async function upgrade(): Promise<void> {
     }
   }
 
+  progress.setOptions({
+    step: stage,
+    stage: 'importing old project data',
+  });
   logInfo(
     color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Import old project data '))
@@ -90,6 +104,10 @@ export async function upgrade(): Promise<void> {
     logMessageGray('skipping import from old project');
   }
 
+  progress.setOptions({
+    step: stage,
+    stage: 'executing upgrade.yml pre install steps',
+  });
   logInfo(
     color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Execute upgrade.yml pre install steps '))
@@ -123,8 +141,16 @@ export async function upgrade(): Promise<void> {
     }
   }
 
+  progress.setOptions({
+    step: stage,
+    stage: 'installing modules',
+  });
   await installModules(oldProjectPath);
 
+  progress.setOptions({
+    step: stage,
+    stage: 're-integrating packages',
+  });
   logInfo(
     color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Re-integrate packages '))
@@ -379,6 +405,10 @@ export async function upgrade(): Promise<void> {
     updateIntegrationStatus(packageLockUpdates);
   }
 
+  progress.setOptions({
+    step: stage,
+    stage: 'importing files from .upgrade/imports',
+  });
   logInfo(
     color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Import files from .upgrade/imports '))
@@ -394,6 +424,10 @@ export async function upgrade(): Promise<void> {
     );
   }
 
+  progress.setOptions({
+    step: stage,
+    stage: 'executing upgrade.yml steps',
+  });
   logInfo(
     color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
       color.bold(color.magenta(' Execute upgrade.yml steps '))
@@ -426,6 +460,10 @@ export async function upgrade(): Promise<void> {
   }
 
   if (!isManual) {
+    progress.setOptions({
+      step: stage,
+      stage: 'committing changes to branch',
+    });
     logInfo(
       color.bold(color.inverse(color.magenta(` stage ${stage++} `))) +
         color.bold(color.magenta(' Commit changes to branch '))
@@ -505,5 +543,14 @@ export async function upgrade(): Promise<void> {
       )
     );
     stopSpinner('cleaned up');
+
+    if (!options.get().verbose) {
+      progress.hide();
+      if (!didPushFail) {
+        logSuccess(
+          color.green(`changes committed to ${color.bold(branchName)}`)
+        );
+      }
+    }
   }
 }
