@@ -18,7 +18,7 @@ import { getErrMessage } from '../utils/getErrMessage';
 import { getProjectPath } from '../utils/getProjectPath';
 import { parseArgs } from '../utils/parseArgs';
 import { setState } from '../utils/setState';
-import { variables } from '../variables';
+import { getText, transformTextInObject, variables } from '../variables';
 
 export async function shellTask(args: {
   configPath: string;
@@ -42,15 +42,15 @@ export async function shellTask(args: {
     try {
       let command: string, args: string[], cwd: string;
       if (action.args) {
-        command = action.command;
-        args = action.args;
+        command = getText(action.command);
+        args = transformTextInObject(action.args);
       } else {
-        const cmdWithArgs = parseArgs(action.command);
+        const cmdWithArgs = parseArgs(getText(action.command));
         command = cmdWithArgs[0];
         args = cmdWithArgs.slice(1);
       }
       if (action.cwd) {
-        const cwdPath = path.join(getProjectPath(), action.cwd);
+        const cwdPath = path.join(getProjectPath(), getText(action.cwd));
         // security check
         if (!cwdPath.startsWith(getProjectPath())) {
           throw new Error('invalid cwd path');

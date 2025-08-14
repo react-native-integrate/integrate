@@ -8,7 +8,7 @@ export function satisfies(left: TAny, right: TAny): boolean {
   if (Array.isArray(right)) return anySatisfiesArray(left, right);
   else if (typeof right == 'object' && right != null)
     return anySatisfiesObject(left, right);
-  return anySatisfiesPrimitive(left, right);
+  return anySatisfiesPrimitive(left, right as TPrimitive);
 }
 
 function anySatisfiesArray(left: TAny, right: TArray): boolean {
@@ -29,6 +29,7 @@ function arraySatisfiesPrimitive(
 ): boolean {
   return left.some((leftChild: TAny) => deepEquals(leftChild, right));
 }
+
 function arraySatisfiesArray(
   left: TArray,
   right: TArray | TPrimitive
@@ -54,7 +55,7 @@ function anySatisfiesObject(left: TAny, right: TObject): boolean {
   if (Array.isArray(left)) return arraySatisfiesObject(left, right);
   else if (typeof left == 'object' && left != null)
     return objectSatisfiesObject(left, right);
-  return primitiveSatisfiesObject(left, right);
+  return primitiveSatisfiesObject(left as TPrimitive, right);
 }
 
 function objectSatisfiesObject(left: TObject, right: TObject): boolean {
@@ -72,7 +73,7 @@ function anySatisfiesPrimitive(left: TAny, right: TPrimitive): boolean {
     // return objectSatisfiesPrimitive(left, right);
     return false;
   }
-  return primitiveSatisfiesPrimitive(left, right);
+  return primitiveSatisfiesPrimitive(left as TPrimitive, right);
 }
 
 function primitiveSatisfiesPrimitive(
@@ -214,7 +215,7 @@ const nonArrayOperands: Record<
   },
   $regex(left: TObjectOrPrimitive, right: TAny, operandParent: TObject) {
     if (typeof right != 'string' || typeof left != 'string') return false;
-    let options = operandParent.$options;
+    let options = operandParent.$options as string | undefined;
     if (typeof options != 'string') options = undefined;
     return new RegExp(right, options).test(left);
   },
